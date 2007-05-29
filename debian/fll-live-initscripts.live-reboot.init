@@ -1,14 +1,63 @@
 #!/bin/bash
 
-PATH=/sbin:/bin:/usr/bin:/usr/sbin
-export PATH
+### BEGIN INIT INFO
+# Provides:          live-reboot
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     
+# Default-Stop:      0 6
+# Short-Description: shutdown and eject live media
+# Description:       This script provides the equivalent of umountfs,
+#                    umountroot and halt on a stadard debian system. It umounts
+#                    live mounts and ejects the live media at shutdown/reboot.
+### END INIT INFO
 
-# override tool behaviour through distro-defaults
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="live-reboot"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
 FLL_DISTRO_MODE="installed"
-FLL_DISTRO_NAME="sidux"
-[ -r /etc/default/distro ] && . /etc/default/distro
-FLL_DISTRO_NAME="$(echo $FLL_DISTRO_NAME | tr [a-z] [A-Z])"
-[ "$FLL_DISTRO_MODE" != "live" ] && exit 0
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+. /lib/init/vars.sh
+
+###
+# source lsb functions:
+#	log_success_msg
+#	log_failure_msg
+#	log_warning_msg
+#	log_begin_msg
+#	log_daemon_msg
+#	log_progress_msg
+#	log_end_msg
+#	log_action_msg
+#	log_action_begin_msg
+#	log_action_cont_msg
+#	log_action_end_msg	
+###
+. /lib/lsb/init-functions
 
 RED="[1;31m"
 GREEN="[1;32m"
@@ -19,12 +68,20 @@ CYAN="[1;36m"
 WHITE="[1;37m"
 NORMAL="[0;39m"
 
-. /lib/lsb/init-functions
-. /lib/init/vars.sh
-
 VERBOSE="no"
 DESTDIR="/live-hack"
 MOUNTS="/proc/mounts"
+
+for param in $(cat /proc/cmdline); do
+	case "$param" in
+		noeject)
+			NOEJECT="1"
+			;;
+		noprompt)
+			NOPROMPT="1"
+			;;
+	esac
+done
 
 ###############################################################################
 # Adapted from initscripts: /etc/init.d/umountfs (2.86.ds1-38)
@@ -253,8 +310,9 @@ do_umount() {
 # $1 is source
 # $2 is relative destination
 copy_exec() {
-	verbose="${VERBOSE}"
-	final_destination=${DESTDIR}/${2}/`basename ${1}`
+	local verbose="${VERBOSE}"
+	local final_destination=${DESTDIR}/${2}/`basename ${1}`
+	
 	if [ -L "$final_destination" ]; then
 		if ! [ `readlink ${final_destination}` = "${1}" ]; then
 			return
@@ -323,33 +381,6 @@ live_hack() {
 	export BINDIR
 }
 
-stop_service()
-{
-	if [ -x /etc/init.d/${1} ]; then
-		if [ -n "${2}" ]; then
-			RUNLEVEL="${2}" /etc/init.d/${1} stop
-		else
-			/etc/init.d/${1} stop
-		fi
-		return ${?}
-	fi
-
-	return 1
-}
-
-parse_cmdline() {
-	for cmd in $(cat /proc/cmdline); do
-		case "$cmd" in
-			noeject)
-				NOEJECT="1"
-				;;
-			noprompt)
-				NOPROMPT="1"
-				;;
-		esac
-	done
-}
-
 pop_live_cd()
 {
 	if [ -z "${LIVE_CDROM}" ] || [ "${NOEJECT}" ]; then
@@ -374,9 +405,16 @@ pop_live_cd()
 }
 
 do_stop() {
+	local command message options
+
+	# prepare binaries for post-umount of live media
+	live_hack
+	# umount the live media and other mount points
+	do_umount
+
 	case "${0}" in
 		*halt)
-			message="${YELLOW}${FLL_DISTRO_NAME} halted.${NORMAL}"
+			message="${YELLOW}System halted.${NORMAL}"
 			command="halt"
 			options="-n -p -i -f"
 			;;
@@ -391,7 +429,7 @@ do_stop() {
 			;;
 	esac
 
-	echo "$message" > /dev/console
+	echo "${message}" > /dev/console
 
 	pop_live_cd
 	
@@ -400,26 +438,18 @@ do_stop() {
 
 case "${1}" in
 	start)
+		# no-op
+		;;
+	restart|reload|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
 		;;
 	stop)
-		# Clean input/output
-		exec > /dev/console 2>&1 < /dev/console
-
-		# get options from /proc/cmdline
-		parse_cmdline
-		
-		# stop services and processes
-		stop_service wpa-ifupdown
-		stop_service sendsigs
-		stop_service umountnfs.sh
-		stop_service networking
-		stop_service ifupdown
-		
-		# hack, umount and eject
-		live_hack
-		do_umount
+		# live-hack, umount and eject
 		do_stop
 		;;
-	restart|force-reload)
+	*)
+		echo "Usage: ${NAME} {start|stop}" >&2
+		exit 3
 		;;
 esac

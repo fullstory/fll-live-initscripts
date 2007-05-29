@@ -28,6 +28,8 @@ NAME=
 ###
 # source distro-defaults, no-op unless in live mode
 ###
+FLL_DISTRO_MODE="installed"
+
 if [ -s /etc/default/distro ]; then
 	. /etc/default/distro
 fi
