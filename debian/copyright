@@ -1,17 +1,22 @@
-This package was debianized by Kel Modderman <kel@otaku42.de> on
-Tue, 29 May 2007 13:04:10 +1000.
+This is fll-live-initramfs, written and maintained by Kel Modderman
+<kel@otaku42.de> on Tue, 29 May 2007 13:04:10 +1000.
 
-It was downloaded from <url://example.com>
-
-Upstream Author(s): 
-
-    <put author's name and email here>
-    <likewise for another author>
+The original source can always be found at:
+	http://developer.berlios.de/projects/fullstory
 
 Copyright: 
+	(C) 2007 F.U.L.L.S.T.O.R.Y Project
 
-    <Copyright (C) YYYY Name OfAuthor>
-    <likewise for another author>
+./fll_analyze_initscripts was originally written by "locsmif".
+Copyright Holders:
+	(C) 2007 Michiel de Boer <locsmif@kanotix.com>
+
+Some code and concepts derived from initscripts-sidux-live.
+Copyright Holders: Klaus Knopper <knopper@knopper.net>
+                   Jörg Schirottke <master@kanotix.com>
+                   Stefan Lippers-Hollmann <s.l-h@gmx.net>
+License: GPL
+http://sidux.com/debian/pool/main/i/initscripts-sidux-live/
 
 License:
 
@@ -34,7 +39,3 @@ Public License can be found in `/usr/share/common-licenses/GPL'.
 
 The Debian packaging is (C) 2007, Kel Modderman <kel@otaku42.de> and
 is licensed under the GPL, see above.
-
-
-# Please also look if there are files or directories which have a
-# different copyright/license attached and list them here.
