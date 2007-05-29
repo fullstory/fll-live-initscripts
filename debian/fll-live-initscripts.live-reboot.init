@@ -44,18 +44,7 @@ fi
 . /lib/init/vars.sh
 
 ###
-# source lsb functions:
-#	log_success_msg
-#	log_failure_msg
-#	log_warning_msg
-#	log_begin_msg
-#	log_daemon_msg
-#	log_progress_msg
-#	log_end_msg
-#	log_action_msg
-#	log_action_begin_msg
-#	log_action_cont_msg
-#	log_action_end_msg	
+# source lsb functions
 ###
 . /lib/lsb/init-functions
 

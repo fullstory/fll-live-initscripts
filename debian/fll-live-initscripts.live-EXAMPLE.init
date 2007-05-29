@@ -22,7 +22,6 @@
 ###
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-DESC=
 NAME=
 
 ###
@@ -44,7 +43,7 @@ fi
 . /lib/init/vars.sh
 
 ###
-# source lsb functions:
+# source lsb functions
 #	log_success_msg
 #	log_failure_msg
 #	log_warning_msg

@@ -1,14 +1,17 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          skeleton
-# Required-Start:    $local_fs $remote_fs
-# Required-Stop:     $local_fs $remote_fs
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Example initscript
-# Description:       This file should be used to construct scripts to be
-#                    placed in /etc/init.d.
+# Provides:          live-autoconfig
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: live sysv-init autoconfiguration script
+# Description:       The purpose of live-autoconfig is to manage the sysv-init
+#                    runlevels of the live media. It calculates what services
+#                    should start by using an utility to lookup sequence
+#                    configuration of the same services in the read only live
+#                    media and replicating them on the live ramdisk.
 ### END INIT INFO
 
 ###
@@ -22,8 +25,7 @@
 ###
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-DESC=
-NAME=
+NAME="live-autoconfig"
 
 ###
 # source distro-defaults, no-op unless in live mode
@@ -44,18 +46,7 @@ fi
 . /lib/init/vars.sh
 
 ###
-# source lsb functions:
-#	log_success_msg
-#	log_failure_msg
-#	log_warning_msg
-#	log_begin_msg
-#	log_daemon_msg
-#	log_progress_msg
-#	log_end_msg
-#	log_action_msg
-#	log_action_begin_msg
-#	log_action_cont_msg
-#	log_action_end_msg	
+# source lsb functions
 ###
 . /lib/lsb/init-functions
 
