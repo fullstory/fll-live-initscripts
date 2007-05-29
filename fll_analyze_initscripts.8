@@ -1,0 +1,24 @@
+.TH FLL_ANALYZE_INITSCRIPTS "1" "May 2007" "" ""
+.SH NAME
+fll_analyze_initscripts \- analyze runlevel configuration of a SysV init system
+.SH SYNOPSIS
+\fBfll_analyze_initscripts\fR \fI[/path/to/chroot] [initscript1 initscript2 ...]\fR
+.SH DESCRIPTION
+The purpose of \fIfll_analyze_initscripts\fR is to recurse a directory tree
+with SysV-Init style init script links,	and formulate update-rc.d commands
+required to replicate the runlevel configuration of each script.
+.PP
+.SH OPTIONS
+.TP
+\fB/path/to/chroot\fR
+Path to chroot which will provide the SysV init runlevel directory tree for
+analysis. If no directory path is given as an argument, / is assumed.
+.TP
+\fBinitscript1 initscript2 ...\fR
+List of initscript names to compute update-rc.d commands for. If no initscript
+names are given as arguments, analyze all configured init scripts existing on
+the target chroot. Returns nothing for invalid initscripts.
+.PP
+.SH AUTHOR
+This manual page was written by Kel Modderman <kel@otaku42.de> for
+the Debian GNU system (but may be used by others).
