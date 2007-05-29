@@ -8,6 +8,7 @@ install/fll-live-initscripts::
 		debian/fll-live-initscripts.live-halt.init
 	# install and configure runlevel seq. for our initscripts
 	dh_installinit --no-start --name=live-autoconfig	-- start 00 S .
+	dh_installinit --no-start --name=live-locales		-- start 04 S .
 	dh_installinit --no-start --name=live-halt		-- start 90 0 .
 	dh_installinit --no-start --name=live-reboot		-- start 90 6 .
 

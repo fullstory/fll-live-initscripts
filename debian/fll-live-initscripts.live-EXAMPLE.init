@@ -62,7 +62,7 @@ fi
 # cheatcode handling
 ###
 for param in $(cat /proc/cmdline); do
-	case "$param" in
+	case "${param}" in
 		*)
 			;;
 	esac
