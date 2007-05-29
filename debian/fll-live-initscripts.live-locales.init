@@ -60,6 +60,12 @@ for param in $(cat /proc/cmdline); do
 		lang=*)
 			LANGUAGE="${param#lang=}"
 			;;
+		utc|gmt)
+			TZ="UTC"
+			;;
+		tz=*)
+			TZ="${param#tz=}"
+			;;
 	esac
 done
 
@@ -74,7 +80,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="de-latin1-nodeadkeys"
 		KDEKEYBOARDS="de,us"
 		XKBLAYOUT="de"
-		TZ="Europe/Berlin"
+		[ "${TZ}" ] || TZ="Europe/Berlin"
 		CD_COUNTRY="German"
 		;;
 	au)
@@ -84,7 +90,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="us"
 		KDEKEYBOARDS="us"
 		XKBLAYOUT="us"
-		TZ="Australia/Sydney"
+		[ "${TZ}" ] || TZ="Australia/Sydney"
 		CD_COUNTRY="us_american"
 		;;
 	bg)
@@ -94,7 +100,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="bg"
 		KDEKEYBOARDS="bg,us"
 		XKBLAYOUT="bg"
-		TZ="Europe/Sofia"
+		[ "${TZ}" ] || TZ="Europe/Sofia"
 		CD_COUNTRY="Bulgarian"
 		;;
 	br)
@@ -104,7 +110,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="br-abnt2"
 		KDEKEYBOARDS="br,us"
 		XKBLAYOUT="br"
-		TZ="America/Sao_Paulo"
+		[ "${TZ}" ] || TZ="America/Sao_Paulo"
 		CD_COUNTRY="Brazilian"
 		;;
 	ch)
@@ -114,7 +120,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="sg-latin1"
 		KDEKEYBOARDS="de_CH,de,fr,us"
 		XKBLAYOUT="de"
-		TZ="Europe/Zurich"
+		[ "${TZ}" ] || TZ="Europe/Zurich"
 		CD_COUNTRY="Swiss-de"
 		;;
 	cn)
@@ -123,7 +129,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="us"
 		KDEKEYBOARDS="us"
 		XKBLAYOUT="us"
-		TZ="Asia/Shanghai"
+		[ "${TZ}" ] || TZ="Asia/Shanghai"
 		CD_COUNTRY=""
 		;;
 	cs|cz)
@@ -133,7 +139,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="cz-lat2"
 		KDEKEYBOARDS="cs,us"
 		XKBLAYOUT="cs"
-		TZ="Europe/Prague"
+		[ "${TZ}" ] || TZ="Europe/Prague"
 		CD_COUNTRY="Czech-qwerty"
 		;;
 	dk|da)
@@ -142,7 +148,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="dk"
 		KDEKEYBOARDS="dk,us"
 		XKBLAYOUT="dk"
-		TZ="Europe/Copenhagen"
+		[ "${TZ}" ] || TZ="Europe/Copenhagen"
 		CD_COUNTRY="Danish"
 		;;
 	el)
@@ -152,7 +158,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="gr"
 		KDEKEYBOARDS="gr,us"
 		XKBLAYOUT="gr"
-		TZ="Europe/Athens"
+		[ "${TZ}" ] || TZ="Europe/Athens"
 		CD_COUNTRY="Greek"
 		;;
 	es)
@@ -162,7 +168,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="es"
 		KDEKEYBOARDS="es,us"
 		XKBLAYOUT="es"
-		TZ="Europe/Madrid"
+		[ "${TZ}" ] || TZ="Europe/Madrid"
 		CD_COUNTRY="Spanish"
 		;;
 	fi)
@@ -172,7 +178,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="fi-latin1"
 		KDEKEYBOARDS="fi,us"
 		XKBLAYOUT="fi"
-		TZ="Europe/Helsinki"
+		[ "${TZ}" ] || TZ="Europe/Helsinki"
 		CD_COUNTRY="Swedish"
 		;;
 	fr)
@@ -182,7 +188,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="fr"
 		KDEKEYBOARDS="fr,us"
 		XKBLAYOUT="fr"
-		TZ="Europe/Paris"
+		[ "${TZ}" ] || TZ="Europe/Paris"
 		CD_COUNTRY="French"
 		;;
 	fr-be)
@@ -192,7 +198,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="be2-latin1"
 		KDEKEYBOARDS="be,fr,us"
 		XKBLAYOUT="be"
-		TZ="Europe/Brussels"
+		[ "${TZ}" ] || TZ="Europe/Brussels"
 		CD_COUNTRY="Belgian"
 		;;
 	ga)
@@ -201,7 +207,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="uk"
 		KDEKYBOARDS="ie"
 		XKBLAYOUT="ie"
-		TZ="Europe/Dublin"
+		[ "${TZ}" ] || TZ="Europe/Dublin"
 		CD_COUNTRY="British"
 		;;
 	he|il)
@@ -211,7 +217,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="us"
 		KDEKEYBOARDS="il,us"
 		XKBLAYOUT="il"
-		TZ="Asia/Jerusalem"
+		[ "${TZ}" ] || TZ="Asia/Jerusalem"
 		CD_COUNTRY="Hebrew"
 		;;
 	hr)
@@ -221,7 +227,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="hr" 
 		KDEKEYBOARDS="hr,us"
 		XKBLAYOUT="hr" 
-		TZ="Europe/Zagreb" 
+		[ "${TZ}" ] || TZ="Europe/Zagreb" 
 		CD_COUNTRY="Croatian"
 		;;
 	ie)
@@ -231,7 +237,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="uk"
 		KDEKEYBOARDS="ie,gb,us"
 		XKBLAYOUT="ie"
-		TZ="Europe/Dublin"
+		[ "${TZ}" ] || TZ="Europe/Dublin"
 		CD_COUNTRY="British"
 		;;
 	it)
@@ -241,7 +247,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="it"
 		KDEKEYBOARDS="it,us"
 		XKBLAYOUT="it"
-		TZ="Europe/Rome"
+		[ "${TZ}" ] || TZ="Europe/Rome"
 		CD_COUNTRY="Italian"
 		;;
 	ja)
@@ -251,7 +257,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="us"
 		KDEKEYBOARDS="jp,us"
 		XKBLAYOUT="jp"
-		TZ="Asia/Tokyo"
+		[ "${TZ}" ] || TZ="Asia/Tokyo"
 		CD_COUNTRY="Japanese"
 		;;
 	nl)
@@ -261,7 +267,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="us"
 		KDEKEYBOARDS="nl,us"
 		XKBLAYOUT="nl"
-		TZ="Europe/Amsterdam"
+		[ "${TZ}" ] || TZ="Europe/Amsterdam"
 		CD_COUNTRY="Dutch"
 		;;
 	nl-be)
@@ -271,7 +277,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="be2-latin1"
 		KDEKEYBOARDS="be,fr,us"
 		XKBLAYOUT="be"
-		TZ="Europe/Brussels"
+		[ "${TZ}" ] || TZ="Europe/Brussels"
 		CD_COUNTRY="Belgian"
 		;;
 	pl)
@@ -281,7 +287,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="pl"
 		KDEKEYBOARDS="pl,us"
 		XKBLAYOUT="pl"
-		TZ="Europe/Warsaw"
+		[ "${TZ}" ] || TZ="Europe/Warsaw"
 		CD_COUNTRY="Polish"
 		;;
 	pt)
@@ -291,7 +297,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="pt-latin1"
 		KDEKEYBOARDS="pt,us"
 		XKBLAYOUT="pt"
-		TZ="Europe/Lisbon"
+		[ "${TZ}" ] || TZ="Europe/Lisbon"
 		CD_COUNTRY="Portugese"
 		;;
 	ru)
@@ -301,7 +307,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="ru"
 		KDEKEYBOARDS="ru,us"
 		XKBLAYOUT="ru"
-		TZ="Europe/Moscow"
+		[ "${TZ}" ] || TZ="Europe/Moscow"
 		CD_COUNTRY="Russian"
 		;;
 	sk)
@@ -311,7 +317,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="sk-qwerty"
 		KDEKEYBOARDS="sk,us"
 		XKBLAYOUT="sk"
-		TZ="Europe/Bratislava"
+		[ "${TZ}" ] || TZ="Europe/Bratislava"
 		CD_COUNTRY="Slovak-qwerty"
 		;;
 	sl)
@@ -321,7 +327,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="slovene"
 		KDEKEYBOARDS="si,us"
 		XKBLAYOUT="si"
-		TZ="Europe/Ljubljana"
+		[ "${TZ}" ] || TZ="Europe/Ljubljana"
 		#CONSOLEFONT="iso02g"
 		CD_COUNTRY="Slovene"
 		;;
@@ -332,7 +338,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="tr_q-latin5"
 		KDEKEYBOARDS="tr,us"
 		XKBLAYOUT="tr"
-		TZ="Europe/Istanbul"
+		[ "${TZ}" ] || TZ="Europe/Istanbul"
 		CD_COUNTRY="Turkish"
 		;;
 	tw)
@@ -342,7 +348,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="us"
 		KDEKEYBOARDS="us"
 		XKBLAYOUT="us"
-		TZ="Asia/Taipei"
+		[ "${TZ}" ] || TZ="Asia/Taipei"
 		CD_COUNTRY=""
 		;;
 	uk)
@@ -352,7 +358,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="uk"
 		KDEKEYBOARDS="gb,us"
 		XKBLAYOUT="gb"
-		TZ="Europe/London"
+		[ "${TZ}" ] || TZ="Europe/London"
 		CD_COUNTRY="British"
 		;;
 	us)
@@ -362,7 +368,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="us"
 		KDEKEYBOARDS="us,ca"
 		XKBLAYOUT="us"
-		TZ="America/New_York"
+		[ "${TZ}" ] || TZ="America/New_York"
 		CD_COUNTRY="us_american"
 		;;
 	*)
@@ -372,7 +378,7 @@ case "${LANGUAGE}" in
 		KEYTABLE="us"
 		KDEKEYBOARDS="us,ca"
 		XKBLAYOUT="us"
-		TZ="Europe/London"
+		[ "${TZ}" ] || TZ="Europe/London"
 		CD_COUNTRY="us_american"
 		;;
 esac
@@ -687,7 +693,22 @@ do_start() {
 	log_daemon_msg "${NAME}"; log_action_begin_msg " installing ${KEYTABLE} keytable"
 	install-keymap "${KEYTABLE}"
 	log_end_msg "${?}"
-	
+
+	###
+	# configure timezone, fallback to UTC
+	###
+	( [ "${TZ}" ] && [ -f "/usr/share/zoneinfo/${TZ}" ] ) || TZ="UTC"
+	log_daemon_msg "${NAME}" "configuring timezone data for ${TZ}"
+	cp "/usr/share/zoneinfo/${TZ}" /etc/localtime && echo "${TZ}" > /etc/timezone
+	log_end_msg "${?}"
+
+	###
+	# hack rcS, make localtime default
+	###
+	if [ "${TZ}" != "UTC" ]; then
+		[ -w /etc/default/rcS ] && sed -i 's/^UTC=.*/UTC=no/' /etc/default/rcS
+	fi
+		
 	###
 	# XXX: store KDEKEYBOARDS / XKBDLAYOUT somewhere for xorg.conf generator
 	###

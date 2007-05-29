@@ -52,19 +52,75 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# functions...
+# runlevels to be setup
 ###
+RUNLEVEL_INITS="
+	glibc.sh
+	hostname.sh
+	mountkernfs.sh
+	udev
+	mountdevsubfs.sh
+	live-locales
+	keymap.sh
+	mtab.sh
+	ifupdown-clean
+	fuse
+	networking
+	udev-mtab
+	ifupdown
+	console-screen.sh
+	x11-common
+	wpa-ifupdown
+	sendsigs
+	umountnfs.sh
+"
 
+###
+# cheatcode handling, if /proc is not mounted then the initramfs failed
+# and executing this script would be an impossible situation
+###
+for param in $(cat /proc/cmdline); do
+	case "${param}" in
+		hostname=*)
+			HOSTNAME=${param#hostname=}
+			;;
+	esac
+done
+
+do_start() {
+	###
+	# custom hostname
+	###
+	if [ "${HOSTNAME}" ]; then
+		log_daemon_msg "${NAME}" "setting hostame of '${HOSTNAME}'"
+		echo "${HOSTNAME}" > /etc/hostname
+		echo "${HOSTNAME}" > /etc/mailname
+		# update /etc/hosts
+		sed -i '/localhost/!s/^\(127.0.0.1[ \t]\+\)\(.\+\)$/\1'"${HOSTNAME}"'/' \
+			/etc/hosts
+		log_end_msg 0
+	fi
+
+	###
+	# populate sysv-init runlevels with fll_analyze_initscripts
+	###
+	log_daemon_msg "${NAME}" "generating runlevel configuration"
+	fll_analyze_initscripts ${RUNLEVEL_INITS} ${FLL_MOUNTPOINT} | /bin/sh
+	log_end_msg 0
+}
 
 case "${1}" in
 	start)
 		;;
 	stop)
+		# no-op
 		;;
-	restart|force-reload)
+	restart|reload|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
 		;;
 	*)
-		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+		echo "Usage: ${NAME} {start|stop}" >&2
 		exit 3
 		;;
 esac
