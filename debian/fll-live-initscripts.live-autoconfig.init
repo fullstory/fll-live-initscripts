@@ -1,3 +1,80 @@
 #!/bin/sh
 
+### BEGIN INIT INFO
+# Provides:          skeleton
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Example initscript
+# Description:       This file should be used to construct scripts to be
+#                    placed in /etc/init.d.
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC=
+NAME=
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+. /lib/init/vars.sh
+
+###
+# source lsb functions:
+#	log_success_msg
+#	log_failure_msg
+#	log_warning_msg
+#	log_begin_msg
+#	log_daemon_msg
+#	log_progress_msg
+#	log_end_msg
+#	log_action_msg
+#	log_action_begin_msg
+#	log_action_cont_msg
+#	log_action_end_msg	
+###
+. /lib/lsb/init-functions
+
+###
+# functions...
+###
+
+
+case "${1}" in
+	start)
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+		exit 3
+		;;
+esac
+
 :
