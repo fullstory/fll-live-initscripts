@@ -1,0 +1,876 @@
+#!/bin/dash
+# Basic system configuration and hardware setup
+# (C) Klaus Knopper <knopper@knopper.net> 2004
+# (C) 2003-2006 Joerg Schirottke <master@kanotix.com>
+# (C) 2005-2007 Stefan Lippers-Hollmann <s.l-h@gmx.de>
+# (C) 2007 Kel Modderman <kel@otaku42.de>
+
+PATH="/bin:/sbin:/usr/bin:/usr/sbin"
+export PATH
+
+umask 022
+
+# override tool behaviour through distro-defaults
+FLL_DISTRO_MODE="installed"
+FLL_IMAGE_DIR="SIDUX"
+FLL_DISTRO_NAME="sidux"
+FLL_MOUNTPOINT="/SIDUX"
+FLL_LIVE_USER="sidux"
+FLL_WALLPAPER="/usr/share/wallpapers/sidux.jpg"
+
+X_CONF="/etc/X11/xorg.conf"
+
+[ -r /etc/default/distro ] && . /etc/default/distro
+
+[ ! "$FLL_DISTRO_MODE" = "live" ] && exit 0
+
+[ -z "$FLL_MOUNTPOINT" ] && FLL_MOUNTPOINT="/$FLL_IMAGE_DIR"
+
+case "$1" in
+	start)
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		;;
+esac
+
+# Ignore these signals: INT, TERM, SEGV
+trap "" 2 3 11
+
+###############################################################################
+# ANSI COLORS
+###############################################################################
+CRE="
+[K"
+NORMAL="[0;39m"
+
+# RED: Failure or error message
+RED="[1;31m"
+
+# GREEN: Success message
+GREEN="[1;32m"
+
+# YELLOW: Descriptions
+YELLOW="[1;33m"
+
+# BLUE: System messages
+BLUE="[1;34m"
+
+# MAGENTA: Found devices or drivers
+MAGENTA="[1;35m"
+
+# CYAN: Questions
+CYAN="[1;36m"
+
+# BOLD WHITE: Hint
+WHITE="[1;37m"
+
+# get rid of these as soon as possible
+HWSETUP_MAIN="/etc/hwsetup"
+
+###############################################################################
+# utility Functions
+###############################################################################
+# Simple shell grep
+stringinfile()
+{
+	case "$(cat $2)" in
+		*$1*)
+			return 0
+			;;
+	esac
+
+	return 1
+}
+
+# same for strings
+stringinstring()
+{
+	case "$2" in 
+		*$1*)
+			return 0
+			;;
+	esac
+
+	return 1
+}
+
+# Reread boot command line; echo last parameter's argument or return false.
+getbootparam()
+{
+	stringinstring " $1=" "$CMDLINE" || return 1
+	echo "$(echo $CMDLINE | sed -e s/.*$1=\\\(.*\\\)/\\1/ -e s/[[:space:]].*//)"
+
+	return 0
+}
+
+# Check boot commandline for specified option
+checkbootparam()
+{
+	stringinstring " $1" "$CMDLINE"
+	return "$?"
+}
+
+start_service()
+{
+	if [ -x /etc/init.d/$1 ]; then
+		if [ -n "$2" ]; then
+			RUNLEVEL="$2" /etc/init.d/$1 start
+		else
+			/etc/init.d/$1 start
+		fi
+		return $?
+	fi
+
+	return 1
+}
+
+splash_progress()
+{
+	# be sure we are non-blocking
+	if [ -p /etc/splashy/splashy.fifo ]; then
+		(printf "progress $1\n" > /etc/splashy/splashy.fifo) &
+	fi
+}
+### EOF utility functions
+
+###############################################################################
+#  mount critical virtual filesystems
+###############################################################################
+start_service mountkernfs.sh
+
+# Read in boot parameters
+[ -z "$CMDLINE" ] && CMDLINE=" $(cat /proc/cmdline)"
+
+###############################################################################
+# set hostname
+###############################################################################
+HOSTNAME="$(getbootparam 'hostname' 2>/dev/null)"
+if [ "${HOSTNAME}" ]; then
+	printf "${HOSTNAME}\n" > /etc/hostname
+	printf "${HOSTNAME}\n" > /etc/mailname
+	# update /etc/hosts
+	sed -i '/localhost/!s/^\(127.0.0.1[ \t]\+\)\(.\+\)$/\1'"${HOSTNAME}"'/' /etc/hosts
+fi
+
+start_service hostname.sh
+
+###############################################################################
+# localization
+###############################################################################
+# Allow language specification via commandline. The default language
+# will be overridden via "lang=de" boot commandline
+LANGUAGE="$(getbootparam lang 2>/dev/null)"
+
+# default to english language
+if [ -z "${LANGUAGE}" ]; then
+	LANGUAGE="en"
+fi
+
+# compute local settings based on given LANGUAGE
+if [ -f /usr/share/initscripts-sidux-live/locale ]; then
+	. /usr/share/initscripts-sidux-live/locale
+fi
+
+###############################################################################
+# set KDE i18n Keyboard
+###############################################################################
+if grep -q ^FLL_KDEKEYBOARDS /etc/default/distro 2>/dev/null; then
+	sed -i -e 's/^FLL_KDEKEYBOARDS=.*$/FLL_KDEKEYBOARDS='"${KDEKEYBOARDS}"'/' \
+		/etc/default/distro
+else
+	printf "\n# kde i18n settings\n"		>> /etc/default/distro
+	printf "FLL_KDEKEYBOARDS=\"${KDEKEYBOARDS}\"\n" >> /etc/default/distro
+fi
+
+###############################################################################
+# update locale settings
+###############################################################################
+# write locale
+update-locale "LANG=${LANG}"
+
+###############################################################################
+# preseed console-data based on locale computed by locale.sh
+###############################################################################
+echo "locales locales/default_environment_locale select ${LANG} \
+console-data console-data/keymap/policy select Select keymap from arch list \
+console-data console-data/keymap/family select ${CD_FAMILY} \
+console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX} \
+console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/variant select ${CD_VARIANT} \
+console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/${CD_VARIANT_PATH}/keymap select ${CD_KEYMAP} \
+console-data console-data/keymap/full select ${CD_FULL}" | /usr/bin/debconf-set-selections
+
+###############################################################################
+# / must be read-write in any case, starting from here
+###############################################################################
+mount -o remount,rw / 2>/dev/null
+
+###############################################################################
+# begin hardware detection and autoconfiguration
+###############################################################################
+# start udev
+start_service udev S
+
+# mount special filesystems under /dev
+start_service mountdevsubfs.sh
+
+###############################################################################
+# setup console-data (before interactive setup stage)
+###############################################################################
+printf "${BLUE}Configuring console for a ${YELLOW}${KEYTABLE} keymap${BLUE}...${NORMAL}\n"
+
+# install keymap
+/usr/sbin/install-keymap "${KEYTABLE}"
+
+# try this, it takes care of unicode start
+start_service keymap.sh
+
+###############################################################################
+# update mtab
+###############################################################################
+start_service mtab.sh
+start_service udev-mtab S
+
+###############################################################################
+#  Set clock (Local time is more often used than GMT, so it is default)
+###############################################################################
+if checkbootparam utc >/dev/null 2>&1 || checkbootparam gmt >/dev/null 2>&1; then
+	TZ="UTC"
+else
+	# dirty hack
+	[ -w /etc/default/rcS ] && sed -i 's/^UTC=.*/UTC=no/' /etc/default/rcS
+fi
+
+if checkbootparam tz >/dev/null 2>&1; then
+	TZ="$(getbootparam tz 2>/dev/null)"
+fi
+
+if [ -z "${TZ}" ]; then
+	# fallback to UTC
+	TZ="UTC"
+fi
+
+if [ -f "/usr/share/zoneinfo/${TZ}" ]; then
+	# /etc/localtime is excluded at build time
+	cp "/usr/share/zoneinfo/${TZ}" /etc/localtime
+	printf "${TZ}\n" > /etc/timezone
+fi
+
+start_service hwclock.sh >/dev/null
+
+###############################################################################
+# hwsetup
+###############################################################################
+# Delete obsolete links and files before starting autoconfig
+if ! checkbootparam "nohwsetup"; then
+	rm -f "$HWSETUP_MAIN" 2>/dev/null
+fi
+
+# load psmouse module
+modprobe psmouse >/dev/null 2>&1
+
+# Second: Search & configure supported hardware
+printf "${WHITE}"
+if hwsetup >/dev/null; then
+	printf "${NORMAL}"
+else
+	printf " ${RED}Please check.${NORMAL}\n"
+fi
+
+# activate PC Speaker
+modprobe pcspkr >/dev/null 2>&1
+
+# activate input driver for char event devices
+modprobe evdev >/dev/null 2>&1
+
+# XXX: Workaround for new mouse detection
+if [ -r "$HWSETUP_MAIN" ]; then
+	. "$HWSETUP_MAIN"
+	if [ "$MOUSE_MOUSETYPE" = "ps2" ]; then
+		ln -sf /dev/psaux /dev/mouse
+		sed -i "s|/dev/input/mice|/dev/psaux|" "$HWSETUP_MAIN"
+		. "$HWSETUP_MAIN"
+	fi
+fi
+       
+# Mouse
+if [ -n "$MOUSE_DEVICE" ]; then
+	printf " ${GREEN}Mouse is ${YELLOW}${MOUSE_FULLNAME}${GREEN} at ${MAGENTA}${MOUSE_DEVICE}${NORMAL}\n"
+fi
+
+# Soundcard
+if [ -n "$SOUND_FULLNAME" -o -n "$SOUND_DRIVER" ]; then
+	SOUNDCARD="$SOUND_DRIVER"
+	printf " ${GREEN}Soundcard is"
+	[ -n "$SOUND_FULLNAME" ] && printf " ${YELLOW}$SOUND_FULLNAME${GREEN}"
+	[ -n "$SOUNDCARD" ] && printf ", ALSA module is ${MAGENTA}$SOUNDCARD${GREEN}"
+	printf "${NORMAL}\n"
+fi
+
+# Get max. sound volume
+VOL="$(getbootparam vol 2>/dev/null)"
+if [ -z "$VOL" ] || [ "$VOL" -lt 0 ] || [ "$VOL" -gt 100 ]; then
+	VOL=50
+fi
+
+# set volume
+case "$SOUND_DRIVER" in
+	snd*)
+		#set_mixers
+		aumix -m 0 -v $VOL -w $VOL -c $VOL >/dev/null 2>&1
+		;;
+esac
+
+###############################################################################
+# load required modules
+###############################################################################
+# Load fuse support
+if [ -x /etc/init.d/fuse-utils ]; then
+	start_service fuse-utils >/dev/null
+fi
+
+# load capability LSM (needed for hal)
+modprobe capability >/dev/null 2>&1
+
+###############################################################################
+# automatic X Setup
+###############################################################################
+if ! checkbootparam "nomkxf86config"; then
+	[ -x /usr/sbin/mkxf86config ] && /usr/sbin/mkxf86config
+fi
+
+# Read in changes
+[ -f "$HWSETUP_MAIN" ] && . "$HWSETUP_MAIN"
+
+if [ -f /etc/X11/xorg.conf ]; then
+	# Apply Language Settings for xorg
+	sed -i "s|\"XkbLayout\".*$|\"XkbLayout\"\t\"${XKBLAYOUT}\"|" /etc/X11/xorg.conf
+fi
+
+###############################################################################
+# partition detection and autoconfiguration of /etc/fstab and /media/*
+###############################################################################
+if checkbootparam "nofstab"; then
+	printf " ${BLUE}Skipping /etc/fstab creation as requested on boot commandline.${NORMAL}\n"
+else
+	printf "${BLUE}Scanning for Harddisk partitions and creating ${YELLOW}/etc/fstab${BLUE}..."
+	
+	/usr/sbin/rebuildfstab --quiet --write-fstab --make-mountpoints 
+	
+	printf "${BLUE}Done.${NORMAL}\n"
+
+	if checkbootparam "noswap"; then
+		printf "${BLUE}Ignoring swap partitions as requested.${NORMAL}\n"
+	else
+		swapon -a -e
+	fi
+fi
+
+###############################################################################
+# Fat-Client-Version: DHCP Broadcast for IP address
+###############################################################################
+if checkbootparam "nodhcp"; then
+	printf " ${BLUE}Skipping DHCP broadcast/network detection as requested on boot commandline.${NORMAL}\n"
+else
+	NETDEVICES=$(perl -le 'print for map {s/.*\///; grep( !/^(lo|br|sit)\d*/,$_);} </sys/class/net/*>')
+	if [ -n "$NETDEVICES" ]; then
+		CONNETDEVS=""
+		for DEVICE in $NETDEVICES; do
+			# wireless
+			[ -d /sys/class/net/${DEVICE}/wireless ] && continue
+			if [ -f /sys/class/net/${DEVICE}/addr_len ]; then
+				# unwanted: > 6 byte mac length (eg, placeholder interface, eth1394)
+				[ "$(cat /sys/class/net/${DEVICE}/addr_len)" -gt 6 ] && continue
+			fi
+			
+			if ifconfig "$DEVICE" up; then
+				sleep 2
+				
+				# probe for link beat
+				ifplugstatus --quiet "$DEVICE"
+			
+				# link beat detected ?
+				if [ "$?" = "2" ]; then
+					CONNETDEVS="$CONNETDEVS $DEVICE"
+					if ! grep -w "$DEVICE" /etc/network/interfaces; then
+						printf "\nallow-hotplug $DEVICE\n"	>> /etc/network/interfaces
+						printf "iface $DEVICE inet dhcp\n"	>> /etc/network/interfaces
+					fi
+				else
+					ifconfig "$DEVICE" down
+				fi
+			fi
+		done
+		
+		if [ -n "$CONNETDEVS" ]; then
+			printf " ${GREEN}Starting ${YELLOW}DHCP${GREEN} broadcast on ethernet devices:${NORMAL}"
+			printf "${YELLOW}${CONNETDEVS}${GREEN}.${NORMAL}\n"
+		fi
+
+	fi
+fi
+
+start_service ifupdown >/dev/null
+# networking also starts the lo (loopback) interface, background it
+( start_service networking  >/dev/null 2>&1 ) &
+
+###############################################################################
+# power management
+###############################################################################
+PBIOS=
+PSERV=
+if [ -d /proc/acpi ]; then
+	# ACPI
+	if checkbootparam "noacpi"; then
+		printf " ${BLUE}Skipping ACPI bios detection as requested on boot commandline.${NORMAL}\n"
+	else
+		fuser -k /proc/acpi/event >/dev/null 2>&1
+		PBIOS=ACPI
+		PSERV=acpid
+	fi
+else
+	# APM
+	if checkbootparam "noapm"; then
+		printf " ${BLUE}Skipping APM bios detection as requested on boot commandline.${NORMAL}\n"
+	else
+		PBIOS=APM
+		PSERV=apmd
+	fi
+fi
+
+if [ -n "$PBIOS" ] && [ -x /etc/init.d/"$PSERV" ]; then
+	update-rc.d "$PSERV" defaults >/dev/null
+fi
+
+###############################################################################
+# enable dbus & hald
+###############################################################################
+if [ -x /etc/init.d/dbus ]; then
+	if checkbootparam "nodbus"; then
+		printf " ${BLUE}Not starting D-Bus/HAL as requested on boot commandline.${NORMAL}\n"
+	else
+		update-rc.d dbus defaults >/dev/null
+		if [ -x /etc/init.d/avahi-daemon ]; then
+			update-rc.d avahi-daemon start 24 2 3 4 5 . stop 16 0 1 6 . >/dev/null
+		fi
+		if [ -x /etc/init.d/hal ]; then
+			update-rc.d hal start 24 2 3 4 5 . stop 16 0 1 6 . >/dev/null
+		fi
+	fi
+fi
+
+###############################################################################
+# cpufreq detection
+###############################################################################
+if checkbootparam "nocpufreq" || checkbootparam "noacpi"; then
+	printf " ${BLUE}Skipping CPUfreq detection as requested on boot commandline.${NORMAL}\n"
+else
+	unset CPUFREQ CPUSERV
+
+	# cpufreq detection from ubuntu powernowd, exports `CPUFREQ' on successful detection
+	if [ -f /usr/share/initscripts-sidux-live/cpufreq-detect ]; then
+		. /usr/share/initscripts-sidux-live/cpufreq-detect
+		
+		# attempt load the detected cpufreq module
+		if [ -n "$CPUFREQ" ]; then
+			if modprobe "$CPUFREQ" 2>/dev/null; then
+				# start cpufreq power services
+				:
+			else
+				unset CPUFREQ
+			fi
+		fi
+		
+		# always try acpi-cpufreq as fallback when acpi support is present
+		if [ -z "$CPUFREQ" ] && [ -d /proc/acpi ]; then
+			if modprobe acpi-cpufreq 2>/dev/null; then
+				CPUFREQ=acpi-cpufreq
+			fi
+		fi
+	fi
+
+	# start power management service
+	if [ -n "$CPUFREQ" ]; then
+		printf " ${GREEN}Detected support for CPUfreq power management with ${YELLOW}${CPUFREQ}${GREEN} module.\n"
+
+		# hack to disable suspend, it currently does not mix with live-mode
+		# kpowersave exposes this problem to unsuspecting users
+		if [ -w /etc/powersave/sleep ]; then
+			sed -i 's/^\(DISABLE_USER_SUSPEND2.*\)=.*$/\1="yes"/' /etc/powersave/sleep
+		fi
+
+		# preseed powersaved with the correct cpufreq module name (avoid re-detection)
+		if [ -w /etc/powersave/cpufreq ]; then
+			sed -i 's/^\(CPUFREQD_MODULE\)=.*$/\1="'$CPUFREQ'"/' /etc/powersave/cpufreq
+		fi
+
+		# start power management, powersaved is given preference
+		if [ -x /etc/init.d/powersaved ]; then
+			update-rc.d powersaved start 25 2 3 4 5 . stop 25 0 1 6 . >/dev/null
+		elif [ -x /etc/init.d/powernowd ]; then
+			update-rc.d powernowd defaults >/dev/null
+		fi
+	fi
+fi
+
+###############################################################################
+# bluetooth
+###############################################################################
+if [ -x /etc/init.d/bluetooth ]; then
+	if checkbootparam "nobluetooth"; then
+		printf " ${BLUE}Skipping bluetooth detection as requested on boot commandline.${NORMAL}\n"
+	else
+		BLUETOOTH="$(hwinfo --bluetooth | awk '/Hardware Class:/{ print $NF; exit }' 2>/dev/null)"
+		if [ "$BLUETOOTH" = bluetooth ]; then
+			update-rc.d bluetooth start 25 2 3 4 5 . stop 74 0 1 6 . >/dev/null
+		fi
+	fi
+fi
+
+###############################################################################
+# keyboard keycodes
+###############################################################################
+if [ -x /etc/init.d/hotkey-setup ]; then
+	update-rc.d hotkey-setup defaults >/dev/null
+fi
+
+###############################################################################
+# configure /root/
+###############################################################################
+# Populate /root/.profile and /root/.bashrc
+cp -f	/usr/share/base-files/dot.profile	/root/.profile
+cp -f	/etc/skel/.bash_logout \
+	/etc/skel/.bash_profile \
+	/etc/skel/.bashrc \
+		/root/
+
+if ! grep -q bash_completion /root/.bashrc; then
+	cat >> /root/.bashrc << EOF
+# enable bash completion in interactive shells
+if [ -f /etc/bash_completion ]; then
+	. /etc/bash_completion
+fi
+EOF
+fi
+
+###############################################################################
+# configure $HOME
+###############################################################################
+# Copy profiles if not already present
+# modified to pull entire /etc/skel and /usr/share/user-profile/profile folder contents,
+# depending on ramdisk space constraints
+FLL_LIVE_USER_HOME="$(getent passwd $FLL_LIVE_USER | cut -d\: -f 6)"
+
+printf "${BLUE}Populate ${YELLOW}${FLL_LIVE_USER_HOME}${BLUE} with user configurations...${NORMAL}"
+
+mkdir -p "${FLL_LIVE_USER_HOME}"
+
+# make sure live-user is owner of their /home
+chown "${FLL_LIVE_USER}:${FLL_LIVE_USER}" "${FLL_LIVE_USER_HOME}"
+
+rsync -Ha --ignore-existing /etc/skel/ "${FLL_LIVE_USER_HOME}/" 2>/dev/null
+rsync -Ha --ignore-existing /usr/share/user-profile/profile/ "${FLL_LIVE_USER_HOME}/" 2>/dev/null
+
+# add aliases for sudo and su
+grep alias\ su  "${FLL_LIVE_USER_HOME}/.bashrc" > /dev/null || printf "alias su=\"sudo su\"\n"   >> "${FLL_LIVE_USER_HOME}/.bashrc"
+grep alias\ sux "${FLL_LIVE_USER_HOME}/.bashrc" > /dev/null || printf "alias sux=\"sudo sux\"\n" >> "${FLL_LIVE_USER_HOME}/.bashrc"
+
+# set default window manager
+if checkbootparam desktop 2>/dev/null; then
+	DESKTOP="$(getbootparam desktop 2>/dev/null)"
+	case "$DESKTOP" in 
+			kde)
+				WM="/usr/bin/kwin"
+				;;
+			gnome)
+				WM="/usr/bin/metacity"
+				;;
+			fluxbox|flux)
+				WM="/usr/bin/fluxbox"
+				;;
+			xfce|xfce4)
+				WM="/usr/bin/xfwm4"
+				;;
+	esac
+	
+	for i in "$WM" "/usr/bin/kwin" "/usr/bin/metacity" "/usr/bin/xfwm4" "/usr/bin/fluxbox"; do
+		if [ -x "$i" ]; then
+			case "$i" in 
+				"/usr/bin/kwin")
+					XSESSION="kde"
+					;;
+				"/usr/bin/metacity")
+					XSESSION="gnome"
+					;;
+				"/usr/bin/fluxbox")
+					XSESSION="fluxbox"
+					;;
+				"/usr/bin/xfwm4")
+					XSESSION="xfce4"
+					;;
+			esac
+	
+			WM="$i"
+			printf "\n ${BLUE}Set window manager to ${YELLOW}${DESKTOP}${BLUE} as requested on boot commandline.${NORMAL}\n"
+			update-alternatives --set x-window-manager "$WM" >/dev/null
+			printf "[Desktop]\nSession=$XSESSION\n" > "${FLL_LIVE_USER_HOME}/.dmrc"
+	
+			break
+		else
+			[ "$WM" = "$i" ] && printf "\n ${RED}window manager $DESKTOP is not available.${NORMAL}\n"
+		fi
+	done
+fi
+
+# configure kdesu to use sudo for the live user
+if [ -x /usr/bin/kde-config ] && [ ! -r /home/${FLL_LIVE_USER}/.kde/share/config/kdesurc ] ; then
+	mkdir -p "/home/${FLL_LIVE_USER}/.kde/share/config/"
+	printf "[super-user-command]\nsuper-user-command=sudo\n" > "/home/${FLL_LIVE_USER}/.kde/share/config/kdesurc"
+fi
+
+# Share Mozilla plugins with Firefox
+if [ -x /usr/bin/iceweasel ]; then
+	MOZPROFILE=$(awk '/Profile/{if (/Profile0/){inprof=1}else{inprof=0}}/Path/{if(inprof){print;}}' ${FLL_LIVE_USER_HOME}/.mozilla/firefox/profiles.ini | sed 's/^Path\=//' )
+	NEWMOZPROFILE=$(mawk 'BEGIN{print int(10000000 * rand())}')".default"
+	
+	mv -f "${FLL_LIVE_USER_HOME}/.mozilla/firefox/${MOZPROFILE}" "${FLL_LIVE_USER_HOME}/.mozilla/firefox/${NEWMOZPROFILE}" && \
+		sed -i 's/Path='$MOZPROFILE'/Path='$NEWMOZPROFILE'/' "${FLL_LIVE_USER_HOME}/.mozilla/firefox/profiles.ini"
+fi
+
+if [ -n "${LANGUAGE}" ]; then
+	# Set mozilla's preferred language
+	for f in `ls -1 ${FLL_LIVE_USER_HOME}/.mozilla/*/*/prefs.js 2>/dev/null`; do
+		echo 'user_pref("intl.accept_languages", "'"${LANGUAGE}"', en");' >>"$f"
+		
+		case "$LANG" in
+			de*|at*|ch*)
+				echo 'user_pref("general.useragent.contentlocale", "AT");' >>"$f"
+				echo 'user_pref("general.useragent.locale", "de-AT");' >>"$f" ;;
+		esac
+		# else leave default language
+	done
+
+	for f in `ls -1 ${FLL_LIVE_USER_HOME}/.mozilla/*/*/chrome/chrome.rdf.${LANGUAGE} 2>/dev/null`; do
+		mv -f "$f" "${f%%.${LANGUAGE}}"
+	done
+fi
+
+if [ ! -r "${FLL_LIVE_USER_HOME}/.kde/share/config/kdeglobals" ]; then
+	# Only regenerate the config and Desktop files if missing
+	mkdir -p "${FLL_LIVE_USER_HOME}/.kde/share" "${FLL_LIVE_USER_HOME}/Desktop"
+	# remove sorticons.desktop
+	rm -f "${FLL_LIVE_USER_HOME}/.kde/Autostart/sorticons.desktop"
+fi
+
+unset INDEXFILE INDEXICON
+# scan for index.html in fll specific live mountpoint directories
+for mntpnt in /fll/*; do
+	if [ -d "${mntpnt}" ] && [ -e "${mntpnt}/index.html" ]; then
+		INDEXFILE="${mntpnt}/index.html"
+		for ext in gif ico png; do
+			if [ -e "${mntpnt}/${FLL_CDROM_INDEX_ICON}.${ext}" ]; then
+				INDEXICON="${mntpnt}/${FLL_CDROM_INDEX_ICON}.${ext}"
+				break
+			fi
+		done
+		break
+	fi
+done
+
+if [ "${INDEXFILE}" ]; then
+	cat > "${FLL_LIVE_USER_HOME}/Desktop/${FLL_DISTRO_NAME}.desktop" \
+<<EOF
+[Desktop Entry]
+Name=${FLL_CDROM_INDEX}
+Exec=konqueror --geometry 950x700+35+20 file:${INDEXFILE}
+Type=Application
+Icon=${INDEXICON}
+Terminal=0
+EOF
+	if ! checkbootparam "nointro" && [ ! -e "${FLL_LIVE_USER_HOME}/.kde/Autostart/showindex.desktop" ]; then
+		mkdir -p "${FLL_LIVE_USER_HOME}/.kde/Autostart"
+		ln "${FLL_LIVE_USER_HOME}/Desktop/${FLL_DISTRO_NAME}.desktop" \
+			"${FLL_LIVE_USER_HOME}/.kde/Autostart/showindex.desktop"
+
+		# create the autostart file for gnome lovers
+		mkdir -p "${FLL_LIVE_USER_HOME}/.config/autostart"
+		cat > "${FLL_LIVE_USER_HOME}/.config/autostart/${FLL_DISTRO_NAME}-manual.desktop" \
+<<EOF
+[Desktop Entry]
+Name=${FLL_DISTRO_NAME}-manual
+Encoding=UTF-8
+Version=1.0
+Name[de_DE]=${FLL_DISTRO_NAME}-manual
+Exec=epiphany file:${INDEXFILE}
+X-GNOME-Autostart-enabled=true
+EOF
+
+	fi
+fi
+
+# Setup language/keyboard
+[ -d "${FLL_LIVE_USER_HOME}/.kde/share/config" ] || mkdir -p "${FLL_LIVE_USER_HOME}/.kde/share/config"
+
+if [ -r "${FLL_LIVE_USER_HOME}/.kde/share/config/kdeglobals" ]; then
+	# Apply Language Settings for KDE
+	touch "${FLL_LIVE_USER_HOME}/.kde/share/config/kdeglobals"
+	sed -i	-e 's/^Charset=.*$/Charset='"$CHARSET"'/' \
+		-e 's/^Country=.*$/Country='"$COUNTRY"'/' \
+		-e 's/^Language=.*$/Language='"$LANGUAGE"'/' \
+			"${FLL_LIVE_USER_HOME}/.kde/share/config/kdeglobals"
+	
+	touch "${FLL_LIVE_USER_HOME}/.kde/share/config/kxkbrc"
+	sed -i "s|^LayoutList.*$|LayoutList=${KDEKEYBOARDS}|" "${FLL_LIVE_USER_HOME}/.kde/share/config/kxkbrc"
+
+	# set KDE wallpaper
+	touch "${FLL_LIVE_USER_HOME}/.kde/share/config/kdesktoprc"
+	if grep -q Wallpaper= "${FLL_LIVE_USER_HOME}/.kde/share/config/kdesktoprc"; then
+		sed -i 's|Wallpaper=.*$|Wallpaper='"$FLL_WALLPAPER"'|g' "${FLL_LIVE_USER_HOME}/.kde/share/config/kdesktoprc"
+	else
+		cat >> "${FLL_LIVE_USER_HOME}/.kde/share/config/kdesktoprc" << EOF
+[Desktop0]
+BackgroundMode=Flat
+BlendBalance=100
+BlendMode=NoBlending
+ChangeInterval=60
+Color1=0,0,0
+Color2=255,255,255
+CurrentWallpaperName=
+LastChange=0
+MinOptimizationDepth=1
+MultiWallpaperMode=NoMulti
+Pattern=
+Program=
+ReverseBlending=false
+UseSHM=false
+Wallpaper=${FLL_WALLPAPER}
+WallpaperMode=Scaled
+EOF
+	fi
+fi
+
+if [ ! -r "${FLL_LIVE_USER_HOME}/.kde/share/config/startupconfigkeys" ]; then
+	# see kstartupconfig source for usage
+	mkdir -m 700 -p	"${FLL_LIVE_USER_HOME}/.kde" \
+			"${FLL_LIVE_USER_HOME}/.kde/share" \
+			"${FLL_LIVE_USER_HOME}/.kde/share/config"
+	
+	cat > "${FLL_LIVE_USER_HOME}/.kde/share/config/startupconfigkeys" <<EOF
+kcminputrc Mouse cursorTheme ''
+kcminputrc Mouse cursorSize ''
+kpersonalizerrc General FirstLogin false
+ksplashrc KSplash Theme Default
+kcmrandrrc Display ApplyOnStartup false
+kcmrandrrc [Screen0]
+kcmrandrrc [Screen1]
+kcmrandrrc [Screen2]
+kcmrandrrc [Screen3]
+kcmfonts General forceFontDPI 0
+EOF
+fi
+
+# fix permissions
+chown -R "${FLL_LIVE_USER}:${FLL_LIVE_USER}" "${FLL_LIVE_USER_HOME}"
+
+printf "${BLUE}Done.${NORMAL}\n"
+
+###############################################################################
+# hook for custom boot scripts
+###############################################################################
+for script in $(run-parts --list /usr/share/initscripts-sidux-live/hooks); do 
+	[ -x "$script" ] && $script 
+done
+
+###############################################################################
+# set up X.org
+###############################################################################
+if start_service x11-common S; then
+	printf "${BLUE}Set up X sockets...${NORMAL}\n"
+fi
+
+# custom dpi handling
+CUSTOM_DPI="$(getbootparam dpi 2>/dev/null)"
+
+if [ -x /usr/bin/kdm ]; then
+	# source live kde defaults
+	if [ -r /etc/default/kde-services-sidux ]; then
+		# XXX: whatever provides this should have a distro agnostic name
+		. /etc/default/kde-services-sidux
+	fi
+
+	if [ -d "${KDE_KDM_THEME}" ]; then
+		printf "USETHEME=true\nTHEME=${KDE_KDM_THEME}\n" \
+			> /etc/default/kdm.d/kdmtheme
+	fi
+	
+	printf "USEBACKGROUND=true\nWALLPAPER=${FLL_WALLPAPER}\n" \
+			> /etc/default/kdm.d/wallpaper
+	printf "AUTOLOGINUSER=${FLL_LIVE_USER}\nAUTOLOGINAGAIN=true\nAUTOLOGINDELAY=0\n" \
+			> /etc/default/kdm.d/autologin
+
+	if [ "${CUSTOM_DPI}" ]; then
+		sed -i -e "s/\(ServerArgsLocal\=\-nolisten tcp\).*$/\1 \-dpi ${CUSTOM_DPI}/" \
+			/etc/kde3/kdm/kdmrc
+	fi
+
+	update-rc.d kdm start 99 5 . stop 01 0 1 2 3 4 6 . >/dev/null
+fi
+
+if [ -x /usr/sbin/gdm ]; then
+	sed -i	-e "/^AutomaticLogin\=.*/d" \
+		-e "/^AutomaticLoginEnable\=.*/d" \
+		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true/" \
+		-e "s/\[greeter\]/\[greeter\]\nGraphicalTheme=sidux-dawn\nGraphicalThemedColor=#343434/" \
+			/etc/gdm/gdm.conf
+
+	if [ "${CUSTOM_DPI}" ]; then
+		sed -i -e "s/\(command\=\/usr\/bin\/X \-dpi \).*\( -audit.*$\)/\1${CUSTOM_DPI}\2/" \
+			/usr/share/gdm/defaults.conf
+	fi
+	
+	update-rc.d gdm start 30 5 . stop 01 0 1 2 3 4 6 . >/dev/null
+fi
+
+###############################################################################
+# Special Gnome Stuff
+###############################################################################
+for WM in $(readlink /etc/alternatives/x-window-manager)
+do
+if [ "$WM"  = "/usr/bin/metacity" ]; then
+	printf "Configure Gnome Desktop Settings...\n"
+
+	if [ -f ${FLL_LIVE_USER_HOME}/Desktop/${FLL_DISTRO_NAME}.desktop ]; then
+		sed -i -e 's|Exec=konqueror\(.*\)file:\(.*\)|Exec=epiphany \2|' \
+			${FLL_LIVE_USER_HOME}/Desktop/${FLL_DISTRO_NAME}.desktop
+	fi
+
+	BASEDIR=".gconf/apps/nautilus"
+
+	[ ! -d "${FLL_LIVE_USER_HOME}/$BASEDIR/preferences" ] && mkdir -p ${FLL_LIVE_USER_HOME}/$BASEDIR/preferences
+
+	if [ ! -f "${FLL_LIVE_USER_HOME}/$BASEDIR/preferences" ]; then
+		cat >> ${FLL_LIVE_USER_HOME}/$BASEDIR/preferences/%gconf.xml << EOF
+<?xml version="1.0"?>
+<gconf>
+        <entry name="always_use_browser" mtime="1179983929" type="bool" value="true">
+        </entry>
+</gconf>
+EOF
+	else
+		sed -i -e 's|always_use_browser\(.*\)value=\(.*\)|always_use_browser\1value="true"|' \
+			${FLL_LIVE_USER_HOME}/$BASEDIR/preferences/%gconf.xml
+	fi
+fi
+done
+
+###############################################################################
+# re-enable printk's and signals
+###############################################################################
+
+printf "6\n" > /proc/sys/kernel/printk
+
+trap 2 3 11
+
+exit 0
+

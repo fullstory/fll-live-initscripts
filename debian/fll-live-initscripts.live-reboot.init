@@ -1,0 +1,425 @@
+#!/bin/bash
+
+PATH=/sbin:/bin:/usr/bin:/usr/sbin
+export PATH
+
+# override tool behaviour through distro-defaults
+FLL_DISTRO_MODE="installed"
+FLL_DISTRO_NAME="sidux"
+[ -r /etc/default/distro ] && . /etc/default/distro
+FLL_DISTRO_NAME="$(echo $FLL_DISTRO_NAME | tr [a-z] [A-Z])"
+[ "$FLL_DISTRO_MODE" != "live" ] && exit 0
+
+RED="[1;31m"
+GREEN="[1;32m"
+YELLOW="[1;33m"
+BLUE="[1;34m"
+MAGENTA="[1;35m"
+CYAN="[1;36m"
+WHITE="[1;37m"
+NORMAL="[0;39m"
+
+. /lib/lsb/init-functions
+. /lib/init/vars.sh
+
+VERBOSE="no"
+DESTDIR="/live-hack"
+MOUNTS="/proc/mounts"
+
+###############################################################################
+# Adapted from initscripts: /etc/init.d/umountfs (2.86.ds1-38)
+###############################################################################
+# Print in order of decreasing length
+#
+# Algorithm: Find and print longest argument, then call self
+# to print remaining arguments in order of decreasing length
+#
+# This function runs at one tenth the speed of the sort program
+# but we use the function because we don't want to rely on any
+# programs in /usr/.
+#
+# N.B.: Arguments must not be null and must not contain whitespace
+#
+pioodl() {
+	[ "$1" ] || return 0
+	
+	ARGNUM=1
+	ARGNUM_LONGEST=0
+	ARGLENGTH_LONGEST=0
+	for ARG in "$@"
+	do
+		ARGLENGTH="${#ARG}"
+		if [ "$ARGLENGTH" -gt "$ARGLENGTH_LONGEST" ]
+		then
+			ARGLENGTH_LONGEST="$ARGLENGTH"
+			ARGNUM_LONGEST="$ARGNUM"
+		fi
+		ARGNUM=$(($ARGNUM + 1))
+	done
+	
+	# The method of passing prevargs assumes that args can be
+	# delimited with spaces
+	ARGNUM=1
+	PREVARGS=""
+	while [ "$ARGNUM" -lt "$ARGNUM_LONGEST" ]
+	do
+		PREVARGS="$PREVARGS $1"
+		shift
+		ARGNUM=$(($ARGNUM + 1))
+	done
+	echo "$1"
+	shift
+	
+	pioodl $PREVARGS "$@"
+}
+
+do_umount() {
+	exec 9<&0 < "${MOUNTS}"
+
+	REG_MTPTS=""
+	TMPFS_MTPTS=""
+	while read DEV MTPT FSTYPE OPTS REST
+	do
+		case "$MTPT" in
+			#
+			# live hack
+			#
+			/fll/*)
+				case "$FSTYPE" in
+					iso9660)
+						if [ "$MTPT" = /fll/fromiso ]; then
+							LIVE_MTPTS="$LIVE_MTPTS $MTPT"
+						else
+							LIVE_CDROM="$DEV"
+						fi
+						;;
+					*)
+						LIVE_MTPTS="$LIVE_MTPTS $MTPT"
+						;;
+				esac
+				continue
+				;;
+			#
+			# live hack
+			#
+			/|/proc|/dev|/.dev|/dev/pts|/dev/shm|/dev/.static/dev|/proc/*|/sys|/lib/init/rw)
+				continue
+				;;
+			/var/run)
+				if [ yes = "$RAMRUN" ] ; then
+					continue
+				fi
+				;;
+			/var/lock)
+				if [ yes = "$RAMLOCK" ] ; then
+					continue
+				fi
+				;;
+		esac
+		case "$FSTYPE" in 
+			proc|procfs|linprocfs|devfs|sysfs|usbfs|usbdevfs|devpts)
+				continue
+				;;
+			#
+			# live hack
+			#
+			aufs|unionfs)
+				UNION_MTPTS="$UNION_MTPTS $MTPT"
+				;;
+			squashfs)
+				SQUSH_MTPTS="$SQUSH_MTPTS $MTPT"
+				;;
+			#
+			# live hack
+			#
+			tmpfs)
+				TMPFS_MTPTS="$TMPFS_MTPTS $MTPT"
+				;;
+			*)
+				REG_MTPTS="$REG_MTPTS $MTPT"
+				;;
+		esac
+	done
+
+	exec 0<&9 9<&-
+	
+	#
+	# Make sure tmpfs file systems are umounted before turning off
+	# swap, to avoid running out of memory if the tmpfs filesystems
+	# use a lot of space.
+	#
+	if [ "$TMPFS_MTPTS" ]
+	then
+		TMPFS_MTPTS="$(pioodl $TMPFS_MTPTS)"
+		if [ "$VERBOSE" = no ]
+		then
+			log_action_begin_msg "Unmounting temporary filesystems"
+			umount $TMPFS_MTPTS
+			log_action_end_msg $?
+		else
+			log_daemon_msg "Will now unmount temporary filesystems"
+			umount -v $TMPFS_MTPTS
+			log_end_msg $?
+		fi
+	fi
+
+	#
+	# Deactivate swap
+	#
+	if [ "$VERBOSE" = no ]
+	then
+		log_action_begin_msg "Deactivating swap"
+		swapoff -a >/dev/null
+		log_action_end_msg $?
+	else
+		log_daemon_msg "Will now deactivate swap"
+		swapoff -a -v
+		log_end_msg $?
+	fi
+
+	#
+	# Unmount local filesystems
+	#
+	if [ "$REG_MTPTS" ]
+	then
+		REG_MTPTS="$(pioodl $REG_MTPTS)"
+		if [ "$VERBOSE" = no ]
+		then
+			log_action_begin_msg "Unmounting local filesystems"
+			umount -n -f -r -d $REG_MTPTS
+			log_action_end_msg $?
+		else
+			log_daemon_msg "Will now unmount local filesystems"
+			umount -n -f -v -r -d $REG_MTPTS
+			log_end_msg $?
+		fi
+	fi
+
+	#
+	# live hack: any command after this point must be prefixed with ${BINDIR}
+	#
+	if [ "$UNION_MTPTS" ]
+	then
+		UNION_MTPTS="$(pioodl $UNION_MTPTS)"
+		if [ "$VERBOSE" = no ]
+		then
+			log_action_begin_msg "Unmounting union filesystems"
+			${BINDIR}umount -l -n -f -d $UNION_MTPTS
+			log_action_end_msg $?
+		else
+			log_daemon_msg "Will now unmount union filesystems"
+			${BINDIR}umount -l -n -f -v -d $UNION_MTPTS
+			log_end_msg $?
+		fi
+	fi
+
+	if [ "$SQSH_MTPTS" ]
+	then
+		SQSH_MTPTS="$(pioodl $SQSH_MTPTS)"
+		if [ "$VERBOSE" = no ]
+		then
+			log_action_begin_msg "Unmounting squashfs filesystems"
+			${BINDIR}umount -l -n -f -d $SQSH_MTPTS
+			log_action_end_msg $?
+		else
+			log_daemon_msg "Will now unmount squashfs filesystems"
+			${BINDIR}umount -l -n -f -v -d $SQSH_MTPTS
+			log_end_msg $?
+		fi
+	fi
+
+	if [ "$LIVE_MTPTS" ]
+	then
+		LIVE_MTPTS="$(pioodl $LIVE_MTPTS)"
+		if [ "$VERBOSE" = no ]
+		then
+			log_action_begin_msg "Unmounting live filesystems"
+			${BINDIR}umount -l -n -f -d $LIVE_MTPTS
+			log_action_end_msg $?
+		else
+			log_daemon_msg "Will now unmount live filesystems"
+			${BINDIR}umount -l -n -f -v -d $LIVE_MTPTS
+			log_end_msg $?
+		fi
+	fi
+
+	if [ "$LIVE_CDROM" ]; then
+		export LIVE_CDROM
+	fi
+}
+###############################################################################
+# Adapted from initramfs-tools hook-functions (0.87b)
+###############################################################################
+# $1 is source
+# $2 is relative destination
+copy_exec() {
+	verbose="${VERBOSE}"
+	final_destination=${DESTDIR}/${2}/`basename ${1}`
+	if [ -L "$final_destination" ]; then
+		if ! [ `readlink ${final_destination}` = "${1}" ]; then
+			return
+		fi
+	else
+		cp ${1} ${DESTDIR}/${2}
+		if [ -n "${verbose}" ] && [ "${verbose}" = "y" ]; then
+			echo "Adding binary ${1}"
+		fi
+	fi
+
+	# Copy the dependant libraries
+	for x in $(ldd ${1} 2>/dev/null | sed -e '
+	    /\//!d;
+	    /linux-gate/d;
+	    /=>/ {s/.*=>[[:blank:]]*\([^[:blank:]]*\).*/\1/};
+	    s/[[:blank:]]*\([^[:blank:]]*\) (.*)/\1/' 2>/dev/null); do
+
+		# Try to use non-optimised libraries where possible.
+		# We assume that all HWCAP libraries will be in tls.
+		nonoptlib=$(echo ${x} | sed -e 's#/lib/tls.*/\(lib.*\)#/lib/\1#')
+
+		if [ -e ${nonoptlib} ]; then
+			x=${nonoptlib}
+		fi
+
+		libname=$(basename ${x})
+		dirname=$(dirname ${x})
+
+		mkdir -p ${DESTDIR}/${dirname}
+		if [ ! -e ${DESTDIR}/${dirname}/${libname} ]; then
+			cp ${x} ${DESTDIR}/${dirname}
+			if [ -n "${verbose}" ] && [ "${verbose}" = "y" ]; then
+				echo "Adding library ${x}"
+			fi
+		fi
+	done
+}
+###############################################################################
+# End adapted functions
+###############################################################################
+
+live_hack() {
+	mkdir -p ${DESTDIR}/bin
+	copy_exec /bin/umount		/bin
+	copy_exec /sbin/halt		/bin
+	copy_exec /sbin/reboot		/bin
+	copy_exec /usr/bin/eject	/bin
+	
+	LD_LIBRARY_PATH="${DESTDIR}/lib"
+	if [ -e "${DESTDIR}/lib64" ]; then
+		LD_LIBRARY_PATH="${DESTDIR}/lib64:${LD_LIBRARY_PATH}"
+	fi
+	export LD_LIBRARY_PATH
+
+	LD_LINUX="${DESTDIR}/lib/ld-linux.so.2"
+	if [ -e "${DESTDIR}/lib64/ld-linux-x86-64.so.2" ]; then
+		LD_LINUX="${DESTDIR}/lib64/ld-linux-x86-64.so.2"
+	fi
+	export LD_LINUX
+
+	PATH="${DESTDIR}/bin:${PATH}"
+	export PATH
+
+	BINDIR="${LD_LINUX} ${DESTDIR}/bin/"
+	export BINDIR
+}
+
+stop_service()
+{
+	if [ -x /etc/init.d/${1} ]; then
+		if [ -n "${2}" ]; then
+			RUNLEVEL="${2}" /etc/init.d/${1} stop
+		else
+			/etc/init.d/${1} stop
+		fi
+		return ${?}
+	fi
+
+	return 1
+}
+
+parse_cmdline() {
+	for cmd in $(cat /proc/cmdline); do
+		case "$cmd" in
+			noeject)
+				NOEJECT="1"
+				;;
+			noprompt)
+				NOPROMPT="1"
+				;;
+		esac
+	done
+}
+
+pop_live_cd()
+{
+	if [ -z "${LIVE_CDROM}" ] || [ "${NOEJECT}" ]; then
+		return 0
+	fi
+
+	#
+	# disable kernel messages while ejecting cdrom (libata noise)
+	#
+	echo "0" > /proc/sys/kernel/printk
+	
+	if [ -b "${LIVE_CDROM}" ]; then
+		${BINDIR}eject -m -p ${LIVE_CDROM}
+	fi
+
+	echo "6" > /proc/sys/kernel/printk
+
+	if [ -z "${NOPROMPT}" ]; then
+		echo "${CYAN}Please remove CD, close cdrom drive and hit return.${NORMAL}" > /dev/console
+		read
+	fi
+}
+
+do_stop() {
+	case "${0}" in
+		*halt)
+			message="${YELLOW}${FLL_DISTRO_NAME} halted.${NORMAL}"
+			command="halt"
+			options="-n -p -i -f"
+			;;
+		*reboot)
+			message="${GREEN}Preparing for reboot...${NORMAL}"
+			command="reboot"
+			options="-n -i -f"
+			;;
+		*)
+			echo "$0: call this script as \"halt\" or \"reboot\" please!"
+			exit 1
+			;;
+	esac
+
+	echo "$message" > /dev/console
+
+	pop_live_cd
+	
+	exec ${BINDIR}${command} ${options} > /dev/console 2>&1 < /dev/console
+}
+
+case "${1}" in
+	start)
+		;;
+	stop)
+		# Clean input/output
+		exec > /dev/console 2>&1 < /dev/console
+
+		# get options from /proc/cmdline
+		parse_cmdline
+		
+		# stop services and processes
+		stop_service wpa-ifupdown
+		stop_service sendsigs
+		stop_service umountnfs.sh
+		stop_service networking
+		stop_service ifupdown
+		
+		# hack, umount and eject
+		live_hack
+		do_umount
+		do_stop
+		;;
+	restart|force-reload)
+		;;
+esac

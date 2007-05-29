@@ -1,0 +1,59 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use File::Find;
+
+my $root = "";
+my $urcd = "update-rc.d";
+my %init;
+my %info;
+my @ucmd;
+
+for (@ARGV) { 
+	if (-d $_) {
+		if (-d $_ . "/etc/rcS.d/") {
+			$root = $_;
+		}
+		else {
+			print "invalid root directory: $_\n";
+			exit(1);
+		}
+	}
+	else {
+		$init{$_} = 1;
+	}
+}
+
+find ( 
+	sub { 
+		return unless -L;
+		return unless my ($rlev, $sk, $pri, $svc) = $File::Find::name =~ m|/rc(.)\.d/([SK])([0-9]{2})(.+)$|;
+		push(@{$info{$svc}{$sk}{$pri}}, $rlev);
+	}, 
+	glob($root . "/etc/rc?.d/")
+);
+
+for my $svc (sort keys %info) {
+	if (%init) {
+		next unless exists $init{$svc};
+	}
+	
+	next if not -x $root . "/etc/init.d/" . $svc;
+	
+	my @s = keys %{$info{$svc}{S}};
+	my @k = keys %{$info{$svc}{K}};
+	
+	if ("@s" eq "20" and "@{$info{$svc}{S}{20}}" eq "2 3 4 5" and 
+	    "@k" eq "20" and "@{$info{$svc}{K}{20}}" eq "0 1 6") { 
+		@ucmd = ($urcd, $svc, "defaults"); 
+	}
+	else {
+		my $prm = undef; 
+		$prm .= "start $_ @{$info{$svc}{S}{$_}} . " for (keys %{$info{$svc}{S}});
+		$prm .= "stop $_ @{$info{$svc}{K}{$_}} . " for (keys %{$info{$svc}{K}});
+		@ucmd = ($urcd, $svc, $prm) if ($prm);
+	}
+	
+	print join(' ', @ucmd), "\n";
+}
