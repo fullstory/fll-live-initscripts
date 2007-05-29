@@ -52,7 +52,7 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# runlevels to be setup
+# initscripts to be configured
 ###
 RUNLEVEL_INITS="
 	glibc.sh
