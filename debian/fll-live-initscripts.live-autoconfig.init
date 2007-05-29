@@ -111,6 +111,7 @@ do_start() {
 
 case "${1}" in
 	start)
+		do_start
 		;;
 	stop)
 		# no-op
