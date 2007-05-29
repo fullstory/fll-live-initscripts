@@ -59,6 +59,16 @@ fi
 . /lib/lsb/init-functions
 
 ###
+# cheatcode handling
+###
+for param in $(cat /proc/cmdline); do
+	case "$param" in
+		*)
+			;;
+	esac
+done
+
+###
 # functions...
 ###
 
