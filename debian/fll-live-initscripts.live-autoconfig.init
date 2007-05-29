@@ -10,8 +10,9 @@
 # Description:       The purpose of live-autoconfig is to manage the sysv-init
 #                    runlevels of the live media. It calculates what services
 #                    should start by using an utility to lookup sequence
-#                    configuration of the same services in the read only live
-#                    media and replicating them on the live ramdisk.
+#                    configuration of the same services as preserved on the
+#                    read only live media mount and replicating them on the
+#                    live read-write ramdisk union mount.
 ### END INIT INFO
 
 ###
