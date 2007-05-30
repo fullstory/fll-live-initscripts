@@ -6,12 +6,16 @@ use File::Find;
 
 my $root = "";
 my $urcd = "update-rc.d";
+my $doit = "no";
 my %init;
 my %info;
 my @ucmd;
 
-for (@ARGV) { 
-	if (-d $_) {
+for (@ARGV) {
+	if (/--doit/) {
+		$doit = "yes";
+	}
+	elsif (-d $_) {
 		if (-d $_ . "/etc/rcS.d/") {
 			$root = $_;
 		}
@@ -56,4 +60,5 @@ for my $svc (sort keys %info) {
 	}
 	
 	print join(' ', @ucmd), "\n";
+	system(join(' ', @ucmd)) if $doit eq "yes";
 }

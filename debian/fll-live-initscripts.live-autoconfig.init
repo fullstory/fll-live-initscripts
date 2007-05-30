@@ -102,10 +102,11 @@ do_start() {
 	fi
 
 	###
-	# populate sysv-init runlevels with fll_analyze_initscripts
+	# populate sysv-init runlevels with fll_analyze_initscripts based on runlevel
+	# configuration of FLL_MOUNTPOINT read-only (preserved) chroot.
 	###
 	log_daemon_msg "${NAME}" "generating runlevel configuration"
-	fll_analyze_initscripts ${RUNLEVEL_INITS} ${FLL_MOUNTPOINT} | /bin/sh
+	fll_analyze_initscripts --doit ${FLL_MOUNTPOINT} ${RUNLEVEL_INITS}
 	log_end_msg 0
 }
 
