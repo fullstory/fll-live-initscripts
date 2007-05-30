@@ -18,6 +18,25 @@ Copyright Holders: Klaus Knopper <knopper@knopper.net>
 License: GPL
 http://sidux.com/debian/pool/main/i/initscripts-sidux-live/
 
+./debian/fll-live-initscripts.live-reboot.init was inspired by
+/etc/init.d/umountfs from initscripts (2.86.ds1-38).
+Copyright 1997-2005 Miquel van Smoorenburg <miquels@cistron.nl> and
+the members pkg-sysvinit project.
+License: GPL
+http://alioth.debian.org/projects/pkg-sysvinit/
+
+copy_exec() in ./debian/fll-live-initscripts.live-reboot.init was shamelessly
+adapted from initramfs-tools.
+Copyright Holders:
+           2005 - 2006 Adam Conrad
+           2006 Ben Collins
+           2005 - 2007 David Härdeman
+           2005 Jeff Bailey
+           2005 - 2007 maximilian attems
+           2005 - 2006 Scott James Remnant
+License: PUBLIC DOMAIN
+http://git.debian.org/?p=kernel/initramfs-tools.git;a=shortlog
+
 License:
 
     This package is free software; you can redistribute it and/or modify
