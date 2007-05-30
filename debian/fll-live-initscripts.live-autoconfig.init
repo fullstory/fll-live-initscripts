@@ -86,7 +86,7 @@ for param in $(cat /proc/cmdline); do
 			BLACKLIST="${BLACKLIST} ${param#hostname=}"
 			;;
 		hostname=*)
-			HOSTNAME="${param#hostname=}"
+			CUSTOM_HOSTNAME="${param#hostname=}"
 			;;
 	esac
 done
@@ -103,12 +103,12 @@ do_start() {
 	###
 	# custom hostname
 	###
-	if [ "${HOSTNAME}" ]; then
-		log_daemon_msg "${NAME}" "setting hostame of '${HOSTNAME}'"
-		echo "${HOSTNAME}" > /etc/hostname
-		echo "${HOSTNAME}" > /etc/mailname
+	if [ "${CUSTOM_HOSTNAME}" ]; then
+		log_daemon_msg "${NAME}" "setting hostame of '${CUSTOM_HOSTNAME}'"
+		echo "${CUSTOM_HOSTNAME}" > /etc/hostname
+		echo "${CUSTOM_HOSTNAME}" > /etc/mailname
 		# update /etc/hosts
-		sed -i '/localhost/!s/^\(127.0.0.1[ \t]\+\)\(.\+\)$/\1'"${HOSTNAME}"'/' \
+		sed -i '/localhost/!s/^\(127.0.0.1[ \t]\+\)\(.\+\)$/\1'"${CUSTOM_HOSTNAME}"'/' \
 			/etc/hosts
 		log_end_msg 0
 	fi

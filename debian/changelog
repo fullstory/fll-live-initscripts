@@ -1,6 +1,6 @@
 fll-live-initscripts (1.0.0) unstable; urgency=low
 
-  * DO NOT RELEASE.
   * Initial Release.
+  * DO NOT EVER RELEASE, concept is flawed . . .
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 29 May 2007 16:13:09 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 30 May 2007 20:51:58 +1000
