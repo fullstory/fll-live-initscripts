@@ -8,12 +8,12 @@ Standards-Version: 3.7.2
 
 Package: initscripts-sidux-live
 Architecture: all
-Depends: fll-live-initscripts
+Depends: dash, debconf-utils, distro-defaults, rebuildfstab (>= 0.6.15), udev, eject, pcmciautils, hwsetup-ng, ifplugd, laptop-detect, hwinfo, rsync, fll-live-initscripts
+Recommends: xorgconfig-sidux, tzdata, kdm | gdm
+Suggests: unionfs-utils, hotkey-setup
 Description: sidux initscripts for live CDs
  Live specific initscripts for hardware detection and shutdown functions on
  sidux.
- .
- This is a dummy transitional package.
 
 Package: fll-live-initscripts
 Architecture: all

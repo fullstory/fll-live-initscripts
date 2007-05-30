@@ -1,18 +1,27 @@
 #!/usr/bin/make -f
-  
+
 include /usr/share/cdbs/1/rules/debhelper.mk
 
-install/fll-live-initscripts::
+install/initscripts-sidux-live::
 	# live-{reboot,halt} are the same script. duplicate it
-	cp debian/fll-live-initscripts.live-reboot.init \
-		debian/fll-live-initscripts.live-halt.init
-	
-	# install and configure runlevel seq. for our initscripts
+	cp debian/initscripts-sidux-live.live-reboot.init \
+		debian/initscripts-sidux-live.live-halt.init
 	dh_installinit --no-start --name=live-autoconfig	-- start 00 S .
-	dh_installinit --no-start --name=live-locales		-- start 04 S .
 	dh_installinit --no-start --name=live-halt		-- start 90 0 .
 	dh_installinit --no-start --name=live-reboot		-- start 90 6 .
 
+install/fll-live-initscripts::
+	# fll-{reboot,halt} are the same script. duplicate it
+	cp debian/fll-live-initscripts.fll-reboot.init \
+		debian/fll-live-initscripts.fll-halt.init
+	
+	# install and configure runlevel seq. for our initscripts
+	dh_installinit --no-start --name=fll-autoconfig	-- start 00 S .
+	dh_installinit --no-start --name=fll-locales	-- start 04 S .
+	dh_installinit --no-start --name=fll-halt	-- start 90 0 .
+	dh_installinit --no-start --name=fll-reboot	-- start 90 6 .
+
 clean::
 	# clean up duplicated init script
-	rm -f debian/fll-live-initscripts.live-halt.init
+	rm -f debian/fll-live-initscripts.fll-halt.init
+	rm -f debian/initscripts-sidux-live.live-halt.init
