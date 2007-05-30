@@ -12,9 +12,9 @@ my %info;
 my @ucmd;
 
 for (@ARGV) {
-	if	(/--doit/)		{ $doit = "yes"; }
-	elsif	(-d $_ . "/etc/rcS.d/")	{ $root = $_; }
-	else				{ $init{$_} = 1; }
+	if (/--doit/) { $doit = "yes"; }
+	elsif (-d $_ . "/etc/rcS.d/") { $root = $_; }
+	else { $init{$_} = 1; }
 }
 
 find ( 
