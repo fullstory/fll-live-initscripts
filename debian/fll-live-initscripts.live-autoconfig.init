@@ -54,7 +54,7 @@ fi
 ###
 # initscripts to be configured
 ###
-RUNLEVEL_INITS="
+INITSCRIPTS="
 	glibc.sh
 	hostname.sh
 	mountkernfs.sh
@@ -93,6 +93,14 @@ done
 
 do_start() {
 	###
+	# populate sysv-init runlevels with fll_analyze_initscripts based on runlevel
+	# configuration of FLL_MOUNTPOINT read-only (preserved) chroot.
+	###
+	log_daemon_msg "${NAME}" "generating runlevel configuration"
+	fll_analyze_initscripts --doit ${FLL_MOUNTPOINT} ${INITSCRIPTS}
+	log_end_msg 0
+
+	###
 	# custom hostname
 	###
 	if [ "${HOSTNAME}" ]; then
@@ -109,19 +117,14 @@ do_start() {
 	# honour blacklist= cheatcode to disable naughty modules before udev
 	###
 	if [ "${BLACKLIST}" ]; then
+		log_daemon_msg "${NAME}" "blacklisting modules"
 		for module in ${BLACKLIST}; do
+			log_progress_msg "${module}"
 			echo "# added by: ${NAME}" >> /etc/modprobe.d/blacklist
 			echo "blacklist ${module}" >> /etc/modprobe.d/blacklist
 		done
+		log_end_msg 0
 	fi
-
-	###
-	# populate sysv-init runlevels with fll_analyze_initscripts based on runlevel
-	# configuration of FLL_MOUNTPOINT read-only (preserved) chroot.
-	###
-	log_daemon_msg "${NAME}" "generating runlevel configuration"
-	fll_analyze_initscripts --doit ${FLL_MOUNTPOINT} ${RUNLEVEL_INITS}
-	log_end_msg 0
 }
 
 case "${1}" in
