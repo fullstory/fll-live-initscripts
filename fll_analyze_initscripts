@@ -12,21 +12,9 @@ my %info;
 my @ucmd;
 
 for (@ARGV) {
-	if (/--doit/) {
-		$doit = "yes";
-	}
-	elsif (-d $_) {
-		if (-d $_ . "/etc/rcS.d/") {
-			$root = $_;
-		}
-		else {
-			print "invalid root directory: $_\n";
-			exit(1);
-		}
-	}
-	else {
-		$init{$_} = 1;
-	}
+	if	(/--doit/)		{ $doit = "yes"; }
+	elsif	(-d $_ . "/etc/rcS.d/")	{ $root = $_; }
+	else				{ $init{$_} = 1; }
 }
 
 find ( 
@@ -39,9 +27,7 @@ find (
 );
 
 for my $svc (sort keys %info) {
-	if (%init) {
-		next unless exists $init{$svc};
-	}
+	if (%init) { next unless exists $init{$svc}; }
 	
 	next if not -x $root . "/etc/init.d/" . $svc;
 	
