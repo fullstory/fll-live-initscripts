@@ -69,6 +69,7 @@ RUNLEVEL_INITS="
 	udev-mtab
 	ifupdown
 	console-screen.sh
+	alsa-utils
 	x11-common
 	wpa-ifupdown
 	sendsigs
@@ -81,8 +82,11 @@ RUNLEVEL_INITS="
 ###
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
+		blacklist=*)
+			BLACKLIST="${BLACKLIST} ${param#hostname=}"
+			;;
 		hostname=*)
-			HOSTNAME=${param#hostname=}
+			HOSTNAME="${param#hostname=}"
 			;;
 	esac
 done
@@ -99,6 +103,16 @@ do_start() {
 		sed -i '/localhost/!s/^\(127.0.0.1[ \t]\+\)\(.\+\)$/\1'"${HOSTNAME}"'/' \
 			/etc/hosts
 		log_end_msg 0
+	fi
+
+	###
+	# honour blacklist= cheatcode to disable naughty modules before udev
+	###
+	if [ "${BLACKLIST}" ]; then
+		for module in ${BLACKLIST}; do
+			echo "# added by: ${NAME}" >> /etc/modprobe.d/blacklist
+			echo "blacklist ${module}" >> /etc/modprobe.d/blacklist
+		done
 	fi
 
 	###
