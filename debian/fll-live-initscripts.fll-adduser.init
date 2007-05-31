@@ -69,6 +69,9 @@ add_live_user() {
 			adduser "${FLL_LIVE_USER}" "${group}"
 		fi
 	done
+
+	sed -i "s#^\(${FLL_LIVE_USER}\):.*:\(.*:.*:.*:.*:.*:.*:.*\)#\1:\*:\2#" \
+		/etc/shadow
 }
 
 
