@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.24) unstable; urgency=low
+
+  * fll-hwsetup: requires udev to have started.
+
+ -- Kel Modderman <kel@otaku42.de>  Fri, 01 Jun 2007 09:34:06 +1000
+
 fll-live-initscripts (1.0.23) unstable; urgency=low
 
   * Add fll-hwsetup.
