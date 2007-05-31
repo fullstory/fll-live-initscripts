@@ -1,8 +1,10 @@
 fll-live-initscripts (1.0.8) unstable; urgency=low
 
   * Add -f|--force and -r|--remove cli options to fll_analyze_runlevels.
+  * Move sidux script fragments out of the way into ./sidux.
+  * fll-fstab: check that swap was detected before attempting to use it.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 17:56:34 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 18:23:59 +1000
 
 fll-live-initscripts (1.0.7) unstable; urgency=low
 

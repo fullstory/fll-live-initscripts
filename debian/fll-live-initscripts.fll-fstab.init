@@ -73,9 +73,11 @@ do_start() {
 
 	[ "${NOSWAP}" = "yes" ] && return 0
 	
-	log_daemon_msg "${NAME}" "mounting swap partitions"
-	swapon -a -e
-	log_end_msg "${?}"
+	if grep -q -w swap /etc/fstab; then
+		log_daemon_msg "${NAME}" "mounting swap partitions"
+		swapon -a -e
+		log_end_msg "${?}"
+	fi
 }
 
 case "${1}" in

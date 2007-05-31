@@ -1,2 +1,2 @@
-cpufreq-detect 	usr/share/initscripts-sidux-live
-locale		usr/share/initscripts-sidux-live
+sidux/cpufreq-detect 	usr/share/initscripts-sidux-live
+sidux/locale		usr/share/initscripts-sidux-live
