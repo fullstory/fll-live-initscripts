@@ -3,8 +3,9 @@ fll-live-initscripts (1.0.4) unstable; urgency=low
   * improve output of fll-locales.
   * Add powersaved hacks to fll-cpufreq.
   * Add capability module to /etc/modules in fll-init-top.
+  * Add fll-rootsh.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 13:33:29 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 13:52:26 +1000
 
 fll-live-initscripts (1.0.3) unstable; urgency=low
 

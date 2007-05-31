@@ -1,0 +1,82 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          fll-rootsh
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: configure root for immutable shell login
+# Description:       Populate /root/.profile and /root/.bashrc for a more
+#                    comfortable root shell login.
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-rootsh"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+. /lib/init/vars.sh
+
+###
+# source lsb functions
+
+###
+. /lib/lsb/init-functions
+
+do_start() {
+	cat /usr/share/base-files/dot.profile > /root/.profile
+	sed 's%^# \(alias\|eval\|export\)%\1%' \
+		/usr/share/base-files/dot.bashrc > /root/.bashrc
+	
+	if ! grep -q -w /etc/bash_completion /root/.bashrc; then
+		cat >> /root/.bashrc << EOF
+
+# enable bash completion in interactive shells
+if [ -f /etc/bash_completion ]; then
+	. /etc/bash_completion
+fi
+EOF
+}
+
+case "${1}" in
+	start)
+		do_start
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+		exit 3
+		;;
+esac
+
+:
