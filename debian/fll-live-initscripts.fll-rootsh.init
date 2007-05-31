@@ -7,8 +7,8 @@
 # Default-Start:     S
 # Default-Stop:      
 # Short-Description: configure root for immutable shell login
-# Description:       Populate /root/.profile and /root/.bashrc for a more
-#                    comfortable root shell login.
+# Description:       Populate /root/.bash* for a more comfortable root shell
+#                    login.
 ### END INIT INFO
 
 ###
