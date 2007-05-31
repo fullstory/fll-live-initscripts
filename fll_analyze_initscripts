@@ -5,16 +5,19 @@ use strict;
 use File::Find;
 
 my $root = "";
-my $urcd = "update-rc.d";
-my $doit = "no";
+my $doit = "";
 my %init;
 my %info;
 my @ucmd;
+my $frc;
+my $rem;
 
 for (@ARGV) {
-	if (/--doit/) { $doit = "yes"; }
-	elsif (-d $_ . "/etc/rcS.d/") { $root = $_; }
-	else { $init{$_} = 1; }
+	if (/^(-r|--remove)$/) { $rem = 1; $frc = 1; next; }
+	if (/^(-f|--force)$/) { $frc = 1; next; }
+	if (/^(-a|--apply)$/) { $doit = "yes"; next; }
+	if (-d $_ . "/etc/rcS.d/") { $root = $_; next; }
+	$init{$_} = 1;
 }
 
 find ( 
@@ -26,6 +29,7 @@ find (
 	glob($root . "/etc/rc?.d/")
 );
 
+my $urcd = $frc ? "update-rc.d -f" : "update-rc.d";
 for my $svc (sort keys %info) {
 	if (%init) { next unless exists $init{$svc}; }
 	
@@ -34,7 +38,10 @@ for my $svc (sort keys %info) {
 	my @s = keys %{$info{$svc}{S}};
 	my @k = keys %{$info{$svc}{K}};
 	
-	if ("@s" eq "20" and "@{$info{$svc}{S}{20}}" eq "2 3 4 5" and 
+	if ($rem) {
+		@ucmd = ($urcd, $svc, "remove");
+	}
+	elsif ("@s" eq "20" and "@{$info{$svc}{S}{20}}" eq "2 3 4 5" and 
 	    "@k" eq "20" and "@{$info{$svc}{K}{20}}" eq "0 1 6") { 
 		@ucmd = ($urcd, $svc, "defaults"); 
 	}
