@@ -89,6 +89,13 @@ do_start() {
 		done
 		log_end_msg 0
 	fi
+
+	###
+	# make sure capability module is loaded if present
+	###
+	if modprobe --ignore-install capability 2>/dev/null; then
+		grep -q -w capability /etc/modules || echo capability >> /etc/modules
+	fi
 }
 
 case "${1}" in
