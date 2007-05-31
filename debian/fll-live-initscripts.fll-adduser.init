@@ -62,6 +62,7 @@ done
 
 add_live_user() {
 	adduser --disabled-password --gecos "${1}" "${1}"
+	sed -i "s#^\(${1}\):.*:\(.*:.*:.*:.*:.*:.*:.*\)#\1:\*:\2#" /etc/shadow
 	shift
 
 	for group in ${@}; do
@@ -69,11 +70,7 @@ add_live_user() {
 			adduser "${FLL_LIVE_USER}" "${group}"
 		fi
 	done
-
-	sed -i "s#^\(${FLL_LIVE_USER}\):.*:\(.*:.*:.*:.*:.*:.*:.*\)#\1:\*:\2#" \
-		/etc/shadow
 }
-
 
 case "${1}" in
 	start)
