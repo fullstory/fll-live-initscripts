@@ -1,6 +1,11 @@
+fll-live-initscripts (1.0.1) unstable; urgency=low
+
+  * fll-live-initramfs now takes care of runlevel sanitisation.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 10:43:51 +1000
+
 fll-live-initscripts (1.0.0) unstable; urgency=low
 
   * Initial Release.
-  * DO NOT EVER RELEASE, concept is flawed . . .
 
  -- Kel Modderman <kel@otaku42.de>  Wed, 30 May 2007 20:51:58 +1000
