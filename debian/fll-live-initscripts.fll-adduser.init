@@ -1,0 +1,98 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          fll-adduser
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: add user to live system
+# Description:       The purpose of fll-adduser is to add a user to the live
+#                    system and populate their /home.
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-adduser"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+. /lib/init/vars.sh
+
+###
+# source lsb functions
+###
+. /lib/lsb/init-functions
+
+###
+# cheatcode handling
+###
+for param in $(cat /proc/cmdline); do
+	case "${param}" in
+		username=*)
+			FLL_LIVE_USER="${param#username=}"
+			sed -i "s/^FLL_LIVE_USER=.*/FLL_LIVE_USER=\"${FLL_LIVE_USER}\"/" \
+				/etc/default/distro
+			;;
+	esac
+done
+
+add_live_user() {
+	adduser --disabled-password --gecos "${1}" "${1}"
+	shift
+
+	for group in ${@}; do
+		if getent group "${group}" >/dev/null 2>&1; then
+			adduser "${FLL_LIVE_USER}" "${group}"
+		fi
+	done
+}
+
+
+case "${1}" in
+	start)
+		log_daemon_msg "${NAME}"
+		if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
+			log_action_msg " user '${FLL_LIVE_USER}' already exists"
+		else
+			log_action_begin_msg " adding user '${FLL_LIVE_USER}'"
+			add_live_user "${FLL_LIVE_USER}" ${FLL_LIVE_USER_GROUPS} >/dev/null
+			log_end_msg 0
+		fi
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop}" >&2
+		exit 3
+		;;
+esac
+
+:

@@ -1,3 +1,16 @@
+fll-live-initscripts (1.0.11) unstable; urgency=low
+
+  * Add fll_login.1 manpage.
+  * Add fll-adduser.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 20:04:23 +1000
+
+fll-live-initscripts (1.0.10) unstable; urgency=low
+
+  * Add fll_login wrapper to allow proper shell login via getty.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 18:51:51 +1000
+
 fll-live-initscripts (1.0.9) unstable; urgency=low
 
   * fll-fstab: check that swap was detected before attempting to use it.

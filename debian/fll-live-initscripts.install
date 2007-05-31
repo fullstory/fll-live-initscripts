@@ -1,1 +1,2 @@
 fll_analyze_initscripts usr/bin
+fll_login		usr/bin
