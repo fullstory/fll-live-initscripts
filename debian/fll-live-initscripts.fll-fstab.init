@@ -1,0 +1,94 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          fll-fstab
+# Required-Start:    udev
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: generates /etc/fstab
+# Description:       The purpose of fll-fstab is to generate /etc.fstab via
+#                    rebuildfstab(8). It also handles mounting of detected 
+#                    swap partitions
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-fstab"
+
+if [ ! -x /usr/sbin/rebuildfstab ]; then
+	exit 0
+fi
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+. /lib/init/vars.sh
+
+###
+# source lsb functions
+###
+. /lib/lsb/init-functions
+
+###
+# cheatcode handling
+###
+for param in $(cat /proc/cmdline); do
+	case "${param}" in
+		nofstab|fstab=no)
+			exit 0
+			;;
+		noswap|swap=no)
+			NOSWAP="yes"
+			;;
+	esac
+done
+
+do_start() {
+	log_daemon_msg "${NAME}"; log_action_begin_msg " generating /etc/fstab"
+	/usr/sbin/rebuildfstab --quiet --write-fstab --make-mountpoints
+	log_end_msg "${?}"
+
+	[ "${NOSWAP}" = "yes" ] && return 0
+	
+	log_daemon_msg "${NAME}" "mounting swap partitions"
+	swapon -a -e
+	log_end_msg "${?}"
+}
+
+case "${1}" in
+	start)
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+		exit 3
+		;;
+esac
+
+:

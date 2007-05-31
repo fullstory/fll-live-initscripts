@@ -1,18 +1,15 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          live-autoconfig
+# Provides:          fll-init-top
 # Required-Start:    
 # Required-Stop:     
 # Default-Start:     S
 # Default-Stop:      
-# Short-Description: live sysv-init autoconfiguration script
-# Description:       The purpose of live-autoconfig is to manage the sysv-init
-#                    runlevels of the live media. It calculates what services
-#                    should start by using an utility to lookup sequence
-#                    configuration of the same services as preserved on the
-#                    read only live media mount and replicating them on the
-#                    live read-write ramdisk union mount.
+# Short-Description: read in fll live specific cheatcodes at top of init
+# Description:       The purpose of fll-init-top is to read in fll live
+#                    specific cheatcodes before any standard iniscript is
+#                    started in runlevel S.
 ### END INIT INFO
 
 ###
@@ -26,7 +23,7 @@
 ###
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-NAME="live-autoconfig"
+NAME="fll-init-top"
 
 ###
 # source distro-defaults, no-op unless in live mode
@@ -53,7 +50,7 @@ fi
 
 ###
 # cheatcode handling, if /proc is not mounted then the initramfs failed
-# and executing this script would be an impossible situation
+# and executing this script would be impossible
 ###
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
@@ -68,7 +65,7 @@ done
 
 do_start() {
 	###
-	# custom hostname
+	# custom hostname given on cmdline
 	###
 	if [ "${CUSTOM_HOSTNAME}" ]; then
 		log_daemon_msg "${NAME}" "setting hostame of '${CUSTOM_HOSTNAME}'"

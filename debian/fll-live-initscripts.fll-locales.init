@@ -1,14 +1,15 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          live-locales
+# Provides:          fll-locales
 # Required-Start:    udev
 # Required-Stop:     
 # Default-Start:     S
 # Default-Stop:      
 # Short-Description: live media locale autoconifgurator
-# Description:       The purpose of live-locales is to calculate required
-#                    strings to configure the console and locale.
+# Description:       The purpose of fll-locales is to calculate required
+#                    strings to configure the locale settings of system
+#                    according to given lang= string.
 ### END INIT INFO
 
 ###
@@ -22,7 +23,7 @@
 ###
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-NAME="live-locales"
+NAME="fll-locales"
 
 ###
 # source distro-defaults, no-op unless in live mode
