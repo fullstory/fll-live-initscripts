@@ -61,13 +61,14 @@ for param in $(cat /proc/cmdline); do
 done
 
 add_live_user() {
-	adduser --disabled-password --gecos "${1}" "${1}"
-	sed -i "s#^\(${1}\):.*:\(.*:.*:.*:.*:.*:.*:.*\)#\1:\*:\2#" /etc/shadow
+	LIVE_USER="${1}"
 	shift
 
+	adduser --disabled-password --gecos "${LIVE_USER}" "${LIVE_USER}"
+	
 	for group in ${@}; do
-		if getent group "${group}" >/dev/null 2>&1; then
-			adduser "${FLL_LIVE_USER}" "${group}"
+		if getent group "${group}" >/dev/null; then
+			adduser "${LIVE_USER}" "${group}"
 		fi
 	done
 }

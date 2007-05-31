@@ -1,8 +1,8 @@
 fll-live-initscripts (1.0.13) unstable; urgency=low
 
-  * live-adduser: use correct variables in sed hack to /etc/shadow.
+  * live-adduser: drop sed hack /etc/shadow.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 20:20:41 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 20:31:05 +1000
 
 fll-live-initscripts (1.0.12) unstable; urgency=low
 
