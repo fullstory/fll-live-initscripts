@@ -62,7 +62,7 @@ done
 do_start() {
 	NETDEVICES=$(perl -le 'print for map {s/.*\///; grep( !/^(lo|br|sit)\d*/,$_);} </sys/class/net/*>')
 	if [ "${NETDEVICES}" ]; then
-		log_daemon_msg "${NAME}"; log_action_begin_msg " probing ethernet interfaces for link beat"
+		log_daemon_msg "${NAME}"; log_action_begin_msg " probing for ethernet link"
 		for netdev in ${NETDEVICES}; do
 			if [ -d /sys/class/net/${netdev}/wireless ]; then
 				# wireless
