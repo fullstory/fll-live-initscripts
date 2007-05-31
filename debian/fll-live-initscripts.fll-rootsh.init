@@ -49,20 +49,11 @@ fi
 . /lib/lsb/init-functions
 
 do_start() {
-	cat /usr/share/base-files/dot.profile > /root/.profile
-	
-	sed -e 's%^# \(alias\|eval\|export\)%\1%' \
-		/usr/share/base-files/dot.bashrc > /root/.bashrc
-	
-	if ! grep -q -w /etc/bash_completion /root/.bashrc; then
-		cat >> /root/.bashrc << EOF
-
-# enable bash completion in interactive shells
-if [ -f /etc/bash_completion ]; then
-	. /etc/bash_completion
-fi
-EOF
-	fi
+	for file in '.bash_logout' '.bash_profile' '.bashrc'; do
+		if [ -f /etc/skel/${file} ] && [ ! -f /root/${file} ]; then
+			cat /etc/skel/${file} > /root/${file}
+		fi
+	done
 
 	:> /root/.hushlogin
 }
