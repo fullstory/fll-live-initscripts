@@ -671,6 +671,21 @@ CD_FULL_FIX="$(echo ${CD_FULL} | cut -d'-' -f1)"
 
 do_start() {
 	###
+	# configure timezone, fallback to UTC
+	###
+	( [ "${TZ}" ] && [ -f "/usr/share/zoneinfo/${TZ}" ] ) || TZ="UTC"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring timezone data for ${TZ}"
+	cp "/usr/share/zoneinfo/${TZ}" /etc/localtime && echo "${TZ}" > /etc/timezone
+	log_end_msg "${?}"
+
+	###
+	# hack rcS, make localtime default
+	###
+	if [ "${TZ}" != "UTC" ]; then
+		[ -w /etc/default/rcS ] && sed -i 's/^UTC=.*/UTC=no/' /etc/default/rcS
+	fi
+
+	###
 	# generate /etc/default/locale
 	###
 	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring locales for ${LANG}"
@@ -695,21 +710,6 @@ do_start() {
 	install-keymap "${KEYTABLE}"
 	log_end_msg "${?}"
 
-	###
-	# configure timezone, fallback to UTC
-	###
-	( [ "${TZ}" ] && [ -f "/usr/share/zoneinfo/${TZ}" ] ) || TZ="UTC"
-	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring timezone data for ${TZ}"
-	cp "/usr/share/zoneinfo/${TZ}" /etc/localtime && echo "${TZ}" > /etc/timezone
-	log_end_msg "${?}"
-
-	###
-	# hack rcS, make localtime default
-	###
-	if [ "${TZ}" != "UTC" ]; then
-		[ -w /etc/default/rcS ] && sed -i 's/^UTC=.*/UTC=no/' /etc/default/rcS
-	fi
-		
 	###
 	# XXX: store KDEKEYBOARDS / XKBDLAYOUT somewhere for xorg.conf generator
 	###

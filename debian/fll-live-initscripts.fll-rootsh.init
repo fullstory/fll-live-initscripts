@@ -50,7 +50,8 @@ fi
 
 do_start() {
 	cat /usr/share/base-files/dot.profile > /root/.profile
-	sed 's%^# \(alias\|eval\|export\)%\1%' \
+	
+	sed -e 's%^# \(alias\|eval\|export\)%\1%' \
 		/usr/share/base-files/dot.bashrc > /root/.bashrc
 	
 	if ! grep -q -w /etc/bash_completion /root/.bashrc; then
@@ -62,8 +63,6 @@ if [ -f /etc/bash_completion ]; then
 fi
 EOF
 	fi
-
-	export HOME=/root SHELL=/bin/bash
 }
 
 case "${1}" in
