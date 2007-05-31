@@ -1,3 +1,14 @@
+fll-live-initscripts (1.0.14) unstable; urgency=low
+
+  * fll_login: call /bin/login with exec or else 'the user you use will
+    continue to appear to be logged in even after you log out of the
+    "subsession"', login(1).
+  * live-adduser: create zero length .hushlogin file in
+    hack_live_user_files().
+  * live-rootsh: create zero length .hushlogin file.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 20:57:57 +1000
+
 fll-live-initscripts (1.0.13) unstable; urgency=low
 
   * live-adduser: drop sed hack /etc/shadow.

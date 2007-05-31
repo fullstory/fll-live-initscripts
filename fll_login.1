@@ -10,7 +10,7 @@ when booting from fll live media with passwordless root and user accounts.
 \fIfll_login\fR will source \fI/etc/default/distro\fR in order to get the
 \fIFLL_LIVE_USER\fR shell variable, check with getent the validity of the
 \fIFLL_LIVE_USER\fR user account and finally login as that user using the login
-option for preauthentication (i.e. \fB/bin/login \-f $FLL_LIVE_USER\fR).
+option for preauthentication (i.e. \fBexec /bin/login \-f $FLL_LIVE_USER\fR).
 .PP
 If the user specified by \fIFLL_LIVE_USER\fR is invalid, login as root instead.
 .PP

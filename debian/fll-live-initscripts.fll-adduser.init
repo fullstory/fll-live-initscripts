@@ -75,7 +75,15 @@ add_live_user() {
 
 hack_live_user_files() {
 	LIVE_USER_HOME=$(getent passwd ${1} | cut -d\: -f 6)
+	
+	###
+	# disable noise at login time
+	###
+	:> ${LIVE_USER_HOME}/.hushlogin
 
+	###
+	# add handy aliases, these are for live-mode only
+	###
 	if ! grep -s -q 'alias su' ${LIVE_USER_HOME}/.bashrc; then
 		printf "\nalias su=\"sudo su\"\nalias sux=\"sudo sux\"\n" \
 			>> ${LIVE_USER_HOME}/.bashrc

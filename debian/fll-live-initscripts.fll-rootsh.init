@@ -63,6 +63,8 @@ if [ -f /etc/bash_completion ]; then
 fi
 EOF
 	fi
+
+	:> /root/.hushlogin
 }
 
 case "${1}" in
