@@ -67,8 +67,7 @@ CYAN="[1;36m"
 WHITE="[1;37m"
 
 # get rid of these as soon as possible
-HWSETUP_MAIN="/etc/sysconfig/knoppix"
-HWSETUP_MOUSE="/etc/sysconfig/mouse"
+HWSETUP_MAIN="/etc/hwsetup"
 
 ###############################################################################
 # utility Functions
@@ -285,16 +284,12 @@ modprobe pcspkr >/dev/null 2>&1
 # activate input driver for char event devices
 modprobe evdev >/dev/null 2>&1
 
-# Read in what hwsetup has found
-[ -f "$HWSETUP_MAIN" ] && . "$HWSETUP_MAIN"
-
-# Workaround for new mouse detection
-if [ -f "$HWSETUP_MOUSE" ]; then
-	. "$HWSETUP_MOUSE"
-	if [ "$MOUSETYPE" = "ps2" ]; then
+# XXX: Workaround for new mouse detection
+if [ -r "$HWSETUP_MAIN" ]; then
+	. "$HWSETUP_MAIN"
+	if [ "$MOUSE_MOUSETYPE" = "ps2" ]; then
 		ln -sf /dev/psaux /dev/mouse
-		perl -pi -e "s|/dev/input/mice|/dev/psaux|" "$HWSETUP_MOUSE" "$HWSETUP_MAIN"
-		. "$HWSETUP_MOUSE"
+		sed -i "s|/dev/input/mice|/dev/psaux|" "$HWSETUP_MAIN"
 		. "$HWSETUP_MAIN"
 	fi
 fi
