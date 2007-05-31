@@ -1,8 +1,8 @@
 fll-live-initscripts (1.0.15) unstable; urgency=low
 
-  * Import latest ;egacy live-autoconfig, r7470.
+  * Import latest legacy live-autoconfig, r7470.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 21:05:31 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 21:06:33 +1000
 
 fll-live-initscripts (1.0.14) unstable; urgency=low
 
