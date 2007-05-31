@@ -52,6 +52,9 @@ fi
 ###
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
+			;;
 		username=*)
 			FLL_LIVE_USER="${param#username=}"
 			sed -i "s/^FLL_LIVE_USER=.*/FLL_LIVE_USER=\"${FLL_LIVE_USER}\"/" \

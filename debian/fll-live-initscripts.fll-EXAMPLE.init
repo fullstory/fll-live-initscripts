@@ -1,9 +1,9 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          skeleton
-# Required-Start:    $local_fs $remote_fs
-# Required-Stop:     $local_fs $remote_fs
+# Provides:          fll-?
+# Required-Start:    
+# Required-Stop:     
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Example initscript
@@ -22,7 +22,7 @@
 ###
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-NAME=
+NAME="fll-?"
 
 ###
 # source distro-defaults, no-op unless in live mode
@@ -63,7 +63,8 @@ fi
 ###
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
-		*)
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
 			;;
 	esac
 done

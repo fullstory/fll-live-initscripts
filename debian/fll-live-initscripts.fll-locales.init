@@ -58,6 +58,9 @@ LANGUAGE="en"
 ###
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
+			;;
 		lang=*)
 			LANGUAGE="${param#lang=}"
 			;;

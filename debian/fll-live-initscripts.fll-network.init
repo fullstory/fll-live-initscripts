@@ -53,6 +53,9 @@ fi
 ###
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
+			;;
 		nodchp|dchp=no)
 			exit 0
 			;;

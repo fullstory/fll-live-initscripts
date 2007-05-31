@@ -67,6 +67,9 @@ DESTDIR="/live-hack"
 
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
+			;;
 		noeject)
 			NOEJECT="1"
 			;;

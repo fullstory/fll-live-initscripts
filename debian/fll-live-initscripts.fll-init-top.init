@@ -54,6 +54,9 @@ fi
 ###
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
+			;;
 		noagp|agp=no)
 			BLACKLIST="${BLACKLIST} agp agpgart"
 			;;

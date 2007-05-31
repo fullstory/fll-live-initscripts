@@ -48,6 +48,17 @@ fi
 ###
 . /lib/lsb/init-functions
 
+###
+# cheatcode handling
+###
+for param in $(cat /proc/cmdline); do
+	case "${param}" in
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
+			;;
+	esac
+done
+
 do_start() {
 	for file in '.bash_logout' '.bash_profile' '.bashrc'; do
 		if [ -f /etc/skel/${file} ] && [ ! -f /root/${file} ]; then

@@ -1,3 +1,10 @@
+fll-live-initscripts (1.0.22) unstable; urgency=low
+
+  * Add flldebug=${NAME} debug handling to all fll initscripts to ease
+    debugging in future.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 22:46:59 +1000
+
 fll-live-initscripts (1.0.21) unstable; urgency=low
 
   * live-network: condense output.
