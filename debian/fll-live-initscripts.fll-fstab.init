@@ -4,8 +4,8 @@
 # Provides:          fll-fstab
 # Required-Start:    udev
 # Required-Stop:     
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
+# Default-Start:     S
+# Default-Stop:      
 # Short-Description: generates /etc/fstab
 # Description:       The purpose of fll-fstab is to generate /etc.fstab via
 #                    rebuildfstab(8). It also handles mounting of detected 

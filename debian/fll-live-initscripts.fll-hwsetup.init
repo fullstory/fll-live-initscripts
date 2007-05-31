@@ -1,0 +1,178 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          fll-hwsetup
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: fll hwsetup init service
+# Description:       The purpose of this script is to invoke hwsetup to
+#                    facilitate various hardware detection routines.
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-hwsetup"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+. /lib/init/vars.sh
+
+###
+# source lsb functions
+###
+. /lib/lsb/init-functions
+
+X_CONF="/etc/X11/xorg.conf"
+HWSETUP_MAIN="/etc/hwsetup"
+
+###
+# cheatcode handling
+###
+for param in $(cat /proc/cmdline); do
+	case "${param}" in
+		flldebug=*)
+			if [ "${param#flldebug=}" = "${NAME}" ]; then
+				set -x
+				HWSETUP_VERBOSITY="-v"
+			fi
+			;;
+		nohwsetup|hwsetup=no)
+			exit 0
+			;;
+		noxorgconfig|nomkxf86config)
+			DISABLE_X_CONFIG="yes"
+			;;
+		vol=*)
+			VOLUME="${param#vol=}"
+			;;
+		volume=*)
+			VOLUME="${param#volume=}"
+			;;
+	esac
+done
+
+###
+# functions...
+###
+do_start() {
+	log_daemon_msg "${NAME}"; log_action_begin_msg " executing hwsetup"
+	hwsetup ${HWSETUP_VERBOSITY}
+	log_end_msg "${?}"
+
+	# activate PC Speaker
+	modprobe pcspkr >/dev/null 2>&1
+
+	# XXX: Workaround for new mouse detection
+	if [ -r "${HWSETUP_MAIN}" ]; then
+		. "${HWSETUP_MAIN}"
+		if [ "${MOUSE_MOUSETYPE}" = "ps2" ]; then
+			ln -sf /dev/psaux /dev/mouse
+			sed -i "s|/dev/input/mice|/dev/psaux|" "${HWSETUP_MAIN}"
+			. "${HWSETUP_MAIN}"
+		fi
+	fi
+
+	# Mouse
+	if [ "${MOUSE_FULLNAME}" ] && [ "${MOUSE_DEVICE}" ]; then
+		log_daemon_msg "${NAME}" "mouse is '${MOUSE_FULLNAME}' ( ${MOUSE_DEVICE} )"
+		log_end_msg 0
+	fi
+
+	# Sound device
+	if [ "${SOUND_FULLNAME}" ]; then
+		log_daemon_msg "${NAME}"
+		log_progress_msg "sound is '${SOUND_FULLNAME}'"
+		log_end_msg 0
+	fo
+
+	# Sound driver
+	if [ "${SOUND_DRIVER}" ]; then
+		log_daemon_msg "${NAME}"
+		log_progress_msg "alsa module is ${SOUND_DRIVER}"
+		log_end_msg 0
+	fi
+
+	###
+	# XXX: set volume, this needs some more work
+	###
+	#case "${VOL}" in
+	#	*[!0-9]*)
+	#		VOL=50
+	#		;;
+	#esac
+	
+	#if [ -z "${VOL}" ] || [ "${VOL}" -lt 0 ] || [ "${VOL}" -gt 100 ]; then
+	#	VOL=50
+	#fi
+
+	# set volume
+	#case "${SOUND_DRIVER}" in
+	#	snd*)
+	#		#set_mixers
+	#		which aumix >/dev/null 2>&1 && aumix -m 0 -v ${VOL} -w ${VOL} -c ${VOL}
+	#		;;
+	#esac
+
+	###
+	# XXX: cleanup bullshit mess, we have sed hack here, and sed hack there
+	# XXX: duplication of functions and escape seqences
+	# xorgconfig
+	###
+	if [ "${DISABLE_X_CONFIG}" != "yes" ]; then
+		[ -x /usr/sbin/mkxf86config ] && /usr/sbin/mkxf86config
+	fi
+
+	# Read in changes
+	[ -f "${HWSETUP_MAIN}" ] && . "${HWSETUP_MAIN}"
+
+	###
+	# XXX: XKBLAYOUT needs to be stored somewhere by fll-locales
+	###
+	if [ -f ${X_CONF} ] && [ "${XKBLAYOUT}" ]; then
+		# Apply Language Settings for xorg
+		sed -i "s|\"XkbLayout\".*$|\"XkbLayout\"\t\"${XKBLAYOUT}\"|" "${X_CONF}"
+	fi
+}
+
+case "${1}" in
+	start)
+		do_start
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop}" >&2
+		exit 3
+		;;
+esac
+
+:

@@ -4,7 +4,7 @@
 # Provides:          fll-cpufreq
 # Required-Start:    
 # Required-Stop:     
-# Default-Start:     2 3 4 5
+# Default-Start:     S
 # Default-Stop:      
 # Short-Description: load cpufreq support for cpu's that support it
 # Description:       The purpose of fll-cpufreq is to detect and load cpu
