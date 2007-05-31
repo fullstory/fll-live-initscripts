@@ -4,13 +4,9 @@ use warnings;
 use strict;
 use File::Find;
 
-my $root = "";
-my $doit = "";
-my %init;
-my %info;
-my @ucmd;
-my $frc;
-my $rem;
+my (@ucmd, $frc, $rem);
+my (%init, %info);
+my ($root, $doit) = ("", "");
 
 for (@ARGV) {
 	if (/^(-r|--remove)$/) { $rem = 1; $frc = 1; next; }
