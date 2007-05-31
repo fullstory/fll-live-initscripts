@@ -54,6 +54,9 @@ fi
 ###
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
+		noagp|agp=no)
+			BLACKLIST="${BLACKLIST} agp agpgart"
+			;;
 		blacklist=*)
 			BLACKLIST="${BLACKLIST} ${param#hostname=}"
 			;;

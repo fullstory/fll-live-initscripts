@@ -1,0 +1,115 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          fll-network
+# Required-Start:    udev
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: configure ifupdown for detected network devices
+# Description:       Probe cable status of detected network devices and
+#                    enable dhcp for those devices which return a positive
+#                    cable link status.
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-network"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+. /lib/init/vars.sh
+
+###
+# source lsb functions
+###
+. /lib/lsb/init-functions
+
+###
+# cheatcode handling
+###
+for param in $(cat /proc/cmdline); do
+	case "${param}" in
+		nodchp|dchp=no)
+			exit 0
+			;;
+	esac
+done
+
+do_start() {
+	NETDEVICES=$(perl -le 'print for map {s/.*\///; grep( !/^(lo|br|sit)\d*/,$_);} </sys/class/net/*>')
+	if [ "${NETDEVICES}" ]; then
+		log_daemon_msg "${NAME}"; log_action_begin_msg " probing ethernet interfaces for link beat"
+		for netdev in ${NETDEVICES}; do
+			if [ -d /sys/class/net/${netdev}/wireless ]; then
+				# wireless
+				continue
+			fi
+			
+			if [ -f /sys/class/net/${netdev}/addr_len ]; then
+				# unwanted, > 6 byte mac length (eg, placeholder interface, eth1394)
+				[ "$(cat /sys/class/net/${netdev}/addr_len)" -gt 6 ] && continue
+			fi
+
+			if ifconfig "${netdev}" up; then
+				sleep 2
+				
+				# probe for link beat
+				ifplugstatus --quiet "${netdev}"
+			
+				# link beat detected ?
+				if [ "${?}" -eq 2 ]; then
+					log_progress_msg "${netdev}"
+					if ! grep -q -w "${netdev}" /etc/network/interfaces; then
+						printf "\nallow-hotplug ${netdev}\n"	>> /etc/network/interfaces
+						printf "iface ${netdev} inet dhcp\n"	>> /etc/network/interfaces
+					fi
+				else
+					ifconfig "${netdev}" down
+				fi
+			fi
+		done
+		log_end_msg 0
+	fi
+}
+
+case "${1}" in
+	start)
+		do_start
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop}" >&2
+		exit 3
+		;;
+esac
+
+:

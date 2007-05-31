@@ -1,11 +1,16 @@
 fll-live-initscripts (1.0.4) unstable; urgency=low
 
-  * improve output of fll-locales.
-  * Add powersaved hacks to fll-cpufreq.
-  * Add capability module to /etc/modules in fll-init-top.
+  * fll-locales: improve output.
+  * fll-cpufreq: add powersaved hacks to disable suspend and cpufrq module
+    preseeding.
+  * fll-init-top: add capability module to /etc/modules.
   * Add fll-rootsh.
+  * Add fll-network.
+  * fll-init-top: honor noagp by adding agp and agpgart modules to
+    /etc/modprobe.d/blacklist.
+  * fll-cpufreq: purge power{save,now}d when nocpufreq cheatcode is used.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 13:52:26 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 14:25:37 +1000
 
 fll-live-initscripts (1.0.3) unstable; urgency=low
 

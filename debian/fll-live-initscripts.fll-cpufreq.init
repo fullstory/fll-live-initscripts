@@ -54,6 +54,8 @@ fi
 for param in $(cat /proc/cmdline); do
 	case "${param}" in
 		nocpufreq|cpufreq=no)
+			update-rc.d -f powersaved remove >/dev/null 2>&1
+			update-rc.d -f powernowd remove >/dev/null 2>&1
 			exit 0
 			;;
 	esac
