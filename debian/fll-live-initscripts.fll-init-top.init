@@ -68,6 +68,13 @@ done
 
 do_start() {
 	###
+	# re-enable printk's. linux stability is important, so are observations
+	# about what information linux is printing to console. see syslog(2)
+	# #define KERN_NOTICE   "<5>"  /* normal but significant condition */
+	###
+	echo 5 >/proc/sys/kernel/printk
+	
+	###
 	# custom hostname given on cmdline
 	###
 	if [ "${CUSTOM_HOSTNAME}" ]; then
