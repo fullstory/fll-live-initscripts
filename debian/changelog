@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.5) unstable; urgency=low
+
+  * fll-rootsh: export HOME and SHELL.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 15:04:02 +1000
+
 fll-live-initscripts (1.0.4) unstable; urgency=low
 
   * fll-locales: improve output.

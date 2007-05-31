@@ -62,6 +62,8 @@ if [ -f /etc/bash_completion ]; then
 fi
 EOF
 	fi
+
+	export HOME=/root SHELL=/bin/bash
 }
 
 case "${1}" in
