@@ -1,3 +1,10 @@
+fll-live-initscripts (1.0.7) unstable; urgency=low
+
+  * Version bump, no changes. (last two revisions bi-product of not thinking
+    while updating repoistory with new packages).
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 17:38:33 +1000
+
 fll-live-initscripts (1.0.6) unstable; urgency=low
 
   * Version bump, no changes.
