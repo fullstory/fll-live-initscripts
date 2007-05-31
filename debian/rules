@@ -16,7 +16,7 @@ install/fll-live-initscripts::
 		debian/fll-live-initscripts.fll-halt.init
 	
 	# install and configure runlevel seq. for our initscripts
-	dh_installinit --no-start --name=fll-autoconfig	-- start 00 S .
+	dh_installinit --no-start --name=fll-init-top	-- start 00 S .
 	dh_installinit --no-start --name=fll-locales	-- start 04 S .
 	dh_installinit --no-start --name=fll-halt	-- start 90 0 .
 	dh_installinit --no-start --name=fll-reboot	-- start 90 6 .

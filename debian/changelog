@@ -1,3 +1,10 @@
+fll-live-initscripts (1.0.2) unstable; urgency=low
+
+  * Rename fll-autoconfig to fll-init-top. The concept of monolithic
+    autoconfig script is dead in this live init concept.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 10:53:19 +1000
+
 fll-live-initscripts (1.0.1) unstable; urgency=low
 
   * fll-live-initramfs now takes care of runlevel sanitisation.
