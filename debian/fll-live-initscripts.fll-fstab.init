@@ -80,13 +80,16 @@ do_start() {
 
 case "${1}" in
 	start)
+		do_start
 		;;
 	stop)
 		;;
 	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
 		;;
 	*)
-		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+		echo "Usage: ${NAME} {start|stop}" >&2
 		exit 3
 		;;
 esac
