@@ -73,6 +73,15 @@ add_live_user() {
 	done
 }
 
+hack_live_user_files() {
+	LIVE_USER_HOME=$(getent passwd ${1} | cut -d\: -f 6)
+
+	if ! grep -s -q 'alias su' ${LIVE_USER_HOME}/.bashrc; then
+		printf "\nalias su=\"sudo su\"\nalias sux=\"sudo sux\"\n" \
+			>> ${LIVE_USER_HOME}/.bashrc
+	fi
+}
+
 case "${1}" in
 	start)
 		log_daemon_msg "${NAME}"
@@ -81,6 +90,7 @@ case "${1}" in
 		else
 			log_action_begin_msg " adding user '${FLL_LIVE_USER}'"
 			add_live_user "${FLL_LIVE_USER}" ${FLL_LIVE_USER_GROUPS} >/dev/null
+			hack_live_user_files "${FLL_LIVE_USER}"
 			log_end_msg 0
 		fi
 		;;

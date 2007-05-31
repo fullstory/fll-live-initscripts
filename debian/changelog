@@ -1,8 +1,11 @@
 fll-live-initscripts (1.0.13) unstable; urgency=low
 
   * live-adduser: drop sed hack /etc/shadow.
+  * live-adduser: add hack_live_user_files() to apply changes to .bashrc and
+    other things in future. Please try to keep this function clean and
+    manageable . . .
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 20:31:05 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 20:43:53 +1000
 
 fll-live-initscripts (1.0.12) unstable; urgency=low
 
