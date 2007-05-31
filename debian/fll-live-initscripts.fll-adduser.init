@@ -4,7 +4,7 @@
 # Provides:          fll-adduser
 # Required-Start:    
 # Required-Stop:     
-# Default-Start:     S
+# Default-Start:     2 3 4 5
 # Default-Stop:      
 # Short-Description: add user to live system
 # Description:       The purpose of fll-adduser is to add a user to the live

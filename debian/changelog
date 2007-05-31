@@ -1,8 +1,9 @@
 fll-live-initscripts (1.0.17) unstable; urgency=low
 
   * fll-rootsh: update lsb description.
+  * Start fll-adduser in runlevels 2 3 4 5, start fll-cpufreq at sequence 05.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 21:25:41 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 21:36:48 +1000
 
 fll-live-initscripts (1.0.16) unstable; urgency=low
 

@@ -18,11 +18,11 @@ install/fll-live-initscripts::
 	# install and configure runlevel seq. for our initscripts
 	dh_installinit --no-start --name=fll-init-top	-- start 00 S .
 	dh_installinit --no-start --name=fll-locales	-- start 04 S .
+	dh_installinit --no-start --name=fll-cpufreq	-- start 05 S .
 	dh_installinit --no-start --name=fll-fstab	-- start 35 S .
 	dh_installinit --no-start --name=fll-network	-- start 35 S .
-	dh_installinit --no-start --name=fll-cpufreq	-- start 90 S .
 	dh_installinit --no-start --name=fll-rootsh	-- start 90 S .
-	dh_installinit --no-start --name=fll-adduser	-- start 90 S .
+	dh_installinit --no-start --name=fll-adduser	-- start 90 2 3 4 5 .
 	# halt|reboot replacements
 	dh_installinit --no-start --name=fll-halt	-- start 90 0 .
 	dh_installinit --no-start --name=fll-reboot	-- start 90 6 .
