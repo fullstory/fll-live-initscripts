@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.6) unstable; urgency=low
+
+  * Version bump, no changes.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 31 May 2007 17:24:47 +1000
+
 fll-live-initscripts (1.0.5) unstable; urgency=low
 
   * fll-locales: configure timzeone first.
