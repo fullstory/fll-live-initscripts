@@ -108,7 +108,7 @@ do_start() {
 		log_daemon_msg "${NAME}"
 		log_progress_msg "sound is '${SOUND_FULLNAME}'"
 		log_end_msg 0
-	fo
+	fi
 
 	# Sound driver
 	if [ "${SOUND_DRIVER}" ]; then
