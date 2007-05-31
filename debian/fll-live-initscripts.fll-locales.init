@@ -674,7 +674,7 @@ do_start() {
 	# configure timezone, fallback to UTC
 	###
 	( [ "${TZ}" ] && [ -f "/usr/share/zoneinfo/${TZ}" ] ) || TZ="UTC"
-	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring timezone data for ${TZ}"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring timezone data for '${TZ}'"
 	cp "/usr/share/zoneinfo/${TZ}" /etc/localtime && echo "${TZ}" > /etc/timezone
 	log_end_msg "${?}"
 
@@ -688,14 +688,14 @@ do_start() {
 	###
 	# generate /etc/default/locale
 	###
-	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring locales for ${LANG}"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring locales for '${LANG}'"
 	update-locale "LANG=${LANG}"
 	log_end_msg "${?}"
 
 	###
 	# select default locale and configure console-data via debconf
 	###
-	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring console data for ${CD_FULL}"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring console data for '${CD_FULL}'"
 	echo "locales locales/default_environment_locale select ${LANG}" \
 	"console-data console-data/keymap/policy select Select keymap from arch list" \
 	"console-data console-data/keymap/family select ${CD_FAMILY}" \
@@ -706,7 +706,7 @@ do_start() {
 		| /usr/bin/debconf-set-selections
 	log_end_msg "${?}"
 	
-	log_daemon_msg "${NAME}"; log_action_begin_msg " installing ${KEYTABLE} keytable"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " installing '${KEYTABLE}' keytable"
 	install-keymap "${KEYTABLE}"
 	log_end_msg "${?}"
 
