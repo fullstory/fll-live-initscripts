@@ -163,17 +163,13 @@ do_start() {
 	###
 	if [ "${DISABLE_X_CONFIG}" != "yes" ]; then
 		[ -x /usr/sbin/mkxf86config ] && /usr/sbin/mkxf86config
-	fi
 
-	# Read in changes
-	[ -f "${HWSETUP_MAIN}" ] && . "${HWSETUP_MAIN}"
-
-	###
-	# XXX: XKBLAYOUT needs to be stored somewhere by fll-locales
-	###
-	if [ -f ${X_CONF} ] && [ "${XKBLAYOUT}" ]; then
-		# Apply Language Settings for xorg
-		sed -i "s|\"XkbLayout\".*$|\"XkbLayout\"\t\"${XKBLAYOUT}\"|" "${X_CONF}"
+		# Read in changes
+		[ -f "${HWSETUP_MAIN}" ] && . "${HWSETUP_MAIN}"
+		
+		#log_daemon_msg "${NAME}"
+		#log_progress_msg ""
+		#log_end_msg 0
 	fi
 }
 
