@@ -101,6 +101,8 @@ do_start() {
 	if [ "${MOUSE_FULLNAME}" ] && [ "${MOUSE_DEVICE}" ]; then
 		log_daemon_msg "${NAME}" "mouse is '${MOUSE_FULLNAME}' ( ${MOUSE_DEVICE} )"
 		log_end_msg 0
+	else
+		update-rc.d -f gpm remove >/dev/null 2>&1
 	fi
 
 	# Sound device
@@ -115,6 +117,10 @@ do_start() {
 		log_daemon_msg "${NAME}"
 		log_progress_msg "alsa module is ${SOUND_DRIVER}"
 		log_end_msg 0
+	fi
+
+	if [ -z "${SOUND_FULLNAME}" ] && [ -z "${SOUND_DRIVER}" ]; then
+		update-rc.d -f alsa-utils remove >/dev/null 2>&1
 	fi
 
 	###
