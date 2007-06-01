@@ -84,12 +84,10 @@ do_start() {
 	hwsetup ${HWSETUP_VERBOSITY}
 	log_end_msg "${?}"
 
-	# activate PC Speaker
-	modprobe pcspkr >/dev/null 2>&1
-
-	# XXX: Workaround for new mouse detection
+	# Read in what hwsetup has found
 	if [ -r "${HWSETUP_MAIN}" ]; then
 		. "${HWSETUP_MAIN}"
+		# XXX: Workaround for new mouse detection
 		if [ "${MOUSE_MOUSETYPE}" = "ps2" ]; then
 			ln -sf /dev/psaux /dev/mouse
 			sed -i "s|/dev/input/mice|/dev/psaux|" "${HWSETUP_MAIN}"
@@ -97,11 +95,25 @@ do_start() {
 		fi
 	fi
 
-	# Mouse
-	if [ "${MOUSE_FULLNAME}" ] && [ "${MOUSE_DEVICE}" ]; then
-		log_daemon_msg "${NAME}" "mouse is '${MOUSE_FULLNAME}' ( ${MOUSE_DEVICE} )"
+	if [ "${BLUETOOTH}" != "bluetooth" ]; then
+		update-rc.d -f bluetooth remove >/dev/null 2>&1
+	fi
+
+	# Mouse name
+	if [ "${MOUSE_FULLNAME}" ]; then
+		log_daemon_msg "${NAME}" 
+		log_progress_msg "mouse name is '${MOUSE_FULLNAME}'"
 		log_end_msg 0
-	else
+	fi
+
+	# Mouse device
+	if [ "${MOUSE_DEVICE}" ]; then
+		log_daemon_msg "${NAME}"
+		log_progress_msg "mouse device is '${MOUSE_DEVICE}'"
+		log_end_msg 0
+	fi
+
+	if [ ! -b "${MOUSE_DEVICE}" ]; then
 		update-rc.d -f gpm remove >/dev/null 2>&1
 	fi
 
