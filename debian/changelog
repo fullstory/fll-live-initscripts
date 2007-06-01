@@ -4,8 +4,10 @@ fll-live-initscripts (1.0.32) unstable; urgency=low
     - better method of filling runlevel data structure for each init script
     - use getopts for argument handling
     - other trivial fixes
+  * Fix -f|--force option of fll_analyze_runlevels.
+  * Conform to make strict pragma.
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 02 Jun 2007 08:42:37 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 02 Jun 2007 09:52:02 +1000
 
 fll-live-initscripts (1.0.31) unstable; urgency=low
 

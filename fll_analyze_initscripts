@@ -1,4 +1,7 @@
 #!/usr/bin/perl
+
+use warnings;
+use strict;
 #use Data::Dumper;
 use Getopt::Long qw(:config bundling no_auto_abbrev);
 # bundling is combining multiple short options together,
@@ -7,10 +10,12 @@ use Getopt::Long qw(:config bundling no_auto_abbrev);
 
 my ($doit, $frc, $rem) = (0, 0 ,0);
 my $urcd = "update-rc.d";
+my $root = "";
+my %init;
 
-$res = GetOptions(	
-		"apply" => \$doit,
-		"force" => \$frc,
+my $res = GetOptions(	
+		"a|apply" => \$doit,
+		"f|force" => \$frc,
 		"r|remove" => sub { $rem = 1; $frc = 1; }, 
 		"root=s" => \$root
 	);
@@ -22,14 +27,16 @@ $res = GetOptions(
 #root(\$root)='$root'
 #_EOF_
 #;
+
 #print "\@ARGV='@ARGV'\n";
 $init{$_}++ for (@ARGV);
+
 #print Dumper \%init;
 #exit;
 
 
 my %info;
-for $lvl (0..6, "S") { 
+for my $lvl (0..6, "S") { 
 	for (glob "/etc/rc${lvl}.d/[KS]*") {
 		next unless -L;
 		next unless my ($rlev, $sk, $pri, $svc) = m|/rc(.)\.d/([SK])([0-9]{2})(.+)$|;
@@ -41,9 +48,10 @@ for $lvl (0..6, "S") {
 #exit;
 
 
-$frc and push @par, "-f";
 for my $svc (sort keys %info) {
-	@par = ();
+	my @par = ();
+	$frc and push @par, "-f";
+
 	if (%init) { next unless exists $init{$svc}; }
 	
 	next if not -x $root . "/etc/init.d/" . $svc;
