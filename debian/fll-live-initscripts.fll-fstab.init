@@ -74,13 +74,14 @@ do_start() {
 	/usr/sbin/rebuildfstab --quiet --write-fstab --make-mountpoints
 	log_end_msg "${?}"
 
-	[ "${NOSWAP}" = "yes" ] && return 0
-	
-	if grep -q -w swap /etc/fstab; then
-		log_daemon_msg "${NAME}" "mounting swap partitions"
-		swapon -a -e
-		log_end_msg "${?}"
+	if [ "${NOSWAP}" = "yes" ] || !  grep -q -s -w swap /etc/fstab; then
+		# noswap
+		return 0
 	fi
+	
+	log_daemon_msg "${NAME}" "mounting swap partitions"
+	swapon -a -e
+	log_end_msg "${?}"
 }
 
 case "${1}" in
