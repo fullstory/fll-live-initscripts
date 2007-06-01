@@ -1,3 +1,12 @@
+fll-live-initscripts (1.0.32) unstable; urgency=low
+
+  * Dump fll_analyze_runlevels update from locsmif
+    - better method of filling runlevel data structure for each init script
+    - use getopts for argument handling
+    - other trivial fixes
+
+ -- Kel Modderman <kel@otaku42.de>  Sat, 02 Jun 2007 08:42:37 +1000
+
 fll-live-initscripts (1.0.31) unstable; urgency=low
 
   * Optimise all fll init scripts by not sourcing lsb vars or init functions
