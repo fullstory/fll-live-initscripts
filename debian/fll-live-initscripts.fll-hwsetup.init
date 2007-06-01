@@ -167,12 +167,6 @@ do_start() {
 		# Read in changes
 		[ -f "${HWSETUP_MAIN}" ] && . "${HWSETUP_MAIN}"
 		
-		if [ "${XSERVER}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "configuring '${XSERVER}' xserver"
-			log_end_msg 0
-		fi
-		
 		if [ "${XDESC}" ]; then
 			log_daemon_msg "${NAME}"
 			log_progress_msg "video is '${XDESC}'"
