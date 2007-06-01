@@ -187,11 +187,11 @@ do_start() {
 		
 		if [ "${XSCREEN}" ]; then
 			log_daemon_msg "${NAME}"
-			log_progress_msg "specified mode '${MODES#Mode }'"
+			log_progress_msg "specified mode '${XSCREEN}'"
 			log_end_msg 0
 		elif [ "${MODES}" ]; then
 			log_daemon_msg "${NAME}"
-			log_progress_msg "detected modes '${MODES#Mode }'"
+			log_progress_msg "detected modes '${MODES#Modes }'"
 			log_end_msg 0
 		fi
 
