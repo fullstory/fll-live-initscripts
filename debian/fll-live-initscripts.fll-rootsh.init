@@ -40,13 +40,13 @@ fi
 ###
 # VERBOSE setting and other rcS variables
 ###
-. /lib/init/vars.sh
+#. /lib/init/vars.sh
 
 ###
 # source lsb functions
 
 ###
-. /lib/lsb/init-functions
+#. /lib/lsb/init-functions
 
 ###
 # cheatcode handling

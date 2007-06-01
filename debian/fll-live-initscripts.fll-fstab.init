@@ -45,7 +45,7 @@ fi
 ###
 # VERBOSE setting and other rcS variables
 ###
-. /lib/init/vars.sh
+#. /lib/init/vars.sh
 
 ###
 # source lsb functions
