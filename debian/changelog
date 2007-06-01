@@ -1,3 +1,10 @@
+fll-live-initscripts (1.0.27) unstable; urgency=low
+
+  * fll-locales: add XKBLAYOUT to /etc/defaults/distro. Also do the same to
+    legacy live-autoconfig.
+
+ -- Kel Modderman <kel@otaku42.de>  Fri, 01 Jun 2007 13:18:43 +1000
+
 fll-live-initscripts (1.0.26) unstable; urgency=low
 
   * Add dependency of ifplugd. Adjust Recommends.

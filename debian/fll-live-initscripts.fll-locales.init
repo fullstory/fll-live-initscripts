@@ -714,8 +714,15 @@ do_start() {
 	log_end_msg "${?}"
 
 	###
-	# XXX: store KDEKEYBOARDS / XKBDLAYOUT somewhere for xorg.conf generator
+	# XXX: store XKBDLAYOUT somewhere for xorg.conf generator
 	###
+	if grep -q "^XKBLAYOUT=" /etc/default/distro 2>/dev/null; then
+		sed -i -e 's/^XKBLAYOUT=.*$/XKBLAYOUT='"${XKBLAYOUT}"'/' \
+			/etc/default/distro
+	else
+		printf "\n# Xkb i18n settings\nXKBLAYOUT=\"${XKBLAYOUT}\"\n" \
+			>> /etc/default/distro
+	fi
 }
 
 case "${1}" in
