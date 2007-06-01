@@ -167,9 +167,65 @@ do_start() {
 		# Read in changes
 		[ -f "${HWSETUP_MAIN}" ] && . "${HWSETUP_MAIN}"
 		
-		#log_daemon_msg "${NAME}"
-		#log_progress_msg ""
-		#log_end_msg 0
+		if [ "${XSERVER}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "configuring '${XSERVER}' xserver"
+			log_end_msg 0
+		fi
+		
+		if [ "${XDESC}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "video is '${XDESC}'"
+			log_end_msg 0
+		fi
+
+		if [ "${XMODULE}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "using '${XMODULE}' xserver driver"
+			log_end_msg 0
+		fi
+
+		if [ "${MODEL}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "monitor is '${MODEL}'"
+			log_end_msg 0
+		fi
+		
+		if [ "${XSCREEN}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "specified mode '${MODES#Mode }'"
+			log_end_msg 0
+		elif [ "${MODES}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "detected modes '${MODES#Mode }'"
+			log_end_msg 0
+		fi
+
+		if [ "${XHREFRESH}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "specified horizontal refresh '${XHREFRESH}'"
+			log_end_msg 0
+		elif [ "${HREFRESH}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "detected horizontal refresh '${HREFRESH}'"
+			log_end_msg 0
+		fi
+
+		if [ "${XVREFRESH}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "specified vertical refresh '${XVREFRESH}'"
+			log_end_msg 0
+		elif [ "${VREFRESH}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "detected vertical refresh '${VREFRESH}'"
+			log_end_msg 0
+		fi
+
+		if [ "${XDEPTH}" ]; then
+			log_daemon_msg "${NAME}"
+			log_progress_msg "specified depth '${XDPETH}'"
+			log_end_msg 0
+		fi
 	fi
 }
 
