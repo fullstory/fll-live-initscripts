@@ -113,7 +113,7 @@ do_start() {
 		log_end_msg 0
 	fi
 
-	if [ ! -b "${MOUSE_DEVICE}" ]; then
+	if [ -z "${MOUSE_DEVICE}" ]; then
 		update-rc.d -f gpm remove >/dev/null 2>&1
 	fi
 
