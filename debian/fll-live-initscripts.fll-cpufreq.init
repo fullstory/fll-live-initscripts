@@ -168,7 +168,7 @@ do_start() {
 	fi
 
 	if [ "${CPUFREQ}" ]; then
-		log_daemon_msg "${G}${NAME}${N}" "detected '${Y}${CPUFREQ}${G}' cpufreq support${N}"
+		log_daemon_msg "${B}${NAME}${N}" "${G}detected '${Y}${CPUFREQ}${G}' cpufreq support${N}"
 		###
 		# load all cpufreq related policy and support modules
 		###
