@@ -6,6 +6,7 @@ install/initscripts-sidux-live::
 	# live-{reboot,halt} are the same script. duplicate it
 	cp debian/initscripts-sidux-live.live-reboot.init \
 		debian/initscripts-sidux-live.live-halt.init
+	
 	dh_installinit --no-start --name=live-autoconfig	-- start 00 S .
 	dh_installinit --no-start --name=live-halt		-- start 90 0 .
 	dh_installinit --no-start --name=live-reboot		-- start 90 6 .
@@ -24,6 +25,8 @@ install/fll-live-initscripts::
 	dh_installinit --no-start --name=fll-cpufreq	-- start 90 S .
 	dh_installinit --no-start --name=fll-rootsh	-- start 90 S .
 	dh_installinit --no-start --name=fll-adduser	-- start 90 S .
+	dh_installinit --no-start --name=fll-xdm	-- start 95 S .
+	
 	# halt|reboot replacements
 	dh_installinit --no-start --name=fll-halt	-- start 90 0 .
 	dh_installinit --no-start --name=fll-reboot	-- start 90 6 .

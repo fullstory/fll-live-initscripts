@@ -1,0 +1,134 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          fll-xdm
+# Required-Start:    fll-adduser
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: detect and setup X desktop manager
+# Description:       The purpose of this script is to detect and configure an
+#                    installed X desktop manager (i.e. kdm, gdm etc.).
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-xdm"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+#. /lib/init/vars.sh
+
+###
+# source lsb functions
+###
+. /lib/lsb/init-functions
+
+###
+# ANSI escape sequences (N, R, G, Y, B, M, C, W)
+###
+. /lib/fll/fll-init-cols
+
+###
+# cheatcode handling
+###
+for param in $(cat /proc/cmdline); do
+	case "${param}" in
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
+			;;
+		dpi=*)
+			CUSTOM_DPI="${param#dpi=}"
+			case "${CUSTOM_DPI}" in
+				*[!0-9]*)
+					CUSTOM_DPI=""
+					;;
+			esac
+			;;
+	esac
+done
+
+setup_kdm() {
+	echo "WALLPAPER=${FLL_WALLPAPER}"	>  /etc/default/kdm.d/wallpaper
+	
+	echo "AUTOLOGINUSER=${FLL_LIVE_USER}"	>  /etc/default/kdm.d/autologin
+	echo "AUTOLOGINAGAIN=true"		>> /etc/default/kdm.d/autologin
+	echo "AUTOLOGINDELAY=0"			>> /etc/default/kdm.d/autologin
+
+	if [ "${CUSTOM_DPI}" ]; then
+		sed -i -e "s/\(ServerArgsLocal\=\-nolisten tcp\).*$/\1 \-dpi ${CUSTOM_DPI}/" \
+			/etc/kde3/kdm/kdmrc
+	fi
+	
+	update-rc.d kdm start 99 5 . stop 01 0 1 2 3 4 6 . >/dev/null
+
+	return "${?}"
+}
+
+setup_gdm() {
+	sed -i	-e "/^AutomaticLogin\=.*/d" \
+		-e "/^AutomaticLoginEnable\=.*/d" \
+		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true/" \
+		-e "s/\[greeter\]/\[greeter\]\nGraphicalTheme=sidux-dawn\nGraphicalThemedColor=#343434/" \
+			/etc/gdm/gdm.conf
+
+	if [ "${CUSTOM_DPI}" ]; then
+		sed -i -e "s/\(command\=\/usr\/bin\/X \-dpi \).*\( -audit.*$\)/\1${CUSTOM_DPI}\2/" \
+			/usr/share/gdm/defaults.conf
+	fi
+	
+	update-rc.d gdm start 30 5 . stop 01 0 1 2 3 4 6 . >/dev/null
+
+	return "${?}"
+}
+
+case "${1}" in
+	start)
+		if [ -x /usr/bin/kdm ]; then
+			log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring ${Y}kdm${N}"
+			setup_kdm
+			log_end_msg "${?}"
+		fi
+
+		if [ -x /usr/sbin/gdm ]; then
+			log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring ${Y}gdm${N}"
+			setup_gdm
+			log_end_msg "${?}"
+		fi
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop}" >&2
+		exit 3
+		;;
+esac
+
+:
