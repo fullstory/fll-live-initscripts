@@ -85,7 +85,7 @@ done
 # functions...
 ###
 do_start() {
-	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}starting hwsetup${N}"
+	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}starting ${Y}hwsetup${N}"
 	hwsetup ${HWSETUP_VERBOSITY}
 	log_end_msg "${?}"
 
@@ -94,7 +94,6 @@ do_start() {
 		. "${HWSETUP_MAIN}"
 		# XXX: Workaround for new mouse detection
 		if [ "${MOUSE_MOUSETYPE}" = "ps2" ]; then
-			ln -sf /dev/psaux /dev/mouse
 			sed -i "s|/dev/input/mice|/dev/psaux|" "${HWSETUP_MAIN}"
 			. "${HWSETUP_MAIN}"
 		fi

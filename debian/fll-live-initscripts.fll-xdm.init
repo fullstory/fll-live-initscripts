@@ -72,8 +72,10 @@ for param in $(cat /proc/cmdline); do
 done
 
 setup_kdm() {
-	echo "WALLPAPER=${FLL_WALLPAPER}"	>  /etc/default/kdm.d/wallpaper
-	
+	# wallpaper
+	echo "USEBACKGROUND=true"		>  /etc/default/kdm.d/wallpaper
+	echo "WALLPAPER=${FLL_WALLPAPER}"	>> /etc/default/kdm.d/wallpaper
+	# autologin
 	echo "AUTOLOGINUSER=${FLL_LIVE_USER}"	>  /etc/default/kdm.d/autologin
 	echo "AUTOLOGINAGAIN=true"		>> /etc/default/kdm.d/autologin
 	echo "AUTOLOGINDELAY=0"			>> /etc/default/kdm.d/autologin
