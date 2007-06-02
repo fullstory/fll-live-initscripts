@@ -100,11 +100,11 @@ hack_live_user_files() {
 
 case "${1}" in
 	start)
-		log_daemon_msg "${NAME}"
+		log_daemon_msg "${G}${NAME}${N}"
 		if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
-			log_action_msg " user '${FLL_LIVE_USER}' already exists"
+			log_action_msg " ${W}user '${Y}${FLL_LIVE_USER}${W}' already exists${N}"
 		else
-			log_action_begin_msg " adding user '${FLL_LIVE_USER}'"
+			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
 			add_live_user "${FLL_LIVE_USER}" ${FLL_LIVE_USER_GROUPS} >/dev/null
 			hack_live_user_files "${FLL_LIVE_USER}"
 			log_end_msg 0

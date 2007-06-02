@@ -75,7 +75,7 @@ for param in $(cat /proc/cmdline); do
 done
 
 do_start() {
-	log_daemon_msg "${NAME}"; log_action_begin_msg " generating /etc/fstab"
+	log_daemon_msg "${G}${NAME}${N}"; log_action_begin_msg " ${G}generating ${Y}/etc/fstab${N}"
 	/usr/sbin/rebuildfstab --quiet --write-fstab --make-mountpoints
 	log_end_msg "${?}"
 
@@ -84,7 +84,7 @@ do_start() {
 		return 0
 	fi
 	
-	log_daemon_msg "${NAME}" "mounting swap partitions"
+	log_daemon_msg "${G}${NAME}${N}" "${G}mounting ${Y}swap${G} partitions${N}"
 	swapon -a -e
 	log_end_msg "${?}"
 }

@@ -86,7 +86,7 @@ do_start() {
 	# custom hostname given on cmdline
 	###
 	if [ "${CUSTOM_HOSTNAME}" ]; then
-		log_daemon_msg "${NAME}" "setting hostame of '${CUSTOM_HOSTNAME}'"
+		log_daemon_msg "${G}${NAME}${N}" "${G}setting hostame of '${Y}${CUSTOM_HOSTNAME}${G}'${N}"
 		echo "${CUSTOM_HOSTNAME}" > /etc/hostname
 		echo "${CUSTOM_HOSTNAME}" > /etc/mailname
 		# update /etc/hosts
@@ -99,7 +99,7 @@ do_start() {
 	# honour blacklist= cheatcode to disable naughty modules before udev
 	###
 	if [ "${BLACKLIST}" ]; then
-		log_daemon_msg "${NAME}" "blacklisting modules"
+		log_daemon_msg "${G}${NAME}${N}" "${G}blacklisting modules${N}"
 		for module in ${BLACKLIST}; do
 			log_progress_msg "${module}"
 			echo "# added by: ${NAME}" >> /etc/modprobe.d/blacklist
@@ -112,7 +112,7 @@ do_start() {
 	# make sure capability module is loaded if present
 	###
 	if modprobe --ignore-install capability 2>/dev/null; then
-		grep -q -w capability /etc/modules || echo capability >> /etc/modules
+		grep -s -q -w capability /etc/modules || echo capability >> /etc/modules
 	fi
 }
 

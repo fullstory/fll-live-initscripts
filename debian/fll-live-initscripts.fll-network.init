@@ -70,7 +70,7 @@ done
 do_start() {
 	NETDEVICES=$(perl -le 'print for map {s/.*\///; grep( !/^(lo|br|sit)\d*/,$_);} </sys/class/net/*>')
 	if [ "${NETDEVICES}" ]; then
-		log_daemon_msg "${NAME}"; log_action_begin_msg " probing for ethernet link"
+		log_daemon_msg "${G}${NAME}${N}"; log_action_begin_msg " ${G}probing for ethernet link${N}"
 		for netdev in ${NETDEVICES}; do
 			if [ -d /sys/class/net/${netdev}/wireless ]; then
 				# wireless
@@ -90,7 +90,7 @@ do_start() {
 			
 				# link beat detected ?
 				if [ "${?}" -eq 2 ]; then
-					log_progress_msg "${netdev}"
+					log_progress_msg "${Y}${netdev}${N}"
 					if ! grep -q -w "${netdev}" /etc/network/interfaces; then
 						printf "\nallow-hotplug ${netdev}\n"	>> /etc/network/interfaces
 						printf "iface ${netdev} inet dhcp\n"	>> /etc/network/interfaces

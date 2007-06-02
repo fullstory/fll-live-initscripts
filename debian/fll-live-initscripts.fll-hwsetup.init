@@ -85,7 +85,7 @@ done
 # functions...
 ###
 do_start() {
-	log_daemon_msg "${NAME}"; log_action_begin_msg " executing hwsetup"
+	log_daemon_msg "${G}${NAME}${N}"; log_action_begin_msg " ${G}starting hwsetup${N}"
 	hwsetup ${HWSETUP_VERBOSITY}
 	log_end_msg "${?}"
 
@@ -100,21 +100,24 @@ do_start() {
 		fi
 	fi
 
-	if [ "${BLUETOOTH}" != "bluetooth" ]; then
+	if [ "${BLUETOOTH}" = "bluetooth" ]; then
+		log_daemon_msg "${G}${NAME}${N}" "${G}detected ${Y}bluetooth${N}"
+		log_end_msg 0
+	else
 		update-rc.d -f bluetooth remove >/dev/null 2>&1
 	fi
 
 	# Mouse name
 	if [ "${MOUSE_FULLNAME}" ]; then
-		log_daemon_msg "${NAME}" 
-		log_progress_msg "mouse name is '${MOUSE_FULLNAME}'"
+		log_daemon_msg "${G}${NAME}${N}" 
+		log_progress_msg "${G}mouse name is '${Y}${MOUSE_FULLNAME}${G}'${N}"
 		log_end_msg 0
 	fi
 
 	# Mouse device
 	if [ "${MOUSE_DEVICE}" ]; then
-		log_daemon_msg "${NAME}"
-		log_progress_msg "mouse device is '${MOUSE_DEVICE}'"
+		log_daemon_msg "${G}${NAME}${N}"
+		log_progress_msg "${G}mouse device is '${Y}${MOUSE_DEVICE}${G}'${N}"
 		log_end_msg 0
 	fi
 
@@ -124,15 +127,15 @@ do_start() {
 
 	# Sound device
 	if [ "${SOUND_FULLNAME}" ]; then
-		log_daemon_msg "${NAME}"
-		log_progress_msg "sound is '${SOUND_FULLNAME}'"
+		log_daemon_msg "${G}${NAME}${N}"
+		log_progress_msg "${G}sound is '${Y}${SOUND_FULLNAME}${G}'${N}"
 		log_end_msg 0
 	fi
 
 	# Sound driver
 	if [ "${SOUND_DRIVER}" ]; then
-		log_daemon_msg "${NAME}"
-		log_progress_msg "alsa module is ${SOUND_DRIVER}"
+		log_daemon_msg "${G}${NAME}${N}"
+		log_progress_msg "${G}alsa module is '${Y}${SOUND_DRIVER}${G}'${N}"
 		log_end_msg 0
 	fi
 
@@ -173,56 +176,56 @@ do_start() {
 		[ -f "${HWSETUP_MAIN}" ] && . "${HWSETUP_MAIN}"
 		
 		if [ "${XDESC}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "video is '${XDESC}'"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}video is '${Y}${XDESC}${G}'${N}"
 			log_end_msg 0
 		fi
 
 		if [ "${XMODULE}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "using '${XMODULE}' xserver driver"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}using '${Y}${XMODULE}${G}' xserver driver${N}"
 			log_end_msg 0
 		fi
 
 		if [ "${MODEL}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "monitor is '${MODEL}'"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}monitor is '${Y}${MODEL}${G}'${N}"
 			log_end_msg 0
 		fi
 		
 		if [ "${XSCREEN}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "specified mode '${XSCREEN}'"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}specified mode '${Y}${XSCREEN}${G}'${N}"
 			log_end_msg 0
 		elif [ "${MODES}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "detected modes '${MODES#Modes }'"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}detected modes '${Y}${MODES#Modes }${G}'${N}"
 			log_end_msg 0
 		fi
 
 		if [ "${XHREFRESH}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "specified horizontal refresh '${XHREFRESH}'"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}specified horizontal refresh '${Y}${XHREFRESH}${G}'${N}"
 			log_end_msg 0
 		elif [ "${HREFRESH}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "detected horizontal refresh '${HREFRESH}'"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}detected horizontal refresh '${Y}${HREFRESH}${G}'${N}"
 			log_end_msg 0
 		fi
 
 		if [ "${XVREFRESH}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "specified vertical refresh '${XVREFRESH}'"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}specified vertical refresh '${Y}${XVREFRESH}${G}'${N}"
 			log_end_msg 0
 		elif [ "${VREFRESH}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "detected vertical refresh '${VREFRESH}'"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}detected vertical refresh '${Y}${VREFRESH}${G}'${N}"
 			log_end_msg 0
 		fi
 
 		if [ "${XDEPTH}" ]; then
-			log_daemon_msg "${NAME}"
-			log_progress_msg "specified depth '${XDPETH}'"
+			log_daemon_msg "${G}${NAME}${N}"
+			log_progress_msg "${G}specified depth '${Y}${XDPETH}${G}'${N}"
 			log_end_msg 0
 		fi
 	fi
