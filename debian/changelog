@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.37) unstable; urgency=low
+
+  * Add fll-desktop.
+
+ -- Kel Modderman <kel@otaku42.de>  Sat, 02 Jun 2007 18:23:14 +1000
+
 fll-live-initscripts (1.0.36) unstable; urgency=low
 
   * Add fll-xdm.

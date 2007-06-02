@@ -1,0 +1,144 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          fll-desktop
+# Required-Start:    fll-adduser
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: configure window manager to be used on live system
+# Description:       The purpose of this script is to configure a X window
+#                    manager.
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-desktop"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+#. /lib/init/vars.sh
+
+###
+# source lsb functions
+###
+. /lib/lsb/init-functions
+
+###
+# ANSI escape sequences (N, R, G, Y, B, M, C, W)
+###
+. /lib/fll/fll-init-cols
+
+###
+# cheatcode handling
+###
+for param in $(cat /proc/cmdline); do
+	case "${param}" in
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
+			;;
+		desktop=*)
+			DESKTOP="${param#desktop=}"
+			;;
+	esac
+done
+
+if [ -z "${DESKTOP}" ]; then
+	exit 0
+fi
+
+do_start() {
+	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
+
+	log_daemon_msg "${B}${NAME}${N}"
+
+	case "${DESKTOP}" in 
+		kde)
+			WM="/usr/bin/kwin"
+			;;
+		gnome)
+			WM="/usr/bin/metacity"
+			;;
+		flux*)
+			WM="/usr/bin/fluxbox"
+			;;
+		xfce*)
+			WM="/usr/bin/xfwm4"
+			;;
+		*)
+			log_action_msg " ${R}desktop '${Y}${DESKTOP}${G}' is not available${N}"
+			log_end_msg 0
+			return 1
+			;;
+	esac
+
+	if [ -x "${WM}" ]; then
+		case "${WM}" in 
+			"/usr/bin/kwin")
+				XSESSION="kde"
+				;;
+			"/usr/bin/metacity")
+				XSESSION="gnome"
+				;;
+			"/usr/bin/fluxbox")
+				XSESSION="fluxbox"
+				;;
+			"/usr/bin/xfwm4")
+				XSESSION="xfce4"
+				;;
+		esac
+	
+		log_action_begin_msg " ${G}setting up window manager '${Y}${WM}${G}'${N}"
+		echo "[Desktop]"		>  ${FLL_LIVE_USER_HOME}/.dmrc
+		echo "Session=${XSESSION}"	>> ${FLL_LIVE_USER_HOME}/.dmrc
+			
+		update-alternatives --set x-window-manager "${WM}" >/dev/null
+		log_end_msg "${?}"
+		return 0
+	else
+		log_action_msg " ${R}desktop '${Y}${DESKTOP}${G}' is not available${N}"
+		log_end_msg 0
+		return 1
+	fi
+}
+
+case "${1}" in
+	start)
+		do_start
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop}" >&2
+		exit 3
+		;;
+esac
+
+:
