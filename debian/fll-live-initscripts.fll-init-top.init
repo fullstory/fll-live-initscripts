@@ -49,6 +49,11 @@ fi
 . /lib/lsb/init-functions
 
 ###
+# ANSI escape sequences (N, R, G, Y, B, M, C, W)
+###
+. /lib/fll/fll-init-cols
+
+###
 # cheatcode handling, if /proc is not mounted then the initramfs failed
 # and executing this script would be impossible
 ###

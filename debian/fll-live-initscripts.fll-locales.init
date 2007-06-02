@@ -49,6 +49,11 @@ fi
 . /lib/lsb/init-functions
 
 ###
+# ANSI escape sequences (N, R, G, Y, B, M, C, W)
+###
+. /lib/fll/fll-init-cols
+
+###
 # default language string
 ###
 LANGUAGE="en"

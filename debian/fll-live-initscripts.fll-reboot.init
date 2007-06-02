@@ -49,16 +49,9 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# colourful escape sequences for eject prompt
+# ANSI escape sequences (N, R, G, Y, B, M, C, W)
 ###
-RED="[1;31m"
-GREEN="[1;32m"
-YELLOW="[1;33m"
-BLUE="[1;34m"
-MAGENTA="[1;35m"
-CYAN="[1;36m"
-WHITE="[1;37m"
-NORMAL="[0;39m"
+. /lib/fll/fll-init-cols
 
 ###
 # define this for copy_exec
@@ -410,17 +403,17 @@ do_stop() {
 
 	case "${0}" in
 		*halt)
-			message="${YELLOW}System halted.${NORMAL}"
+			message="${Y}System halted.${N}"
 			command="halt"
 			options="-n -p -i -f"
 			;;
 		*reboot)
-			message="${GREEN}Preparing for reboot...${NORMAL}"
+			message="${G}Preparing for reboot...${N}"
 			command="reboot"
 			options="-n -i -f"
 			;;
 		*)
-			echo "$0: call this script as \"halt\" or \"reboot\" please!"
+			echo "${0}: call this script as \"halt\" or \"reboot\" please!"
 			exit 1
 			;;
 	esac
