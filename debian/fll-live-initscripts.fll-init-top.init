@@ -76,11 +76,11 @@ done
 
 do_start() {
 	###
-	# re-enable printk's. linux stability is important, so are observations
-	# about what information linux is printing to console. see syslog(2)
-	# #define KERN_NOTICE   "<5>"  /* normal but significant condition */
+	# re-enable printk's. see syslog(2)
 	###
-	echo 5 >/proc/sys/kernel/printk
+	if ! grep -s -q -w quiet /proc/cmdline; then
+		echo 6 >/proc/sys/kernel/printk
+	fi
 	
 	###
 	# custom hostname given on cmdline
