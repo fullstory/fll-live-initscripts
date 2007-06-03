@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.66) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.66) unstable; urgency=low
 
   * fll-adduser: FLL_LIVE_USER_HOME cannot be determined before the user is
     created. This caused the .bashrc hack to fail.
