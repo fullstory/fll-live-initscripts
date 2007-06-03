@@ -78,7 +78,7 @@ setup_kdm() {
 	# autologin
 	echo "AUTOLOGINUSER=${FLL_LIVE_USER}"	>  /etc/default/kdm.d/autologin
 	echo "AUTOLOGINAGAIN=true"		>> /etc/default/kdm.d/autologin
-	echo "AUTOLOGINDELAY=3"			>> /etc/default/kdm.d/autologin
+	echo "AUTOLOGINDELAY=0"			>> /etc/default/kdm.d/autologin
 
 	if [ "${CUSTOM_DPI}" ]; then
 		sed -i -e "s/\(ServerArgsLocal\=\-nolisten tcp\).*$/\1 \-dpi ${CUSTOM_DPI}/" \
@@ -134,3 +134,4 @@ case "${1}" in
 esac
 
 :
+
