@@ -108,7 +108,7 @@ case "${1}" in
 	start)
 		log_daemon_msg "${B}${NAME}${N}"
 		if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
-			log_action_begin_msg " ${G}user '${Y}${FLL_LIVE_USER}${G}' exists, preparing /home${N}"
+			log_action_begin_msg " ${G}user '${Y}${FLL_LIVE_USER}${G}' exists, updating ${Y}${FLL_LIVE_USER_HOME}${N}"
 			sync_for_existing_user
 		else
 			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
