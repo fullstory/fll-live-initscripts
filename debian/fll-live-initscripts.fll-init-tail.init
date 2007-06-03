@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/dash
 
 ### BEGIN INIT INFO
 # Provides:          fll-init-tail
