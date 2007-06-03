@@ -68,8 +68,6 @@ for param in $(cat /proc/cmdline); do
 	esac
 done
 
-FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
-	
 add_live_user() {
 	adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
 	
@@ -78,7 +76,10 @@ add_live_user() {
 			adduser "${FLL_LIVE_USER}" "${group}"
 		fi
 	done
+}
 
+hack_bashrc() {
+	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
 	if ! grep -s -q 'alias su' ${FLL_LIVE_USER_HOME}/.bashrc; then
 		printf "\nalias su='sudo su'\nalias sux='sudo sux'\n" \
 			>> ${FLL_LIVE_USER_HOME}/.bashrc
@@ -94,6 +95,7 @@ case "${1}" in
 			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
 			add_live_user >/dev/null
 		fi
+		hack_bashrc
 		log_end_msg 0
 		;;
 	stop)
