@@ -99,13 +99,6 @@ do_start() {
 		fi
 	fi
 
-	if [ "${BLUETOOTH}" = "bluetooth" ]; then
-		log_daemon_msg "${B}${NAME}${N}" "${G}detected ${Y}bluetooth${N}"
-		log_end_msg 0
-	else
-		update-rc.d -f bluetooth remove >/dev/null 2>&1
-	fi
-
 	# Mouse name
 	if [ "${MOUSE_FULLNAME}" ]; then
 		log_daemon_msg "${B}${NAME}${N}" 
@@ -124,44 +117,7 @@ do_start() {
 		update-rc.d -f gpm remove >/dev/null 2>&1
 	fi
 
-	# Sound device
-	if [ "${SOUND_FULLNAME}" ]; then
-		log_daemon_msg "${B}${NAME}${N}"
-		log_progress_msg "${G}sound is '${Y}${SOUND_FULLNAME}${G}'${N}"
-		log_end_msg 0
-	fi
-
-	# Sound driver
-	if [ "${SOUND_DRIVER}" ]; then
-		log_daemon_msg "${B}${NAME}${N}"
-		log_progress_msg "${G}alsa module is '${Y}${SOUND_DRIVER}${G}'${N}"
-		log_end_msg 0
-	fi
-
 	###
-	# XXX: set volume, this needs some more work
-	###
-	#case "${VOL}" in
-	#	*[!0-9]*)
-	#		VOL=50
-	#		;;
-	#esac
-	
-	#if [ -z "${VOL}" ] || [ "${VOL}" -lt 0 ] || [ "${VOL}" -gt 100 ]; then
-	#	VOL=50
-	#fi
-
-	# set volume
-	#case "${SOUND_DRIVER}" in
-	#	snd*)
-	#		#set_mixers
-	#		which aumix >/dev/null 2>&1 && aumix -m 0 -v ${VOL} -w ${VOL} -c ${VOL}
-	#		;;
-	#esac
-
-	###
-	# XXX: cleanup bullshit mess, we have sed hack here, and sed hack there
-	# XXX: duplication of functions and escape seqences
 	# xorgconfig
 	###
 	if [ "${DISABLE_X_CONFIG}" != "yes" ]; then
@@ -226,9 +182,19 @@ do_start() {
 	fi
 
 	###
+	# bluetooth management
+	###
+	if [ "${BLUETOOTH}" = "bluetooth" ]; then
+		log_daemon_msg "${B}${NAME}${N}" "${G}detected ${Y}bluetooth${N}"
+		log_end_msg 0
+	else
+		update-rc.d -f bluetooth remove >/dev/null 2>&1
+	fi
+
+	###
 	# pcmciautils management
 	###
-	if ! grep -s -q '^pcmcia' /proc/modules; then
+	if ! grep -s -q -w '^pcmcia_core' /proc/modules; then
 		# disable it
 		echo "# added by ${NAME}"	>> /etc/default/pcmciautils
 		echo "PCMCIA=no" 		>> /etc/default/pcmciautils

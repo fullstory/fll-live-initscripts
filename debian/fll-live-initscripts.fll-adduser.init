@@ -81,6 +81,9 @@ add_live_user() {
 }
 
 sync_for_existing_user() {
+	###
+	# XXX: this function can disappear soon, it is fugly
+	###
 	install --directory --group="${FLL_LIVE_USER}" --owner="${FLL_LIVE_USER}" "${FLL_LIVE_USER_HOME}"
 
 	rsync -Ha --ignore-existing /etc/skel/ "${FLL_LIVE_USER_HOME}/" 2>/dev/null
