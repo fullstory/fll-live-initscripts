@@ -23,7 +23,7 @@
 ###
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-NAME="fll=cpufreq"
+NAME="fll-cpufreq"
 
 ###
 # source distro-defaults, no-op unless in live mode

@@ -5,8 +5,9 @@ fll-live-initscripts (1.0.63) UNRELEASED; urgency=low
     chooser via this.
   * fll-xdm: delay login by 3 secs again, 1 sec looked glitchy, but 0 doesn't
     show wallapaper . . .
+  * fll-cpufreq: fix typo in NAME.
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 23:16:33 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 23:18:17 +1000
 
 fll-live-initscripts (1.0.62) unstable; urgency=low
 
