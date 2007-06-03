@@ -717,33 +717,34 @@ do_start() {
 	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}installing '${Y}${KEYTABLE}${G}' keytable${N}"
 	install-keymap "${KEYTABLE}"
 	log_end_msg "${?}"
+}
 
-	###
-	# XXX: store XKBDLAYOUT somewhere for xorg.conf generator
-	###
-	if grep -q "^XKBLAYOUT=" /etc/default/distro 2>/dev/null; then
-		sed -i -e 's/^XKBLAYOUT=.*$/XKBLAYOUT="'"${XKBLAYOUT}"'"/' \
-			/etc/default/distro
-	else
-		printf "\n# Xkb i18n settings\nXKBLAYOUT=\"${XKBLAYOUT}\"\n" \
-			>> /etc/default/distro
+save_locale_variables() {
+	if [ ! -f "/etc/default/${NAME}" ]; then
+		return 0
 	fi
-
+	
 	###
-	# XXX: store KDEKEYBOARDS somewhere for kde keyboard application
+	# store XKBDLAYOUT xorg.conf generator
 	###
-	if grep -q "^KDEKEYBOARDS=" /etc/default/distro 2>/dev/null; then
-		sed -i -e 's/^KDEKEYBOARDS=.*$/KDEKEYBOARDS="'"${KDEKEYBOARDS}"'"/' \
-			/etc/default/distro
-	else
-		printf "\n# KDE i18n settings\nKDEKEYBOARDS=\"${KDEKEYBOARDS}\"\n" \
-			>> /etc/default/distro
+	if [ "${XKBLAYOUT}" ]; then
+		sed -i 's/^XKBLAYOUT=.*$/XKBLAYOUT="'"${XKBLAYOUT}"'"/' \
+			"/etc/default/${NAME}"
+	fi
+	
+	###
+	# store KDEKEYBOARDS for kde keyboard application
+	###
+	if [ "${KDEKEYBOARDS}" ]; then
+		sed -i 's/^KDEKEYBOARDS=.*$/KDEKEYBOARDS="'"${KDEKEYBOARDS}"'"/' \
+			"/etc/default/${NAME}"
 	fi
 }
 
 case "${1}" in
 	start)
 		do_start
+		save_locale_variables
 		;;
 	stop)
 		# no-op

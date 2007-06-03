@@ -1,0 +1,7 @@
+# locale settings determined by /etc/init.d/fll-locales
+
+# default X i18n settings
+XKBLAYOUT="us"
+
+# default KDE i18n settings
+KDEKEYBOARDS="us"
