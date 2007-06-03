@@ -1,5 +1,8 @@
 # locale settings determined by /etc/init.d/fll-locales
 
+# language cheatcode
+LANGUAGE=""
+
 # default language
 KEYTABLE=""
 

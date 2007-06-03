@@ -723,6 +723,14 @@ save_locale_variables() {
 	if [ ! -f "/etc/default/${NAME}" ]; then
 		return 0
 	fi
+
+	###
+	# store language cheatcode
+	###
+	if [ "${LANGUAGE}" ]; then
+		sed -i 's/^LANGUAGE=.*$/LANGUAGE="'"${LANGUAGE}"'"/' \
+			"/etc/default/${NAME}"
+	fi
 	
 	###
 	# store keytable
