@@ -13,6 +13,7 @@ XKBLAYOUT=""
 KDEKEYBOARDS=""
 
 # console-data defaults
+CD_COUNTRY=""
 CD_FAMILY=""
 CD_KEYMAP=""
 CD_VARIANT=""

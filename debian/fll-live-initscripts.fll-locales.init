@@ -764,6 +764,31 @@ save_locale_variables() {
 			"/etc/default/${NAME}"
 	fi
 
+	if [ "${CD_COUNTRY}" ]; then
+		sed -i 's/^CD_COUNTRY=.*$/CD_COUNTRY="'"${CD_COUNTRY}"'"/' \
+			"/etc/default/${NAME}"
+	fi
+	
+	if [ "${CD_FAMILY}" ]; then
+		sed -i 's/^CD_FAMILY=.*$/CD_FAMILY="'"${CD_FAMILY}"'"/' \
+			"/etc/default/${NAME}"
+	fi
+	
+	if [ "${CD_KEYMAP}" ]; then
+		sed -i 's/^CD_KEYMAP=.*$/CD_KEYMAP="'"${CD_KEYMAP}"'"/' \
+			"/etc/default/${NAME}"
+	fi
+	
+	if [ "${CD_VARIANT}" ]; then
+		sed -i 's/^CD_VARIANT=.*$/CD_VARIANT="'"${CD_VARIANT}"'"/' \
+			"/etc/default/${NAME}"
+	fi
+	
+	if [ "${CD_FULL}" ]; then
+		sed -i 's/^CD_FULL=.*$/CD_FULL="'"${CD_FULL}"'"/' \
+			"/etc/default/${NAME}"
+	fi
+
 	if [ "${CD_LAYOUT}" ]; then
 		sed -i 's/^CD_LAYOUT=.*$/CD_LAYOUT="'"${CD_LAYOUT}"'"/' \
 			"/etc/default/${NAME}"
