@@ -138,10 +138,6 @@ do_start() {
 		log_end_msg 0
 	fi
 
-	if [ -z "${SOUND_FULLNAME}" ] && [ -z "${SOUND_DRIVER}" ]; then
-		update-rc.d -f alsa-utils remove >/dev/null 2>&1
-	fi
-
 	###
 	# XXX: set volume, this needs some more work
 	###
