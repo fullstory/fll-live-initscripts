@@ -135,6 +135,10 @@ case "${1}" in
 		echo "Error: argument '${1}' not supported" >&2
 		exit 3
 		;;
+	kde|gnome|flux*|xfce*)
+		DESKTOP="${1}"
+		do_start
+		;;
 	*)
 		echo "Usage: ${NAME} {start|stop}" >&2
 		exit 3
