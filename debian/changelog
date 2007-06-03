@@ -1,3 +1,10 @@
+fll-live-initscripts (1.0.48) unstable; urgency=low
+
+  * fll-init-tail: move to runlevel S. Keep the default runlevels as debian
+    servcies only.
+
+ -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 12:36:50 +1000
+
 fll-live-initscripts (1.0.47) unstable; urgency=low
 
   * Add fll-init-tail.

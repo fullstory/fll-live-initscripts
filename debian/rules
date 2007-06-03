@@ -9,7 +9,7 @@ install/fll-live-initscripts::
 	
 	# install and configure runlevel seq. for our initscripts
 	dh_installinit --no-start --name=fll-init-top	-- start 00 S .
-	dh_installinit --no-start --name=fll-init-tail	-- start 99 2 3 4 5 .
+	dh_installinit --no-start --name=fll-init-tail	-- start 99 S .
 	dh_installinit --no-start --name=fll-locales	-- start 04 S .
 	dh_installinit --no-start --name=fll-fstab	-- start 35 S .
 	dh_installinit --no-start --name=fll-network	-- start 35 S .
