@@ -108,7 +108,7 @@ case "${1}" in
 	start)
 		log_daemon_msg "${B}${NAME}${N}"
 		if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
-			log_action_begin_msg " ${G}user '${Y}${FLL_LIVE_USER}${W}' already exists, preparing /home${N}"
+			log_action_begin_msg " ${G}user '${Y}${FLL_LIVE_USER}${G}' exists, preparing /home${N}"
 			sync_for_existing_user
 		else
 			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
@@ -116,6 +116,7 @@ case "${1}" in
 			log_end_msg 0
 		fi
 		hack_live_user_files
+		log_end_msg 0
 		;;
 	stop)
 		;;
