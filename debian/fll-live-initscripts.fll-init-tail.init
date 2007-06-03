@@ -1,0 +1,94 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          fll-init-tail
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      
+# Short-Description: read in fll live specific cheatcodes at tail of init
+# Description:       The purpose of fll-init-tail is to read in fll live
+#                    specific cheatcodes after all other init scripts have
+#                    processed.
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-init-tail"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+#. /lib/init/vars.sh
+
+###
+# source lsb functions
+###
+#. /lib/lsb/init-functions
+
+###
+# ANSI escape sequences (N, R, G, Y, B, M, C, W)
+###
+#. /lib/fll/fll-init-cols
+
+###
+# cheatcode handling
+###
+for param in $(cat /proc/cmdline); do
+	case "${param}" in
+		flldebug=*)
+			[ "${param#flldebug=}" = "${NAME}" ] && set -x
+			;;
+		quiet)
+			exit 0
+			;;
+	esac
+done
+
+do_start() {
+	###
+	# re-enable printk's. see syslog(2)
+	###
+	echo 6 >/proc/sys/kernel/printk
+}
+
+case "${1}" in
+	start)
+		do_start
+		;;
+	stop)
+		# no-op
+		;;
+	restart|reload|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop}" >&2
+		exit 3
+		;;
+esac
+
+:
