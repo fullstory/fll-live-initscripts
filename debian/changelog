@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.62) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.62) unstable; urgency=low
 
   * fll-adduser: drop hack_live_user_files().
   * fll_login: create ~/.hushlogin.
