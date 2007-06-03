@@ -3,7 +3,7 @@
 [ -s /etc/default/distro ] && . /etc/default/distro
 
 if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
-	exec /bin/login -f "${FLL_LIVE_USER}" >/dev/null 2>&1
+	exec /bin/login -f "${FLL_LIVE_USER}"
 else
-	exec /bin/login -f root >/dev/null 2>&1
+	exec /bin/login -f root
 fi
