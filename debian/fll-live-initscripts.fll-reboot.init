@@ -388,7 +388,7 @@ pop_live_cd()
 	echo "6" > /proc/sys/kernel/printk
 
 	if [ -z "${NOPROMPT}" ]; then
-		echo "${CYAN}Please remove CD, close cdrom drive and hit return.${NORMAL}" > /dev/console
+		echo "${Y}Please remove CD, close cdrom drive and hit return.${N}" > /dev/console
 		read
 	fi
 }
