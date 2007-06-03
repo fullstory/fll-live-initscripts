@@ -230,8 +230,8 @@ do_start() {
 	###
 	if ! grep -s -q '^pcmcia' /proc/modules; then
 		# disable it
-		echo "# added by ${NAME}"	>> /etc/defaults/pcmciautils
-		echo "PCMCIA=no" 		>> /etc/defaults/pcmciautils
+		echo "# added by ${NAME}"	>> /etc/default/pcmciautils
+		echo "PCMCIA=no" 		>> /etc/default/pcmciautils
 		update-rc.d -f pcmciautils remove >/dev/null 2>&1
 	fi
 }
