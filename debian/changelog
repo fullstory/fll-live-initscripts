@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.61) unstable; urgency=low
+
+  * upload to sidux.com.
+
+ -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 13:40:08 +0200
+
 fll-live-initscripts (1.0.60) unstable; urgency=low
 
   * fll-xdm: reduce kdm autologin delay to one second.
