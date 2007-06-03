@@ -1,19 +1,19 @@
 # locale settings determined by /etc/init.d/fll-locales
 
 # default language
-KEYTABLE="us"
+KEYTABLE=""
 
 # default X i18n settings
-XKBLAYOUT="us"
+XKBLAYOUT=""
 
 # default KDE i18n settings
-KDEKEYBOARDS="us"
+KDEKEYBOARDS=""
 
 # console-data defaults
-CD_FAMILY="qwerty"
-CD_KEYMAP="us"
-CD_VARIANT="Standard"
-CD_FULL="US american"
+CD_FAMILY=""
+CD_KEYMAP=""
+CD_VARIANT=""
+CD_FULL=""
 
 # console data variables
 CD_LAYOUT=""
