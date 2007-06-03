@@ -1,8 +1,12 @@
 fll-live-initscripts (1.0.67) unstable; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * remove auto-login grace period for kdm.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 04 Jun 2007 00:18:33 +0200
+  [ Kel Modderman ]
+  * Don't purge alsa-utils when hwinfo fails to identify a sound device.
+
+ -- Kel Modderman <kel@otaku42.de>  Mon, 04 Jun 2007 09:35:37 +1000
 
 fll-live-initscripts (1.0.66) unstable; urgency=low
 
