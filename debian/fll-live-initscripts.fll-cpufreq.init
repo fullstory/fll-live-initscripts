@@ -210,9 +210,8 @@ case "${1}" in
 	stop)
 		;;
 	restart|force-reload)
-		${0} stop
-        	sleep 1
-		${0} start
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
 		;;
 	*)
 		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
