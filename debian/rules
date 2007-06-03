@@ -2,15 +2,6 @@
 
 include /usr/share/cdbs/1/rules/debhelper.mk
 
-install/initscripts-sidux-live::
-	# live-{reboot,halt} are the same script. duplicate it
-	cp debian/initscripts-sidux-live.live-reboot.init \
-		debian/initscripts-sidux-live.live-halt.init
-	
-	dh_installinit --no-start --name=live-autoconfig	-- start 00 S .
-	dh_installinit --no-start --name=live-halt		-- start 90 0 .
-	dh_installinit --no-start --name=live-reboot		-- start 90 6 .
-
 install/fll-live-initscripts::
 	# fll-{reboot,halt} are the same script. duplicate it
 	cp debian/fll-live-initscripts.fll-reboot.init \
@@ -35,4 +26,3 @@ install/fll-live-initscripts::
 clean::
 	# clean up duplicated init script
 	rm -f debian/fll-live-initscripts.fll-halt.init
-	rm -f debian/initscripts-sidux-live.live-halt.init

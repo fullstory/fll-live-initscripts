@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.41) unstable; urgency=low
+
+  * Really purge all initscripts-sidux-live from packaging.
+
+ -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 10:14:20 +1000
+
 fll-live-initscripts (1.0.40) unstable; urgency=low
 
   * Remove legacy initscripts-sidux-life stuff, turn it into a dummy
