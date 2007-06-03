@@ -6,17 +6,6 @@ Uploaders: Stefan Lippers-Hollmann <s.l-h@gmx.de>
 Build-Depends: cdbs, debhelper (>= 5)
 Standards-Version: 3.7.2
 
-Package: initscripts-sidux-live
-Architecture: all
-Depends: fll-live-initscripts
-Recommends: xorgconfig-sidux, tzdata, kdm | gdm
-Suggests: unionfs-utils, hotkey-setup
-Description: sidux initscripts for live CDs
- Live specific initscripts for hardware detection and shutdown functions on
- sidux.
- .
- This is a dummy transitional package for entry of fll-live-initscripts.
-
 Package: fll-live-initscripts
 Architecture: all
 Depends: lsb-base (>= 3.0-6), adduser, debconf-utils, distro-defaults, eject, rebuildfstab (>= 0.6.15), udev, ifplugd, hwinfo

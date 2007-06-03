@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.64) unstable; urgency=low
+
+  * remove transitional package for initscripts-sidux-live.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Jun 2007 15:24:12 +0200
+
 fll-live-initscripts (1.0.63) unstable; urgency=low
 
   * fll-desktop: allow script to accept desktop names as arguments, and
