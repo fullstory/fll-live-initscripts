@@ -68,33 +68,39 @@ for param in $(cat /proc/cmdline); do
 	esac
 done
 
-add_live_user() {
-	LIVE_USER="${1}"
-	shift
-
-	adduser --disabled-password --gecos "${LIVE_USER}" "${LIVE_USER}"
+LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
 	
-	for group in ${@}; do
+add_live_user() {
+	adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
+	
+	for group in ${FLL_LIVE_USER_GROUPS}; do
 		if getent group "${group}" >/dev/null; then
-			adduser "${LIVE_USER}" "${group}"
+			adduser "${FLL_LIVE_USER}" "${group}"
 		fi
 	done
 }
 
+sync_for_existing_user() {
+	install --directory --group="${FLL_LIVE_USER}" --owner="${FLL_LIVE_USER}" "${FLL_LIVE_USER_HOME}"
+
+	rsync -Ha --ignore-existing /etc/skel/ "${FLL_LIVE_USER_HOME}/" 2>/dev/null
+	rsync -Ha --ignore-existing /usr/share/user-profile/profile/ "${FLL_LIVE_USER_HOME}/" 2>/dev/null
+
+	chown -R "${FLL_LIVE_USER}:${FLL_LIVE_USER}" "${FLL_LIVE_USER_HOME}"
+}
+
 hack_live_user_files() {
-	LIVE_USER_HOME=$(getent passwd ${1} | cut -d\: -f 6)
-	
 	###
 	# disable noise at login time
 	###
-	:> ${LIVE_USER_HOME}/.hushlogin
+	:> ${FLL_LIVE_USER_HOME}/.hushlogin
 
 	###
 	# add handy aliases, these are for live-mode only
 	###
-	if ! grep -s -q 'alias su' ${LIVE_USER_HOME}/.bashrc; then
+	if ! grep -s -q 'alias su' ${FLL_LIVE_USER_HOME}/.bashrc; then
 		printf "\nalias su='sudo su'\nalias sux='sudo sux'\n" \
-			>> ${LIVE_USER_HOME}/.bashrc
+			>> ${FLL_LIVE_USER_HOME}/.bashrc
 	fi
 }
 
@@ -102,13 +108,14 @@ case "${1}" in
 	start)
 		log_daemon_msg "${B}${NAME}${N}"
 		if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
-			log_action_msg " ${W}user '${Y}${FLL_LIVE_USER}${W}' already exists${N}"
+			log_action_begin_msg " ${G}user '${Y}${FLL_LIVE_USER}${W}' already exists, preparing /home${N}"
+			sync_for_existing_user
 		else
 			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
-			add_live_user "${FLL_LIVE_USER}" ${FLL_LIVE_USER_GROUPS} >/dev/null
-			hack_live_user_files "${FLL_LIVE_USER}"
+			add_live_user >/dev/null
 			log_end_msg 0
 		fi
+		hack_live_user_files
 		;;
 	stop)
 		;;
