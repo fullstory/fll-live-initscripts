@@ -3,6 +3,7 @@
 [ -s /etc/default/distro ] && . /etc/default/distro
 
 if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
+	:> "$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)/.hushlogin"
 	exec /bin/login -f "${FLL_LIVE_USER}"
 else
 	exec /bin/login -f root

@@ -78,17 +78,7 @@ add_live_user() {
 			adduser "${FLL_LIVE_USER}" "${group}"
 		fi
 	done
-}
 
-hack_live_user_files() {
-	###
-	# disable noise at login time
-	###
-	:> ${FLL_LIVE_USER_HOME}/.hushlogin
-
-	###
-	# add handy aliases, these are for live-mode only
-	###
 	if ! grep -s -q 'alias su' ${FLL_LIVE_USER_HOME}/.bashrc; then
 		printf "\nalias su='sudo su'\nalias sux='sudo sux'\n" \
 			>> ${FLL_LIVE_USER_HOME}/.bashrc
@@ -104,7 +94,6 @@ case "${1}" in
 			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
 			add_live_user >/dev/null
 		fi
-		hack_live_user_files
 		log_end_msg 0
 		;;
 	stop)

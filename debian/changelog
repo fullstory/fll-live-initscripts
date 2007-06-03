@@ -1,8 +1,9 @@
 fll-live-initscripts (1.0.62) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-adduser: drop hack_live_user_files().
+  * fll_login: create ~/.hushlogin.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Jun 2007 13:42:53 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 21:47:30 +1000
 
 fll-live-initscripts (1.0.61) unstable; urgency=low
 
