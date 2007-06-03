@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.63) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.63) unstable; urgency=low
 
   * fll-desktop: allow script to accept desktop names as arguments, and
     facilitate the x-window-manager update. We can revive restartx/desktop
