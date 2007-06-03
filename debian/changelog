@@ -1,8 +1,9 @@
 fll-live-initscripts (1.0.49) unstable; urgency=low
 
   * fll-hwsetup: move to sequence position 35.
+  * fll-hwsetup: add pcmcia detection, manage pcmciautils init script.
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 12:52:41 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 13:00:05 +1000
 
 fll-live-initscripts (1.0.48) unstable; urgency=low
 
