@@ -3,8 +3,10 @@ fll-live-initscripts (1.0.63) UNRELEASED; urgency=low
   * fll-desktop: allow script to accept desktop names as arguments, and
     facilitate the x-window-manager update. We can revive restartx/desktop
     chooser via this.
+  * fll-xdm: delay loging by 3 secs again, 1 sec looked glitchy, but 0 doesn't
+    show wallapaper . . .
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 22:53:21 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 23:15:49 +1000
 
 fll-live-initscripts (1.0.62) unstable; urgency=low
 
