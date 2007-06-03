@@ -14,7 +14,7 @@ my $chroot = "";
 my %init;
 
 my $res = GetOptions(	
-		"a|apply" => \$doit,
+		"a|apply" => sub { $doit = "yes"; },
 		"f|force" => \$frc,
 		"r|remove" => sub { $rem = 1; $frc = 1; }, 
 		"c|chroot=s" => \$chroot
