@@ -80,18 +80,6 @@ add_live_user() {
 	done
 }
 
-sync_for_existing_user() {
-	###
-	# XXX: this function can disappear soon, it is fugly
-	###
-	install --directory --group="${FLL_LIVE_USER}" --owner="${FLL_LIVE_USER}" "${FLL_LIVE_USER_HOME}"
-
-	rsync -Ha --ignore-existing /etc/skel/ "${FLL_LIVE_USER_HOME}/" 2>/dev/null
-	rsync -Ha --ignore-existing /usr/share/user-profile/profile/ "${FLL_LIVE_USER_HOME}/" 2>/dev/null
-
-	chown -R "${FLL_LIVE_USER}:${FLL_LIVE_USER}" "${FLL_LIVE_USER_HOME}"
-}
-
 hack_live_user_files() {
 	###
 	# disable noise at login time
@@ -111,12 +99,10 @@ case "${1}" in
 	start)
 		log_daemon_msg "${B}${NAME}${N}"
 		if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
-			log_action_begin_msg " ${G}user '${Y}${FLL_LIVE_USER}${G}' exists, updating ${Y}${FLL_LIVE_USER_HOME}${N}"
-			sync_for_existing_user
+			log_action_begin_msg " ${G}user '${Y}${FLL_LIVE_USER}${G}' exists${N}"
 		else
 			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
 			add_live_user >/dev/null
-			log_end_msg 0
 		fi
 		hack_live_user_files
 		log_end_msg 0
