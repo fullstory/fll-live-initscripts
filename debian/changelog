@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.45) unstable; urgency=low
+
+  * fll_login: add ugly redirect to inhibit pam messages.
+
+ -- Kel Modderman <kel@otaku42.de>  Sun, 03 Jun 2007 11:57:19 +1000
+
 fll-live-initscripts (1.0.44) unstable; urgency=low
 
   * fll-adduser: fix output.
