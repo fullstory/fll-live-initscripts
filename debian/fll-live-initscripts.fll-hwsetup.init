@@ -72,12 +72,6 @@ for param in $(cat /proc/cmdline); do
 		noxorgconfig|nomkxf86config)
 			DISABLE_X_CONFIG="yes"
 			;;
-		vol=*)
-			VOLUME="${param#vol=}"
-			;;
-		volume=*)
-			VOLUME="${param#volume=}"
-			;;
 	esac
 done
 
