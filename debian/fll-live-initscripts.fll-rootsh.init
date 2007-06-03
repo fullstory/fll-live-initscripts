@@ -70,8 +70,6 @@ do_start() {
 			cat /etc/skel/${file} > /root/${file}
 		fi
 	done
-
-	:> /root/.hushlogin
 }
 
 case "${1}" in
