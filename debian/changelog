@@ -8,8 +8,9 @@ fll-live-initscripts (1.0.67) unstable; urgency=low
     device.
   * fll-reboot: make "System halted" string green, to stand out against the
     yellow prompt to remove cd.
+  * fll_login: ensure we are user friendly while creating ~/.hushlogin.
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 04 Jun 2007 11:11:22 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 04 Jun 2007 12:59:09 +1000
 
 fll-live-initscripts (1.0.66) unstable; urgency=low
 
