@@ -108,7 +108,11 @@ case "${1}" in
 			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
 			add_live_user >/dev/null
 		fi
-		hack_sudoers
+		
+		if ! grep -q -w "${FLL_LIVE_USER}" /etc/sudoers; then
+			hack_sudoers
+		fi
+		
 		hack_bashrc
 		log_end_msg 0
 		;;
