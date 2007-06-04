@@ -2,7 +2,7 @@
 .SH NAME
 fll_analyze_initscripts \- analyze runlevel configuration of a SysV init system
 .SH SYNOPSIS
-\fBfll_analyze_initscripts\fR \fI[\-a | \-\-apply] [\-r | \-\-remove] [\-f | \-\-force] [\-c | \-\-croot /path/to/chroot] [initscript1 initscript2 ...]\fR
+\fBfll_analyze_initscripts\fR \fI[\-a | \-\-apply] [\-r | \-\-remove] [\-f | \-\-force] [\-c | \-\-chroot /path/to/chroot] [initscript1 initscript2 ...]\fR
 .SH DESCRIPTION
 The purpose of \fIfll_analyze_initscripts\fR is to recurse a directory tree
 with SysV-Init style init script links,	and formulate update-rc.d commands
@@ -19,7 +19,7 @@ Print update-rc.d command that would remove the initscripts.
 \fB\-f | \-\-force\fR
 Print update-rc.d command using \fI\-f\fR force option.
 .TP
-\fB\-c | \-\-croot /path/to/chroot\fR
+\fB\-c | \-\-chroot /path/to/chroot\fR
 Path to chroot which will provide the SysV init runlevel directory tree for
 analysis. If no directory path is given as an argument, / is assumed.
 .TP
