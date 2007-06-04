@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.69) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.69) unstable; urgency=low
 
   * fll-adduser: add hack_sudoers(), from fll-builder.
 
