@@ -403,7 +403,7 @@ do_stop() {
 
 	case "${0}" in
 		*halt)
-			message="${Y}System halted.${N}"
+			message="${G}System halted.${N}"
 			command="halt"
 			options="-n -p -i -f"
 			;;
