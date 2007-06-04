@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.68) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.68) unstable; urgency=low
 
   * fll-hwsetup: don't purge alsa-utils when hwinfo fails to identify a sound
     device.
