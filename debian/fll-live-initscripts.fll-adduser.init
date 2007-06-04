@@ -78,6 +78,19 @@ add_live_user() {
 	done
 }
 
+hack_sudoers() {
+		# append suoders entry
+		cat >> /etc/sudoers \
+<<EOF
+
+# WARNING: This allows the unprivileged ${FLL_LIVE_USER} user to start commands as root
+# WARNING: This is totally insecure and (almost) makes ${FLL_LIVE_USER} a second root account.
+# WARNING: Never allow external access to the ${FLL_LIVE_USER} user!!!
+${FLL_LIVE_USER} ALL=NOPASSWD: ALL
+EOF
+		chmod 0440 /etc/sudoers
+}
+
 hack_bashrc() {
 	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
 	if ! grep -s -q 'alias su' ${FLL_LIVE_USER_HOME}/.bashrc; then
@@ -95,6 +108,7 @@ case "${1}" in
 			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
 			add_live_user >/dev/null
 		fi
+		hack_sudoers
 		hack_bashrc
 		log_end_msg 0
 		;;
