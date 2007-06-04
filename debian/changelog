@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.70) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.70) unstable; urgency=low
 
   * fll_analyze_initscripts.1: fix typo, s/croot/chroot/.
 
