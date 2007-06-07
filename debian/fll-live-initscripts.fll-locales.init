@@ -701,13 +701,6 @@ do_start() {
 	log_end_msg "${?}"
 
 	###
-	# install keymap/keytable
-	###
-	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}installing '${Y}${KEYTABLE}${G}' keytable${N}"
-	install-keymap "${KEYTABLE}"
-	log_end_msg "${?}"
-
-	###
 	# select default locale and configure console-data via debconf
 	###
 	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring console data for '${Y}${CD_FULL}${G}'${N}"
@@ -720,6 +713,13 @@ do_start() {
 		"console-data console-data/keymap/full select ${CD_FULL}"; do
 		echo "${msg}" | /usr/bin/debconf-set-selections
 	done
+	log_end_msg "${?}"
+
+	###
+	# install keymap/keytable
+	###
+	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}installing '${Y}${KEYTABLE}${G}' keytable${N}"
+	install-keymap "${KEYTABLE}"
 	log_end_msg "${?}"
 }
 
