@@ -718,9 +718,7 @@ do_start() {
 	###
 	# install keymap/keytable
 	###
-	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}installing '${Y}${KEYTABLE}${G}' keytable${N}"
-	install-keymap "${KEYTABLE}"
-	log_end_msg "${?}"
+	DEBIAN_FRONTEND="noninteractive" DEBIAN_PRIORITY="critical" dpkg-reconfigure console-data
 }
 
 save_locale_variables() {
