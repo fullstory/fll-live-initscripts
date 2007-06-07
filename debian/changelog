@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.71) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.71) unstable; urgency=low
 
   * Bugfix: our console-data preseeding has been long broken, each individual
     debconf communication must be parsed individually. Do this in a for loop.
