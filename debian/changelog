@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.72) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.72) unstable; urgency=low
 
   * Skip devices with phy80211 sysfs attribute, they are mac80211 supported
     devices that we cannot appropriately autoconfigure.
