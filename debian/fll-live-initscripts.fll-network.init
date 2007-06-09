@@ -72,7 +72,7 @@ do_start() {
 	if [ "${NETDEVICES}" ]; then
 		log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}probing for an ${Y}ethernet${G} link${N}"
 		for netdev in ${NETDEVICES}; do
-			if [ -d /sys/class/net/${netdev}/wireless ]; then
+			if [ -d /sys/class/net/${netdev}/wireless ] || [ -d /sys/class/net/${netdev}/phy80211 ]; then
 				# wireless
 				continue
 			fi
