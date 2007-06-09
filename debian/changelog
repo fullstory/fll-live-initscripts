@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.73) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 09 Jun 2007 21:15:06 +0200
+
 fll-live-initscripts (1.0.72) unstable; urgency=low
 
   * Skip devices with phy80211 sysfs attribute, they are mac80211 supported
