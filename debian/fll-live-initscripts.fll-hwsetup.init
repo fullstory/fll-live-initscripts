@@ -203,7 +203,7 @@ do_start() {
 	###
 	# don't start gpm is a mouse device is not present
 	###
-	if [ ! -c /dev/input/mice ] || [ ! -c /dev/psaux ]; then
+	if [ ! -c /dev/input/mice ]; then
 		update-rc.d -f gpm remove >/dev/null 2>&1
 	fi
 }
