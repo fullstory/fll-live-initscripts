@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.74) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 10 Jun 2007 14:33:07 +0200
+
 fll-live-initscripts (1.0.73) unstable; urgency=low
 
   * fll-locales.init: clean up TZ handling.
