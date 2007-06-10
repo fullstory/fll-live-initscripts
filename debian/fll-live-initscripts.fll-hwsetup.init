@@ -93,24 +93,6 @@ do_start() {
 		fi
 	fi
 
-	# Mouse name
-	if [ "${MOUSE_FULLNAME}" ]; then
-		log_daemon_msg "${B}${NAME}${N}" 
-		log_progress_msg "${G}mouse name is '${Y}${MOUSE_FULLNAME}${G}'${N}"
-		log_end_msg 0
-	fi
-
-	# Mouse device
-	if [ "${MOUSE_DEVICE}" ]; then
-		log_daemon_msg "${B}${NAME}${N}"
-		log_progress_msg "${G}mouse device is '${Y}${MOUSE_DEVICE}${G}'${N}"
-		log_end_msg 0
-	fi
-
-	if [ -z "${MOUSE_DEVICE}" ]; then
-		update-rc.d -f gpm remove >/dev/null 2>&1
-	fi
-
 	###
 	# xorgconfig
 	###
@@ -216,6 +198,13 @@ do_start() {
 		echo "# added by ${NAME}"	>> /etc/default/pcmciautils
 		echo "PCMCIA=no" 		>> /etc/default/pcmciautils
 		update-rc.d -f pcmciautils remove >/dev/null 2>&1
+	fi
+
+	###
+	# don't start gpm is a mouse device is not present
+	###
+	if [ ! -c /dev/input/mice ] || [ ! -c /dev/psaux ]; then
+		update-rc.d -f gpm remove >/dev/null 2>&1
 	fi
 }
 
