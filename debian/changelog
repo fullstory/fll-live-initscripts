@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.73) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.73) unstable; urgency=low
 
   * fll-locales.init: clean up TZ handling.
   * fll-hwsetup: don't announce mouse detection, who really cares anyway.
