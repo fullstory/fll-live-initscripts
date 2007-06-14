@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.75) UNRELEASED; urgency=low
+fll-live-initscripts (1.0.75) unstable; urgency=low
 
   * fll-fstab.init: no longer handle swap mounting, let
     /etc/init.d/mountall.sh do that now that it has been whitelisted.
