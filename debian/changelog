@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.76) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 14 Jun 2007 13:30:56 +0200
+
 fll-live-initscripts (1.0.75) unstable; urgency=low
 
   * fll-fstab.init: no longer handle swap mounting, let
