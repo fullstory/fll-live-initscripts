@@ -58,6 +58,11 @@ fi
 . /lib/fll/fll-init-cols
 
 ###
+# ensure this is clean variable
+###
+NOSWAP=""
+
+###
 # cheatcode handling
 ###
 for param in $(cat /proc/cmdline); do
@@ -69,23 +74,14 @@ for param in $(cat /proc/cmdline); do
 			exit 0
 			;;
 		noswap|swap=no)
-			NOSWAP="yes"
+			NOSWAP="--no-swap"
 			;;
 	esac
 done
 
 do_start() {
 	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}generating ${Y}/etc/fstab${N}"
-	/usr/sbin/rebuildfstab --quiet --write-fstab --make-mountpoints
-	log_end_msg "${?}"
-
-	if [ "${NOSWAP}" = "yes" ] || !  grep -q -s -w swap /etc/fstab; then
-		# noswap
-		return 0
-	fi
-	
-	log_daemon_msg "${B}${NAME}${N}" "${G}mounting ${Y}swap${G} partitions${N}"
-	swapon -a -e
+	/usr/sbin/rebuildfstab --quiet --write-fstab --make-mountpoints ${NOSWAP}
 	log_end_msg "${?}"
 }
 
