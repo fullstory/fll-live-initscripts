@@ -191,17 +191,7 @@ do_start() {
 	fi
 
 	###
-	# pcmciautils management
-	###
-	if ! grep -s -q -w '^pcmcia_core' /proc/modules; then
-		# disable it
-		echo "# added by ${NAME}"	>> /etc/default/pcmciautils
-		echo "PCMCIA=no" 		>> /etc/default/pcmciautils
-		update-rc.d -f pcmciautils remove >/dev/null 2>&1
-	fi
-
-	###
-	# don't start gpm is a mouse device is not present
+	# don't start gpm if a mouse device is not present
 	###
 	if [ ! -c /dev/input/mice ]; then
 		update-rc.d -f gpm remove >/dev/null 2>&1
