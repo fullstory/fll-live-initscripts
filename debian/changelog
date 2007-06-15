@@ -1,8 +1,9 @@
 fll-live-initscripts (1.0.76) UNRELEASED; urgency=low
 
   * Start fll-hwestup later, at sequence 90.
+  * fll-hwsetup: remove pcmciautils related garbage.
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 15 Jun 2007 23:59:49 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 16 Jun 2007 00:05:32 +1000
 
 fll-live-initscripts (1.0.75) unstable; urgency=low
 
