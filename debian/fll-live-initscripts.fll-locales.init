@@ -35,7 +35,7 @@ if [ -s /etc/default/distro ]; then
 fi
 
 if [ "${FLL_DISTRO_MODE}" != "live" ]; then
-	exit 0
+	[ "${1}" = "localize" ] || exit 0
 fi
 
 ###
