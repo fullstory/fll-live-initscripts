@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.2) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.2) unstable; urgency=low
 
   * fll-locales: remove spurios '.' from FLL_LANG arg handling.
   * fll-locales: use only primary mirrors. enhance sources.list substitution
