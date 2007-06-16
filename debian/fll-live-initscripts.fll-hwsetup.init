@@ -169,17 +169,6 @@ do_start() {
 	fi
 
 	###
-	# sound management
-	###
-	SOUND=$(hwinfo --sound --short | sed -n '/^[a-z]\+:/!s/[ \t]\+//p' | head -n1)
-	if [ "${SOUND}" ]; then
-		log_daemon_msg "${B}${NAME}${N}" "${G}sound is '${Y}${SOUND}${G}'${N}"
-		log_end_msg 0
-	else
-		: #update-rc.d -f alsa-utils remove >/dev/null 2>&1
-	fi
-
-	###
 	# printer management
 	###
 	PRINTER=$(hwinfo --printer --short | sed -n '/^[a-z]\+:/!s/[ \t]\+//p' | head -n1)
