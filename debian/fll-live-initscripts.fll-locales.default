@@ -12,6 +12,9 @@ XKBLAYOUT=""
 # default KDE i18n settings
 KDEKEYBOARDS=""
 
+# local apt mirror
+MIRROR=""
+
 # console-data defaults
 CD_COUNTRY=""
 CD_FAMILY=""
