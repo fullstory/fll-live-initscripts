@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.1) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.1) unstable; urgency=low
 
   * fll-locales: call save_locale_variables for localize target.
 
