@@ -1,8 +1,19 @@
 fll-live-initscripts (1.0.77) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-locales: many enhancements and bugfixes
+    - remove LANGUAGE default, the case construct handles that
+    - allow FLL_LANG environment variable to trump all, allowing fll-locales
+      to be useful for fll-installer
+    - add MIRROR variable for all supported languages, do a sources.list
+      substitution
+    - allow lang=gr to select greek language profile
+    - allow lang=si to select slovenian language profile
+    - fix CD_VARIANT_PATH calculation, substitute spaces and brackets for
+      underscores
+    - rewrite save_locale_variables() to use a for loop that operates on a
+      list of variables
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 16 Jun 2007 03:37:46 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sat, 16 Jun 2007 18:11:39 +1000
 
 fll-live-initscripts (1.0.76) unstable; urgency=low
 

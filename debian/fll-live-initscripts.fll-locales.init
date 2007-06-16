@@ -54,11 +54,6 @@ fi
 . /lib/fll/fll-init-cols
 
 ###
-# default language string
-###
-LANGUAGE="en"
-
-###
 # cheatcode handling
 ###
 for param in $(cat /proc/cmdline); do
@@ -79,6 +74,13 @@ for param in $(cat /proc/cmdline); do
 done
 
 ###
+# allow FLL_LANG environment variable to trump
+###
+if [ "${FLL_LANG}" ]; then
+	LANGUAGE="${FLL_LANG}"
+fi	
+
+###
 # The default language/keyboard to use. This CANNOT be autoprobed.
 ###
 case "${LANGUAGE}" in
@@ -91,6 +93,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="de"
 		TZ="Europe/Berlin"
 		CD_COUNTRY="German"
+		MIRROR="ftp.de.debian.org"
 		;;
 	au)
 		## Australian version
@@ -101,6 +104,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="us"
 		TZ="Australia/Sydney"
 		CD_COUNTRY="us_american"
+		MIRROR="ftp.au.debian.org"
 		;;
 	bg)
 		## Bulgarian version
@@ -111,6 +115,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="bg"
 		TZ="Europe/Sofia"
 		CD_COUNTRY="Bulgarian"
+		MIRROR="ftp.bg.debian.org"
 		;;
 	br)
 		## Brazilian Version
@@ -121,6 +126,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="br"
 		TZ="America/Sao_Paulo"
 		CD_COUNTRY="Brazilian"
+		MIRROR="ftp.br.debian.org"
 		;;
 	ch)
 		## Swiss version (basically de with some modifications)
@@ -131,6 +137,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="de"
 		TZ="Europe/Zurich"
 		CD_COUNTRY="Swiss-de"
+		MIRROR="ftp.ch.debian.org"
 		;;
 	cn)
 		## Simplified Chinese version
@@ -140,6 +147,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="us"
 		TZ="Asia/Shanghai"
 		CD_COUNTRY=""
+		MIRROR="mirrors.geekbone.org" # china has no primary mirror
 		;;
 	cs|cz)
 		## Czech version
@@ -150,6 +158,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="cs"
 		TZ="Europe/Prague"
 		CD_COUNTRY="Czech-qwerty"
+		MIRROR="ftp.cz.debian.org"
 		;;
 	dk|da)
 		## Dansk version
@@ -159,8 +168,9 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="dk"
 		TZ="Europe/Copenhagen"
 		CD_COUNTRY="Danish"
+		MIRROR="ftp.dk.debian.org"
 		;;
-	el)
+	el|gr)
 		## Greek version
 		#LANGUAGE="el_GR:el"
 		LANG="el_GR.UTF-8"
@@ -169,6 +179,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="gr"
 		TZ="Europe/Athens"
 		CD_COUNTRY="Greek"
+		MIRROR="ftp.gr.debian.org"
 		;;
 	es)
 		## Spanish version
@@ -179,6 +190,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="es"
 		TZ="Europe/Madrid"
 		CD_COUNTRY="Spanish"
+		MIRROR="ftp.es.debian.org"
 		;;
 	fi)
 		## Finnish version, though we may not have the kde-i18n files
@@ -189,6 +201,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="fi"
 		TZ="Europe/Helsinki"
 		CD_COUNTRY="Swedish"
+		MIRROR="ftp.fi.debian.org"
 		;;
 	fr)
 		## French version
@@ -199,6 +212,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="fr"
 		TZ="Europe/Paris"
 		CD_COUNTRY="French"
+		MIRROR="ftp.fr.debian.org"
 		;;
 	fr-be)
 		## Belgian version
@@ -209,6 +223,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="be"
 		TZ="Europe/Brussels"
 		CD_COUNTRY="Belgian"
+		MIRROR="ftp.fr.debian.org"
 		;;
 	ga)
 		## Irish Gaeilge version
@@ -218,6 +233,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="ie"
 		TZ="Europe/Dublin"
 		CD_COUNTRY="British"
+		MIRROR="ftp.uk.debian.org"
 		;;
 	he|il)
 		## Hebrew version
@@ -228,6 +244,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="il"
 		TZ="Asia/Jerusalem"
 		CD_COUNTRY="Hebrew"
+		MIRROR="ftp.us.debian.org"
 		;;
 	hr)
 		## Croatian version 
@@ -238,6 +255,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="hr" 
 		TZ="Europe/Zagreb" 
 		CD_COUNTRY="Croatian"
+		MIRROR="ftp.hr.debian.org"
 		;;
 	ie)
 		## Irish (English) version
@@ -248,6 +266,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="ie"
 		TZ="Europe/Dublin"
 		CD_COUNTRY="British"
+		MIRROR="ftp.uk.debian.org"
 		;;
 	it)
 		## Italian version
@@ -258,6 +277,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="it"
 		TZ="Europe/Rome"
 		CD_COUNTRY="Italian"
+		MIRROR="ftp.it.debian.org"
 		;;
 	ja)
 		## (limited) Japanese version
@@ -268,6 +288,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="jp"
 		TZ="Asia/Tokyo"
 		CD_COUNTRY="Japanese"
+		MIRROR="ftp.jp.debian.org"
 		;;
 	nl)
 		## Dutch version
@@ -278,6 +299,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="nl"
 		TZ="Europe/Amsterdam"
 		CD_COUNTRY="Dutch"
+		MIRROR="ftp.nl.debian.org"
 		;;
 	nl-be)
 		## Belgian version
@@ -288,6 +310,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="be"
 		TZ="Europe/Brussels"
 		CD_COUNTRY="Belgian"
+		MIRROR="ftp.nl.debian.org"
 		;;
 	pl)
 		## Polish version
@@ -298,6 +321,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="pl"
 		TZ="Europe/Warsaw"
 		CD_COUNTRY="Polish"
+		MIRROR="ftp.pl.debian.org"
 		;;
 	pt)
 		## Portuguese version
@@ -308,6 +332,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="pt"
 		TZ="Europe/Lisbon"
 		CD_COUNTRY="Portugese"
+		MIRROR="mirrors.nfsi.pt"
 		;;
 	ru)
 		## Russian version
@@ -318,6 +343,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="ru"
 		TZ="Europe/Moscow"
 		CD_COUNTRY="Russian"
+		MIRROR="ftp.ru.debian.org"
 		;;
 	sk)
 		## Slovak version (guessed)
@@ -328,8 +354,9 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="sk"
 		TZ="Europe/Bratislava"
 		CD_COUNTRY="Slovak-qwerty"
+		MIRROR="ftp.sk.debian.org"
 		;;
-	sl)
+	si|sl)
 		## Slovenian keyboard
 		#LANGUAGE="sl_SI:sl"
 		LANG="sl_SI.UTF-8"
@@ -339,6 +366,7 @@ case "${LANGUAGE}" in
 		TZ="Europe/Ljubljana"
 		#CONSOLEFONT="iso02g"
 		CD_COUNTRY="Slovene"
+		MIRROR="ftp.si.debian.org"
 		;;
 	tr)
 		## Turkish version (guessed)
@@ -349,6 +377,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="tr"
 		TZ="Europe/Istanbul"
 		CD_COUNTRY="Turkish"
+		MIRROR="ftp.tr.debian.org"
 		;;
 	tw)
 		## Traditional Chinese version (thanks to Chung-Yen Chang)
@@ -359,6 +388,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="us"
 		TZ="Asia/Taipei"
 		CD_COUNTRY=""
+		MIRROR="ftp.tw.debian.org"
 		;;
 	uk)
 		## British version UTF-8
@@ -369,6 +399,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="gb"
 		TZ="Europe/London"
 		CD_COUNTRY="British"
+		MIRROR="ftp.uk.debian.org"
 		;;
 	us)
 		# American version UTF-8
@@ -379,6 +410,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="us"
 		TZ="America/New_York"
 		CD_COUNTRY="us_american"
+		MIRROR="ftp.us.debian.org"
 		;;
 	*)
 		# American version UTF-8
@@ -389,6 +421,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="us"
 		TZ="Europe/London"
 		CD_COUNTRY="us_american"
+		MIRROR="ftp.debian.org"
 		;;
 esac
 
@@ -398,7 +431,6 @@ fi
 
 case "${CD_COUNTRY}" in
 	French)
-		#Issue
 		CD_FAMILY="azerty"
 		CD_KEYMAP="Standard"
 		CD_VARIANT="Same as X11 (latin 9)"
@@ -678,7 +710,7 @@ esac
 
 CD_LAYOUT="$(echo ${CD_COUNTRY} | cut -d'-' -f1)"
 CD_LAYOUT_PATH="$(echo ${CD_COUNTRY} | tr [A-Z] [a-z] | cut -d'-' -f1)"
-CD_VARIANT_PATH="$(echo ${CD_VARIANT} | tr [A-Z] [a-z])"
+CD_VARIANT_PATH="$(echo ${CD_VARIANT} | tr [A-Z] [a-z] | sed 's%\(\ \|(\|)\)%_%g')"
 CD_FULL_FIX="$(echo ${CD_FULL} | cut -d'-' -f1)"
 
 do_start() {
@@ -708,112 +740,41 @@ do_start() {
 	# select default locale and configure console-data via debconf
 	###
 	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring console data for '${Y}${CD_FULL}${G}'${N}"
-	for msg in "locales locales/default_environment_locale select ${LANG}" \
-		"console-data console-data/keymap/policy select Select keymap from arch list" \
-		"console-data console-data/keymap/family select ${CD_FAMILY}" \
-		"console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX}" \
-		"console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/variant select ${CD_VARIANT}" \
-		"console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/${CD_VARIANT_PATH}/keymap select ${CD_KEYMAP}" \
-		"console-data console-data/keymap/full select ${CD_FULL}"; do
+	for msg in	"locales locales/default_environment_locale select ${LANG}" \
+			"console-data console-data/keymap/policy select Select keymap from arch list" \
+			"console-data console-data/keymap/family select ${CD_FAMILY}" \
+			"console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX}" \
+			"console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/variant select ${CD_VARIANT}" \
+			"console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/${CD_VARIANT_PATH}/keymap select ${CD_KEYMAP}" \
+			"console-data console-data/keymap/full select ${CD_FULL}"; do
 		echo "${msg}" | /usr/bin/debconf-set-selections
 	done
+	DEBIAN_FRONTEND="noninteractive" DEBIAN_PRIORITY="critical" dpkg-reconfigure console-data >/dev/null 2>&1
 	log_end_msg "${?}"
 
 	###
-	# install keymap/keytable
+	# localise /etc/apt/sources.list
 	###
-	DEBIAN_FRONTEND="noninteractive" DEBIAN_PRIORITY="critical" dpkg-reconfigure console-data
+	if [ "${MIRROR}" ] && [ -f /etc/apt/sources.list ]; then
+		sed -i 's|/ftp\.debian\.org/|/'"${MIRROR}"'/|' /etc/apt/sources.list
+	fi
 }
 
 save_locale_variables() {
-	if [ ! -f "/etc/default/${NAME}" ]; then
-		return 0
-	fi
+	[ -f "/etc/default/${NAME}" ] || return 0
 
-	###
-	# store language cheatcode
-	###
-	if [ "${LANGUAGE}" ]; then
-		sed -i 's/^LANGUAGE=.*$/LANGUAGE="'"${LANGUAGE}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-	
-	###
-	# store keytable
-	###
-	if [ "${KEYTABLE}" ]; then
-		sed -i 's/^KEYTABLE=.*$/KEYTABLE="'"${KEYTABLE}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-	
-	###
-	# store XKBDLAYOUT xorg.conf generator
-	###
-	if [ "${XKBLAYOUT}" ]; then
-		sed -i 's/^XKBLAYOUT=.*$/XKBLAYOUT="'"${XKBLAYOUT}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-	
-	###
-	# store KDEKEYBOARDS for kde keyboard application
-	###
-	if [ "${KDEKEYBOARDS}" ]; then
-		sed -i 's/^KDEKEYBOARDS=.*$/KDEKEYBOARDS="'"${KDEKEYBOARDS}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-
-	###
-	# store console data settings
-	###
-	if [ "${CD_COUNTRY}" ]; then
-		sed -i 's/^CD_COUNTRY=.*$/CD_COUNTRY="'"${CD_COUNTRY}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-
-	if [ "${CD_COUNTRY}" ]; then
-		sed -i 's/^CD_COUNTRY=.*$/CD_COUNTRY="'"${CD_COUNTRY}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-	
-	if [ "${CD_FAMILY}" ]; then
-		sed -i 's/^CD_FAMILY=.*$/CD_FAMILY="'"${CD_FAMILY}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-	
-	if [ "${CD_KEYMAP}" ]; then
-		sed -i 's/^CD_KEYMAP=.*$/CD_KEYMAP="'"${CD_KEYMAP}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-	
-	if [ "${CD_VARIANT}" ]; then
-		sed -i 's/^CD_VARIANT=.*$/CD_VARIANT="'"${CD_VARIANT}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-	
-	if [ "${CD_FULL}" ]; then
-		sed -i 's/^CD_FULL=.*$/CD_FULL="'"${CD_FULL}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-
-	if [ "${CD_LAYOUT}" ]; then
-		sed -i 's/^CD_LAYOUT=.*$/CD_LAYOUT="'"${CD_LAYOUT}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-
-	if [ "${CD_LAYOUT_PATH}" ]; then
-		sed -i 's/^CD_LAYOUT_PATH=.*$/CD_LAYOUT_PATH="'"${CD_LAYOUT_PATH}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-
-	if [ "${CD_VARIANT_PATH}" ]; then
-		sed -i 's/^CD_VARIANT_PATH=.*$/CD_VARIANT_PATH="'"${CD_VARIANT_PATH}"'"/' \
-			"/etc/default/${NAME}"
-	fi
-
-	if [ "${CD_FULL_FIX}" ]; then
-		sed -i 's/^CD_FULL_FIX=.*$/CD_FULL_FIX="'"${CD_FULL_FIX}"'"/' \
-			"/etc/default/${NAME}"
-	fi
+	for var in	LANGUAGE KEYTABLE XKBLAYOUT KDEKEYBOARDS MIRROR \
+			CD_COUNTRY CD_FAMILY CD_KEYMAP CD_VARIANT CD_FULL \
+			CD_LAYOUT CD_LAYOUT_PATH CD_VARIANT_PATH CD_FULL_FIX; do
+		
+		val=$(eval echo \$${var})
+		
+		if grep -q "^${var}" "/etc/default/${NAME}"; then
+			sed -i 's|^'"${var}"'=.*$|'"${var}"'="'"${val}"'"|' "/etc/default/${NAME}"
+		else
+			log_warning_msg "${NAME}: ${var} not in in /etc/default/${NAME}"
+		fi
+	done
 }
 
 case "${1}" in
@@ -827,6 +788,10 @@ case "${1}" in
 	restart|reload|force-reload)
 		echo "Error: argument '${1}' not supported" >&2
 		exit 3
+		;;
+	FLL_LANG=*)
+		# to test FLL_LANG override
+		eval "${1}" "/etc/init.d/${NAME}" start
 		;;
 	*)
 		echo "Usage: ${NAME} {start|stop}" >&2
