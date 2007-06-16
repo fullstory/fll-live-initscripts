@@ -1,4 +1,4 @@
-fll-live-initscripts (1.0.77) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.0) unstable; urgency=low
 
   * fll-locales: many enhancements and bugfixes
     - remove LANGUAGE default, the case construct handles that
