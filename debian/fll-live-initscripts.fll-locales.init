@@ -799,10 +799,13 @@ case "${1}" in
 		echo "Error: argument '${1}' not supported" >&2
 		exit 3
 		;;
-	installer)
+	localize)
 		set_locale
 		localize_sources_list
-		;;		
+		;;
+	FLL_LANG=.*)
+		eval "${1}" "/etc/init.d/${NAME}" localize
+		;;
 	*)
 		echo "Usage: ${NAME} {start|stop}" >&2
 		exit 3

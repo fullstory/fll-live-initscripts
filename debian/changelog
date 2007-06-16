@@ -15,13 +15,13 @@ fll-live-initscripts (1.0.77) UNRELEASED; urgency=low
     - use Etc/UTC and not UTC as fall back timezone.
   * fll-locales.default: add MIRROR variable.
   * fll-locales: split do_start() into specific parts for locales, timezone
-    and sources list localisation. Add a special "installer" argument handling
+    and sources list localisation. Add a special "localize" argument handling
     to script to allow installer to only execute what it needs -> locales
     settings.
   * fll-hwsetup: do not bother announcing sound card label, who really
     cares to know that when we can save a second or two at bootup.
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 16 Jun 2007 20:28:51 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 16 Jun 2007 20:34:34 +1000
 
 fll-live-initscripts (1.0.76) unstable; urgency=low
 
