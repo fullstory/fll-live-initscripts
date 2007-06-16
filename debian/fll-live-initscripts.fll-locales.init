@@ -802,6 +802,7 @@ case "${1}" in
 	localize)
 		set_locale
 		localize_sources_list
+		save_locale_variables
 		;;
 	FLL_LANG=.*)
 		eval "${1}" "/etc/init.d/${NAME}" localize >/dev/null
