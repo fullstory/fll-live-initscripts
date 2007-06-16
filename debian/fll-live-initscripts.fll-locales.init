@@ -147,7 +147,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="us"
 		TZ="Asia/Shanghai"
 		CD_COUNTRY=""
-		MIRROR="mirrors.geekbone.org" # china has no primary mirror
+		MIRROR="ftp.hk.debian.org" # china has no primary mirror
 		;;
 	cs|cz)
 		## Czech version
@@ -332,7 +332,7 @@ case "${LANGUAGE}" in
 		XKBLAYOUT="pt"
 		TZ="Europe/Lisbon"
 		CD_COUNTRY="Portugese"
-		MIRROR="mirrors.nfsi.pt"
+		MIRROR="ftp.es.debian.org"
 		;;
 	ru)
 		## Russian version
@@ -764,7 +764,7 @@ localize_sources_list() {
 	# localise /etc/apt/sources.list
 	###
 	if [ "${MIRROR}" ] && [ -f /etc/apt/sources.list ]; then
-		sed -i 's|/ftp\.debian\.org/|/'"${MIRROR}"'/|' /etc/apt/sources.list
+		sed -i 's|/ftp\.\(..\.\)\?debian\.org/|/'"${MIRROR}"'/|' /etc/apt/sources.list
 	fi
 }
 
