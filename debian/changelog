@@ -1,3 +1,9 @@
+fll-live-initscripts (1.0.77) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 16 Jun 2007 03:37:46 +0200
+
 fll-live-initscripts (1.0.76) unstable; urgency=low
 
   * Start fll-hwestup later, at sequence 90.
