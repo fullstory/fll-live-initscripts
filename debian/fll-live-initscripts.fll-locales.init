@@ -65,7 +65,7 @@ for param in $(cat /proc/cmdline); do
 			LANGUAGE="${param#lang=}"
 			;;
 		utc|gmt)
-			CUSTOM_TZ="UTC"
+			CUSTOM_TZ="Etc/UTC"
 			;;
 		tz=*)
 			CUSTOM_TZ="${param#tz=}"
@@ -713,26 +713,32 @@ CD_LAYOUT_PATH="$(echo ${CD_COUNTRY} | tr [A-Z] [a-z] | cut -d'-' -f1)"
 CD_VARIANT_PATH="$(echo ${CD_VARIANT} | tr [A-Z] [a-z] | sed 's%\(\ \|(\|)\)%_%g')"
 CD_FULL_FIX="$(echo ${CD_FULL} | cut -d'-' -f1)"
 
-do_start() {
+set_timezone()
+{
 	###
 	# configure timezone, fallback to UTC
 	###
-	[ -f "/usr/share/zoneinfo/${TZ}" ] || TZ="UTC"
+	[ -f "/usr/share/zoneinfo/${TZ}" ] || TZ="Etc/UTC"
 	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring timezone data for '${Y}${TZ}${G}'${N}"
-	cp "/usr/share/zoneinfo/${TZ}" /etc/localtime && echo "${TZ}" > /etc/timezone
+	echo "${TZ}" > /etc/timezone
+	rm -f /etc/localtime && cp -f "/usr/share/zoneinfo/${TZ}" /etc/localtime
 	log_end_msg "${?}"
 
 	###
 	# hack rcS, make localtime default
 	###
-	if [ "${TZ}" != "UTC" ]; then
+	if [ "${TZ}" != "Etc/UTC" ]; then
 		[ -w /etc/default/rcS ] && sed -i 's/^UTC=.*/UTC=no/' /etc/default/rcS
 	fi
+}
 
+set_locale()
+{
 	###
 	# generate /etc/default/locale
 	###
 	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring locales for '${Y}${LANG}${G}'${N}"
+	echo "locales locales/default_environment_locale select ${LANG}" | /usr/bin/debconf-set-selections
 	update-locale "LANG=${LANG}"
 	log_end_msg "${?}"
 
@@ -740,8 +746,7 @@ do_start() {
 	# select default locale and configure console-data via debconf
 	###
 	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring console data for '${Y}${CD_FULL}${G}'${N}"
-	for msg in	"locales locales/default_environment_locale select ${LANG}" \
-			"console-data console-data/keymap/policy select Select keymap from arch list" \
+	for msg in	"console-data console-data/keymap/policy select Select keymap from arch list" \
 			"console-data console-data/keymap/family select ${CD_FAMILY}" \
 			"console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX}" \
 			"console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/variant select ${CD_VARIANT}" \
@@ -752,6 +757,9 @@ do_start() {
 	DEBIAN_FRONTEND="noninteractive" DEBIAN_PRIORITY="critical" dpkg-reconfigure console-data >/dev/null 2>&1
 	log_end_msg "${?}"
 
+}
+
+localize_sources_list() {
 	###
 	# localise /etc/apt/sources.list
 	###
@@ -779,7 +787,9 @@ save_locale_variables() {
 
 case "${1}" in
 	start)
-		do_start
+		set_timezone
+		set_locale
+		localize_sources_list
 		save_locale_variables
 		;;
 	stop)
@@ -789,10 +799,10 @@ case "${1}" in
 		echo "Error: argument '${1}' not supported" >&2
 		exit 3
 		;;
-	FLL_LANG=*)
-		# to test FLL_LANG override
-		eval "${1}" "/etc/init.d/${NAME}" start
-		;;
+	installer)
+		set_locale
+		localize_sources_list
+		;;		
 	*)
 		echo "Usage: ${NAME} {start|stop}" >&2
 		exit 3
