@@ -800,12 +800,14 @@ case "${1}" in
 		exit 3
 		;;
 	localize)
+		# no output
+		log_daemon_msg() { :; }
+		log_action_begin_msg() { :; }
+		log_end_msg() { :; }
+		# localize
 		set_locale
 		localize_sources_list
 		save_locale_variables
-		;;
-	FLL_LANG=*)
-		eval "${1}" "/etc/init.d/${NAME}" localize >/dev/null
 		;;
 	*)
 		echo "Usage: ${NAME} {start|stop}" >&2
