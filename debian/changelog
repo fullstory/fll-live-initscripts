@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.4) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.4) unstable; urgency=low
 
   * fll-rootsh: create /root/.hushlogin.
   * Change fll-hwsetup and fll-cpufreq to sequence level 80.
