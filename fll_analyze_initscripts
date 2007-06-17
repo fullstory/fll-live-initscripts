@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 
-use warnings;
+# Warnings is much too loud, and i'm not the only one to
+# complain about that, seen tutorials online that advise
+# to only enable it when needed, for debugging. I agree.
+#use warnings;
 use strict;
 #use Data::Dumper;
 use Getopt::Long qw(:config bundling no_auto_abbrev);
@@ -8,10 +11,15 @@ use Getopt::Long qw(:config bundling no_auto_abbrev);
 # no_auto_abbrev makes sure the error messages never
 # abbreviate the parameter that was unknown.
 
-my ($doit, $frc, $rem) = (0, 0 ,0);
+# Declare all variables used in main here for oversight,
+# except loop variables, because they don't persist.
+# Variables start with undefined values, which evaluates
+# to "" in scalar context.
+my %info = ();
+my (@glob, @k, @par, @s);
+my ($count, $chroot, $pri, $prm, $sk, $svc, $rlev);
+my ($doit, $found, $frc, $rem) = (0, 0, 0, 0);
 my $urcd = "update-rc.d";
-my $chroot = "";
-my %init;
 
 my $res = GetOptions(	
 		"a|apply" => sub { $doit = "yes"; },
@@ -19,46 +27,33 @@ my $res = GetOptions(
 		"r|remove" => sub { $rem = 1; $frc = 1; }, 
 		"c|chroot=s" => \$chroot
 	);
-#print "\$res='$res'\n";
-#print <<_EOF_
-#apply(\$doit)='$doit'
-#force(\$frc)='$frc'
-#remove(\$rem)='$rem'
-#root(\$chroot)='$chroot'
-#_EOF_
-#;
-
-#print "\@ARGV='@ARGV'\n";
-$init{$_}++ for (@ARGV);
-
-#print Dumper \%init;
-#exit;
 
 -d $chroot . "/etc/rcS.d/" or die "invalid chroot '$chroot': $!";
 
-my %info;
-for my $lvl (0..6, "S") { 
-	for (glob $chroot . "/etc/rc${lvl}.d/[KS]*") {
-		next unless -L;
-		next unless my ($rlev, $sk, $pri, $svc) = m|/rc(.)\.d/([SK])([0-9]{2})(.+)$|;
-		push(@{$info{$svc}{$sk}{$pri}}, $rlev);
-	}
+for $svc (@ARGV) {
+	push @glob, glob $chroot . "/etc/rc[0-6S].d/[KS][0-9][0-9]$svc";
 }
 
-#print Dumper \%info;
-#exit;
+@glob = glob $chroot . "/etc/rc[0-6S].d/[KS]*" unless @ARGV;
 
+for (@glob) {
+	next unless -L;
+	next unless ($rlev, $sk, $pri, $svc) = m|/rc(.)\.d/([SK])([0-9]{2})(.+)$|;
+	push(@{$info{$svc}{$sk}{$pri}}, $rlev);
+}
 
-for my $svc (sort keys %info) {
-	my @par = ();
+for $svc (sort keys %info) {
+	# Prevent filling up variables with data from previous iterations 
+	# by starting from undefined state
+	@par = ();
+	$prm = undef;
+
 	$frc and push @par, "-f";
 
-	if (%init) { next unless exists $init{$svc}; }
-	
 	next if not -x $chroot . "/etc/init.d/" . $svc;
 	
-	my @s = keys %{$info{$svc}{S}};
-	my @k = keys %{$info{$svc}{K}};
+	@s = keys %{$info{$svc}{S}};
+	@k = keys %{$info{$svc}{K}};
 	
 	if ($rem) {
 		push @par, $svc, "remove";
@@ -68,12 +63,17 @@ for my $svc (sort keys %info) {
 		push @par, $svc, "defaults";
 	}
 	else {
-		my $prm = undef; 
 		$prm .= "start $_ @{$info{$svc}{S}{$_}} . " for (@s);
 		$prm .= "stop $_ @{$info{$svc}{K}{$_}} . " for (@k);
 		push @par, $svc, $prm if ($prm);
 	}
-	
+
+	$found++;
 	print "$urcd @par\n";
 	system($urcd, @par) if $doit eq "yes";
 }
+
+# If specific services were passed on the command line,
+# test if as much services were found and reported as requested
+@ARGV and $found == @ARGV or exit 1;
+exit 0;
