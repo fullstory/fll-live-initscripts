@@ -125,7 +125,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Swiss-de"
 		MIRROR="ftp.ch.debian.org"
 		;;
-	cn)	### CN Simplified Chinese ###
+	cn)	### CN Chinese (Simplified) ###
 		LANG="zh_CN.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="us"
@@ -134,7 +134,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY=""
 		MIRROR="ftp.hk.debian.org" # no primary mirror
 		;;
-	cz|cs)	### CZ Czech Republic ###
+	cz|cs)	### CZ CzechRepublic ###
 		LANG="cs_CZ.UTF-8"
 		KEYTABLE="cz-lat2"
 		KDEKEYBOARDS="cs,us"
@@ -206,7 +206,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Greek"
 		MIRROR="ftp.es.debian.org" # no primary mirror
 		;;
-	gb|uk)	### GB Great Britain ###
+	gb|uk)	### GB GreatBritain ###
 		LANG="en_GB.UTF-8"
 		KEYTABLE="uk"
 		KDEKEYBOARDS="gb,us"
@@ -342,7 +342,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Turkish"
 		MIRROR="ftp.tr.debian.org"
 		;;
-	tw)	### TW Taiwan (Traditional Chinese) ###
+	tw)	### TW Taiwan (TraditionalChinese) ###
 		LANG="zh_TW.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="us"
@@ -351,7 +351,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY=""
 		MIRROR="ftp.tw.debian.org"
 		;;
-	us)	### US United States ###
+	us)	### US UnitedStates ###
 		LANG="en_US.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="us,ca"
