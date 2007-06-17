@@ -756,7 +756,7 @@ case "${1}" in
 		save_locale_variables
 		;;
 	*)
-		echo "Usage: ${NAME} {start|stop}" >&2
+		echo "Usage: ${NAME} {start|stop|list|localize}" >&2
 		exit 3
 		;;
 esac
