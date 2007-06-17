@@ -188,7 +188,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="French"
 		MIRROR="ftp.fr.debian.org"
 		;;
-	fr-be)	### FR France (Belgium Version) ###
+	fr-be)	### FR France (Belgium) ###
 		LANG="fr_BE.UTF-8"
 		KEYTABLE="be2-latin1"
 		KDEKEYBOARDS="be,fr,us"
@@ -215,7 +215,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="British"
 		MIRROR="ftp.uk.debian.org"
 		;;
-	il|he)	### IL Israel (Hebrew Version) ###
+	il|he)	### IL Israel (Hebrew) ###
 		LANG="he_IL.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="il,us"
@@ -233,7 +233,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Croatian"
 		MIRROR="ftp.hr.debian.org" # no primary mirror
 		;;
-	ie)	### IE Ireland (English Version) ###
+	ie)	### IE Ireland (English) ###
 		LANG="en_IE.UTF-8"
 		KEYTABLE="uk"
 		KDEKEYBOARDS="ie,gb,us"
@@ -242,7 +242,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="British"
 		MIRROR="ftp.uk.debian.org"
 		;;
-	ga)	### IE Ireland (Gaeilge Version) ###
+	ga)	### IE Ireland (Gaeilge) ###
 		LANG="ga_IE.UTF-8"
 		KEYTABLE="uk"
 		KDEKYBOARDS="ie"
@@ -260,7 +260,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Italian"
 		MIRROR="ftp.it.debian.org"
 		;;
-	jp|ja)	### JP Japanese (Limited Version) ###
+	jp|ja)	### JP Japanese (Limited) ###
 		LANG="ja_JP.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="jp,us"
@@ -278,7 +278,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Dutch"
 		MIRROR="ftp.nl.debian.org"
 		;;
-	nl-be)	### NL Netherlands (Belgian Version) ###
+	nl-be)	### NL Netherlands (Belgian) ###
 		LANG="nl_BE.UTF-8"
 		KEYTABLE="be2-latin1"
 		KDEKEYBOARDS="be,fr,us"
@@ -342,7 +342,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Turkish"
 		MIRROR="ftp.tr.debian.org"
 		;;
-	tw)	### TW Taiwan (Traditional Chinese Version) ###
+	tw)	### TW Taiwan (Traditional Chinese) ###
 		LANG="zh_TW.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="us"
