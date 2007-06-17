@@ -25,6 +25,11 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 NAME="fll-locales"
 
+if [ "${1}" = "list" ]; then
+	sed -n 's![ \t]\+\([a-z]\+\)|\?\([a-z]\+\)\?).*### [A-Z][A-Z] \(.\+\) ###!\1 \3!p' "${0}"
+	exit 0
+fi
+
 ###
 # source distro-defaults, no-op unless in live mode
 ###
@@ -273,7 +278,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Dutch"
 		MIRROR="ftp.nl.debian.org"
 		;;
-	nl-be)	###  NL Netherlands (Belgian Version) ###
+	nl-be)	### NL Netherlands (Belgian Version) ###
 		LANG="nl_BE.UTF-8"
 		KEYTABLE="be2-latin1"
 		KDEKEYBOARDS="be,fr,us"
