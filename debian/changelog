@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.3) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.3) unstable; urgency=low
 
   * fll-locales: when "${1}" = "localize" allow script to run in installed
     mode.
