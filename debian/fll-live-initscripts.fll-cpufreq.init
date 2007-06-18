@@ -56,18 +56,20 @@ fi
 ###
 # cheatcode handling
 ###
-for param in $(cat /proc/cmdline); do
-	case "${param}" in
-		flldebug=*)
-			[ "${param#flldebug=}" = "${NAME}" ] && set -x
-			;;
-		nocpufreq|cpufreq=no)
-			update-rc.d -f powersaved remove >/dev/null 2>&1
-			update-rc.d -f powernowd remove >/dev/null 2>&1
-			exit 0
-			;;
-	esac
-done
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				[ "${param#flldebug=}" = "${NAME}" ] && set -x
+				;;
+			nocpufreq|cpufreq=no)
+				update-rc.d -f powersaved remove >/dev/null 2>&1
+				update-rc.d -f powernowd remove >/dev/null 2>&1
+				exit 0
+				;;
+		esac
+	done
+fi
 
 do_start() {
 	#if /usr/sbin/laptop-detect; then LAPTOP=1; fi

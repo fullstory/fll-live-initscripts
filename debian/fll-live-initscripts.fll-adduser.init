@@ -55,18 +55,20 @@ fi
 ###
 # cheatcode handling
 ###
-for param in $(cat /proc/cmdline); do
-	case "${param}" in
-		flldebug=*)
-			[ "${param#flldebug=}" = "${NAME}" ] && set -x
-			;;
-		username=*)
-			FLL_LIVE_USER="${param#username=}"
-			sed -i "s/^FLL_LIVE_USER=.*/FLL_LIVE_USER=\"${FLL_LIVE_USER}\"/" \
-				/etc/default/distro
-			;;
-	esac
-done
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				[ "${param#flldebug=}" = "${NAME}" ] && set -x
+				;;
+			username=*)
+				FLL_LIVE_USER="${param#username=}"
+				sed -i "s/^FLL_LIVE_USER=.*/FLL_LIVE_USER=\"${FLL_LIVE_USER}\"/" \
+					/etc/default/distro
+				;;
+		esac
+	done
+fi
 
 add_live_user() {
 	adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"

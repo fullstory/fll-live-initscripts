@@ -54,25 +54,26 @@ fi
 . /lib/fll/fll-init-cols
 
 ###
-# cheatcode handling, if /proc is not mounted then the initramfs failed
-# and executing this script would be impossible
+# cheatcode handling
 ###
-for param in $(cat /proc/cmdline); do
-	case "${param}" in
-		flldebug=*)
-			[ "${param#flldebug=}" = "${NAME}" ] && set -x
-			;;
-		noagp|agp=no)
-			BLACKLIST="${BLACKLIST} agp agpgart"
-			;;
-		blacklist=*)
-			BLACKLIST="${BLACKLIST} ${param#hostname=}"
-			;;
-		hostname=*)
-			CUSTOM_HOSTNAME="${param#hostname=}"
-			;;
-	esac
-done
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				[ "${param#flldebug=}" = "${NAME}" ] && set -x
+				;;
+			noagp|agp=no)
+				BLACKLIST="${BLACKLIST} agp agpgart"
+				;;
+			blacklist=*)
+				BLACKLIST="${BLACKLIST} ${param#hostname=}"
+				;;
+			hostname=*)
+				CUSTOM_HOSTNAME="${param#hostname=}"
+				;;
+		esac
+	done
+fi
 
 do_start() {
 	###

@@ -55,21 +55,23 @@ fi
 ###
 # cheatcode handling
 ###
-for param in $(cat /proc/cmdline); do
-	case "${param}" in
-		flldebug=*)
-			[ "${param#flldebug=}" = "${NAME}" ] && set -x
-			;;
-		dpi=*)
-			CUSTOM_DPI="${param#dpi=}"
-			case "${CUSTOM_DPI}" in
-				*[!0-9]*)
-					CUSTOM_DPI=""
-					;;
-			esac
-			;;
-	esac
-done
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				[ "${param#flldebug=}" = "${NAME}" ] && set -x
+				;;
+			dpi=*)
+				CUSTOM_DPI="${param#dpi=}"
+				case "${CUSTOM_DPI}" in
+					*[!0-9]*)
+						CUSTOM_DPI=""
+						;;
+				esac
+				;;
+		esac
+	done
+fi
 
 setup_kdm() {
 	# wallpaper

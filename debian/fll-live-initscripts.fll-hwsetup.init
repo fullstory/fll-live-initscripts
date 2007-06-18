@@ -58,22 +58,24 @@ HWSETUP_MAIN="/etc/hwsetup"
 ###
 # cheatcode handling
 ###
-for param in $(cat /proc/cmdline); do
-	case "${param}" in
-		flldebug=*)
-			if [ "${param#flldebug=}" = "${NAME}" ]; then
-				set -x
-				HWSETUP_VERBOSITY="-v"
-			fi
-			;;
-		nohwsetup|hwsetup=no)
-			exit 0
-			;;
-		noxorgconfig|nomkxf86config)
-			DISABLE_X_CONFIG="yes"
-			;;
-	esac
-done
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				if [ "${param#flldebug=}" = "${NAME}" ]; then
+					set -x
+					HWSETUP_VERBOSITY="-v"
+				fi
+				;;
+			nohwsetup|hwsetup=no)
+				exit 0
+				;;
+			noxorgconfig|nomkxf86config)
+				DISABLE_X_CONFIG="yes"
+				;;
+		esac
+	done
+fi
 
 ###
 # functions...

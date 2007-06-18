@@ -66,13 +66,15 @@ fi
 ###
 # cheatcode handling
 ###
-for param in $(cat /proc/cmdline); do
-	case "${param}" in
-		flldebug=*)
-			[ "${param#flldebug=}" = "${NAME}" ] && set -x
-			;;
-	esac
-done
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				[ "${param#flldebug=}" = "${NAME}" ] && set -x
+				;;
+		esac
+	done
+fi
 
 ###
 # functions...

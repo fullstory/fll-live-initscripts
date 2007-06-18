@@ -58,19 +58,21 @@ fi
 ###
 DESTDIR="/live-hack"
 
-for param in $(cat /proc/cmdline); do
-	case "${param}" in
-		flldebug=*)
-			[ "${param#flldebug=}" = "${NAME}" ] && set -x
-			;;
-		noeject)
-			NOEJECT="1"
-			;;
-		noprompt)
-			NOPROMPT="1"
-			;;
-	esac
-done
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				[ "${param#flldebug=}" = "${NAME}" ] && set -x
+				;;
+			noeject)
+				NOEJECT="1"
+				;;
+			noprompt)
+				NOPROMPT="1"
+				;;
+		esac
+	done
+fi
 
 ###############################################################################
 # Adapted from initscripts: /etc/init.d/umountfs (2.86.ds1-38)
