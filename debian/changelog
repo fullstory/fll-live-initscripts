@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.6) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.6) unstable; urgency=low
 
   * Test for existance of /proc/cmdline in all initscripts before attempting
     to parse it.
