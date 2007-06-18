@@ -1,8 +1,14 @@
 fll-live-initscripts (1.1.5) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 17 Jun 2007 16:16:53 +0200
+  [ Michiel de Boer ]
+  * Added more comments and largely revised code. Requested by kelmo: the
+    script will finish its tasks, but exit with exit code 1 if it can't report
+    info on one or more of the services passed on the commandline.
+
+ -- Michiel de Boer <sidux@rebelhomicide.demon.nl>  Mon, 18 Jun 2007 04:03:57 +0200
 
 fll-live-initscripts (1.1.4) unstable; urgency=low
 
