@@ -1,3 +1,9 @@
+fll-live-initscripts (1.1.7) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 18 Jun 2007 13:17:23 +0200
+
 fll-live-initscripts (1.1.6) unstable; urgency=low
 
   * Test for existance of /proc/cmdline in all initscripts before attempting
