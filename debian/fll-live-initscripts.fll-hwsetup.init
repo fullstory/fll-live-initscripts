@@ -62,7 +62,7 @@ if [ -f /proc/cmdline ]; then
 	for param in $(cat /proc/cmdline); do
 		case "${param}" in
 			flldebug=*)
-				if [ "${param#flldebug=}" = "${NAME}" ]; then
+				if [ "${param#flldebug=}" = "${NAME#fll-}" ]; then
 					set -x
 					HWSETUP_VERBOSITY="-v"
 				fi

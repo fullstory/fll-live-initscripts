@@ -69,7 +69,7 @@ if [ -f /proc/cmdline ]; then
 	for param in $(cat /proc/cmdline); do
 		case "${param}" in
 			flldebug=*)
-				[ "${param#flldebug=}" = "${NAME}" ] && set -x
+				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
 			nofstab|fstab=no)
 				exit 0
