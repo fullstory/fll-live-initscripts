@@ -69,10 +69,41 @@ if [ -f /proc/cmdline ]; then
 	done
 fi
 
+ifplug_dhcp() {
+	[ "${1}" ] || return 1
+
+	if ifconfig "${1}" up; then
+		# settle
+		sleep 2
+				
+		# probe for link beat
+		ifplugstatus --quiet "${1}"
+			
+		if [ "${?}" -eq 2 ]; then
+			# link beat detected
+			log_progress_msg "${Y}${1}${N}"
+			
+			# add /e/n/i entry for dhcp if not already present (persistency)
+			if ! grep -s -q -w "${1}" /etc/network/interfaces; then
+				printf "\nallow-hotplug ${1}\niface ${1} inet dhcp\n" >> \
+					/etc/network/interfaces
+			fi
+		else
+			# link beat not detected
+			ifconfig "${1}" down
+		fi
+	fi
+	
+	return 0
+}
+
 do_start() {
 	NETDEVICES=$(perl -le 'print for map {s/.*\///; grep( !/^(lo|br|sit)\d*/,$_);} </sys/class/net/*>')
+	
 	if [ "${NETDEVICES}" ]; then
-		log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}probing for an ${Y}ethernet${G} link${N}"
+		log_daemon_msg "${B}${NAME}${N}"
+		log_action_begin_msg " ${G}probing for an ${Y}ethernet${G} link${N}"
+		
 		for netdev in ${NETDEVICES}; do
 			if [ -d /sys/class/net/${netdev}/wireless ] || [ -d /sys/class/net/${netdev}/phy80211 ]; then
 				# wireless
@@ -83,25 +114,14 @@ do_start() {
 				# unwanted, > 6 byte mac length (eg, placeholder interface, eth1394)
 				[ "$(cat /sys/class/net/${netdev}/addr_len)" -gt 6 ] && continue
 			fi
-
-			if ifconfig "${netdev}" up; then
-				sleep 2
-				
-				# probe for link beat
-				ifplugstatus --quiet "${netdev}"
 			
-				# link beat detected ?
-				if [ "${?}" -eq 2 ]; then
-					log_progress_msg "${Y}${netdev}${N}"
-					if ! grep -q -w "${netdev}" /etc/network/interfaces; then
-						printf "\nallow-hotplug ${netdev}\n"	>> /etc/network/interfaces
-						printf "iface ${netdev} inet dhcp\n"	>> /etc/network/interfaces
-					fi
-				else
-					ifconfig "${netdev}" down
-				fi
-			fi
+			# fork child process to do cable link test
+			ifplug_dhcp "${netdev}" &
 		done
+
+		# wait for child processes to finish. yes, dash supports this.
+		wait
+
 		log_end_msg 0
 	fi
 }

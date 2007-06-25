@@ -2,8 +2,11 @@ fll-live-initscripts (1.1.7) UNRELEASED; urgency=low
 
   * Allow flldebug= debug aid to be fll-'less. For example, to debug
     fll-cpufreq use flldebug=cpufreq.
+  * fll-network: fork child processes to do link beat detection on all
+    detected ethernet devices in parallel. Wait for them to return before
+    continuing.
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 25 Jun 2007 16:56:14 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 25 Jun 2007 17:18:49 +1000
 
 fll-live-initscripts (1.1.6) unstable; urgency=low
 
