@@ -1,3 +1,9 @@
+fll-live-initscripts (1.1.8) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 26 Jun 2007 00:04:45 +0200
+
 fll-live-initscripts (1.1.7) unstable; urgency=low
 
   * Allow flldebug= debug aid to be fll-'less. For example, to debug
