@@ -1,8 +1,10 @@
 fll-live-initscripts (1.1.9) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-network: remove executable bit from /etc/network/if-up.d/ntpdate to
+    avoid funky problems associated with touching the clock. X often blanks
+    itself just after logging into KDE, for example.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 26 Jun 2007 11:12:58 +0200
+ -- Kel Modderman <kel@otaku42.de>  Wed, 27 Jun 2007 08:16:00 +1000
 
 fll-live-initscripts (1.1.8) unstable; urgency=low
 

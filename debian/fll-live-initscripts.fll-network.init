@@ -124,6 +124,13 @@ do_start() {
 
 		log_end_msg 0
 	fi
+	
+	###
+	# don't clobber the clock in live mode, reverse this during install time
+	###
+	if [ -x /etc/network/if-up.d/ntpdate ]; then
+		chmod -x /etc/network/if-up.d/ntpdate
+	fi
 }
 
 case "${1}" in
