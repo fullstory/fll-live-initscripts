@@ -4,8 +4,10 @@ fll-live-initscripts (1.1.8) UNRELEASED; urgency=low
     /etc/modules instead.
   * fll-locales: add kb field to locale headers that are parsed by sed for
     list argument. Output is install-gui friendly, and we only used sed once!
+  * fll-network: try settling for one second rather than two when detecting
+    link beat.
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 26 Jun 2007 16:16:34 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 26 Jun 2007 17:34:32 +1000
 
 fll-live-initscripts (1.1.7) unstable; urgency=low
 

@@ -74,7 +74,7 @@ ifplug_dhcp() {
 
 	if ifconfig "${1}" up; then
 		# settle
-		sleep 2
+		sleep 1
 				
 		# probe for link beat
 		ifplugstatus --quiet "${1}"
