@@ -187,15 +187,9 @@ do_start() {
 		log_end_msg 0
 
 		###
-		# powersaved live-hacks: preseed cpufreq module and disable suspend
+		# add cpufreq module to /etc/modules. avoid hacking config files of power management packages
 		###
-		if [ -w /etc/powersave/cpufreq ]; then
-			sed -i 's/^\(CPUFREQD_MODULE\)=.*$/\1="'$CPUFREQ'"/' /etc/powersave/cpufreq
-		fi
-		
-		if [ -w /etc/powersave/sleep ]; then
-			sed -i 's/^\(DISABLE_USER_SUSPEND2.*\)=.*$/\1="yes"/' /etc/powersave/sleep
-		fi
+		printf "\n# Added by: ${NAME}\n${CPUFREQ}\n" >> /etc/modules
 	else
 		###
 		# purge these services from latter runlevels, no cpufreq support
