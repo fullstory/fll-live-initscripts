@@ -2,8 +2,10 @@ fll-live-initscripts (1.1.8) UNRELEASED; urgency=low
 
   * fll-cpufreq: no longer tamper with /etc/powersave/*, add cpufreq module to
     /etc/modules instead.
+  * fll-locales: add kb field to locale headers that are parsed by sed for
+    list argument. Output is install-gui friendly, and we only used sed once!
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 26 Jun 2007 13:16:51 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 26 Jun 2007 16:16:34 +1000
 
 fll-live-initscripts (1.1.7) unstable; urgency=low
 

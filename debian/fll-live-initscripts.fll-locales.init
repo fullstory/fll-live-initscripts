@@ -26,7 +26,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 NAME="fll-locales"
 
 if [ "${1}" = "list" ]; then
-	sed -n 's![ \t]\+\([a-z-]\+\)|\?\([a-z]\+\)\?).*### [A-Z][A-Z] \(.\+\) ###!\1\t\3!p' "${0}"
+	sed -n 's![ \t]\+\([a-z-]\+\)|\?\([a-z]\+\)\?).*### [A-Z][A-Z] \(.\+\) kb:\(.\+\) ###!\1, \3,\4!p' "${0}"
 	exit 0
 fi
 
@@ -91,7 +91,7 @@ fi
 # locale settings (good reference: http://www.debian.org/mirror/list)
 ###
 case "${LANGUAGE}" in
-	au)	### AU Australia ###
+	au)	### AU Australia kb:us ###
 		LANG="en_AU.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="us"
@@ -100,7 +100,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="us_american"
 		MIRROR="ftp.au.debian.org"
 		;;
-	bg)	### BG Bulgaria ###
+	bg)	### BG Bulgaria kb:bg ###
 		LANG="bg_BG.UTF-8"
 		KEYTABLE="bg"
 		KDEKEYBOARDS="bg,us"
@@ -109,7 +109,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Bulgarian"
 		MIRROR="ftp.bg.debian.org"
 		;;
-	br)	### BR Brazil ###
+	br)	### BR Brazil kb:br ###
 		LANG="pt_BR.UTF-8"
 		KEYTABLE="br-abnt2"
 		KDEKEYBOARDS="br,us"
@@ -118,7 +118,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Brazilian"
 		MIRROR="ftp.br.debian.org"
 		;;
-	ch)	### CH Switzerland ###
+	ch)	### CH Switzerland kb:de ###
 		LANG="de_CH.UTF-8"
 		KEYTABLE="sg-latin1"
 		KDEKEYBOARDS="de_CH,de,fr,us"
@@ -127,7 +127,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Swiss-de"
 		MIRROR="ftp.ch.debian.org"
 		;;
-	cn)	### CN Chinese (Simplified) ###
+	cn)	### CN Chinese (Simplified) kb:us ###
 		LANG="zh_CN.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="us"
@@ -136,7 +136,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY=""
 		MIRROR="ftp.hk.debian.org" # no primary mirror
 		;;
-	cz|cs)	### CZ CzechRepublic ###
+	cz|cs)	### CZ CzechRepublic kb:cs ###
 		LANG="cs_CZ.UTF-8"
 		KEYTABLE="cz-lat2"
 		KDEKEYBOARDS="cs,us"
@@ -145,7 +145,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Czech-qwerty"
 		MIRROR="ftp.cz.debian.org"
 		;;
-	de)	### DE Germany ###
+	de)	### DE Germany kb:de ###
 		LANG="de_DE.UTF-8"
 		KEYTABLE="de-latin1-nodeadkeys"
 		KDEKEYBOARDS="de,us"
@@ -154,7 +154,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="German"
 		MIRROR="ftp.de.debian.org"
 		;;
-	dk|da)	### DK Denmark ###
+	dk|da)	### DK Denmark kb:dk ###
 		LANG="da_DK.UTF-8"
 		KEYTABLE="dk"
 		KDEKEYBOARDS="dk,us"
@@ -163,7 +163,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Danish"
 		MIRROR="ftp.dk.debian.org"
 		;;
-	es)	### ES Spain ###
+	es)	### ES Spain kb:es ###
 		LANG="es_ES.UTF-8"
 		KEYTABLE="es"
 		KDEKEYBOARDS="es,us"
@@ -172,7 +172,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Spanish"
 		MIRROR="ftp.es.debian.org"
 		;;
-	fi)	### FI Finland ### 
+	fi)	### FI Finland kb:fi ### 
 		LANG="fi_FI.UTF-8"
 		KEYTABLE="fi-latin1"
 		KDEKEYBOARDS="fi,us"
@@ -181,7 +181,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Swedish"
 		MIRROR="ftp.fi.debian.org"
 		;;
-	fr)	### FR France ###
+	fr)	### FR France kb:fr ###
 		LANG="fr_FR.UTF-8"
 		KEYTABLE="fr"
 		KDEKEYBOARDS="fr,us"
@@ -190,7 +190,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="French"
 		MIRROR="ftp.fr.debian.org"
 		;;
-	fr-be)	### FR France (Belgium) ###
+	fr-be)	### FR France (Belgian) kb:be ###
 		LANG="fr_BE.UTF-8"
 		KEYTABLE="be2-latin1"
 		KDEKEYBOARDS="be,fr,us"
@@ -199,7 +199,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Belgian"
 		MIRROR="ftp.fr.debian.org"
 		;;
-	gr|el)	### GR Greece ###
+	gr|el)	### GR Greece kb:gr ###
 		LANG="el_GR.UTF-8"
 		KEYTABLE="gr"
 		KDEKEYBOARDS="gr,us"
@@ -208,7 +208,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Greek"
 		MIRROR="ftp.es.debian.org" # no primary mirror
 		;;
-	gb|uk)	### GB GreatBritain ###
+	gb|uk)	### GB GreatBritain kb:gb ###
 		LANG="en_GB.UTF-8"
 		KEYTABLE="uk"
 		KDEKEYBOARDS="gb,us"
@@ -217,7 +217,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="British"
 		MIRROR="ftp.uk.debian.org"
 		;;
-	il|he)	### IL Israel (Hebrew) ###
+	il|he)	### IL Israel (Hebrew) kb:il ###
 		LANG="he_IL.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="il,us"
@@ -226,7 +226,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Hebrew"
 		MIRROR="ftp.us.debian.org"
 		;;
-	hr) 	### HR Croatia ### 
+	hr) 	### HR Croatia kb:hr ###
 		LANG="hr_HR.UTF-8" 
 		KEYTABLE="hr" 
 		KDEKEYBOARDS="hr,us"
@@ -235,7 +235,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Croatian"
 		MIRROR="ftp.hr.debian.org" # no primary mirror
 		;;
-	ie)	### IE Ireland (English) ###
+	ie)	### IE Ireland (English) kb:ie ###
 		LANG="en_IE.UTF-8"
 		KEYTABLE="uk"
 		KDEKEYBOARDS="ie,gb,us"
@@ -244,7 +244,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="British"
 		MIRROR="ftp.uk.debian.org"
 		;;
-	ga)	### IE Ireland (Gaeilge) ###
+	ga)	### IE Ireland (Gaeilge) kb:ie ###
 		LANG="ga_IE.UTF-8"
 		KEYTABLE="uk"
 		KDEKYBOARDS="ie"
@@ -253,7 +253,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="British"
 		MIRROR="ftp.ie.debian.org"
 		;;
-	it)	### IT Italy ###
+	it)	### IT Italy kb:it ###
 		LANG="it_IT.UTF-8"
 		KEYTABLE="it"
 		KDEKEYBOARDS="it,us"
@@ -262,7 +262,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Italian"
 		MIRROR="ftp.it.debian.org"
 		;;
-	jp|ja)	### JP Japanese (Limited) ###
+	jp|ja)	### JP Japanese (Limited) kb:jp ###
 		LANG="ja_JP.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="jp,us"
@@ -271,7 +271,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Japanese"
 		MIRROR="ftp.jp.debian.org"
 		;;
-	nl)	### NL Netherlands ###
+	nl)	### NL Netherlands kb:nl ###
 		LANG="nl_NL.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="nl,us"
@@ -280,7 +280,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Dutch"
 		MIRROR="ftp.nl.debian.org"
 		;;
-	nl-be)	### NL Netherlands (Belgian) ###
+	nl-be)	### NL Netherlands (Belgian) kb:be ###
 		LANG="nl_BE.UTF-8"
 		KEYTABLE="be2-latin1"
 		KDEKEYBOARDS="be,fr,us"
@@ -289,7 +289,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Belgian"
 		MIRROR="ftp.nl.debian.org"
 		;;
-	pl)	### PL Poland ###
+	pl)	### PL Poland kb:pl ###
 		LANG="pl_PL.UTF-8"
 		KEYTABLE="pl"
 		KDEKEYBOARDS="pl,us"
@@ -298,7 +298,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Polish"
 		MIRROR="ftp.pl.debian.org"
 		;;
-	pt)	### PT Portugal ###
+	pt)	### PT Portugal kb:pt ###
 		LANG="pt_PT.UTF-8"
 		KEYTABLE="pt-latin1"
 		KDEKEYBOARDS="pt,us"
@@ -307,7 +307,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Portugese"
 		MIRROR="ftp.es.debian.org"
 		;;
-	ru)	### RU Russia ###
+	ru)	### RU Russia kb:ru ###
 		LANG="ru_RU.UTF-8"
 		KEYTABLE="ru"
 		KDEKEYBOARDS="ru,us"
@@ -316,7 +316,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Russian"
 		MIRROR="ftp.ru.debian.org"
 		;;
-	si|sl)	### SI Slovenia ###
+	si|sl)	### SI Slovenia kb:si ###
 		LANG="sl_SI.UTF-8"
 		KEYTABLE="slovene"
 		KDEKEYBOARDS="si,us"
@@ -326,7 +326,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Slovene"
 		MIRROR="ftp.si.debian.org"
 		;;
-	sk)	### SK Slovakia ###
+	sk)	### SK Slovakia kb:sk ###
 		LANG="sk_SK.UTF-8"
 		KEYTABLE="sk-qwerty"
 		KDEKEYBOARDS="sk,us"
@@ -335,7 +335,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Slovak-qwerty"
 		MIRROR="ftp.sk.debian.org"
 		;;
-	tr)	### TR Turkey ###
+	tr)	### TR Turkey kb:tr ###
 		LANG="tr_TR.UTF-8"
 		KEYTABLE="tr_q-latin5"
 		KDEKEYBOARDS="tr,us"
@@ -344,7 +344,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY="Turkish"
 		MIRROR="ftp.tr.debian.org"
 		;;
-	tw)	### TW Taiwan (TraditionalChinese) ###
+	tw)	### TW Taiwan (TraditionalChinese) kb:us ###
 		LANG="zh_TW.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="us"
@@ -353,7 +353,7 @@ case "${LANGUAGE}" in
 		CD_COUNTRY=""
 		MIRROR="ftp.tw.debian.org"
 		;;
-	us)	### US UnitedStates ###
+	us)	### US UnitedStates kb:us ###
 		LANG="en_US.UTF-8"
 		KEYTABLE="us"
 		KDEKEYBOARDS="us,ca"
