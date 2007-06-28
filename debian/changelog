@@ -1,8 +1,9 @@
 fll-live-initscripts (1.1.10) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-network: revert to sleep of 2 seconds before ifplugstatus link
+    detection.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 27 Jun 2007 02:59:28 +0200
+ -- Kel Modderman <kel@otaku42.de>  Thu, 28 Jun 2007 10:17:40 +1000
 
 fll-live-initscripts (1.1.9) unstable; urgency=low
 
