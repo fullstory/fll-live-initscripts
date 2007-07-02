@@ -1,8 +1,9 @@
 fll-live-initscripts (1.1.11) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-locales: introduce utc=yes cheatcode that will retain debian's default
+    of UTC=yes in /etc/default/rcS while still allowing TZ selection.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 28 Jun 2007 13:52:13 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 02 Jul 2007 19:13:16 +1000
 
 fll-live-initscripts (1.1.10) unstable; urgency=low
 

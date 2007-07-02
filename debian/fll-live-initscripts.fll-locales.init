@@ -70,6 +70,9 @@ if [ -f /proc/cmdline ]; then
 			lang=*)
 				LANGUAGE="${param#lang=}"
 				;;
+			utc=yes)
+				UTC="yes"
+				;;
 			utc|gmt)
 				CUSTOM_TZ="Etc/UTC"
 				;;
@@ -373,8 +376,16 @@ case "${LANGUAGE}" in
 		;;
 esac
 
-if [ -n "${CUSTOM_TZ}" ] && [ -f "/usr/share/zoneinfo/${CUSTOM_TZ}" ]; then
-	TZ="${CUSTOM_TZ}"
+###
+# allow CUSTOM_TZ to override above TZ definitions
+###
+if [ -n "${CUSTOM_TZ}" ]; then
+	case "${CUSTOM_TZ}" in
+		utc|UTC)
+			CUSTOM_TZ="Etc/UTC"
+			;;
+	esac
+	[ -f "/usr/share/zoneinfo/${CUSTOM_TZ}" ] && TZ="${CUSTOM_TZ}"
 fi
 
 case "${CD_COUNTRY}" in
@@ -673,9 +684,10 @@ set_timezone()
 	log_end_msg "${?}"
 
 	###
-	# hack rcS, make localtime default
+	# hack rcS, make localtime default, unless tz=Etc/UTC or utc=yes
 	###
-	if [ "${TZ}" != "Etc/UTC" ]; then
+	if [ "${TZ}" != "Etc/UTC" ] && [ "${UTC}" != "yes" ]; then
+		# debian defaults to UTC=yes, which is rumored to be dual-boot unfriendly
 		[ -w /etc/default/rcS ] && sed -i 's/^UTC=.*/UTC=no/' /etc/default/rcS
 	fi
 }
