@@ -1,3 +1,9 @@
+fll-live-initscripts (1.1.12) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 02 Jul 2007 11:38:15 +0200
+
 fll-live-initscripts (1.1.11) unstable; urgency=low
 
   * fll-locales: introduce utc=yes cheatcode that will retain debian's default
