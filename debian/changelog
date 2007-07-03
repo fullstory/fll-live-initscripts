@@ -1,8 +1,9 @@
 fll-live-initscripts (1.1.12) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-network: mostly revert patch that inhibited ntpdate, but disable
+    ntpdate via a cheatcode (nontp) for now.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 02 Jul 2007 11:38:15 +0200
+ -- Kel Modderman <kel@otaku42.de>  Tue, 03 Jul 2007 22:29:55 +1000
 
 fll-live-initscripts (1.1.11) unstable; urgency=low
 
