@@ -1,8 +1,8 @@
 fll-live-initscripts (1.1.13) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-init-tail: removed, didn't do anything useful.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 04 Jul 2007 00:48:58 +0200
+ -- Kel Modderman <kel@otaku42.de>  Fri, 06 Jul 2007 08:14:15 +1000
 
 fll-live-initscripts (1.1.12) unstable; urgency=low
 
