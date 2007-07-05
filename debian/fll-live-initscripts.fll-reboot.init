@@ -407,7 +407,7 @@ do_stop() {
 		*halt)
 			message="${G}System halted.${N}"
 			command="halt"
-			options="-n -p -i -f"
+			options="-h -n -p -i -f"
 			;;
 		*reboot)
 			message="${G}Preparing for reboot...${N}"
