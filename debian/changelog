@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.13) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.13) unstable; urgency=low
 
   * fll-init-tail: removed, didn't do anything useful.
   * fll-reboot: add -h option to halt to sync drives that need that.
