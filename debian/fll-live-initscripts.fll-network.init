@@ -65,9 +65,6 @@ if [ -f /proc/cmdline ]; then
 			nodchp|dchp=no)
 				exit 0
 				;;
-			nontp|ntp=no)
-				NTP="no"
-				;;
 		esac
 	done
 fi
@@ -129,11 +126,9 @@ do_start() {
 	fi
 	
 	###
-	# don't clobber the clock in live mode, reverse this during install time
+	# prevent screen blanking due to clock slew
 	###
-	if [ "${NTP}" = "no" ] && [ -x /etc/network/if-up.d/ntpdate ]; then
-		chmod -x /etc/network/if-up.d/ntpdate
-	fi
+	echo "0.0 0 0.0" > /etc/adjtime
 }
 
 case "${1}" in
