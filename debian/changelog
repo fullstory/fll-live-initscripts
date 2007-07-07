@@ -1,3 +1,9 @@
+fll-live-initscripts (1.1.18) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Jul 2007 20:26:15 +0200
+
 fll-live-initscripts (1.1.17) unstable; urgency=low
 
   * fix xsession definitions.
