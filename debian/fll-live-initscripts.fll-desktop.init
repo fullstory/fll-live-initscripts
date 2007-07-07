@@ -85,7 +85,7 @@ do_start() {
 			WM="/usr/bin/metacity"
 			;;
 		flux*)
-			WM="/usr/bin/fluxbox"
+			WM="/usr/bin/startfluxbox"
 			;;
 		xfce*)
 			WM="/usr/bin/xfwm4"
@@ -105,7 +105,7 @@ do_start() {
 			"/usr/bin/metacity")
 				XSESSION="gnome"
 				;;
-			"/usr/bin/fluxbox")
+			"/usr/bin/startfluxbox")
 				XSESSION="fluxbox"
 				;;
 			"/usr/bin/xfwm4")

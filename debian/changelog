@@ -1,10 +1,14 @@
-fll-live-initscripts (1.1.14) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.14) unstable; urgency=low
 
+  [ Kel Modderman ]
   * fll-network: forget about ntpdate workarounds, zero /etc/adjtime before
     starting networking to prevent clock slew adjustment from causing X to
     blank.
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 07 Jul 2007 17:01:12 +1000
+  [ Stefan Lippers-Hollmann ]
+  * fix alternatives selection for fluxbox.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Jul 2007 13:55:11 +0200
 
 fll-live-initscripts (1.1.13) unstable; urgency=low
 
