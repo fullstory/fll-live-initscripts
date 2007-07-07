@@ -1,8 +1,8 @@
-fll-live-initscripts (1.1.15) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.15) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * add IceWM support.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Jul 2007 13:59:28 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Jul 2007 15:02:19 +0200
 
 fll-live-initscripts (1.1.14) unstable; urgency=low
 
