@@ -1,8 +1,8 @@
-fll-live-initscripts (1.1.16) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.16) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fix access rights for ${FLL_LIVE_USER}.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Jul 2007 15:04:20 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Jul 2007 18:02:35 +0200
 
 fll-live-initscripts (1.1.15) unstable; urgency=low
 

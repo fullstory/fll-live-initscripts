@@ -122,6 +122,7 @@ do_start() {
 		log_action_begin_msg " ${G}setting up window manager '${Y}${WM}${G}'${N}"
 		echo "[Desktop]"		>  ${FLL_LIVE_USER_HOME}/.dmrc
 		echo "Session=${XSESSION}"	>> ${FLL_LIVE_USER_HOME}/.dmrc
+		chown "${FLL_LIVE_USER}":"$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 4)" "${FLL_LIVE_USER_HOME}/.dmrc"
 			
 		update-alternatives --set x-window-manager "${WM}" >/dev/null
 		log_end_msg "${?}"
