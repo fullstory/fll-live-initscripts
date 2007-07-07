@@ -109,13 +109,13 @@ do_start() {
 				XSESSION="gnome"
 				;;
 			"/usr/bin/startfluxbox")
-				XSESSION="fluxbox"
+				XSESSION="X-Debian-Window Managers-fluxbox"
 				;;
 			"/usr/bin/xfwm4")
 				XSESSION="xfce4"
 				;;
 			"/usr/bin/icewm")
-				XSESSION="xfce4"
+				XSESSION="IceWM"
 				;;
 		esac
 	
