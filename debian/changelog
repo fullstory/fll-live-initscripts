@@ -1,8 +1,10 @@
 fll-live-initscripts (1.1.18) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-locales: handle ll_CC lang= cheatcodes. This allows languages to be
+    used in arbitary demographic environments. Thanks to baldyeti for the
+    patch. http://sidux.com/PNphpBB2-viewtopic-t-3966.html
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Jul 2007 20:26:15 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 09 Jul 2007 09:53:31 +1000
 
 fll-live-initscripts (1.1.17) unstable; urgency=low
 
