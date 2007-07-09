@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.18) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.18) unstable; urgency=low
 
   * fll-locales: handle ll_CC lang= cheatcodes. This allows languages to be
     used in arbitary demographic environments. Thanks to baldyeti for the
