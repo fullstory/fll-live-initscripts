@@ -68,7 +68,7 @@ if [ -f /proc/cmdline ]; then
 				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
 			lang=*)
-				LANGUAGE=$(awk 'BEGIN{ print tolower('"${param#lang=}"') }')
+				LANGUAGE=$(awk 'BEGIN{ print tolower("'"${param#lang=}"'") }')
 				;;
 			utc=yes)
 				UTC="yes"

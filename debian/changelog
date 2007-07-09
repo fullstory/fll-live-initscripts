@@ -3,8 +3,9 @@ fll-live-initscripts (1.1.18) UNRELEASED; urgency=low
   * fll-locales: handle ll_CC lang= cheatcodes. This allows languages to be
     used in arbitary demographic environments. Thanks to baldyeti for the
     patch. http://sidux.com/PNphpBB2-viewtopic-t-3966.html
+  * fll-locales: make sure string given to awk's tolower is quoted.
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 09 Jul 2007 09:53:31 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 09 Jul 2007 10:03:24 +1000
 
 fll-live-initscripts (1.1.17) unstable; urgency=low
 
