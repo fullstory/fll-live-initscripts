@@ -1,3 +1,9 @@
+fll-live-initscripts (1.1.20) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 12 Jul 2007 12:41:52 +0200
+
 fll-live-initscripts (1.1.19) unstable; urgency=low
 
   * fll-network: stick with networking stuff, don't play arounf with
