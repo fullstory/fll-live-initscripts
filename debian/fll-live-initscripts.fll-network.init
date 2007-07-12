@@ -124,11 +124,6 @@ do_start() {
 
 		log_end_msg 0
 	fi
-	
-	###
-	# prevent screen blanking due to clock slew
-	###
-	echo "0.0 0 0.0" > /etc/adjtime
 }
 
 case "${1}" in

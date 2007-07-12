@@ -760,6 +760,11 @@ save_locale_variables() {
 case "${1}" in
 	start)
 		set_timezone
+		
+		if [ -x /etc/init.d/hwclock.sh ]; then
+			/etc/init.d/hwclock.sh start
+		fi
+		
 		set_locale
 		localize_sources_list
 		save_locale_variables
