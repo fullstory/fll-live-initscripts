@@ -702,6 +702,14 @@ set_timezone()
 		# debian defaults to UTC=yes, which is rumored to be dual-boot unfriendly
 		[ -w /etc/default/rcS ] && sed -i 's/^UTC=.*/UTC=no/' /etc/default/rcS
 	fi
+
+	###
+	# hack: we don't configure hwclock.sh to be in the live runlevel configuration
+	# but start it now, manually. never stop it, or else we clobber the clock
+	###
+	if [ -x /etc/init.d/hwclock.sh ]; then
+		invoke-rc.d hwclock.sh start
+	fi
 }
 
 set_locale()
