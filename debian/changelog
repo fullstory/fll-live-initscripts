@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.20) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.20) unstable; urgency=low
 
   * fll-adduser: disable lastlog for autologin on console.
 
