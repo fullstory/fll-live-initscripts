@@ -114,6 +114,11 @@ case "${1}" in
 		if ! grep -q -w "${FLL_LIVE_USER}" /etc/sudoers; then
 			hack_sudoers
 		fi
+
+		# disable lastlog for autologin on console
+		if [ -f /etc/pam.d/login ]; then
+			sed -i '/^[^#].*pam_lastlog\.so/s/^/# /' /etc/pam.d/login
+		fi
 		
 		hack_bashrc
 		log_end_msg 0
