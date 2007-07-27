@@ -98,8 +98,8 @@ do_start() {
 	###
 	# xorgconfig
 	###
-	if [ "${DISABLE_X_CONFIG}" != "yes" ]; then
-		[ -x /usr/sbin/mkxf86config ] && /usr/sbin/mkxf86config
+	if [ "${DISABLE_X_CONFIG}" != "yes" ] && [ -x /usr/sbin/mkxf86config ]; then
+		/usr/sbin/mkxf86config
 
 		# Read in changes
 		[ -f "${HWSETUP_MAIN}" ] && . "${HWSETUP_MAIN}"
