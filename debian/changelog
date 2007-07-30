@@ -2,8 +2,12 @@ fll-live-initscripts (1.1.21) UNRELEASED; urgency=low
 
   * fll-hwsetup: better sanity check to decide if we are in fact going to
     configure X11.
+  * fll-init:
+    - renamed fll-init-top to fll-init
+    - provide /etc/default/fll-init, this will be created at build time and
+      used by fll-live-initramfs to configure runlevel configuration
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 27 Jul 2007 10:41:46 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 30 Jul 2007 22:41:45 +1000
 
 fll-live-initscripts (1.1.20) unstable; urgency=low
 
