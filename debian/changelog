@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.21) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.21) unstable; urgency=low
 
   * fll-hwsetup: better sanity check to decide if we are in fact going to
     configure X11.
