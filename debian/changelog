@@ -1,3 +1,9 @@
+fll-live-initscripts (1.1.22) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 30 Jul 2007 20:48:10 +0200
+
 fll-live-initscripts (1.1.21) unstable; urgency=low
 
   * fll-hwsetup: better sanity check to decide if we are in fact going to
