@@ -1,3 +1,9 @@
+fll-live-initscripts (1.1.23) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 02 Aug 2007 13:21:42 +0200
+
 fll-live-initscripts (1.1.22) unstable; urgency=low
 
   * fll-network, fll-fstab: start at sequence number 34.
