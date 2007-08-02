@@ -1,4 +1,4 @@
-fll-live-initscripts (1.1.22) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.22) unstable; urgency=low
 
   * fll-network, fll-fstab: start at sequence number 34.
 
