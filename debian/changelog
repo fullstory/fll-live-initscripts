@@ -1,8 +1,8 @@
 fll-live-initscripts (1.1.23) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-network: s/dchp/dhcp/, thanks to sigfri for spotting.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 02 Aug 2007 13:21:42 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 06 Aug 2007 11:12:26 +1000
 
 fll-live-initscripts (1.1.22) unstable; urgency=low
 

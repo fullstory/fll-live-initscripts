@@ -62,7 +62,7 @@ if [ -f /proc/cmdline ]; then
 			flldebug=*)
 				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
-			nodchp|dchp=no)
+			nodhcp|dhcp=no)
 				exit 0
 				;;
 		esac
