@@ -69,7 +69,8 @@ if [ -f /proc/cmdline ]; then
 fi
 
 if [ -z "${DESKTOP}" ]; then
-	exit 0
+	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"
+	[ -x "/usr/bin/kwin" ] && DESKTOP="kde"
 fi
 
 do_start() {

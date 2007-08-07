@@ -1,8 +1,8 @@
-fll-live-initscripts (1.1.24) UNRELEASED; urgency=low
+fll-live-initscripts (1.1.24) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * prefer kde/ gnome in favour of xfce's broken priority.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 06 Aug 2007 03:38:44 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 07 Aug 2007 13:30:32 +0200
 
 fll-live-initscripts (1.1.23) unstable; urgency=low
 
