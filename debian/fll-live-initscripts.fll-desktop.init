@@ -69,8 +69,8 @@ if [ -f /proc/cmdline ]; then
 fi
 
 if [ -z "${DESKTOP}" ]; then
-	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"
-	[ -x "/usr/bin/kwin" ] && DESKTOP="kde"
+	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"	# second choice
+	[ -x "/usr/bin/kwin" ] && DESKTOP="kde"		# first choice, if installed and desktop= is empty
 fi
 
 do_start() {

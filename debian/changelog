@@ -1,8 +1,9 @@
 fll-live-initscripts (1.1.25) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * document default behaviour in case no desktop= cheatcode is given (r9775).
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 07 Aug 2007 13:32:33 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 09 Aug 2007 02:15:34 +0200
 
 fll-live-initscripts (1.1.24) unstable; urgency=low
 
