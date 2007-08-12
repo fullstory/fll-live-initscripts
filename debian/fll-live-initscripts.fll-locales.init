@@ -734,7 +734,7 @@ set_locale()
 			"console-data console-data/keymap/full select ${CD_FULL}"; do
 		echo "${msg}" | /usr/bin/debconf-set-selections
 	done
-	DEBIAN_FRONTEND="noninteractive" DEBIAN_PRIORITY="critical" dpkg-reconfigure console-data >/dev/null 2>&1
+	dpkg-reconfigure -fnoninteractive -pcritical --no-reload console-data >/dev/null 2>&1
 	log_end_msg "${?}"
 
 }

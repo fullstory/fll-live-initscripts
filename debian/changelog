@@ -1,9 +1,16 @@
 fll-live-initscripts (1.1.25) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
   * document default behaviour in case no desktop= cheatcode is given (r9775).
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 09 Aug 2007 02:15:34 +0200
+  [ Kel Modderman ]
+  * fll-locales: attempted optimisation of expensive call to dpkg-reconfigure
+    of locales package. Use cli options to dpkg-reconfigure instead of leading
+    variables, and use --no-load to avoid reloading/checking package
+    templates.
+
+ -- Kel Modderman <kel@otaku42.de>  Mon, 13 Aug 2007 00:18:26 +1000
 
 fll-live-initscripts (1.1.24) unstable; urgency=low
 
