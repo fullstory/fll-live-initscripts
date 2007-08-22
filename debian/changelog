@@ -1,8 +1,8 @@
-fll-live-initscripts (1.1.26) UNRELEASED; urgency=low
+fll-live-initscripts (1.2.0) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * use fll-fshelper.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 12 Aug 2007 16:27:21 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 22 Aug 2007 15:52:54 +0200
 
 fll-live-initscripts (1.1.25) unstable; urgency=low
 
