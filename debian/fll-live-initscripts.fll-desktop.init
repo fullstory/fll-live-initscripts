@@ -69,6 +69,7 @@ if [ -f /proc/cmdline ]; then
 fi
 
 if [ -z "${DESKTOP}" ]; then
+	[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"	# third choice
 	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"	# second choice
 	[ -x "/usr/bin/kwin" ] && DESKTOP="kde"		# first choice, if installed and desktop= is empty
 fi

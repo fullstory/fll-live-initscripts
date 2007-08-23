@@ -1,8 +1,12 @@
 fll-live-initscripts (1.2.1) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 22 Aug 2007 15:54:17 +0200
+  [ Bernard Gray ]
+  * add transparent xfce desktop option 
+
+ -- Bernard Gray <bernard.gray@gmail.com>  Fri, 24 Aug 2007 09:20:39 +1000
 
 fll-live-initscripts (1.2.0) unstable; urgency=low
 
