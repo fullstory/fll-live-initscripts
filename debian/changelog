@@ -12,8 +12,9 @@ fll-live-initscripts (1.2.1) UNRELEASED; urgency=low
   * Restructure top lovel files into bin/, lib/, man/ directories.
   * Add preinst with chroot check from udev/initramfs-tools. Package will fail
     to install in any system != chroot.
+  * fll-fstab.init: update for /usr/sbin/fll_fshelper.
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 24 Aug 2007 10:58:22 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 24 Aug 2007 12:29:46 +1000
 
 fll-live-initscripts (1.2.0) unstable; urgency=low
 
