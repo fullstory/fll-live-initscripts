@@ -8,7 +8,7 @@
 # Default-Stop:      
 # Short-Description: generates /etc/fstab
 # Description:       The purpose of fll-fstab is to generate /etc.fstab via
-#                    fll-fshelper(8). It also handles mounting of detected 
+#                    fll_fshelper(8). It also handles mounting of detected 
 #                    swap partitions
 ### END INIT INFO
 
@@ -25,7 +25,7 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 NAME="fll-fstab"
 
-if [ ! -x /usr/sbin/fll-fshelper ]; then
+if [ ! -x /usr/sbin/fll_fshelper ]; then
 	exit 0
 fi
 

@@ -66,9 +66,9 @@ chomp($charmap);
 sub help {
 	print STDERR <<_EOF_
 
-fll-fshelper (re)creates the /etc/fstab file and filesystem mountpoints
+fll_fshelper (re)creates the /etc/fstab file and filesystem mountpoints
 
-By default fll-fshelper prints fstab to stdout, and does not create mountpoints
+By default fll_fshelper prints fstab to stdout, and does not create mountpoints
 
   -h|--help                 print this help
   -w|--write-fstab          (re)create the fstab file
@@ -82,7 +82,7 @@ By default fll-fshelper prints fstab to stdout, and does not create mountpoints
   -q|--quiet                surpress output when writing to file
   -d|--debug                debug sh code execution
 
-rebuildfstab is intended for initial creation of /etc/fstab by "live" linux
+fll_fshelper is intended for initial creation of /etc/fstab by "live" linux
 distro's. It is not intended for ongoing maintenance of the fstab file on
 standard linux distro installations.
 
@@ -185,7 +185,7 @@ sub device_resolver {
 }
 
 sub comment {
-	my $c = '# added by fll-fshelper';
+	my $c = '# added by fll_fshelper';
 	
 	for my $extra ( @_ ) {
 		chomp $extra;
