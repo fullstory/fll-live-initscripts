@@ -35,8 +35,7 @@ use Tie::File;
 
 die "Must be root!\n" unless $> == 0;
 
-die "udev utilities 'vol_id' and 'ata_id' are required!\n"
- 	unless (-x '/lib/udev/vol_id' and -x '/lib/udev/ata_id');
+die "udev utility 'vol_id' is required!\n" unless -x '/lib/udev/vol_id';
 
 #-------------------------------------------------------------------#
 # variable declarations
@@ -115,7 +114,26 @@ sub vol_id {
 		m/^ID_FS_([^=]+)=(.+)$/ and $vol_id{lc($1)} = $2;
 	}
 	close($fh);
+	
 	return \%vol_id;
+}
+
+sub ata_id {
+	return unless -x '/lib/udev/ata_id';
+	
+	my $d = shift;
+	return unless -b $d;
+	
+	unless (-d '/sys/module/libata') {
+		dbg "no libata - skipping ata_id";
+		return;
+	}
+
+	my $id = `/lib/udev/ata_id $d`;
+	chomp $id;
+	dbg $id;
+	
+	return "$id";
 }
 
 sub device_is_removeable {
@@ -317,7 +335,7 @@ if (-f '/proc/mounts') {
 			$options = "auto,$options";
 		}
 		
-		$comment = comment `/lib/udev/ata_id $device`;
+		$comment = comment ata_id($device);
 
 		if ($opts{'uuids'} and $p{$device}{'uuid_enc'}) {
 			$name = 'UUID=' . $p{$device}{'uuid_enc'};
@@ -382,7 +400,7 @@ for my $device ( sort keys %p ) {
 	my ($comment, $name, $mount) = ();
 	
 	# pretty label for ata devices
-	$comment = comment `/lib/udev/ata_id $device`;
+	$comment = comment ata_id($device);
 
 	if ($opts{'uuids'} and $uuid) {
 		if ($u_seen{$uuid}) {
@@ -469,7 +487,7 @@ for (</dev/cdrom*>) {
 	next unless -b;
 	$_ =~ s|^/dev/||;
 	
-	push @fstab, comment `/lib/udev/ata_id /dev/$_`;
+	push @fstab, comment ata_id("/dev/$_");
 	push @fstab, join "\t", "/dev/$_", "/media/$_", 'udf,iso9660', 'user,noauto', '0', '0';
 	push @fstab, '';
 	

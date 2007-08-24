@@ -13,8 +13,10 @@ fll-live-initscripts (1.2.1) UNRELEASED; urgency=low
   * Add preinst with chroot check from udev/initramfs-tools. Package will fail
     to install in any system != chroot.
   * fll-fstab.init: update for /usr/sbin/fll_fshelper.
+  * fll_fshelper: modularise ata_id usage. Avoid using ata_id unless libata is
+    in use, or utility not present.
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 24 Aug 2007 12:29:46 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 24 Aug 2007 13:05:02 +1000
 
 fll-live-initscripts (1.2.0) unstable; urgency=low
 
