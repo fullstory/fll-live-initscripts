@@ -73,7 +73,8 @@ By default fll-fshelper prints fstab to stdout, and does not create mountpoints
   -h|--help                 print this help
   -w|--write-fstab          (re)create the fstab file
   -m|--make-mountpoints     (re)create mountpoints in /media
-  -n|--no-swap              don't write fstab entry for swap partitions
+  --no-swap                 don't write fstab entry for swap partitions
+  --no-id                   don't attempt detection of device id
   -u|--uuids                use UUID's for mount names when possible
   -l|--labels               use LABELS's for mount names when possible
   -f|--fstab <file>         target file to write output to
@@ -119,16 +120,13 @@ sub vol_id {
 }
 
 sub ata_id {
-	return unless -x '/lib/udev/ata_id';
+	unless (-x '/lib/udev/ata_id' and not $opts{'no-id'}) {
+		return;
+	}
 	
 	my $d = shift;
 	return unless -b $d;
 	
-	unless (-d '/sys/module/libata') {
-		dbg "no libata - skipping ata_id";
-		return;
-	}
-
 	my $id = `/lib/udev/ata_id $d`;
 	chomp $id;
 	dbg $id;
@@ -214,7 +212,7 @@ sub add_mnt_pnt {
 
 GetOptions(
 	\%opts, 'auto', 'debug', 'fstab=s', 'help', 'install-gui', 'labels',
-	'make-mountpoints', 'no-swap', 'quiet', 'uuids', 'write-fstab'
+	'make-mountpoints', 'no-id', 'no-swap', 'quiet', 'uuids', 'write-fstab'
 );
 
 if ($opts{'help'}) {
@@ -311,50 +309,58 @@ if (-f '/proc/mounts') {
 		chomp;
 		dbg $_;
 		my ($device, $mount, $fstype, $options, $dump, $pass) = split;
-		my ($comment, $name) = ();
+		my ($comment, $name, $label, $uuid) = ();
 		
 		if (not -b $device or $fstype eq 'swap'
 			or $mount =~ m%^(/dev/.static/[^/]+|/media/[^/]+|/fll/[^/]+)$%) {
 			next;
 		}
 		
+		# resolve device name and check that it is part of the %p structure
 		$device = device_resolver $device;
-
 		next unless $p{$device}{'type'};
+		
+		# device is valid, seen it
 		$p_seen{$device} = 1;
 
-		$fstype = $p{$device}{'type'};
+		# take a slice of %p
+		($fstype, $label, $uuid) = @{$p{$device}}{'type', 'label_enc', 'uuid_enc'};
+		
+		# fallbacks, support older udev versions
+		$label ||= @{$p{$device}}{'label'};
+		$uuid ||= @{$p{$device}}{'uuid'};
+		
+		# default options and fs_passno
 		$options = 'defaults,noatime';
+		$pass = '2';
+		
 		# root fs_passno = 1, all others should be 2 or 0 as per fstab(5)
 		if ($mount eq '/') {
 			$pass = '1';
 			$fstype =~ /^ext[234]$/ and $options .= ',errors=remount-ro';
 		}
-		else {
-			$pass = '2';
-			$options = "auto,$options";
-		}
 		
+		# begin creating fstab comment for $device
 		$comment = comment ata_id($device);
 
-		if ($opts{'uuids'} and $p{$device}{'uuid_enc'}) {
-			$name = 'UUID=' . $p{$device}{'uuid_enc'};
+		if ($opts{'uuids'} and $uuid) {
+			$name = 'UUID=' . $uuid;
 			$comment .= ", $device";
 			# show label in comment if one exists
-			if ($p{$device}{'label_enc'} and not $opts{'labels'}) {
-				$comment .= ', LABEL=' . $p{$device}{'label_enc'};
+			if ($label and not $opts{'labels'}) {
+				$comment .= ', LABEL=' . $label;
 			}
 			# seen it
-			$u_seen{$p{$device}{'uuid_enc'}} = 1;
+			$u_seen{$uuid} = 1;
 		}
 		
 		# if labels and uuids are wanted, prefer labels
-		if ($opts{'labels'} and $p{$device}{'label_enc'}) {
-			$name = 'LABEL=' . $p{$device}{'label_enc'};
+		if ($opts{'labels'} and $label) {
+			$name = 'LABEL=' . $label;
 			# avoid double appendage of device node name
 			$comment .= ", $device" unless $opts{'uuids'};
 			# seen it
-			$l_seen{$p{$device}{'label_enc'}} = 1;
+			$l_seen{$label} = 1;
 		}
 
 		$name ||= $device;
@@ -379,16 +385,26 @@ for my $device ( sort keys %p ) {
 
 	# $device info, take a slice of %p
 	my ($usage, $fstype, $label, $label_safe, $uuid) = @{$p{$device}}{'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc'};
+		
+	# fallbacks, support older udev versions
+	$label ||= @{$p{$device}}{'label'};
+	$uuid ||= @{$p{$device}}{'uuid'};
 	
 	if (not $fstype or $fstype =~ /(unknown|iso9660|udf|squashfs)/ or 
 		not $usage or $usage !~ /(filesystem|other)/) {
 		dbg "Skipping $device, unsuitable fstype or usage";
 		next;
 	}
+
+	# device is valid, seen it
+	$p_seen{$device} = 1;
+
+	my ($comment, $name, $mount, $options) = ();
+	my ($dump, $pass) = ('0', '2');
 	
 	# default mount and pass options
-	my $auto = $opts{'auto'} ? 'auto' : 'noauto';
-	my ($options, $dump, $pass) =  ("$auto,users,exec", '0', '2');
+	$options = $opts{'auto'} ? 'auto' : 'noauto';
+	$options .= ',users,exec';
 
 	# utf-8 support
 	my ($iocs, $nls, $utf8) = ();
@@ -397,8 +413,6 @@ for my $device ( sort keys %p ) {
 		dbg "$charmap $iocs $nls $utf8";
 	}
 
-	my ($comment, $name, $mount) = ();
-	
 	# pretty label for ata devices
 	$comment = comment ata_id($device);
 
