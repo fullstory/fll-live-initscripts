@@ -1,11 +1,8 @@
-fll-live-initscripts (1.2.1) UNRELEASED; urgency=low
+fll-live-initscripts (1.2.1) unstable; urgency=low
 
   [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Bernard Gray ]
-  * add transparent xfce desktop option
-  * add fluxbox as fallback wm
+  * revert r10116 and r10117 and make window manager selection more robust
+    (again).
 
   [ Kel Modderman ]
   * Merge fll-fshelper functionality in form of bin/fll_fshelper.

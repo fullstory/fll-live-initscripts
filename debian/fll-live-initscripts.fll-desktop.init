@@ -69,10 +69,12 @@ if [ -f /proc/cmdline ]; then
 fi
 
 if [ -z "${DESKTOP}" ]; then
-	[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"	# fallback
-	[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"		# third choice
-	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# second choice
-	[ -x "/usr/bin/kwin" ] && DESKTOP="kde"			# first choice, if installed and desktop= is empty
+	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"	# second choice
+	[ -x "/usr/bin/kwin" ] && DESKTOP="kde"		# first choice, if installed and desktop= is empty
+
+	# none of the major desktop environments is installed, don't interfere 
+	# with ordinary priorities.
+	[ -z "${DESKTOP}" ] && exit 0
 fi
 
 do_start() {
