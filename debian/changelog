@@ -17,8 +17,9 @@ fll-live-initscripts (1.2.1) UNRELEASED; urgency=low
   * fll_fshelper: no need to specify auto mount option when defaults is used.
   * fll_fshelper: improve MOUNTS loop.
   * fll-fstab.init: use --no-id option of fll_fshelper for live boot, faster.
+  * fll_fshelper.8: update for --no-id, remove --no-swap short option.
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 24 Aug 2007 17:00:21 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 24 Aug 2007 20:30:31 +1000
 
 fll-live-initscripts (1.2.0) unstable; urgency=low
 
