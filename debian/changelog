@@ -2,7 +2,7 @@ fll-live-initscripts (1.2.2) unstable; urgency=low
 
   * fll-fshelper was renamed...
 
- -- Joaquim Boura <x-un-i@sidux.com>   Fri, 24 Aug 2007 20:41:37 +0200
+ -- Joaquim Boura <x-un-i@sidux.com>  Fri, 24 Aug 2007 20:41:37 +0200
 
 fll-live-initscripts (1.2.1) unstable; urgency=low
 
