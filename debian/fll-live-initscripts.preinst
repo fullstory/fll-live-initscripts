@@ -16,8 +16,10 @@ chrooted() {
 case "$1" in
 	install)
 		if ! chrooted; then
+			echo '############################################################'
 			echo 'Installing this package on an installed system is dangerous!'
 			echo 'Aborting installion.'
+			echo '############################################################'
 			exit 1
 		fi
 		;;
