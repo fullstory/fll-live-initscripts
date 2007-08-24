@@ -7,7 +7,13 @@ fll-live-initscripts (1.2.1) UNRELEASED; urgency=low
   * add transparent xfce desktop option
   * add fluxbox as fallback wm
 
- -- Bernard Gray <bernard.gray@gmail.com>  Fri, 24 Aug 2007 09:26:23 +1000
+  [ Kel Modderman ]
+  * Merge fll-fshelper functionality in form of bin/fll_fshelper.
+  * Restructure top lovel files into bin/, lib/, man/ directories.
+  * Add preinst with chroot check from udev/initramfs-tools. Package will fail
+    to install in any system != chroot.
+
+ -- Kel Modderman <kel@otaku42.de>  Fri, 24 Aug 2007 10:58:22 +1000
 
 fll-live-initscripts (1.2.0) unstable; urgency=low
 

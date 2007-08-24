@@ -1,0 +1,498 @@
+#!/usr/bin/perl
+#
+# Copyright (C) 2007 Kel Modderman <kel@otaku42.de>
+#	    (C) 2007 Michiel de Boer <locsmif@kanotix.com>
+#	    (C) 2007 Joaquim Boura <x-un-i@sidux.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this package; if not, write to the Free Software 
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+# MA 02110-1301, USA.
+#
+# On Debian GNU/Linux systems, the text of the GPL license can be
+# found in /usr/share/common-licenses/GPL.
+#
+
+use warnings;
+use strict;
+use File::Copy;
+use File::Path;
+use Getopt::Long;
+use Tie::File;
+
+#-------------------------------------------------------------------#
+# sanity checks
+
+die "Must be root!\n" unless $> == 0;
+
+die "udev utilities 'vol_id' and 'ata_id' are required!\n"
+ 	unless (-x '/lib/udev/vol_id' and -x '/lib/udev/ata_id');
+
+#-------------------------------------------------------------------#
+# variable declarations
+
+# global hashes
+#   %p		- partition information structure
+#   %l_seen	- labels seen so far
+#   %p_seen	- partitions seen so far
+#   %u_seen	- uuids seen so far
+my (%p, %l_seen, %p_seen, %u_seen);
+
+# fstab file location
+my $file = '/etc/fstab';
+
+# @fstab is tied to $file, $f is the tied arrays control object
+my ($f, @fstab);
+
+# global options, $opts{'fstab'} is ref to $file
+my %opts = ('fstab' => \$file);
+
+# utf-8 options for M$ filesystems
+my $charmap = `locale charmap`;
+chomp($charmap);
+
+#-------------------------------------------------------------------#
+# internal functions
+
+sub help {
+	print STDERR <<_EOF_
+
+fll-fshelper (re)creates the /etc/fstab file and filesystem mountpoints
+
+By default fll-fshelper prints fstab to stdout, and does not create mountpoints
+
+  -h|--help                 print this help
+  -w|--write-fstab          (re)create the fstab file
+  -m|--make-mountpoints     (re)create mountpoints in /media
+  -n|--no-swap              don't write fstab entry for swap partitions
+  -u|--uuids                use UUID's for mount names when possible
+  -l|--labels               use LABELS's for mount names when possible
+  -f|--fstab <file>         target file to write output to
+  -a|--auto                 set auto mount option where applicable
+  -q|--quiet                surpress output when writing to file
+  -d|--debug                debug sh code execution
+
+rebuildfstab is intended for initial creation of /etc/fstab by "live" linux
+distro's. It is not intended for ongoing maintenance of the fstab file on
+standard linux distro installations.
+
+_EOF_
+;
+}
+
+sub dbg {
+	return unless $opts{'debug'};
+	
+	for my $data ( @_ ) {
+		if (ref $data) {
+			print STDERR "DBG: " . Dumper($data);
+		}
+		else {
+			$data and print STDERR "DBG: $data\n";
+		}
+	}
+}
+
+sub vol_id {
+	my $v = shift;
+	return unless -b $v;
+
+	my %vol_id;
+	open(my $fh, '-|', "/lib/udev/vol_id $v 2>/dev/null");
+	while (<$fh>) {
+		chomp;
+		dbg($_);
+		m/^ID_FS_([^=]+)=(.+)$/ and $vol_id{lc($1)} = $2;
+	}
+	close($fh);
+	return \%vol_id;
+}
+
+sub device_is_removeable {
+	my $d = shift;
+	my $link;
+	
+	$d =~ m|^(/dev/)?([^/0-9]+)([0-9]*)$| and $d = $2;
+
+	dbg "device_is_removeable: $d";
+
+	if (-l "/sys/block/$d/device") {
+		$link = `readlink -f /sys/block/$d/device`;
+		chomp $link;
+		dbg $link;
+		# we filter out devices on the usb or firewire bus
+		# eg. /sys/devices/pci0000:00/0000:00:02.1/usb2/2-6/2-6:1.0/host7/target7:0:0/7:0:0:0
+		if ($link =~ /\/(usb|fw)[0-9]+/) {
+			dbg "$d is removable";
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+sub device_resolver {
+	my $d = shift;
+	my $n = '';
+
+	dbg "device_resolver in: $d";
+
+	if ($d =~ /^(LABEL|UUID)=.+$/) {
+		# this is here for completeness only
+		$n = `findfs $d`;
+		chomp $n;
+	}
+	elsif ($d =~ m|^/dev/disk/by-.+/[^/]+$|) {
+		# canonicalize device node symlink
+		$n = `readlink -f $d`;
+		chomp $n;
+	}
+	elsif ($d =~ m|^/dev/.+|) {
+		$n = $d;
+	}
+
+	dbg "device_resolver out: $n";
+
+	-b $n and return "$n";
+
+	return undef;
+}
+
+sub comment {
+	my $c = '# added by fll-fshelper';
+	
+	for my $extra ( @_ ) {
+		chomp $extra;
+		$c .= ", $extra";
+	}
+
+	return "$c";
+}
+
+sub add_mnt_pnt {
+	return unless $opts{'make-mountpoints'};
+	
+	my $mnt_pnt = shift;
+	return if -d $mnt_pnt;
+
+	eval { mkpath $mnt_pnt, 0, 0755; };
+	if ($@) {
+		print STDERR "Could not create $mnt_pnt: $@\n"
+	}	
+}
+
+#-------------------------------------------------------------------#
+# process cli arguments
+
+GetOptions(
+	\%opts, 'auto', 'debug', 'fstab=s', 'help', 'install-gui', 'labels',
+	'make-mountpoints', 'no-swap', 'quiet', 'uuids', 'write-fstab'
+);
+
+if ($opts{'help'}) {
+	help;
+	exit(0);
+}
+
+#-------------------------------------------------------------------#
+# debugging
+
+if ($opts{'debug'}) {
+	require Data::Dumper;
+	import Data::Dumper;
+}
+
+dbg '%opts', \%opts;
+
+#-------------------------------------------------------------------#
+# preparation for writing fstab to file
+
+if ($opts{'write-fstab'}) {
+	# back it up before writing
+	if (-f $file) {
+		copy $file, $file . '.old'
+			or die "Cannot back up $file to $file.old: $!\n";
+	}
+	
+	# tie array to file, lock it
+	$f = tie @fstab, "Tie::File", $file
+		or die "Cannot open $file for writing: $!\n";
+	$f->flock;
+	
+	# truncate file
+	@fstab = ();
+}
+
+@fstab = (
+	'# /etc/fstab - static information about the filesystems - fstab(5)',
+	'#',
+	'# /etc/fstab is only read by programs, and not written; it is the duty of the',
+	'# system administrator to properly maintain this file.',
+	'#',
+	'# Instead  of giving the device explicitly, one may indicate the filesystem',
+	'# that is to be mounted by its UUID or VOLUME label. This will make the',
+	'# system more robust: adding or removing a disk changes the disk device name',
+	'# but not the filesystem UUID or VOLUME label.',
+	'#',
+	"# <filesystem>\t<mountpoint>\t<type>\t\t<options>\t<dump>\t<pass>",
+	'',
+);
+
+#-------------------------------------------------------------------#
+# build %p structure with information about partitions
+
+if (-f '/proc/partitions') {
+	open(PARTITIONS, '<', '/proc/partitions')
+		or die "Cannot open /proc/partitions for reading: $!\n";
+	while (<PARTITIONS>) {
+		chomp;
+		dbg $_;
+		if (/\s+(\d+)\s+(\d+)\s+(\d+)\s+(.+)/) {
+			# locsmif has some other tweak that can go here
+			unless ($3 == 1 or $4 =~ /^(ram|cloop|loop)[0-9]*$/) {
+				$p{"/dev/$4"} = vol_id "/dev/$4";
+			}
+		}
+	}
+	close(PARTITIONS);
+
+	dbg '%p', \%p;
+}
+
+#-------------------------------------------------------------------#
+# just for install-gui
+
+if ($opts{'install-gui'}) {
+	for my $device ( sort keys %p ) {
+		my ($usage, $fstype) = @{$p{$device}}{'usage', 'type'};
+		if ($fstype and $fstype !~ /^(unknown|iso9660|udf|squashfs)$/ and 
+			$usage and $usage eq 'filesystem') {
+			print join('-', $device, $fstype), "\n";
+		}
+	}
+	exit 0;
+}
+
+#-------------------------------------------------------------------#
+# process mounted volumes
+
+if (-f '/proc/mounts') {
+	open(MOUNTS, '<', '/proc/mounts')
+		or die "Cannot open /proc/mounts for reading: $!\n";
+	while (<MOUNTS>) {
+		chomp;
+		dbg $_;
+		my ($device, $mount, $fstype, $options, $dump, $pass) = split;
+		my ($comment, $name) = ();
+		
+		if (not -b $device or $fstype eq 'swap'
+			or $mount =~ m%^(/dev/.static/[^/]+|/media/[^/]+|/fll/[^/]+)$%) {
+			next;
+		}
+		
+		$device = device_resolver $device;
+
+		next unless $p{$device}{'type'};
+		$p_seen{$device} = 1;
+
+		$fstype = $p{$device}{'type'};
+		$options = 'defaults,noatime';
+		# root fs_passno = 1, all others should be 2 or 0 as per fstab(5)
+		if ($mount eq '/') {
+			$pass = '1';
+			$fstype =~ /^ext[234]$/ and $options .= ',errors=remount-ro';
+		}
+		else {
+			$pass = '2';
+			$options = "auto,$options";
+		}
+		
+		$comment = comment `/lib/udev/ata_id $device`;
+
+		if ($opts{'uuids'} and $p{$device}{'uuid_enc'}) {
+			$name = 'UUID=' . $p{$device}{'uuid_enc'};
+			$comment .= ", $device";
+			# show label in comment if one exists
+			if ($p{$device}{'label_enc'} and not $opts{'labels'}) {
+				$comment .= ', LABEL=' . $p{$device}{'label_enc'};
+			}
+			# seen it
+			$u_seen{$p{$device}{'uuid_enc'}} = 1;
+		}
+		
+		# if labels and uuids are wanted, prefer labels
+		if ($opts{'labels'} and $p{$device}{'label_enc'}) {
+			$name = 'LABEL=' . $p{$device}{'label_enc'};
+			# avoid double appendage of device node name
+			$comment .= ", $device" unless $opts{'uuids'};
+			# seen it
+			$l_seen{$p{$device}{'label_enc'}} = 1;
+		}
+
+		$name ||= $device;
+
+		push @fstab, $comment;
+		push @fstab, join "\t", $name, $mount, $fstype, $options, $dump, $pass;
+		push @fstab, '';
+	}
+	close(MOUNTS);
+}
+
+#-------------------------------------------------------------------#
+# process all unseen non-removable partitions
+
+for my $device ( sort keys %p ) {
+	if ($p_seen{$device} or device_is_removeable $device) {
+		dbg "Skipping $device";
+		next;
+	}
+	
+	dbg $device, $p{$device};
+
+	# $device info, take a slice of %p
+	my ($usage, $fstype, $label, $label_safe, $uuid) = @{$p{$device}}{'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc'};
+	
+	if (not $fstype or $fstype =~ /(unknown|iso9660|udf|squashfs)/ or 
+		not $usage or $usage !~ /(filesystem|other)/) {
+		dbg "Skipping $device, unsuitable fstype or usage";
+		next;
+	}
+	
+	# default mount and pass options
+	my $auto = $opts{'auto'} ? 'auto' : 'noauto';
+	my ($options, $dump, $pass) =  ("$auto,users,exec", '0', '2');
+
+	# utf-8 support
+	my ($iocs, $nls, $utf8) = ();
+	if ($charmap eq 'UTF-8') {
+		($iocs, $nls, $utf8) = (',iocharset=utf8', ',nls=utf8', ',utf8');
+		dbg "$charmap $iocs $nls $utf8";
+	}
+
+	my ($comment, $name, $mount) = ();
+	
+	# pretty label for ata devices
+	$comment = comment `/lib/udev/ata_id $device`;
+
+	if ($opts{'uuids'} and $uuid) {
+		if ($u_seen{$uuid}) {
+			print STDERR "Duplicate UUID ($device): $uuid\n";
+			next;
+		}
+		else {
+			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
+				$name = "UUID=$uuid";
+			}
+			else {
+				$name = "/dev/disk/by-uuid/$uuid";
+			}
+			# append device node name and label to comment
+			$comment .= ", $device";
+			if ($label and not $opts{'labels'}) {
+				$comment .= ', LABEL=' . $label;
+			}
+			# seen it
+			$u_seen{$uuid} = 1;
+		}
+	}
+
+	if ($opts{'labels'} and $label) {
+		if ($l_seen{$label}) {
+			print STDERR "Duplicate LABEL ($device): $label\n";
+			next;
+		}
+		else {
+			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
+				$name = "LABEL=$label";
+			}
+			else {
+				$name = "/dev/disk/by-label/$label";
+			}
+			# use safe label for mount point name
+			$label_safe and $mount = "/media/$label_safe";
+			# append device node name to comment, if not done already
+			$comment .= ", $device" unless $opts{'uuids'};
+			# seen it
+			$l_seen{$label} = 1;
+		}
+	}
+
+	# device name as default/fallback
+	$name ||= $device;
+	($mount ||= "/media/$device") =~ s|/dev/||;
+
+	if ($fstype eq 'ntfs') {
+		$options .= ',ro,dmask=0022,fmask=0133';
+		$nls and $options .= $nls;
+		$pass = '0';
+	}
+	elsif ($fstype eq 'msdos') {
+		$options .= ',quiet,umask=000';
+		$iocs and $options .= $iocs;
+		$pass = '0';
+	}
+	elsif ($fstype eq 'vfat') {
+		$options .= ',shortname=lower,quiet,umask=000';
+		$utf8 and $options .= $utf8;
+		$pass = '0';
+	}
+	elsif ($fstype eq 'swap') {
+		$opts{'no-swap'} and next;
+		$options = 'sw';
+		$mount = 'none';
+	}
+	elsif ($fstype =~ /^(ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
+		$options .= ',noatime';
+	}
+
+	push @fstab, $comment;
+	push @fstab, join "\t", $name, $mount, $fstype, $options, $dump, $pass;
+	push @fstab, '';
+
+	add_mnt_pnt $mount;
+}
+
+#-------------------------------------------------------------------#
+# cdrom devices
+
+for (</dev/cdrom*>) {
+	next unless -b;
+	$_ =~ s|^/dev/||;
+	
+	push @fstab, comment `/lib/udev/ata_id /dev/$_`;
+	push @fstab, join "\t", "/dev/$_", "/media/$_", 'udf,iso9660', 'user,noauto', '0', '0';
+	push @fstab, '';
+	
+	add_mnt_pnt "/media/$_";
+}
+
+#-------------------------------------------------------------------#
+# floppy devices
+
+for (</dev/fd*>) {
+	next unless -b;
+	$_ =~ s|^/dev/||;
+
+	push @fstab, comment;
+	push @fstab, join "\t", "/dev/$_", "/media/$_", 'auto', 'rw,user,noauto', '0', '0';
+	push @fstab, '';
+	
+	add_mnt_pnt "/media/$_";
+}
+
+#-------------------------------------------------------------------#
+# show fstab
+
+unless ($opts{'quiet'}) {
+	print "$_\n" for ( @fstab );
+}
