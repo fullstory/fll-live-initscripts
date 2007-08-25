@@ -188,6 +188,7 @@ sub comment {
 	my $c = '# added by fll_fshelper';
 	
 	for my $extra ( @_ ) {
+		next unless defined $extra;
 		chomp $extra;
 		$c .= ", $extra";
 	}
@@ -273,10 +274,24 @@ if (-f '/proc/partitions') {
 	while (<PARTITIONS>) {
 		chomp;
 		dbg $_;
+		my $part;
 		if (/\s+(\d+)\s+(\d+)\s+(\d+)\s+(.+)/) {
 			# locsmif has some other tweak that can go here
 			unless ($3 == 1 or $4 =~ /^(ram|cloop|loop)[0-9]*$/) {
-				$p{"/dev/$4"} = vol_id "/dev/$4";
+				$part = $4;
+				$p{"/dev/$part"} = vol_id "/dev/$part";
+				
+				next if $opts{'no-id'};
+				# get device description from ata_id
+				if ($part !~ /[0-9]$/) {
+					# the parent device
+					$p{"/dev/$part"}{'desc'} = ata_id "/dev/$part";
+				}
+				elsif ($part =~ /^(.+)[0-9]+$/ and $p{"/dev/$1"}{'desc'}) {
+					# use description of parent device
+					dbg "$part -> $1 -> " . $p{"/dev/$1"}{'desc'};
+					$p{"/dev/$part"}{'desc'} = $p{"/dev/$1"}{'desc'};
+				}
 			}
 		}
 	}
@@ -309,7 +324,7 @@ if (-f '/proc/mounts') {
 		chomp;
 		dbg $_;
 		my ($device, $mount, $fstype, $options, $dump, $pass) = split;
-		my ($comment, $name, $label, $uuid) = ();
+		my ($comment, $desc, $name, $label, $uuid) = ();
 		
 		if (not -b $device or $fstype eq 'swap'
 			or $mount =~ m%^(/dev/.static/[^/]+|/media/[^/]+|/fll/[^/]+)$%) {
@@ -324,7 +339,7 @@ if (-f '/proc/mounts') {
 		$p_seen{$device} = 1;
 
 		# take a slice of %p
-		($fstype, $label, $uuid) = @{$p{$device}}{'type', 'label_enc', 'uuid_enc'};
+		($fstype, $label, $uuid, $desc) = @{$p{$device}}{'type', 'label_enc', 'uuid_enc', 'desc'};
 		
 		# fallbacks, support older udev versions
 		$label ||= @{$p{$device}}{'label'};
@@ -341,7 +356,7 @@ if (-f '/proc/mounts') {
 		}
 		
 		# begin creating fstab comment for $device
-		$comment = comment ata_id($device);
+		$comment = comment $desc;
 
 		if ($opts{'uuids'} and $uuid) {
 			$name = 'UUID=' . $uuid;
@@ -384,7 +399,7 @@ for my $device ( sort keys %p ) {
 	dbg $device, $p{$device};
 
 	# $device info, take a slice of %p
-	my ($usage, $fstype, $label, $label_safe, $uuid) = @{$p{$device}}{'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc'};
+	my ($usage, $fstype, $label, $label_safe, $uuid, $desc) = @{$p{$device}}{'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc', 'desc'};
 		
 	# fallbacks, support older udev versions
 	$label ||= @{$p{$device}}{'label'};
@@ -414,7 +429,7 @@ for my $device ( sort keys %p ) {
 	}
 
 	# pretty label for ata devices
-	$comment = comment ata_id($device);
+	$comment = comment $desc;
 
 	if ($opts{'uuids'} and $uuid) {
 		if ($u_seen{$uuid}) {
