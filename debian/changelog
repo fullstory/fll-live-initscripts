@@ -1,4 +1,4 @@
-fll-live-initscripts (1.2.3) UNRELEASED; urgency=low
+fll-live-initscripts (1.2.3) unstable; urgency=low
 
   * fll_fshelper: optimize usage of ata_id.
   * fll_fshelper: enhance MOUNTS loop.
