@@ -274,23 +274,22 @@ if (-f '/proc/partitions') {
 	while (<PARTITIONS>) {
 		chomp;
 		dbg $_;
-		my $part;
+		my ($major, $minor, $blocks, $name) = split;
 		if (/\s+(\d+)\s+(\d+)\s+(\d+)\s+(.+)/) {
 			# locsmif has some other tweak that can go here
-			unless ($3 == 1 or $4 =~ /^(ram|cloop|loop)[0-9]*$/) {
-				$part = $4;
-				$p{"/dev/$part"} = vol_id "/dev/$part";
+			unless ($blocks == 1 or $name =~ /^(ram|cloop|loop)[0-9]*$/) {
+				$p{"/dev/$name"} = vol_id "/dev/$name";
 				
 				next if $opts{'no-id'};
 				# get device description from ata_id
-				if ($part !~ /[0-9]$/) {
+				if ($name !~ /[0-9]$/) {
 					# the parent device
-					$p{"/dev/$part"}{'desc'} = ata_id "/dev/$part";
+					$p{"/dev/$name"}{'desc'} = ata_id "/dev/$name";
 				}
-				elsif ($part =~ /^(.+)[0-9]+$/ and $p{"/dev/$1"}{'desc'}) {
+				elsif ($name =~ /^(.+)[0-9]+$/ and $p{"/dev/$1"}{'desc'}) {
 					# use description of parent device
-					dbg "$part -> $1 -> " . $p{"/dev/$1"}{'desc'};
-					$p{"/dev/$part"}{'desc'} = $p{"/dev/$1"}{'desc'};
+					dbg "$name -> $1 -> " . $p{"/dev/$1"}{'desc'};
+					$p{"/dev/$name"}{'desc'} = $p{"/dev/$1"}{'desc'};
 				}
 			}
 		}
