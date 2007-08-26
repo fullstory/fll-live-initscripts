@@ -1,3 +1,9 @@
+fll-live-initscripts (1.2.5) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 26 Aug 2007 12:16:28 +0200
+
 fll-live-initscripts (1.2.4) unstable; urgency=low
 
   * fll_fshelper: cleanup MOUNTS loop.
