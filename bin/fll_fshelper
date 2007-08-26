@@ -36,6 +36,7 @@ use Tie::File;
 die "Must be root!\n" unless $> == 0;
 
 die "udev utility 'vol_id' is required!\n" unless -x '/lib/udev/vol_id';
+die "udev utility 'ata_id' is required!\n" unless -x '/lib/udev/ata_id';
 
 #-------------------------------------------------------------------#
 # variable declarations
@@ -120,9 +121,7 @@ sub vol_id {
 }
 
 sub ata_id {
-	unless (-x '/lib/udev/ata_id' and not $opts{'no-id'}) {
-		return;
-	}
+	return if $opts{'no-id'};
 	
 	my $d = shift;
 	return unless -b $d;
@@ -275,23 +274,25 @@ if (-f '/proc/partitions') {
 		chomp;
 		dbg $_;
 		my ($major, $minor, $blocks, $name) = split;
-		if (/\s+(\d+)\s+(\d+)\s+(\d+)\s+(.+)/) {
-			# locsmif has some other tweak that can go here
-			unless ($blocks == 1 or $name =~ /^(ram|cloop|loop)[0-9]*$/) {
-				$p{"/dev/$name"} = vol_id "/dev/$name";
+		
+		unless ($name and -b "/dev/$name"
+			and $name !~ /^(ram|cloop|loop)[0-9]*$/) {
+			next;
+		}
+		
+		next unless $blocks > 1;
+
+		$p{"/dev/$name"} = vol_id "/dev/$name";
 				
-				next if $opts{'no-id'};
-				# get device description from ata_id
-				if ($name !~ /[0-9]$/) {
-					# the parent device
-					$p{"/dev/$name"}{'desc'} = ata_id "/dev/$name";
-				}
-				elsif ($name =~ /^(.+)[0-9]+$/ and $p{"/dev/$1"}{'desc'}) {
-					# use description of parent device
-					dbg "$name -> $1 -> " . $p{"/dev/$1"}{'desc'};
-					$p{"/dev/$name"}{'desc'} = $p{"/dev/$1"}{'desc'};
-				}
-			}
+		next if $opts{'no-id'};
+		
+		# get device description from ata_id
+		$name !~ /[0-9]$/ and $p{"/dev/$name"}{'desc'} = ata_id "/dev/$name";
+		
+		if ($name =~ /^(.+)[0-9]+$/ and $p{"/dev/$1"}{'desc'}) {
+			# use description of parent device
+			dbg "$name -> $1 = " . $p{"/dev/$1"}{'desc'};
+			$p{"/dev/$name"}{'desc'} = $p{"/dev/$1"}{'desc'};
 		}
 	}
 	close(PARTITIONS);

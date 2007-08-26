@@ -1,3 +1,9 @@
+fll-live-initscripts (1.2.4) unstable; urgency=low
+
+  * fll_fshelper: cleanup MOUNTS loop.
+
+ -- Kel Modderman <kel@otaku42.de>  Sun, 26 Aug 2007 10:07:08 +1000
+
 fll-live-initscripts (1.2.3) unstable; urgency=low
 
   * fll_fshelper: optimize usage of ata_id.
