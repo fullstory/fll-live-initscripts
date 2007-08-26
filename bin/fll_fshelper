@@ -283,17 +283,6 @@ if (-f '/proc/partitions') {
 		next unless $blocks > 1;
 
 		$p{"/dev/$name"} = vol_id "/dev/$name";
-				
-		next if $opts{'no-id'};
-		
-		# get device description from ata_id
-		$name !~ /[0-9]$/ and $p{"/dev/$name"}{'desc'} = ata_id "/dev/$name";
-		
-		if ($name =~ /^(.+)[0-9]+$/ and $p{"/dev/$1"}{'desc'}) {
-			# use description of parent device
-			dbg "$name -> $1 = " . $p{"/dev/$1"}{'desc'};
-			$p{"/dev/$name"}{'desc'} = $p{"/dev/$1"}{'desc'};
-		}
 	}
 	close(PARTITIONS);
 
@@ -312,6 +301,24 @@ if ($opts{'install-gui'}) {
 		}
 	}
 	exit 0;
+}
+
+#-------------------------------------------------------------------#
+# parse ata/scsi disk id's without vol_id
+
+for my $id (</dev/disk/by-id/ata-*>) {
+	my $name = `readlink -f $id`;
+	chomp($name);
+	$id =~ s|/dev/disk/by-id/ata-||;
+	$p{$name}{'desc'} = $id;
+}
+
+for my $id (</dev/disk/by-id/scsi-*>) {
+	my $name = `readlink -f $id`;
+	chomp($name);
+	$id =~ s|/dev/disk/by-id/ata-||;
+	# don't clobber ata id
+	$p{$name}{'desc'} ||= $id;
 }
 
 #-------------------------------------------------------------------#

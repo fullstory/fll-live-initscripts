@@ -1,8 +1,9 @@
 fll-live-initscripts (1.2.5) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_fshelper: use device node symlinks from udev to determine ata/scsi
+    disk id's for free, rather than calling ata_id.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 26 Aug 2007 12:16:28 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sun, 26 Aug 2007 22:47:52 +1000
 
 fll-live-initscripts (1.2.4) unstable; urgency=low
 
