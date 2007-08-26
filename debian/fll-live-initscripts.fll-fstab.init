@@ -83,7 +83,7 @@ fi
 
 do_start() {
 	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}generating ${Y}/etc/fstab${N}"
-	/usr/sbin/fll_fshelper --quiet --no-id --write-fstab --make-mountpoints ${NOSWAP}
+	/usr/sbin/fll_fshelper --quiet --write-fstab --make-mountpoints ${NOSWAP}
 	log_end_msg "${?}"
 }
 

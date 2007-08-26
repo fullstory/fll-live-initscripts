@@ -75,7 +75,6 @@ By default fll_fshelper prints fstab to stdout, and does not create mountpoints
   -w|--write-fstab          (re)create the fstab file
   -m|--make-mountpoints     (re)create mountpoints in /media
   --no-swap                 don't write fstab entry for swap partitions
-  --no-id                   don't attempt detection of device id
   -u|--uuids                use UUID's for mount names when possible
   -l|--labels               use LABELS's for mount names when possible
   -f|--fstab <file>         target file to write output to
@@ -121,7 +120,7 @@ sub vol_id {
 }
 
 sub ata_id {
-	return if $opts{'no-id'};
+	return unless -d '/sys/module/libata';
 	
 	my $d = shift;
 	return unless -b $d;
@@ -160,8 +159,6 @@ sub device_resolver {
 	my $d = shift;
 	my $n = '';
 
-	dbg "device_resolver in: $d";
-
 	if ($d =~ /^(LABEL|UUID)=.+$/) {
 		# this is here for completeness only
 		$n = `findfs $d`;
@@ -176,7 +173,7 @@ sub device_resolver {
 		$n = $d;
 	}
 
-	dbg "device_resolver out: $n";
+	dbg join ' -> ', $d, $n;
 
 	-b $n and return "$n";
 
@@ -212,7 +209,7 @@ sub add_mnt_pnt {
 
 GetOptions(
 	\%opts, 'auto', 'debug', 'fstab=s', 'help', 'install-gui', 'labels',
-	'make-mountpoints', 'no-id', 'no-swap', 'quiet', 'uuids', 'write-fstab'
+	'make-mountpoints', 'no-swap', 'quiet', 'uuids', 'write-fstab'
 );
 
 if ($opts{'help'}) {
@@ -306,19 +303,14 @@ if ($opts{'install-gui'}) {
 #-------------------------------------------------------------------#
 # parse ata/scsi disk id's without vol_id
 
-for my $id (</dev/disk/by-id/ata-*>) {
+for my $id (</dev/disk/by-id/ata-*>, </dev/disk/by-id/scsi-*>) {
 	my $name = `readlink -f $id`;
 	chomp($name);
-	$id =~ s|/dev/disk/by-id/ata-||;
-	$p{$name}{'desc'} = $id;
-}
-
-for my $id (</dev/disk/by-id/scsi-*>) {
-	my $name = `readlink -f $id`;
-	chomp($name);
-	$id =~ s|/dev/disk/by-id/ata-||;
-	# don't clobber ata id
+	
+	$id =~ s%^/dev/disk/by-id/(ata|scsi)-%%;
+	
 	$p{$name}{'desc'} ||= $id;
+	dbg join ' -> ', $name, $id;
 }
 
 #-------------------------------------------------------------------#
