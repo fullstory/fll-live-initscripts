@@ -73,6 +73,21 @@ if [ -f /proc/cmdline ]; then
 	done
 fi
 
+get_init_seq_num() {
+	if [ "${#}" -lt 2 ] || [ ! -d "${2}" ] || \
+		[ ! -x /usr/sbin/fll_analyze_initscripts ]; then
+		return
+	fi
+
+	/usr/sbin/fll_analyze_initscripts "${1}" --chroot "${2}" | awk '
+		/^update-rc.d/ {
+			for (i=3; i<=NF; i++) {
+				if ($i == "start" || $i == "stop")
+					printf "%s=%s\n", toupper($i), $++i
+			}
+		}'
+}
+
 setup_kdm() {
 	# wallpaper
 	echo "USEBACKGROUND=true"		>  /etc/default/kdm.d/wallpaper
@@ -87,12 +102,18 @@ setup_kdm() {
 			/etc/kde3/kdm/kdmrc
 	fi
 	
-	update-rc.d kdm start 99 5 . stop 01 0 1 2 3 4 6 . >/dev/null
+	unset START STOP
+	eval "`get_init_seq_num kdm ${FLL_MOUNTPOINT}`"
+	if [ "${START}" ] && [ "${STOP}" ]; then
+		update-rc.d kdm start "${START}" 5 . stop "${STOP}" 0 1 2 3 4 6 . >/dev/null
+		return "${?}"
+	fi
 
-	return "${?}"
+	return 1
 }
 
 setup_gdm() {
+	# autologin + greeter theme
 	sed -i	-e "/^AutomaticLogin\=.*/d" \
 		-e "/^AutomaticLoginEnable\=.*/d" \
 		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true/" \
@@ -104,9 +125,14 @@ setup_gdm() {
 			/usr/share/gdm/defaults.conf
 	fi
 	
-	update-rc.d gdm start 30 5 . stop 01 0 1 2 3 4 6 . >/dev/null
+	unset START STOP
+	eval "`get_init_seq_num gdm ${FLL_MOUNTPOINT}`"
+	if [ "${START}" ] && [ "${STOP}" ]; then
+		update-rc.d gdm start "${START}" 5 . stop "${STOP}" 0 1 2 3 4 6 . >/dev/null
+		return "${?}"
+	fi
 
-	return "${?}"
+	return 1
 }
 
 case "${1}" in

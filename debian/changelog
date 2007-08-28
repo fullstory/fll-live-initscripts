@@ -1,8 +1,10 @@
 fll-live-initscripts (1.2.7) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xdm: introduce get_init_seq_num() funtion to lookup runlevel sequence
+    start + stop numbers from squashfs chroot before reconfiguring our desktop
+    managers for init 5 start only.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 26 Aug 2007 15:07:16 +0200
+ -- Kel Modderman <kel@otaku42.de>  Tue, 28 Aug 2007 16:34:42 +1000
 
 fll-live-initscripts (1.2.6) unstable; urgency=low
 
