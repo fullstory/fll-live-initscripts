@@ -1,4 +1,4 @@
-fll-live-initscripts (1.2.7) UNRELEASED; urgency=low
+fll-live-initscripts (1.2.7) unstable; urgency=low
 
   * fll-xdm: introduce get_init_seq_num() funtion to lookup runlevel sequence
     start + stop numbers from squashfs chroot before reconfiguring our desktop
