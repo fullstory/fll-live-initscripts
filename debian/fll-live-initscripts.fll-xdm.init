@@ -74,12 +74,12 @@ if [ -f /proc/cmdline ]; then
 fi
 
 get_init_seq_num() {
-	if [ "${#}" -lt 2 ] || [ ! -d "${2}" ] || \
+	if [ "${#}" -ne 2 ] || [ ! -d "${2}" ] || \
 		[ ! -x /usr/sbin/fll_analyze_initscripts ]; then
 		return
 	fi
 
-	/usr/sbin/fll_analyze_initscripts "${1}" --chroot "${2}" | awk '
+	/usr/sbin/fll_analyze_initscripts "${1}" --chroot "${2}" | mawk '
 		/^update-rc.d/ {
 			for (i=3; i<=NF; i++) {
 				if ($i == "start" || $i == "stop")
