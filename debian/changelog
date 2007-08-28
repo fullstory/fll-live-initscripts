@@ -1,3 +1,9 @@
+fll-live-initscripts (1.2.8) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 28 Aug 2007 09:45:43 +0200
+
 fll-live-initscripts (1.2.7) unstable; urgency=low
 
   * fll-xdm: introduce get_init_seq_num() funtion to lookup runlevel sequence
