@@ -79,7 +79,7 @@ get_init_seq_num() {
 		return
 	fi
 
-	/usr/sbin/fll_analyze_initscripts "${1}" --chroot "${2}" | mawk '
+	/usr/bin/fll_analyze_initscripts "${1}" --chroot "${2}" | mawk '
 		/^update-rc.d/ {
 			for (i=3; i<=NF; i++) {
 				if ($i == "start" || $i == "stop")
