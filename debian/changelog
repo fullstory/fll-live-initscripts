@@ -1,8 +1,12 @@
 fll-live-initscripts (1.2.8) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 28 Aug 2007 09:45:43 +0200
+  [ Bernard Gray ]
+  * fll_analyzw_initscripts is in /usr/bin (not /usr/sbin) 
+
+ -- Bernard Gray <bernard.gray@gmail.com>  Wed, 29 Aug 2007 10:39:01 +1000
 
 fll-live-initscripts (1.2.7) unstable; urgency=low
 

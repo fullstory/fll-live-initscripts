@@ -75,7 +75,7 @@ fi
 
 get_init_seq_num() {
 	if [ "${#}" -ne 2 ] || [ ! -d "${2}" ] || \
-		[ ! -x /usr/sbin/fll_analyze_initscripts ]; then
+		[ ! -x /usr/bin/fll_analyze_initscripts ]; then
 		return
 	fi
 
