@@ -1,8 +1,9 @@
 fll-live-initscripts (1.2.9) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * add VCS control headers.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 29 Aug 2007 03:34:40 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 11 Sep 2007 20:10:21 +0200
 
 fll-live-initscripts (1.2.8) unstable; urgency=low
 
