@@ -1,9 +1,15 @@
 fll-live-initscripts (1.2.9) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
   * add VCS control headers.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 11 Sep 2007 20:10:21 +0200
+  [ Horst Tritremmel ]
+  * GraphicalTheme and GraphicalThemedColor removed from setup_gdm
+    function in fll-live-initscripts.fll-xdm.init. Is now part from
+    dsktop-defaults
+
+ -- Horst Tritremmel <hjt@sidux.com>  Wed, 19 Sep 2007 09:23:57 +0200
 
 fll-live-initscripts (1.2.8) unstable; urgency=low
 

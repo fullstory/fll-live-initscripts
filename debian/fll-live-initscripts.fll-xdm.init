@@ -117,7 +117,6 @@ setup_gdm() {
 	sed -i	-e "/^AutomaticLogin\=.*/d" \
 		-e "/^AutomaticLoginEnable\=.*/d" \
 		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true/" \
-		-e "s/\[greeter\]/\[greeter\]\nGraphicalTheme=sidux-dawn\nGraphicalThemedColor=#343434/" \
 			/etc/gdm/gdm.conf
 
 	if [ "${CUSTOM_DPI}" ]; then
