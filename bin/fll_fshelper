@@ -360,11 +360,17 @@ if (-f '/proc/mounts') {
 		$comment = comment $desc;
 
 		if ($opts{'uuids'} and $uuid) {
-			$name = 'UUID=' . $uuid;
+			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
+				$name = "UUID=$uuid";
+			}
+			else {
+				$name = "/dev/disk/by-uuid/$uuid";
+			}
+			# append device name to comment
 			$comment .= ", $device";
 			# show label in comment if one exists
 			if ($label and not $opts{'labels'}) {
-				$comment .= ', LABEL=' . $label;
+				$comment .= ", LABEL=$label";
 			}
 			# seen it
 			$u_seen{$uuid} = 1;
@@ -372,7 +378,12 @@ if (-f '/proc/mounts') {
 		
 		# if labels and uuids are wanted, prefer labels
 		if ($opts{'labels'} and $label) {
-			$name = 'LABEL=' . $label;
+			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
+				$name = "LABEL=$label";
+			}
+			else {
+				$name = "/dev/disk/by-label/$label";
+			}
 			# avoid double appendage of device node name
 			$comment .= ", $device" unless $opts{'uuids'};
 			# seen it

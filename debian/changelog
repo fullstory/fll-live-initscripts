@@ -3,9 +3,8 @@ fll-live-initscripts (1.2.10) UNRELEASED; urgency=low
   * bin/fll_fshelper:
     - don't depend on ata_id
     - syntax cleanups
-    - no longer long device node for non-linux filesystems
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 23 Sep 2007 20:16:06 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 23 Sep 2007 20:23:12 +1000
 
 fll-live-initscripts (1.2.9) unstable; urgency=low
 
