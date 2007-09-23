@@ -36,7 +36,6 @@ use Tie::File;
 die "Must be root!\n" unless $> == 0;
 
 die "udev utility 'vol_id' is required!\n" unless -x '/lib/udev/vol_id';
-die "udev utility 'ata_id' is required!\n" unless -x '/lib/udev/ata_id';
 
 #-------------------------------------------------------------------#
 # variable declarations
@@ -93,12 +92,14 @@ _EOF_
 sub dbg {
 	return unless $opts{'debug'};
 	
-	for my $data ( @_ ) {
+	for my $data (@_) {
+		next unless $data;
+
 		if (ref $data) {
 			print STDERR "DBG: " . Dumper($data);
 		}
 		else {
-			$data and print STDERR "DBG: $data\n";
+			print STDERR "DBG: $data\n";
 		}
 	}
 }
@@ -111,7 +112,7 @@ sub vol_id {
 	open(my $fh, '-|', "/lib/udev/vol_id $v 2>/dev/null");
 	while (<$fh>) {
 		chomp;
-		dbg($_);
+		dbg $_;
 		m/^ID_FS_([^=]+)=(.+)$/ and $vol_id{lc($1)} = $2;
 	}
 	close($fh);
@@ -120,6 +121,7 @@ sub vol_id {
 }
 
 sub ata_id {
+	return unless -x '/lib/udev/ata_id';
 	return unless -d '/sys/module/libata';
 	
 	my $d = shift;
@@ -183,7 +185,7 @@ sub device_resolver {
 sub comment {
 	my $c = '# added by fll_fshelper';
 	
-	for my $extra ( @_ ) {
+	for my $extra (@_) {
 		next unless defined $extra;
 		chomp $extra;
 		$c .= ", $extra";
@@ -214,7 +216,7 @@ GetOptions(
 
 if ($opts{'help'}) {
 	help;
-	exit(0);
+	exit 0;
 }
 
 #-------------------------------------------------------------------#
@@ -303,11 +305,11 @@ if ($opts{'install-gui'}) {
 #-------------------------------------------------------------------#
 # parse ata/scsi disk id's without vol_id
 
-for my $id (</dev/disk/by-id/ata-*>, </dev/disk/by-id/scsi-*>) {
+for my $id (</dev/disk/by-id/{ata,scsi,usb}-*>) {
 	my $name = `readlink -f $id`;
 	chomp($name);
 	
-	$id =~ s%^/dev/disk/by-id/(ata|scsi)-%%;
+	$id =~ s%^/dev/disk/by-id/\w+-%%;
 	
 	$p{$name}{'desc'} ||= $id;
 	dbg join ' -> ', $name, $id;
@@ -436,12 +438,7 @@ for my $device ( sort keys %p ) {
 			next;
 		}
 		else {
-			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
-				$name = "UUID=$uuid";
-			}
-			else {
-				$name = "/dev/disk/by-uuid/$uuid";
-			}
+			$name = "UUID=$uuid";
 			# append device node name and label to comment
 			$comment .= ", $device";
 			if ($label and not $opts{'labels'}) {
@@ -458,12 +455,7 @@ for my $device ( sort keys %p ) {
 			next;
 		}
 		else {
-			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
-				$name = "LABEL=$label";
-			}
-			else {
-				$name = "/dev/disk/by-label/$label";
-			}
+			$name = "LABEL=$label";
 			# use safe label for mount point name
 			$label_safe and $mount = "/media/$label_safe";
 			# append device node name to comment, if not done already
@@ -515,7 +507,7 @@ for (</dev/cdrom*>) {
 	next unless -b;
 	$_ =~ s|^/dev/||;
 	
-	push @fstab, comment ata_id("/dev/$_");
+	push @fstab, comment ata_id "/dev/$_";
 	push @fstab, join "\t", "/dev/$_", "/media/$_", 'udf,iso9660', 'user,noauto', '0', '0';
 	push @fstab, '';
 	
