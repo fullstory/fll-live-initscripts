@@ -1,0 +1,9 @@
+Section "InputDevice"
+	Identifier	"@@NAME@@"
+	Driver		"mouse"
+	Option		"Device"		"@@DEVICE@@"
+	Option		"Protocol"		"@@PROTOCOL@@"
+	Option		"Emulate3Buttons"	"true"
+	Option		"Emulate3Timeout"	"70"
+	Option		"SendCoreEvents"	"true"
+EndSection

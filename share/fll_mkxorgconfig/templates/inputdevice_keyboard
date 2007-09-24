@@ -1,0 +1,10 @@
+Section "InputDevice"
+	Identifier	"Keyboard"
+	Driver		"kbd"
+	Option		"CoreKeyboard"
+	Option		"XkbRules"		"xorg"
+	Option		"XkbOptions"		"@@XKBOPTIONS@@"
+	Option		"XkbModel"		"@@XKBMODEL@@"
+	Option		"XkbLayout"		"@@XKBLAYOUT@@"
+	Option		"XkbVariant"		"@@XKBVARIANT@@"
+EndSection
