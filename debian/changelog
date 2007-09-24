@@ -1,8 +1,12 @@
 fll-live-initscripts (1.2.11) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  [ Kel Modderman ]
+  * Add fll-live-initscripts-xorg stuff
+    - bin/fll_mkxorgconfig - make /etc/X11/xorg.conf
+    - bin/fll_xserver_discover - detect required Xorg driver
+    - debian/fll-live-initscripts-xorg.fll-xorgconfig.init
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 23 Sep 2007 12:32:27 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 24 Sep 2007 21:40:54 +1000
 
 fll-live-initscripts (1.2.10) unstable; urgency=low
 

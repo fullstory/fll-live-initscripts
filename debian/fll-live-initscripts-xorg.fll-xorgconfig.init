@@ -1,0 +1,89 @@
+#!/bin/dash
+
+### BEGIN INIT INFO
+# Provides:          fll-xorgconfig
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      0 1 6
+# Short-Description: configure Xorg xserver
+# Description:       The script is intended to configure the
+#                    Xorg xserver for use.
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-xorgconfig"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+if [ ! -x /usr/sbin/fll_mkxorgconfig ] || [ ! -x fll_xserver_discover ]; then
+	exit 0
+fi
+
+###
+# source lsb functions
+###
+. /lib/lsb/init-functions
+
+###
+# ANSI escape sequences (N, R, G, Y, B, M, C, W)
+###
+. /lib/fll/fll-init-cols
+
+###
+# cheatcode handling
+###
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
+				;;
+		esac
+	done
+fi
+
+###
+# functions...
+###
+xserver_video_version() {
+	local V P="xserver-xorg-video-${1}"
+	[ "${P}" ] && V="$(grep-dctrl -n -s Version -XP ${P} /var/lib/dpkg/status)"
+	[ "${V}" ] && echo "${V#[0-9]*:}"
+}
+
+case "${1}" in
+	start)
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+		exit 3
+		;;
+esac
+
+:

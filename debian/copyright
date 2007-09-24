@@ -7,8 +7,10 @@ The original source can always be found at:
 Copyright: 
 	(C) 2007 F.U.L.L.S.T.O.R.Y Project
 
-./fll_analyze_initscripts was originally written by "locsmif".
+./bin/fll_analyze_initscripts and ./bin/fll_xserver_discover was
+originally written by "locsmif".
 Copyright Holders:
+	(C) 2006 M.L. de Boer a.k.a locsmif <locsmif@kanotix.com>
 	(C) 2007 Michiel de Boer <locsmif@kanotix.com>
 
 Some code and concepts derived from initscripts-sidux-live.

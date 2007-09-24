@@ -23,6 +23,9 @@ install/fll-live-initscripts::
 	dh_installinit --no-start --name=fll-halt	-- start 90 0 .
 	dh_installinit --no-start --name=fll-reboot	-- start 90 6 .
 
+install/fll-live-initscripts-xorg::
+	dh_installinit --no-start --name=fll-xorgconfig	-- start 80 S .
+
 clean::
 	# clean up duplicated init script
 	rm -f debian/fll-live-initscripts.fll-halt.init

@@ -1,0 +1,2 @@
+bin/fll_mkxorgconfig		usr/sbin
+bin/fll_xserver_discover	usr/sbin

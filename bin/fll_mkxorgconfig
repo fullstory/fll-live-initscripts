@@ -1,0 +1,432 @@
+#!/usr/bin/perl
+#
+# Copyright (C) 2007 Kel Modderman <kel@otaku42.de>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this package; if not, write to the Free Software 
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+# MA 02110-1301, USA.
+#
+# On Debian GNU/Linux systems, the text of the GPL license can be
+# found in /usr/share/common-licenses/GPL.
+
+# legacy
+#
+# mkxorgconfig.pl --templates $HOME/svn/fullstory/xorgconfig/trunk/templates --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --horizsync 30-60 --vertrefresh 50-75 --colordepth 24 --xkbmodel pc105 --modes "1024x768 832x624 800x600 720x400 640x480" --modelname AL512 --output /tmp/xorg.conf
+#
+# mkxorgconfig.pl --templates $HOME/svn/fullstory/xorgconfig/trunk/templates --input type=synaptics device=/dev/psaux name="SynPS/2 Synaptics TouchPad" --driver i810 --vendorname "Intel Corporation" --boardname "Intel Corporation 945G Integrated Graphics Controller" --busid "PCI:0:2:0" --horizsync 30-81 --vertrefresh 56-76 --xkbmodel pc104 --xkblayout de --xkbvariant nodeadkeys --modes "1280x1024 1024x768 800x600" --modelname 2405FPW --output /tmp/xorg.conf
+
+# xrandr (--mode, --rate, --virtual to force config options)
+#
+# mkxorgconfig.pl --templates $HOME/svn/fullstory/xorgconfig/trunk/templates --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver cirrus --vendorname "Cirrus Logic" --boardname "Cirrus Logics (QEMU)" --busid "PCI:5:0:0" --xkbmodel pc105 --mode 1280x1024 --rate 75 --modelname CM753 --output /tmp/xorg.conf
+#
+# mkxorgconfig.pl --templates $HOME/svn/fullstory/xorgconfig/trunk/templates --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --colordepth 16 --xkbmodel pc105 --mode 1024x768 --rate 85 --modelname AL512 --virtual "2048 2048" --xrandr --output /tmp/xorg.conf
+
+use warnings;
+use strict;
+use Data::Dumper;
+use File::Find;
+use Getopt::Long;
+use Tie::File;
+use Switch 'Perl6';
+
+###########################################################
+# global vars
+my $verbosity = 0;
+my $xorg_conf = '/etc/X11/xorg.conf';
+my $xorg_tmpl = '/usr/share/xorgconfig/templates';
+
+# used for countint line numbers
+my $n;
+
+# for handling multiple mice
+my $mice = 0;
+my $mouse_index = 0;
+
+# the array to be tied to xorg.conf
+my @x;
+
+# the x config structure, provide defaults here. overridden by GetOptions down below
+my %x = (
+	# global variable refs
+	'output'	=> \$xorg_conf,
+	'templates'	=> \$xorg_tmpl,
+	'verbose'	=> \$verbosity,
+
+	# device
+	'boardname'	=> 'All',
+	'vendorname'	=> 'All',
+
+	# xorg driver
+	'driver'	=> 'vesa',
+	'colordepth'	=> '24',
+
+	# monitor
+	'modes'		=> '1024x768 800x600 640x480',
+	'horizsync'	=> '28.0 - 96.0',
+	'vertrefresh'	=> '50.0 - 75.0',
+
+	# keyboard
+	'xkblayout'	=> 'us',
+	'xkbmodel'	=> 'pc105',
+	'xkboptions'	=> 'altwin:super_win',
+);
+
+###########################################################
+# internal functions
+
+# debugging function
+sub dbg {
+	return unless $verbosity;
+	
+	# dump references, print everything else
+	for my $data (@_) {
+		next unless defined $data;
+		if (ref $data) {
+			print STDERR Dumper $data;
+		}
+		else {
+			print STDERR "$data\n";
+		}
+	}
+}
+
+# mouse <option> <key> <value>
+# function to place multiple mice into %x structure
+sub input {
+	# For a hash destination, the second arguments is the key to the hash,
+	# and the third argument the value to be stored.
+	my ($option, $key, $value) = (shift, shift, shift);
+	
+	# store $key/$value in current $mouse_index
+	$x{'mouse'}{$mouse_index}{$key} = $value;
+
+	# call to &mouse, inciment $mice
+	# 3rd call to &mouse and inciment $mouse_index
+	$mouse_index++ if ++$mice % 3 == 0;
+}
+
+sub gtf_modelines {
+	my @ml;
+	my @f = $_[0] ? [ @_ ] : (
+		[ 640, 350, 85 ],	[ 640, 400, 85 ], 	[ 640, 480, 60 ],
+		[ 640, 480, 72 ],	[ 640, 480, 75 ],	[ 640, 480, 85 ],
+		[ 640, 480, 100 ],	[ 720, 400, 85 ],	[ 768, 576, 60 ],
+		[ 768, 576, 72 ],	[ 768, 576, 75 ],	[ 768, 576, 85 ],
+		[ 768, 576, 100 ],	[ 800, 600, 56 ],	[ 800, 600, 60 ],
+		[ 800, 600, 72 ],	[ 800, 600, 75 ],	[ 800, 600, 85 ],
+		[ 800, 600, 100 ],	[ 1024, 600, 60 ],	[ 1024, 768, 60 ],
+		[ 1024, 768, 70 ],	[ 1024, 768, 75 ],	[ 1024, 768, 85 ],
+		[ 1024, 768, 100 ],	[ 1152, 864, 75 ],	[ 1152, 864, 60 ],
+		[ 1152, 864, 85 ],	[ 1152, 864, 100 ],	[ 1152, 900, 77 ],
+		[ 1152, 900, 66 ],	[ 1280, 768, 60 ],	[ 1280, 800, 60 ],
+		[ 1280, 960, 60 ],	[ 1280, 960, 72 ],	[ 1280, 960, 75 ],
+		[ 1280, 960, 85 ],	[ 1280, 960, 100 ],	[ 1280, 1024, 60 ],
+		[ 1280, 1024, 67 ],	[ 1280, 1024, 75 ],	[ 1280, 1024, 76 ],
+		[ 1280, 1024, 85 ],	[ 1280, 1024, 100 ],	[ 1368, 768, 60 ],
+		[ 1440, 900, 60 ],	[ 1400, 1050, 60 ],	[ 1400, 1050, 72 ],
+		[ 1400, 1050, 75 ],	[ 1400, 1050, 85 ],	[ 1400, 1050, 100 ],
+		[ 1440, 900, 60 ],	[ 1600, 1200, 60 ],	[ 1600, 1200, 65 ],
+		[ 1600, 1200, 70 ],	[ 1600, 1200, 75 ],	[ 1600, 1200, 85 ],
+		[ 1600, 1200, 100 ],	[ 1680, 1050, 60 ],	[ 1792, 1344, 60 ],
+		[ 1792, 1344, 75 ],	[ 1856, 1392, 60 ],	[ 1856, 1392, 75 ],
+		[ 1920, 1200, 60 ],	[ 1920, 1440, 60 ],	[ 1920, 1440, 75 ],
+	);
+
+	for (@f) {
+		open(my $fh, '-|', '/usr/bin/gtf', @$_)
+			or die "cannot compute modeline with gtf: $!\n";
+		while (<$fh>) {
+			chomp;
+			next unless /^\s+(#|Modeline)/;
+			s/^\s+/\t/;
+			push @ml, "$_";
+		}
+		close($fh);
+	}
+
+	#dbg \@ml;
+
+	return @ml;
+}
+
+sub get_template {
+	my $file = shift;
+	my @template;
+
+	dbg "looking for template: $file";
+	
+	find(
+		sub {
+			return if $File::Find::name =~ m|/\.svn/|;
+			return unless -T $File::Find::name;
+			if ($_ eq $file) {
+				dbg "reading template: $file";
+				open my $fh, '<', $File::Find::name
+					or die "cannot open template for reading: $!\n";
+				@template = <$fh>;
+				close $fh;
+			}
+		}, $xorg_tmpl
+	);
+	
+	chomp @template;
+	return @template;
+}
+
+###########################################################
+# process cli args
+GetOptions(
+	\%x,
+
+	# mkxorgconfig control
+	'output=s',
+	'templates=s',
+	'verbose|debug',
+
+	# device
+	'boardname=s',
+	'busid=s',
+	'driver=s',
+	'vendorname=s',
+
+	# monitor
+	'colordepth=i',
+	'modelname=s',
+	'nomodelines',
+	'modes=s',
+	'horizsync=s',
+	'vertrefresh=s',
+
+	# input device
+	# --input type=<synaptics,alps,serial,usb,ps2,serial> dev=<> name=<>
+	'input=s%{3}' => \&input,
+	'nowheel',
+
+	# keyboard
+	'xkblayout=s',
+	'xkbmodel=s',
+	'xkboptions=s',
+	'xkbvariant=s',
+
+	# xrandr
+	'xrandr',
+	'mode=s',
+	'rate=s',
+	'virtual=s',
+);
+
+dbg \%x;
+
+###########################################################
+# read in the templates
+my @heading = get_template 'heading';
+my @files = get_template 'files';
+my @module = get_template 'module';
+my @serverlayout = get_template 'serverlayout';
+my @serverflags = get_template 'serverflags';
+my @keyboard = get_template 'inputdevice_keyboard';
+my @monitor = get_template 'monitor';
+my @device = get_template 'device';
+my @screen = get_template 'screen';
+my @dri = get_template 'dri';
+my @extensions = get_template 'extensions';
+
+# Note: http://bgoglin.livejournal.com/10214.html
+#
+# [quote]
+# Additionally, thanks to the X server autoconfiguration capabilities,
+# most trivial sections become useless. The only really required one for
+# a regular setup is the InputDevice section for the keyboard since you
+# still need to configure the layout (there is no way to detect this
+# automatically).
+# [/quote]
+
+###########################################################
+# input devices
+my @inputdevices;
+
+MICE: for my $m (keys %{$x{'mouse'}}) {
+	my ($type, $device, $name) = @{$x{'mouse'}{$m}}{'type', 'device', 'name'};
+	dbg "device=$device type=$type name=$name";
+
+	my ($core_type, $protocol);
+	
+	given ($type) {
+		when 'synaptics' {
+			#splice @module, -1, 0, "\tLoad\t\t\"synaptics\"";
+			$core_type = 'SendCoreEvents';
+			$protocol = "auto-dev";
+		}
+		when 'alps' {
+			$core_type = 'SendCoreEvents';
+			$protocol = "auto-dev";
+		}
+		when 'usb' {
+			$core_type = 'CorePointer';
+			$protocol = 'IMPS/2';
+		}
+		when 'ps2' {
+			$core_type = 'CorePointer';
+			$protocol = $x{'nowheel'} ? 'PS/2' : 'IMPS/2';
+		}
+		when 'serial' {
+			$core_type = 'CorePointer';
+			$protocol = 'Microsoft';
+		}
+		default {
+			dbg "unknown mouse type '$type'";
+			next MICE;
+		}
+	}
+
+	$x{'mouse'}{$m}{'protocol'} = $protocol;
+
+	if ($core_type) {
+		dbg "pushing core type '$core_type' to serverlayout section";
+		splice @serverlayout, -1, 0, "\tInputDevice\t\"$name\"\t\"$core_type\"";
+	}
+
+	$n = 0;
+	my @section = get_template "inputdevice_$type";
+
+	MOUSE: while ($section[$n]) {
+		my $line = $section[$n];
+		
+		dbg "$n: $line";
+		given ($line) {
+			when m/@@\w+@@/ {
+				if ($line =~ m/@@(\w+)@@/ and $x{'mouse'}{$m}{lc($1)}) {
+					dbg "Modifying line '$n'";
+					my $sub = $x{'mouse'}{$m}{lc($1)};
+					(my $newline = $line) =~ s/@@\w+@@/$sub/;
+					push @inputdevices, $newline;
+				}
+				else {
+					dbg "Ignoring line '$n'";
+				}
+				next MOUSE;
+			}
+			when m/^\s+Option\s+"(Emulate3.+|ZAxisMapping)".*$/ {
+				if ($x{'nowheel'} and $type eq 'ps2') {
+					dbg "Ignoring line '$n'";
+					next MOUSE;
+				}
+			}
+		}
+
+		push @inputdevices, $line;
+	}
+	continue {
+		$n++;
+	}
+}
+
+dbg \@inputdevices;
+
+###########################################################
+# monitor settings
+if ($x{'xrandr'}) {
+	# http://bgoglin.livejournal.com/10423.html
+	# force mode/resolution for self modesetting driver
+	if ($x{'mode'} and $x{'rate'}) {
+		my ($x_axis, $y_axis) = split 'x', $x{'mode'};
+		my @prefmode = gtf_modelines $x_axis, $y_axis, $x{'rate'};
+		for (@prefmode) {
+			if (m/^\s+Modeline\s+"(.+)"/) {
+				push @prefmode, "\tOption\t\"PreferredMode\"\t\"$1\"";
+				last;
+			}
+		}
+		dbg \@prefmode;
+		splice @monitor, -1, 0, @prefmode;
+	}
+	
+	# http://bgoglin.livejournal.com/10214.html
+	# * drop ModeLine, HorizSync and VertRefresh from the Monitor section
+	# * drop Modes line from the Display subsection
+	$x{'nomodelines'} = 1;
+	delete $x{'horizsync'};
+	delete $x{'vertrefresh'};
+
+	# http://bgoglin.livejournal.com/9846.html
+	# Virtual lives where Modes used to for new modesetting drivers
+	# with xrandr 1.2 support
+	if ($x{'virtual'}) {
+		$x{'modes'} = "Virtual\t" . $x{'virtual'};
+	}
+	else {
+		delete $x{'modes'};
+	}
+}
+else {
+	$x{'modes'} = "Modes\t" . $x{'modes'};
+	unless ($x{'nomodelines'}) {
+		# add large modeline table for legacy config
+		splice @monitor, -1, 0, gtf_modelines;
+	}
+}
+
+###########################################################
+# tie @x to $xorg_conf, $x_o is the control object
+my $x_o = tie @x, "Tie::File", $xorg_conf
+	or die "Cannot open $xorg_conf for writing: $!\n";
+
+# lock it for writing
+$x_o->flock;
+
+# write the config
+@x = (
+	@heading,
+	@files,
+	@module,
+	@serverlayout,
+	@serverflags,
+	@keyboard,
+	@inputdevices,
+	@monitor,
+	@device,
+	@screen,
+	@dri,
+	@extensions,
+);
+
+###########################################################
+# post-process xorg.conf, substitute markers
+$n = 0;
+XCONF: while ($x[$n]) {
+	my $line = \$x[$n];
+	dbg "$n: $$line";
+	
+	given ($$line) {
+		when m/@@\w+@@/ {
+			if ($$line =~ m/@@(\w+)@@/ and $x{lc($1)}) {
+				dbg "Modifying line '$n'";
+				my $sub = $x{lc($1)};
+				$$line =~ s/@@\w+@@/$sub/;
+			}
+			else {
+				dbg "Removing line '$n'";
+				splice @x, $n, 1;
+				redo XCONF if $x[$n];
+			}
+		}
+		when m/^EndSection$/ {
+			dbg "Adding whitespace";
+			splice @x, ++$n, 0, '';
+		}
+	}
+}
+continue {
+	$n++;
+}
