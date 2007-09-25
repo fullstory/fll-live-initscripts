@@ -157,13 +157,8 @@ do_start() {
 		esac
 	fi
 
-	if [ "${XKBMODEL}" ]; then
-		XCFG_OPTS+=("--xkbmodel ${XKBMODEL}")
-	fi
-	
-	if [ "${XKBVARIANT}" ]; then
-		XCFG_OPTS+=("--xkbvariant ${XKBVARIANT}")
-	fi
+	[ "${XKBMODEL}" ] && XCFG_OPTS+=("--xkbmodel ${XKBMODEL}")
+	[ "${XKBVARIANT}" ] && XCFG_OPTS+=("--xkbvariant ${XKBVARIANT}")
 
 	# detect video hardware via fll_xserver_discover
 	# XMODULE XVENDORNAME XBOARDNAME XBUSID
@@ -185,7 +180,11 @@ do_start() {
 		[ "${XMODES}" ] && XCFG_OPTS+=("--mode ${XMODES}")
 		[ "${XRATE}" ] && XCFG_OPTS+=("--rate ${XRATE}")
 	else
-		: # do xresprobe stuff here
+		[ "${XHORIZSYNC}" ] && XCFG_OPTS+=("--horizsync ${XHORIZSYNC}")
+		[ "${XVERTREFRESH}" ] && XCFG_OPTS+=("--vertrefresh ${XVERTREFRESH}")
+		[ "${XMODELINES}" ] && XCFG_OPTS+=("--no-modelines")
+
+		# do xresprobe stuff here
 	fi
 }
 

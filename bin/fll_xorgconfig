@@ -232,6 +232,18 @@ GetOptions(
 
 dbg \%x;
 
+# sanitize input
+for my $key (keys %x) {
+	given ($key) {
+		when 'modes' {
+			for (split /\s+/, $x{$key}) {
+				/^\d+x\d+$/i or
+					warn "W: invalid --$key value: " .  $x{$key} . "\n";
+			}
+		}
+	}
+}
+
 ###########################################################
 # read in the templates
 my @heading = get_template 'heading';
