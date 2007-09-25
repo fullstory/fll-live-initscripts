@@ -34,11 +34,11 @@ if [ -s /etc/default/distro ]; then
 fi
 
 if [ "${FLL_DISTRO_MODE}" != "live" ]; then
-	exit 0
+	: # XXX exit 0
 fi
 
 if [ ! -x /usr/sbin/fll_xorgconfig ] || [ ! -x /usr/sbin/fll_xserver_discover ]; then
-	exit 0
+	: # XXX exit 0
 fi
 
 # XKBLAYOUT is stored here by /etc/init.d/fll-locales
@@ -56,7 +56,7 @@ fi
 ###
 # ANSI escape sequences (N, R, G, Y, B, M, C, W)
 ###
-. /lib/fll/fll-init-cols
+# XXX . /lib/fll/fll-init-cols
 
 ###
 # cheatcode handling
@@ -149,7 +149,7 @@ do_start() {
 
 	# sourced earlier from /etc/default/fll-locales
 	if [ "${XKBLAYOUT}" ]; then
-		XCFG_OPTS+=("--xkblayout ${XKBLAYOUT}")
+		XCFG_OPTS+=("--xkblayout '${XKBLAYOUT}'")
 		case "${XKBLAYOUT}" in
 		 	de)
 				XCFG_OPTS+=("--xkbvariant nodeadkeys")
@@ -157,39 +157,49 @@ do_start() {
 		esac
 	fi
 
-	[ "${XKBMODEL}" ] && XCFG_OPTS+=("--xkbmodel ${XKBMODEL}")
-	[ "${XKBVARIANT}" ] && XCFG_OPTS+=("--xkbvariant ${XKBVARIANT}")
+	[ "${XKBMODEL}" ] && XCFG_OPTS+=("--xkbmodel '${XKBMODEL}'")
+	[ "${XKBVARIANT}" ] && XCFG_OPTS+=("--xkbvariant '${XKBVARIANT}'")
 
 	# detect video hardware via fll_xserver_discover
 	# XMODULE XVENDORNAME XBOARDNAME XBUSID
 	if [ "${XMODULE}" ]; then
-		eval $(/usr/sbin/fll_xserver_discover 2>/dev/null | grep -v '^XMODULE=')
+		# XXX eval $(/usr/sbin/fll_xserver_discover 2>/dev/null | grep -v '^XMODULE=')
+		eval $(./bin/fll_xserver_discover 2>/dev/null | grep -v '^XMODULE=')
 	else
-		eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
+		# XXX eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
+		eval $(./bin/fll_xserver_discover 2>/dev/null)
 	fi
 
-	[ "${XMODULE}" ] && XCFG_OPTS+=("--driver ${XMODULE}")
-	[ "${XVENDORNAME}" ] && XCFG_OPTS+=("--vendorname ${XVENDORNAME}")
-	[ "${XBOARDNAME}" ] && XCFG_OPTS+=("--boardname ${XBOARDNAME}")
-	[ "${XBUSID}" ] && XCFG_OPTS+=("--busid ${XBUSID}")
+	[ "${XMODULE}" ] && XCFG_OPTS+=("--driver '${XMODULE}'")
+	[ "${XVENDORNAME}" ] && XCFG_OPTS+=("--vendorname '${XVENDORNAME}'")
+	[ "${XBOARDNAME}" ] && XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
+	[ "${XBUSID}" ] && XCFG_OPTS+=("--busid '${XBUSID}'")
 
-	[ "${XDEPTH}" ] && XCFG_OPTS+=("--colordepth ${XDEPTH}")
+	[ "${XDEPTH}" ] && XCFG_OPTS+=("--colordepth '${XDEPTH}'")
 
 	if xserver_has_xrandr "${XMODULE}"; then
 		XCFG_OPTS+=("--xrandr")
-		[ "${XMODES}" ] && XCFG_OPTS+=("--mode ${XMODES}")
-		[ "${XRATE}" ] && XCFG_OPTS+=("--rate ${XRATE}")
+		[ "${XMODES}" ] && XCFG_OPTS+=("--mode '${XMODES}'")
+		[ "${XRATE}" ] && XCFG_OPTS+=("--rate '${XRATE}'")
 	else
-		[ "${XHORIZSYNC}" ] && XCFG_OPTS+=("--horizsync ${XHORIZSYNC}")
-		[ "${XVERTREFRESH}" ] && XCFG_OPTS+=("--vertrefresh ${XVERTREFRESH}")
+		[ "${XHORIZSYNC}" ] && XCFG_OPTS+=("--horizsync '${XHORIZSYNC}'")
+		[ "${XVERTREFRESH}" ] && XCFG_OPTS+=("--vertrefresh '${XVERTREFRESH}'")
 		[ "${XMODELINES}" ] && XCFG_OPTS+=("--no-modelines")
 
 		# do xresprobe stuff here
 	fi
+
+	# XXX local INPUT=$(/usr/sbin/fll_xinput_discover)
+	local INPUT=$(./bin/fll_xinput_discover)
+	[ "${INPUT}" ] && XCFG_OPTS+=("${INPUT}")
+
+	# XXX eval "/usr/sbin/fll_xorgconfig ${XCFG_OPTS[@]}"
+	eval "./bin/fll_xorgconfig --output /tmp/xorg.conf --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ ${XCFG_OPTS[@]}"
 }
 
 case "${1}" in
 	start)
+		do_start
 		;;
 	stop)
 		;;

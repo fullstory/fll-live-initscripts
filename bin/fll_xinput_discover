@@ -1,0 +1,81 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+use Switch 'Perl6';
+
+my %input;
+my @input_devices;
+my ($name, $phys, $mouse);
+
+open(INPUT, '<', '/proc/bus/input/devices')
+	or die "Unable to read '/proc/bus/input/devices': $!\n";
+while (<INPUT>) {
+	chomp;
+	
+	unless (/^./) {
+		($name, $phys, $mouse) = ();
+		next;
+	}
+	
+	my ($key, $val) = split '=';
+	($key and $val) or next;
+
+	$key =~ s/^\w:\s+//;
+
+	given (lc($key)) { 
+		when 'name' {
+			$name = $val;
+		}
+		when 'handlers' {
+			$val =~ /mouse(\d+)/ and $mouse = $1;
+		}
+		when 'phys' {
+			$phys = $val;
+		}
+	}
+
+	next unless (defined $mouse and $name and $phys);
+
+	my $device = '/dev/input/mice';
+
+	given ($phys) {
+		when m/^isa/ {
+			given ($name) {
+				when m/SynPS\/2/ {
+					$phys = 'synaptics';
+					$device = '/dev/psaux';
+				}
+				when m/AlpsPS\/2/ {
+					$phys = 'alps';
+					$device = '/dev/psaux';
+				}
+				default {
+					$phys = 'ps2';
+				}
+			}
+		}
+		when m/^usb/ { 
+			$phys = 'usb';
+		}
+	}
+	
+	$input{$mouse} = {
+		'name' => $name,
+		'type' => $phys,
+		'device' => $device
+	};
+
+	($name, $phys, $mouse) = ();
+}
+close(INPUT);
+
+for my $key (sort keys %input) {
+	push @input_devices, '--input';
+	for ('name', 'type', 'device') {
+		push @input_devices, $_ . '=' . $input{$key}->{$_},
+	}
+}
+
+print "@input_devices\n";
