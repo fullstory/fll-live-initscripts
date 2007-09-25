@@ -240,10 +240,19 @@ for my $key (keys %x) {
 		when 'colordepth' {
 			$x{$key} =~ /^(1|4|8|16|24)$/ or $invalid = $key;
 		}
+		when 'mode' {
+			$x{$key} =~ /^\d+x\d+$/ or $invalid = $key;
+		}
 		when 'modes' {
 			for (split /\s+/, $x{$key}) {
-				/^\d+x\d+$/i or $invalid = $key;
+				/^\d+x\d+$/ or $invalid = $key;
 			}
+		}
+		when m/^(rate|horizsync|vertrefresh)$/ {
+			$x{$key} =~ /^\d+(\.\d+)$/ or $invalid = $key;
+		}
+		when 'virtual' {
+			$x{$key} =~ /^\d+\s+\d+$/ or $invalid = $key;
 		}
 	}
 
