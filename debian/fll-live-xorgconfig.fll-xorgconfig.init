@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/bash
 
 ### BEGIN INIT INFO
 # Provides:          fll-xorgconfig
@@ -41,6 +41,13 @@ if [ ! -x /usr/sbin/fll_xorgconfig ] || [ ! -x fll_xserver_discover ]; then
 	exit 0
 fi
 
+# XKBLAYOUT is stored here by /etc/init.d/fll-locales
+# TODO: fetch this via debconf, requires it be be preseeded via debocnf
+# initially by /etc/init.d/fll-locales
+if [ -s /etc/default/fll-locales ]; then
+	. /etc/default/fll-locales
+fi
+
 ###
 # source lsb functions
 ###
@@ -61,7 +68,28 @@ if [ -f /proc/cmdline ]; then
 				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
 			noxorgconfig|xorgconfig=no)
-				DISABLE_X_CONFIG="yes"
+				exit 0
+				;;
+			nomodelines|noml)
+				XMODELINES="no"
+				;;
+			xdepth=*|depth=*)
+				XDEPTH="${param#*depth=}"
+				;;
+			xhrefresh=*|hsync=*)
+				XHORIZSYNC="${param#*=}"
+				;;
+			xmodule=*)
+				XMODULE="${param#xmodule=}"
+				;;
+			xrate=*|rate=*)
+				XRATE="${param#*rate=}"
+				;;
+			xscreen=*|screen=*|xmode=*|mode=*)
+				XMODES="${param#*=}"
+				;;
+			xvrefresh=*|vsync=*)
+				XVERTREFRESH="${param#*=}"
 				;;
 		esac
 	done
@@ -71,9 +99,24 @@ fi
 # functions...
 ###
 xserver_video_version() {
-	local V P="xserver-xorg-video-${1}"
-	[ "${P}" ] && V="$(grep-dctrl -n -s Version -XP ${P} /var/lib/dpkg/status)"
-	[ "${V}" ] && echo "${V#[0-9]*:}"
+	[ "${1}" ] || return
+	
+	grep-dctrl -n -s Version -XP "xserver-xorg-video-${1}" /var/lib/dpkg/status
+}
+
+do_start() {
+	# fll_xorgconfig option array
+	local XCFG_OPTS
+
+	# sourced earlier from /etc/default/fll-locales
+	if [ "${XKBLAYOUT}" ]; then
+		XCFG_OPTS+=("--xkblayout ${XKBLAYOUT}")
+		case "${XKBLAYOUT}" in
+		 	de)
+				XCFG_OPTS+=("--xkbvariant nodeadkeys")
+				;;
+		esac
+	fi
 }
 
 case "${1}" in
@@ -82,9 +125,11 @@ case "${1}" in
 	stop)
 		;;
 	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
 		;;
 	*)
-		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+		echo "Usage: ${NAME} {start|stop}" >&2
 		exit 3
 		;;
 esac
