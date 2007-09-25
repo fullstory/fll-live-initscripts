@@ -58,7 +58,7 @@ open(L, '-|',  "LC_ALL=C lspci -n -d $vendor:$device 2>/dev/null")
 	or die("Failed to execute lspci: $!\n");
 while (<L>) {
 	chomp;
-	if (m/^(\w+:)?(\w+):(\w+)\.(\w+)\s+0300.*/) { 
+	if (m/^(\w+:)?(\w+):(\w+)\.(\w+)\s+.*/) { 
 		$busid = join(':', 'PCI', hex("0x$2"),  hex("0x$3"), hex("0x$4"));
 		last;
 	}
