@@ -157,8 +157,8 @@ do_start() {
 		esac
 	fi
 
-	[ "${XKBMODEL}" ] && XCFG_OPTS+=("--xkbmodel '${XKBMODEL}'")
-	[ "${XKBVARIANT}" ] && XCFG_OPTS+=("--xkbvariant '${XKBVARIANT}'")
+	[ "${XKBMODEL}" ]	&& XCFG_OPTS+=("--xkbmodel '${XKBMODEL}'")
+	[ "${XKBVARIANT}" ]	&& XCFG_OPTS+=("--xkbvariant '${XKBVARIANT}'")
 
 	# detect video hardware via fll_xserver_discover
 	# XMODULE XVENDORNAME XBOARDNAME XBUSID
@@ -170,21 +170,21 @@ do_start() {
 		eval $(./bin/fll_xserver_discover 2>/dev/null)
 	fi
 
-	[ "${XMODULE}" ] && XCFG_OPTS+=("--driver '${XMODULE}'")
-	[ "${XVENDORNAME}" ] && XCFG_OPTS+=("--vendorname '${XVENDORNAME}'")
-	[ "${XBOARDNAME}" ] && XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
-	[ "${XBUSID}" ] && XCFG_OPTS+=("--busid '${XBUSID}'")
+	[ "${XMODULE}" ]	&& XCFG_OPTS+=("--driver '${XMODULE}'")
+	[ "${XVENDORNAME}" ]	&& XCFG_OPTS+=("--vendorname '${XVENDORNAME}'")
+	[ "${XBOARDNAME}" ]	&& XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
+	[ "${XBUSID}" ]		&& XCFG_OPTS+=("--busid '${XBUSID}'")
 
-	[ "${XDEPTH}" ] && XCFG_OPTS+=("--colordepth '${XDEPTH}'")
+	[ "${XDEPTH}" ]		&& XCFG_OPTS+=("--colordepth '${XDEPTH}'")
 
 	if xserver_has_xrandr "${XMODULE}"; then
 		XCFG_OPTS+=("--xrandr")
-		[ "${XMODES}" ] && XCFG_OPTS+=("--mode '${XMODES}'")
-		[ "${XRATE}" ] && XCFG_OPTS+=("--rate '${XRATE}'")
+		[ "${XMODES}" ]		&& XCFG_OPTS+=("--mode '${XMODES}'")
+		[ "${XRATE}" ]		&& XCFG_OPTS+=("--rate '${XRATE}'")
 	else
-		[ "${XHORIZSYNC}" ] && XCFG_OPTS+=("--horizsync '${XHORIZSYNC}'")
-		[ "${XVERTREFRESH}" ] && XCFG_OPTS+=("--vertrefresh '${XVERTREFRESH}'")
-		[ "${XMODELINES}" ] && XCFG_OPTS+=("--no-modelines")
+		[ "${XHORIZSYNC}" ]	&& XCFG_OPTS+=("--horizsync '${XHORIZSYNC}'")
+		[ "${XVERTREFRESH}" ]	&& XCFG_OPTS+=("--vertrefresh '${XVERTREFRESH}'")
+		[ "${XMODELINES}" ]	&& XCFG_OPTS+=("--no-modelines")
 
 		# do xresprobe stuff here
 	fi
