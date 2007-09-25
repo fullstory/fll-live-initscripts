@@ -34,7 +34,7 @@ else {
 }
 
 # Declare variables
-my ($busid, $desc, $device, $drv, $mod, $pci, $type, $vendorname, $vendor);
+my ($busid, $desc, $device, $drv, $mod, $pci, $type, $vname, $vendor);
 
 # Glob /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class
 for (</sys/devices/pci*/*{,/*}/class>) {
@@ -68,31 +68,31 @@ open(F, '<', PCILST) or die("Failed to open pci.lst: $!\n");
 while (<F>) {
 	chomp;
 	# Inside vendor block and new vendor block found? Then exit loop.
-	$vendorname and last if /^\w/;
+	$vname and last if /^\w/;
 	# Inside vendor?
-	if ($vendorname) {
+	if ($vname) {
 		# Match vendor and device of GFX card found or match fallback driver(ffffffff)?
 		if (/^\t(?:${vendor}${device}|ffffffff)\t(\S+)\t(\S+\((\S+)\))\t(.+)$/) { 
 			# Get strings captured from backreferences above.
-			($type, $drv, $mod, $desc) = ($1, $2, $3, "$vendorname $4");
+			($type, $drv, $mod, $desc) = ($1, $2, $3, "$vname $4");
 			# Break loop
 			last;
 		}
 	}
-	# Found target vendor block? Set $vendorname with the vendor name captured from backref.
-	/^$vendor\s+(.*)$/ and $vendorname = $1;
+	# Found target vendor block? Set $vname with the vendor name captured from backref.
+	/^$vendor\s+(.*)$/ and $vname = $1;
 }
 close(F);
 
 # If module and description are not both set, goto fallback.
-unless ($mod and $vendorname and $desc) {
-	($type, $drv, $mod, $vendorname, $desc) = (undef, undef, 'vesa', 'All', 'All');
+unless ($mod and $vname and $desc) {
+	($type, $drv, $mod, $vname, $desc) = (undef, undef, 'vesa', 'All', 'All');
 }
 
 # Output stuff that can be sourced by shellscripts.
 print <<_EOF_
 XMODULE="$mod"
-XVENDORNAME="$vendorname"
+XVENDORNAME="$vname"
 XBOARDNAME="$desc"
 XBUSID="$busid"
 _EOF_
