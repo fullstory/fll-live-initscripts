@@ -73,6 +73,7 @@ my %x = (
 
 	# monitor
 	'modes'		=> '1024x768 800x600 640x480',
+	'modelines'	=> 1,
 	'horizsync'	=> '28.0 - 96.0',
 	'vertrefresh'	=> '50.0 - 75.0',
 
@@ -206,7 +207,7 @@ GetOptions(
 	# monitor
 	'colordepth=i',
 	'modelname=s',
-	'nomodelines',
+	'modelines!',
 	'modes=s',
 	'horizsync=s',
 	'vertrefresh=s',
@@ -359,7 +360,7 @@ if ($x{'xrandr'}) {
 	# * drop ModeLine, HorizSync and VertRefresh from the Monitor section
 	# * drop Modes line from the Display subsection
 	$x{'screen'} = '"Screen0"';
-	$x{'nomodelines'} = 1;
+	$x{'modelines'} = 0;
 	delete $x{'horizsync'};
 	delete $x{'vertrefresh'};
 
@@ -375,7 +376,7 @@ if ($x{'xrandr'}) {
 }
 else {
 	($x{'modes'} = "Modes\t" . $x{'modes'}) =~ s/(\d+x\d+)/"$1"/g;
-	unless ($x{'nomodelines'}) {
+	if ($x{'modelines'}) {
 		# add large modeline table for legacy config
 		splice @monitor, -1, 0, gtf_modelines;
 	}
