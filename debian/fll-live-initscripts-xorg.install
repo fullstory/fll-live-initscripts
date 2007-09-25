@@ -1,3 +1,0 @@
-bin/fll_mkxorgconfig			usr/sbin
-bin/fll_xserver_discover		usr/sbin
-share/fll_mkxorgconfig/templates/*	usr/share/fll_mkxorgconfig/templates

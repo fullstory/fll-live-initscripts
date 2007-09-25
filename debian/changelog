@@ -1,7 +1,7 @@
 fll-live-initscripts (1.2.11) UNRELEASED; urgency=low
 
   [ Kel Modderman ]
-  * Add fll-live-initscripts-xorg stuff
+  * Add fll-live-xorgconfig stuff
     - bin/fll_mkxorgconfig - make /etc/X11/xorg.conf
     - bin/fll_xserver_discover - detect required Xorg driver
     - debian/fll-live-initscripts-xorg.fll-xorgconfig.init
@@ -10,7 +10,7 @@ fll-live-initscripts (1.2.11) UNRELEASED; urgency=low
     - add BusID detection
     - strip perl tips from comments
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 25 Sep 2007 21:02:30 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 25 Sep 2007 21:31:32 +1000
 
 fll-live-initscripts (1.2.10) unstable; urgency=low
 

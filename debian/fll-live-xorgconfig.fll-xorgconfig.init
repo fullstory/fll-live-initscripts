@@ -37,7 +37,7 @@ if [ "${FLL_DISTRO_MODE}" != "live" ]; then
 	exit 0
 fi
 
-if [ ! -x /usr/sbin/fll_mkxorgconfig ] || [ ! -x fll_xserver_discover ]; then
+if [ ! -x /usr/sbin/fll_xorgconfig ] || [ ! -x fll_xserver_discover ]; then
 	exit 0
 fi
 
