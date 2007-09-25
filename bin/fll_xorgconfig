@@ -234,18 +234,20 @@ dbg \%x;
 
 # sanitize input
 for my $key (keys %x) {
+	my $invalid = undef;
+
 	given ($key) {
 		when 'colordepth' {
-			$x{$key} =~ /^(1|4|8|16|24)$/ or
-				warn "W: invalid --$key value: " .  $x{$key} . "\n";
+			$x{$key} =~ /^(1|4|8|16|24)$/ or $invalid = $key;
 		}
 		when 'modes' {
 			for (split /\s+/, $x{$key}) {
-				/^\d+x\d+$/i or
-					warn "W: invalid --$key value: " .  $x{$key} . "\n";
+				/^\d+x\d+$/i or $invalid = $key;
 			}
 		}
 	}
+
+	$invalid and warn "W: invalid --$invalid value: " .  $x{$invalid} . "\n";
 }
 
 ###########################################################
