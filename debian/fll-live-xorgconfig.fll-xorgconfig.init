@@ -37,7 +37,7 @@ if [ "${FLL_DISTRO_MODE}" != "live" ]; then
 	exit 0
 fi
 
-if [ ! -x /usr/sbin/fll_xorgconfig ] || [ ! -x fll_xserver_discover ]; then
+if [ ! -x /usr/sbin/fll_xorgconfig ] || [ ! -x /usr/sbin/fll_xserver_discover ]; then
 	exit 0
 fi
 
@@ -79,6 +79,15 @@ if [ -f /proc/cmdline ]; then
 			xhrefresh=*|hsync=*)
 				XHORIZSYNC="${param#*=}"
 				;;
+			xkblayout=*)
+				XKBLAYOUT="${param#xkblayout=}"
+				;;
+			xkbmodel=*)
+				XKBMODEL="${param#xkbmodel=}"
+				;;
+			xkbvariant=*)
+				XKBVARIANT="${param#xkbvariant=}"
+				;;
 			xmodule=*)
 				XMODULE="${param#xmodule=}"
 				;;
@@ -98,10 +107,40 @@ fi
 ###
 # functions...
 ###
-xserver_video_version() {
-	[ "${1}" ] || return
+xserver_has_xrandr() {
+	[ "${1}" ] || return 1
+
+	# xserver driver
+	local DRIVER="${1}"
 	
-	grep-dctrl -n -s Version -XP "xserver-xorg-video-${1}" /var/lib/dpkg/status
+	# package version with randr1.2 support
+	local VERSION_HAS_RANDR
+
+	case "${DRIVER}" in
+		ati)
+			VERSION_HAS_RANDR="1:6.7.193-1"
+			;;
+		intel)
+			VERSION_HAS_RANDR="2:2.1.0-1"
+			;;
+		mga)
+			VERSION_HAS_RANDR="1:1.4.7.dfsg.1-3"
+			;;
+		*)
+			return 1
+			;;
+	esac
+
+	# get xserver-xorg-video-$driver package version
+	local VERSION=$(grep-dctrl -n -s Version -XP "xserver-xorg-video-${DRIVER}" /var/lib/dpkg/status)
+
+	# compare versions, return status
+	if [ "${VERSION}" ]; then
+		dpkg --compare-versions "${VERSION}" ge "${VERSION_HAS_RANDR}"
+		return "${?}"
+	fi
+	
+	return 1
 }
 
 do_start() {
@@ -116,6 +155,37 @@ do_start() {
 				XCFG_OPTS+=("--xkbvariant nodeadkeys")
 				;;
 		esac
+	fi
+
+	if [ "${XKBMODEL}" ]; then
+		XCFG_OPTS+=("--xkbmodel ${XKBMODEL}")
+	fi
+	
+	if [ "${XKBVARIANT}" ]; then
+		XCFG_OPTS+=("--xkbvariant ${XKBVARIANT}")
+	fi
+
+	# detect video hardware via fll_xserver_discover
+	# XMODULE XVENDORNAME XBOARDNAME XBUSID
+	if [ "${XMODULE}" ]; then
+		eval $(/usr/sbin/fll_xserver_discover 2>/dev/null | grep -v '^XMODULE=')
+	else
+		eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
+	fi
+
+	[ "${XMODULE}" ] && XCFG_OPTS+=("--driver ${XMODULE}")
+	[ "${XVENDORNAME}" ] && XCFG_OPTS+=("--vendorname ${XVENDORNAME}")
+	[ "${XBOARDNAME}" ] && XCFG_OPTS+=("--boardname ${XBOARDNAME}")
+	[ "${XBUSID}" ] && XCFG_OPTS+=("--busid ${XBUSID}")
+
+	[ "${XDEPTH}" ] && XCFG_OPTS+=("--colordepth ${XDEPTH}")
+
+	if xserver_has_xrandr "${XMODULE}"; then
+		XCFG_OPTS+=("--xrandr")
+		[ "${XMODES}" ] && XCFG_OPTS+=("--mode ${XMODES}")
+		[ "${XRATE}" ] && XCFG_OPTS+=("--rate ${XRATE}")
+	else
+		: # do xresprobe stuff here
 	fi
 }
 
