@@ -11,7 +11,6 @@ use constant {
 	DEBUG => 0,
 	VGA => '0300',
 	PCILST => '/lib/discover/pci.lst',
-	SLURP => 0,
 };
 
 # Check for File::Slurp, catch errors in $@
@@ -41,13 +40,11 @@ my ($busid, $desc, $device, $drv, $mod, $pci, $type, $vendorname, $vendor);
 for (</sys/devices/pci*/*{,/*}/class>) {
 	# Check for type VGA (see use constant at the top)
 	if (substr(slurp($_),2,4) eq VGA) {
-		$pci = $_;
+		# Strip '/class' from the end of the path
+		($pci = $_) =~ s|/class$||;
 		last;
 	}
 }
-
-# Strip '/class' from the end of the path
-$pci =~ s|/class$||;
 
 # Get vendor and device
 chomp($vendor = substr(slurp("$pci/vendor"),2,4));
@@ -95,8 +92,8 @@ unless ($mod and $vendorname and $desc) {
 # Output stuff that can be sourced by shellscripts.
 print <<_EOF_
 XMODULE="$mod"
-XVENDOR="$vendorname"
-XBOARD="$desc"
+XVENDORNAME="$vendorname"
+XBOARDNAME="$desc"
 XBUSID="$busid"
 _EOF_
 ;
