@@ -374,7 +374,7 @@ if ($x{'xrandr'}) {
 	}
 }
 else {
-	$x{'modes'} = "Modes\t" . $x{'modes'};
+	($x{'modes'} = "Modes\t" . $x{'modes'}) =~ s/(\d+x\d+)/"$1"/g;
 	unless ($x{'nomodelines'}) {
 		# add large modeline table for legacy config
 		splice @monitor, -1, 0, gtf_modelines;
