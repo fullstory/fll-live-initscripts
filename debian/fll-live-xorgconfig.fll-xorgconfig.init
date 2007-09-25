@@ -60,6 +60,9 @@ if [ -f /proc/cmdline ]; then
 			flldebug=*)
 				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
+			noxorgconfig|xorgconfig=no)
+				DISABLE_X_CONFIG="yes"
+				;;
 		esac
 	done
 fi

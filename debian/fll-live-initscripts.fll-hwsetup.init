@@ -52,9 +52,6 @@ fi
 ###
 . /lib/fll/fll-init-cols
 
-X_CONF="/etc/X11/xorg.conf"
-HWSETUP_MAIN="/etc/hwsetup"
-
 ###
 # cheatcode handling
 ###
@@ -62,16 +59,7 @@ if [ -f /proc/cmdline ]; then
 	for param in $(cat /proc/cmdline); do
 		case "${param}" in
 			flldebug=*)
-				if [ "${param#flldebug=}" = "${NAME#fll-}" ]; then
-					set -x
-					HWSETUP_VERBOSITY="-v"
-				fi
-				;;
-			nohwsetup|hwsetup=no)
-				exit 0
-				;;
-			noxorgconfig|nomkxf86config)
-				DISABLE_X_CONFIG="yes"
+				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
 		esac
 	done
@@ -81,84 +69,6 @@ fi
 # functions...
 ###
 do_start() {
-	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}starting ${Y}hwsetup${N}"
-	hwsetup ${HWSETUP_VERBOSITY}
-	log_end_msg "${?}"
-
-	# Read in what hwsetup has found
-	if [ -r "${HWSETUP_MAIN}" ]; then
-		. "${HWSETUP_MAIN}"
-		# XXX: Workaround for new mouse detection
-		if [ "${MOUSE_MOUSETYPE}" = "ps2" ]; then
-			sed -i "s|/dev/input/mice|/dev/psaux|" "${HWSETUP_MAIN}"
-			. "${HWSETUP_MAIN}"
-		fi
-	fi
-
-	###
-	# xorgconfig
-	###
-	if [ "${DISABLE_X_CONFIG}" != "yes" ] && [ -x /usr/sbin/mkxf86config ]; then
-		/usr/sbin/mkxf86config
-
-		# Read in changes
-		[ -f "${HWSETUP_MAIN}" ] && . "${HWSETUP_MAIN}"
-		
-		if [ "${XDESC}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}video is '${Y}${XDESC}${G}'${N}"
-			log_end_msg 0
-		fi
-
-		if [ "${XMODULE}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}using '${Y}${XMODULE}${G}' xserver driver${N}"
-			log_end_msg 0
-		fi
-
-		if [ "${MODEL}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}monitor is '${Y}${MODEL}${G}'${N}"
-			log_end_msg 0
-		fi
-		
-		if [ "${XSCREEN}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}specified mode '${Y}${XSCREEN}${G}'${N}"
-			log_end_msg 0
-		elif [ "${MODES}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}detected modes '${Y}${MODES#Modes }${G}'${N}"
-			log_end_msg 0
-		fi
-
-		if [ "${XHREFRESH}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}specified horizontal refresh '${Y}${XHREFRESH}${G}'${N}"
-			log_end_msg 0
-		elif [ "${HREFRESH}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}detected horizontal refresh '${Y}${HREFRESH}${G}'${N}"
-			log_end_msg 0
-		fi
-
-		if [ "${XVREFRESH}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}specified vertical refresh '${Y}${XVREFRESH}${G}'${N}"
-			log_end_msg 0
-		elif [ "${VREFRESH}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}detected vertical refresh '${Y}${VREFRESH}${G}'${N}"
-			log_end_msg 0
-		fi
-
-		if [ "${XDEPTH}" ]; then
-			log_daemon_msg "${B}${NAME}${N}"
-			log_progress_msg "${G}specified depth '${Y}${XDPETH}${G}'${N}"
-			log_end_msg 0
-		fi
-	fi
-
 	###
 	# bluetooth management
 	###
