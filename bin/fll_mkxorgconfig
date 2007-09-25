@@ -360,7 +360,6 @@ if ($x{'xrandr'}) {
 	# * drop ModeLine, HorizSync and VertRefresh from the Monitor section
 	# * drop Modes line from the Display subsection
 	$x{'screen'} = '"Screen0"';
-	$x{'modelines'} = 0;
 	delete $x{'horizsync'};
 	delete $x{'vertrefresh'};
 
