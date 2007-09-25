@@ -3,81 +3,101 @@
 #   description for the videocard detected in the machine it runs on, 
 #   plus fallback methods.
 #   Copyright (C) 2006  M.L. de Boer a.k.a locsmif <locsmif@kanotix.com>
+#   Copyright (C) 2007  Kel Modderman <kel@otaku42.de>
 
-# All variables must be declared, no symrefs, and misc strict safety checks.
-# Remember: "use strict is a good servant, but a bad master, and must be treated
-# as such." -- Simon Cozens, author of "Advanced Perl Programming - O'Reilly"
 use strict;
-# Define constants (via an anonymous hash)
+
 use constant {
 	DEBUG => 0,
-	VGA => '0300', # Must be quoted! (Else this becomes '192')
-	PCILST => '/lib/discover/pci.lst', # Comma goes here because that is allowed. (Think of expansion later)
+	VGA => '0300',
+	PCILST => '/lib/discover/pci.lst',
 	SLURP => 0,
 };
+
 # Check for File::Slurp, catch errors in $@
 eval "require File::Slurp"; 
 if ($@) {
 	# Errors found, use own emulator
 	sub slurp {
-	 	open EATFH, "<", $_[0] or die $!; my @lines = <EATFH>; close EATFH;
+	 	open(EATFH, '<', $_[0]) or die($!);
+		my @lines = <EATFH>;
+		close(EATFH);
 		return @lines if wantarray;
-		chomp $lines[0]; return $lines[0];
+		chomp($lines[0]);
+		return $lines[0];
 	}
 	DEBUG and print("Using locsmif's File::Slurp emulator\n");
 }
 else {
-	# Present, import 'slurp' (let's hope Perl 6 comes quick)
-	import File::Slurp "slurp"; # slurp will be a Perl6 builtin.
+	# Present, import 'slurp'
+	import File::Slurp 'slurp';
 	DEBUG and print("Enabling File::Slurp\n");
 }
 
 # Declare variables
-my ($desc, $device, $drv, $mod, $pci, $type, $v, $vendor);
+my ($busid, $desc, $device, $drv, $mod, $pci, $type, $vendorname, $vendor);
 
 # Glob /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class
-# Works similar to Bash, returns a list. Shortcut to glob = <..>
 for (</sys/devices/pci*/*{,/*}/class>) {
 	# Check for type VGA (see use constant at the top)
-	if (substr(slurp($_),2,4) eq VGA) { $pci = $_; last; }
+	if (substr(slurp($_),2,4) eq VGA) {
+		$pci = $_;
+		last;
+	}
 }
+
 # Strip '/class' from the end of the path
 $pci =~ s|/class$||;
+
 # Get vendor and device
 chomp($vendor = substr(slurp("$pci/vendor"),2,4));
 chomp($device = substr(slurp("$pci/device"),2,4));
 
-# Open PCILST for reading (see use constant at the top) and associate with 'F'
-open(F, "<", PCILST) or die("Failed to open pci.lst: $!\n");
+# Get BusID, ref: xserver-xorg.postinst
+open(L, '-|',  "LC_ALL=C lspci -n -d $vendor:$device 2>/dev/null")
+	or die("Failed to execute lspci: $!\n");
+while (<L>) {
+	chomp;
+	if (m/^(\w+:)?(\w+):(\w+)\.(\w+)\s+0300.*/) { 
+		$busid = join(':', 'PCI', hex("0x$2"),  hex("0x$3"), hex("0x$4"));
+		last;
+	}
+}
+close(L);
+	
+
+# Open PCILST for reading
+open(F, '<', PCILST) or die("Failed to open pci.lst: $!\n");
 while (<F>) {
+	chomp;
 	# Inside vendor block and new vendor block found? Then exit loop.
-	$v and last if /^\w/;
+	$vendorname and last if /^\w/;
 	# Inside vendor?
-	if ($v) {
+	if ($vendorname) {
 		# Match vendor and device of GFX card found or match fallback driver(ffffffff)?
 		if (/^\t(?:${vendor}${device}|ffffffff)\t(\S+)\t(\S+\((\S+)\))\t(.+)$/) { 
 			# Get strings captured from backreferences above.
-			($type, $drv, $mod, $desc) = ($1, $2, $3, "$v $4");
+			($type, $drv, $mod, $desc) = ($1, $2, $3, "$vendorname $4");
 			# Break loop
 			last;
 		}
 	}
-	# Found target vendor block? Set $v with the vendor name captured from backref.
-	$v = $1 if (/^$vendor\s+(.*)$/);
+	# Found target vendor block? Set $vendorname with the vendor name captured from backref.
+	/^$vendor\s+(.*)$/ and $vendorname = $1;
 }
 close(F);
 
-# If module and description are not both set, goto fallback. (Should this be more flexible?)
-($mod and $desc) or ($type, $drv, $mod, $desc) = (undef, undef, "vesa", "All");
-# No need for lspci, it would generate exactly the same output
-
-$v ||= 'All'; # Fallback vendor
+# If module and description are not both set, goto fallback.
+unless ($mod and $vendorname and $desc) {
+	($type, $drv, $mod, $vendorname, $desc) = (undef, undef, 'vesa', 'All', 'All');
+}
 
 # Output stuff that can be sourced by shellscripts.
 print <<_EOF_
 XMODULE="$mod"
-XVENDOR="$v"
+XVENDOR="$vendorname"
 XBOARD="$desc"
+XBUSID="$busid"
 _EOF_
 ;
 exit(0);

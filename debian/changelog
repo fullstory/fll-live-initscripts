@@ -6,8 +6,11 @@ fll-live-initscripts (1.2.11) UNRELEASED; urgency=low
     - bin/fll_xserver_discover - detect required Xorg driver
     - debian/fll-live-initscripts-xorg.fll-xorgconfig.init
     - share/fll_mkxorgconfig/templates/*
+  * bin/fll_xserver_discover:
+    - add BusID detection
+    - strip perl tips from comments
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 24 Sep 2007 22:48:27 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 25 Sep 2007 21:02:30 +1000
 
 fll-live-initscripts (1.2.10) unstable; urgency=low
 
