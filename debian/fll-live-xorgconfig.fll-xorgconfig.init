@@ -161,7 +161,6 @@ do_start() {
 	# fll_xorgconfig option array
 	local XCFG_OPTS
 
-	XKBLAYOUT="de"
 	# sourced earlier from /etc/default/fll-locales
 	if [ "${XKBLAYOUT}" ]; then
 		XCFG_OPTS+=("--xkblayout '${XKBLAYOUT}'")
@@ -175,8 +174,10 @@ do_start() {
 	[ "${XKBMODEL}" ]	&& XCFG_OPTS+=("--xkbmodel '${XKBMODEL}'")
 	[ "${XKBVARIANT}" ]	&& XCFG_OPTS+=("--xkbvariant '${XKBVARIANT}'")
 
+	[ "${XDEPTH}" ]		&& XCFG_OPTS+=("--colordepth '${XDEPTH}'")
+
 	# detect video hardware via fll_xserver_discover
-	# XMODULE XVENDORNAME XBOARDNAME XBUSID
+	#     XMODULE XVENDORNAME XBOARDNAME XBUSID
 	if [ "${XMODULE}" ]; then
 		eval $(/usr/sbin/fll_xserver_discover 2>/dev/null | grep -v '^XMODULE=')
 	else
@@ -188,8 +189,6 @@ do_start() {
 	[ "${XBOARDNAME}" ]	&& XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
 	[ "${XBUSID}" ]		&& XCFG_OPTS+=("--busid '${XBUSID}'")
 
-	[ "${XDEPTH}" ]		&& XCFG_OPTS+=("--colordepth '${XDEPTH}'")
-
 	if xserver_has_xrandr "${XMODULE}"; then
 		# xrandr aware, we don't have to probe monitor settings :)
 		XCFG_OPTS+=("--xrandr")
@@ -197,7 +196,7 @@ do_start() {
 		[ "${XRATE}" ]		&& XCFG_OPTS+=("--rate '${XRATE}'")
 	else
 		# legacy style config, we need to probe for optimal X settings
-		# do xresprobe stuff here: XID, XRES, XHFREQ, XVFREQ, XDISPTYPE
+		#     XID XRES XHFREQ XVFREQ XDISPTYPE
 		eval $(x_res_probe ${XMODULE})
 
 		# probed
