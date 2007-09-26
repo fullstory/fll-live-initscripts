@@ -152,7 +152,10 @@ x_res_probe() {
 					print "XVFREQ" "=\"" $3 "\""
 				}
 				else
-					print "X" toupper($1) "=\"" $2 "\""
+					string = ""
+					for (i = 2; i < $NF; i++)
+						string = string " " $i;
+					print "X" toupper($1) "=\"" string "\""
 			}
 		}'
 }
