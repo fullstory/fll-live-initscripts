@@ -1,9 +1,5 @@
-fll-live-initscripts (1.99.02) UNRELEASED; urgency=low
+fll-live-initscripts (1.99.02) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * Make modeline regexp slightly more readable.
   * Only drop hz marker from Modelines in legacy type configs.
   * Seperate --rate from --mode, allow the options to be used individually.
