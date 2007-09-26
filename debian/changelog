@@ -1,8 +1,12 @@
 fll-live-initscripts (1.99.02) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 26 Sep 2007 21:16:03 +0200
+  [ Kel Modderman ]
+  * Make modeline regexp slightly more readable.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 27 Sep 2007 07:54:04 +1000
 
 fll-live-initscripts (1.99.01) unstable; urgency=low
 
