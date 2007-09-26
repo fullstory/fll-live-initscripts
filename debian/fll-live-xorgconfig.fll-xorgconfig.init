@@ -153,7 +153,7 @@ x_res_probe() {
 				}
 				else
 					string = ""
-					for (i = 2; i < $NF; i++)
+					for (i = 2; i <= $NF; i++)
 						string = string " " $i;
 					print "X" toupper($1) "=\"" string "\""
 			}
