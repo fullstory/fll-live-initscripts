@@ -1,6 +1,5 @@
 Section "Module"
 	Load		"ddc"
-	#Load		"GLcore"
 	Load		"dbe"
 	Load		"dri"
 	Load		"extmod"

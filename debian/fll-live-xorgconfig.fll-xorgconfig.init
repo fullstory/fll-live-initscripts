@@ -190,8 +190,8 @@ do_start() {
 	fi
 
 	# XXX local INPUT=$(/usr/sbin/fll_xinput_discover)
-	local INPUT=$(./bin/fll_xinput_discover)
-	[ "${INPUT}" ] && XCFG_OPTS+=("${INPUT}")
+	eval $(./bin/fll_xinput_discover)
+	[ "${XINPUT}" ] && XCFG_OPTS+=("${XINPUT}")
 
 	# XXX eval "/usr/sbin/fll_xorgconfig ${XCFG_OPTS[@]}"
 	eval "./bin/fll_xorgconfig --output /tmp/xorg.conf --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ ${XCFG_OPTS[@]}"

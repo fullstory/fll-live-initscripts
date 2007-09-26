@@ -78,4 +78,4 @@ for my $key (sort keys %input) {
 	}
 }
 
-print "@input_devices\n";
+print "XINPUT='@input_devices'\n";

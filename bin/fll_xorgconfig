@@ -26,11 +26,11 @@
 #
 # fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=synaptics device=/dev/psaux name="SynPS/2 Synaptics TouchPad" --driver i810 --vendorname "Intel Corporation" --boardname "Intel Corporation 945G Integrated Graphics Controller" --busid "PCI:0:2:0" --horizsync 30-81 --vertrefresh 56-76 --xkbmodel pc104 --xkblayout de --xkbvariant nodeadkeys --modes "1280x1024 1024x768 800x600" --modelname 2405FPW --output /tmp/xorg.conf
 
-# xrandr (--mode, --rate, --virtual to force config options)
+# xrandr (--mode, --rate to force config options)
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver cirrus --vendorname "Cirrus Logic" --boardname "Cirrus Logics (QEMU)" --busid "PCI:5:0:0" --xkbmodel pc105 --mode 1280x1024 --rate 75 --modelname CM753 --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver cirrus --vendorname "Cirrus Logic" --boardname "Cirrus Logics (QEMU)" --busid "PCI:5:0:0" --xkbmodel pc105 --mode 1280x1024 --rate 75 --modelname CM753 --xrandr --output /tmp/xorg.conf
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --colordepth 16 --xkbmodel pc105 --mode 1024x768 --rate 85 --modelname AL512 --virtual "2048 2048" --xrandr --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --colordepth 16 --xkbmodel pc105 --mode 1024x768 --rate 85 --modelname AL512 --xrandr --output /tmp/xorg.conf
 
 use warnings;
 use strict;
@@ -74,6 +74,7 @@ my %x = (
 	# monitor
 	'modes'		=> '1024x768 800x600 640x480',
 	'modelines'	=> 1,
+	'modelname'	=> 'Default Monitor',
 	'horizsync'	=> '28.0 - 96.0',
 	'vertrefresh'	=> '50.0 - 75.0',
 
@@ -227,7 +228,6 @@ GetOptions(
 	'xrandr',
 	'mode=s',
 	'rate=s',
-	'virtual=s',
 );
 
 dbg \%x;
@@ -248,11 +248,8 @@ for my $key (keys %x) {
 				/^\d+x\d+$/ or $invalid = $key;
 			}
 		}
-		when m/^(rate|horizsync|vertrefresh)$/ {
+		when 'rate' {
 			$x{$key} =~ /^\d+(\.\d+)$/ or $invalid = $key;
-		}
-		when 'virtual' {
-			$x{$key} =~ /^\d+\s+\d+$/ or $invalid = $key;
 		}
 	}
 
@@ -287,7 +284,10 @@ my @extensions = get_template 'extensions';
 # input devices
 my @inputdevices;
 
-MICE: for my $m (keys %{$x{'mouse'}}) {
+# this sorts well for up to 9 input devices without using Tie::IxHash
+# or other means of maintaining hash order
+MICE: for my $m (sort keys %{$x{'mouse'}}) {
+	$x{'mouse'}{$m}{'name'} = "$m " . $x{'mouse'}{$m}{'name'};
 	my ($type, $device, $name) = @{$x{'mouse'}{$m}}{'type', 'device', 'name'};
 	dbg "device=$device type=$type name=$name";
 
@@ -295,7 +295,7 @@ MICE: for my $m (keys %{$x{'mouse'}}) {
 	
 	given ($type) {
 		when 'synaptics' {
-			#splice @module, -1, 0, "\tLoad\t\t\"synaptics\"";
+			splice @module, -1, 0, "\tLoad\t\t\"synaptics\"";
 			$core_type = 'SendCoreEvents';
 			$protocol = "auto-dev";
 		}
@@ -389,16 +389,7 @@ if ($x{'xrandr'}) {
 	$x{'screen'} = '"Screen0"';
 	delete $x{'horizsync'};
 	delete $x{'vertrefresh'};
-
-	# http://bgoglin.livejournal.com/9846.html
-	# Virtual lives where Modes used to for new modesetting drivers
-	# with xrandr 1.2 support
-	if ($x{'virtual'}) {
-		$x{'modes'} = "Virtual\t" . $x{'virtual'};
-	}
-	else {
-		delete $x{'modes'};
-	}
+	delete $x{'modes'};
 }
 else {
 	($x{'modes'} = "Modes\t" . $x{'modes'}) =~ s/(\d+x\d+)/"$1"/g;
@@ -440,6 +431,7 @@ XCONF: while ($x[$n]) {
 	dbg "$n: $$line";
 	
 	given ($$line) {
+		# substitute placeholders
 		when m/@@\w+@@/ {
 			if ($$line =~ m/@@(\w+)@@/ and $x{lc($1)}) {
 				dbg "Modifying line '$n'";
@@ -452,6 +444,7 @@ XCONF: while ($x[$n]) {
 				redo XCONF if $x[$n];
 			}
 		}
+		# beautify
 		when m/^EndSection$/ {
 			dbg "Adding whitespace";
 			splice @x, ++$n, 0, '';
