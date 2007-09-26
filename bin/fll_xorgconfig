@@ -259,16 +259,16 @@ for my $key (keys %x) {
 ###########################################################
 # read in the templates
 my @heading = get_template 'heading';
-my @files = get_template 'files';
-my @module = get_template 'module';
+#my @files = get_template 'files';
+#my @module = get_template 'module';
 my @serverlayout = get_template 'serverlayout';
 my @serverflags = get_template 'serverflags';
 my @keyboard = get_template 'inputdevice_keyboard';
 my @monitor = get_template 'monitor';
 my @device = get_template 'device';
 my @screen = get_template 'screen';
-my @dri = get_template 'dri';
-my @extensions = get_template 'extensions';
+#my @dri = get_template 'dri';
+#my @extensions = get_template 'extensions';
 
 # Note: http://bgoglin.livejournal.com/10214.html
 #
@@ -295,7 +295,7 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 	
 	given ($type) {
 		when 'synaptics' {
-			splice @module, -1, 0, "\tLoad\t\t\"synaptics\"";
+			#splice @module, -1, 0, "\tLoad\t\t\"synaptics\"";
 			$core_type = 'SendCoreEvents';
 			$protocol = "auto-dev";
 		}
@@ -410,8 +410,8 @@ $x_o->flock;
 # write the config
 @x = (
 	@heading,
-	@files,
-	@module,
+	#@files,
+	#@module,
 	@serverlayout,
 	@serverflags,
 	@keyboard,
@@ -419,8 +419,8 @@ $x_o->flock;
 	@monitor,
 	@device,
 	@screen,
-	@dri,
-	@extensions,
+	#@dri,
+	#@extensions,
 );
 
 ###########################################################
