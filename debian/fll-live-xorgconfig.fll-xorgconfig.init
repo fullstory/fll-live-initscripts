@@ -34,16 +34,14 @@ if [ -s /etc/default/distro ]; then
 fi
 
 if [ "${FLL_DISTRO_MODE}" != "live" ]; then
-	: # XXX exit 0
+	exit 0
 fi
 
 if [ ! -x /usr/sbin/fll_xorgconfig ] || [ ! -x /usr/sbin/fll_xserver_discover ]; then
-	: # XXX exit 0
+	exit 0
 fi
 
 # XKBLAYOUT is stored here by /etc/init.d/fll-locales
-# TODO: fetch this via debconf, requires it be be preseeded via debocnf
-# initially by /etc/init.d/fll-locales
 if [ -s /etc/default/fll-locales ]; then
 	. /etc/default/fll-locales
 fi
@@ -56,7 +54,7 @@ fi
 ###
 # ANSI escape sequences (N, R, G, Y, B, M, C, W)
 ###
-# XXX . /lib/fll/fll-init-cols
+. /lib/fll/fll-init-cols
 
 ###
 # cheatcode handling
@@ -71,7 +69,7 @@ if [ -f /proc/cmdline ]; then
 				exit 0
 				;;
 			nomodelines|noml)
-				XMODELINES="no"
+				XNOMODELINES="1"
 				;;
 			xdepth=*|depth=*)
 				XDEPTH="${param#*depth=}"
@@ -143,10 +141,27 @@ xserver_has_xrandr() {
 	return 1
 }
 
+x_res_probe() {
+	awk -v driver="${1}" '
+		BEGIN {
+			cmd = "xresprobe " driver
+			while ((cmd | getline) > 0) {
+				sub(/:$/,"",$1)
+				if ($1 == "freq") {
+					print "XHFREQ" "=\"" $2 "\""
+					print "XVFREQ" "=\"" $3 "\""
+				}
+				else
+					print "X" toupper($1) "=\"" $2 "\""
+			}
+		}'
+}
+
 do_start() {
 	# fll_xorgconfig option array
 	local XCFG_OPTS
 
+	XKBLAYOUT="de"
 	# sourced earlier from /etc/default/fll-locales
 	if [ "${XKBLAYOUT}" ]; then
 		XCFG_OPTS+=("--xkblayout '${XKBLAYOUT}'")
@@ -163,11 +178,9 @@ do_start() {
 	# detect video hardware via fll_xserver_discover
 	# XMODULE XVENDORNAME XBOARDNAME XBUSID
 	if [ "${XMODULE}" ]; then
-		# XXX eval $(/usr/sbin/fll_xserver_discover 2>/dev/null | grep -v '^XMODULE=')
-		eval $(./bin/fll_xserver_discover 2>/dev/null | grep -v '^XMODULE=')
+		eval $(/usr/sbin/fll_xserver_discover 2>/dev/null | grep -v '^XMODULE=')
 	else
-		# XXX eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
-		eval $(./bin/fll_xserver_discover 2>/dev/null)
+		eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
 	fi
 
 	[ "${XMODULE}" ]	&& XCFG_OPTS+=("--driver '${XMODULE}'")
@@ -178,23 +191,54 @@ do_start() {
 	[ "${XDEPTH}" ]		&& XCFG_OPTS+=("--colordepth '${XDEPTH}'")
 
 	if xserver_has_xrandr "${XMODULE}"; then
+		# xrandr aware, we don't have to probe monitor settings :)
 		XCFG_OPTS+=("--xrandr")
 		[ "${XMODES}" ]		&& XCFG_OPTS+=("--mode '${XMODES}'")
 		[ "${XRATE}" ]		&& XCFG_OPTS+=("--rate '${XRATE}'")
 	else
-		[ "${XHORIZSYNC}" ]	&& XCFG_OPTS+=("--horizsync '${XHORIZSYNC}'")
-		[ "${XVERTREFRESH}" ]	&& XCFG_OPTS+=("--vertrefresh '${XVERTREFRESH}'")
-		[ "${XMODELINES}" ]	&& XCFG_OPTS+=("--no-modelines")
+		# legacy style config, we need to probe for optimal X settings
+		# do xresprobe stuff here: XID, XRES, XHFREQ, XVFREQ, XDISPTYPE
+		eval $(x_res_probe ${XMODULE})
 
-		# do xresprobe stuff here
+		# probed
+		[ "${XID}" ]		&& XCFG_OPTS+=("--modelname '${XID}'")
+		
+		if [ "${XMODES}" ]; then
+			# cheatcode
+			XCFG_OPTS+=("--modes '${XMODES}'")
+		else
+			# probed
+			[ "${XRES}" ]	&& XCFG_OPTS+=("--modes '${XRES}'")
+		fi
+		
+		if [ "${XHORIZSYNC}" ]; then
+			# cheatcode
+			XCFG_OPTS+=("--horizsync '${XHORIZSYNC}'")
+		else
+			# probed
+			[ "${XHFREQ}" ]	&& XCFG_OPTS+=("--horizsync '${XHFREQ}'")
+		fi
+		
+		if [ "${XVERTREFRESH}" ]; then
+			# cheatcode
+			XCFG_OPTS+=("--vertrefresh '${XVERTREFRESH}'")
+		else
+			# probed
+			[ "${XVFREQ}" ]	&& XCFG_OPTS+=("--vertrefresh '${XVFREQ}'")
+		fi
+
+		# cheatcode
+		[ "${XNOMODELINES}" ]	&& XCFG_OPTS+=("--no-modelines")
 	fi
 
-	# XXX local INPUT=$(/usr/sbin/fll_xinput_discover)
-	eval $(./bin/fll_xinput_discover)
+	# detect input devices, return string of args to fll_xorgconfig
+	eval $(/usr/sbin/fll_xinput_discover 2>/dev/null)
+	
 	[ "${XINPUT}" ] && XCFG_OPTS+=("${XINPUT}")
 
-	# XXX eval "/usr/sbin/fll_xorgconfig ${XCFG_OPTS[@]}"
-	eval "./bin/fll_xorgconfig --output /tmp/xorg.conf --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ ${XCFG_OPTS[@]}"
+	
+	# write the configuration to file
+	eval "/usr/sbin/fll_xorgconfig ${XCFG_OPTS[@]}"
 }
 
 case "${1}" in
