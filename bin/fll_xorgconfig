@@ -155,7 +155,7 @@ sub gtf_modelines {
 			chomp;
 			next unless /^\s+(#|Modeline)/;
 			s/^\s+/\t/;
-			s/Modeline "(\d+x\d+)_[\d\.]+"/Modeline "$1"/;
+			s/Modeline "(\d+x\d+)_[\d\.]+"/Modeline "$1"/ unless $x{'xrandr'};
 			push @ml, "$_";
 		}
 		close($fh);

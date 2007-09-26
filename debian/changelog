@@ -5,8 +5,9 @@ fll-live-initscripts (1.99.02) UNRELEASED; urgency=low
 
   [ Kel Modderman ]
   * Make modeline regexp slightly more readable.
+  * Only drop hz marker from Modelines in legacy type configs.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 27 Sep 2007 07:54:04 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 27 Sep 2007 07:58:00 +1000
 
 fll-live-initscripts (1.99.01) unstable; urgency=low
 
