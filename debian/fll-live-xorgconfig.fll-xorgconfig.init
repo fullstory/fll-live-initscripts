@@ -199,6 +199,8 @@ do_start() {
 		#     XID XRES XHFREQ XVFREQ XDISPTYPE
 		eval $(x_res_probe ${XMODULE})
 
+		# XXX: set default horizsync/vertfrefresh based on XDISPTYPE
+
 		# probed
 		[ "${XID}" ]		&& XCFG_OPTS+=("--modelname '${XID}'")
 		
