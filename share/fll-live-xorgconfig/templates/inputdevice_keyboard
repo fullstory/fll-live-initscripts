@@ -1,5 +1,5 @@
 Section "InputDevice"
-	Identifier	"Keyboard"
+	Identifier	"Keyboard0"
 	Driver		"kbd"
 	Option		"CoreKeyboard"
 	Option		"XkbRules"		"xorg"
