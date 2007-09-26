@@ -1,3 +1,9 @@
+fll-live-initscripts (1.99.02) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 26 Sep 2007 21:16:03 +0200
+
 fll-live-initscripts (1.99.01) unstable; urgency=low
 
   * drop Hz marker from gtf lines.
