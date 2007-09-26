@@ -371,15 +371,22 @@ dbg \@inputdevices;
 if ($x{'xrandr'}) {
 	# http://bgoglin.livejournal.com/10423.html
 	# force mode/resolution for self modesetting driver
-	if ($x{'mode'} and $x{'rate'}) {
-		my ($x_axis, $y_axis) = split 'x', $x{'mode'};
-		my @prefmode = gtf_modelines $x_axis, $y_axis, $x{'rate'};
-		for (@prefmode) {
-			if (m/^\s+Modeline\s+"(.+)"/) {
-				push @prefmode, "\tOption\t\"PreferredMode\"\t\"$1\"";
-				last;
+	if ($x{'mode'}) {
+		my @prefmode;
+		if ($x{'rate'}) {
+			my ($x_axis, $y_axis) = split 'x', $x{'mode'};
+			@prefmode = gtf_modelines $x_axis, $y_axis, $x{'rate'};
+			for (@prefmode) {
+				if (m/^\s+Modeline\s+"(.+)"/) {
+					push @prefmode, "\tOption\t\"PreferredMode\"\t\"$1\"";
+					last;
+				}
 			}
 		}
+		else {
+			push @prefmode, "\tOption\t\"PreferredMode\"\t\"" . $x{'mode'} . "\"";
+		}
+			
 		dbg \@prefmode;
 		splice @monitor, -1, 0, @prefmode;
 	}
