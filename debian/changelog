@@ -1,4 +1,4 @@
-fll-live-initscripts (1.99.00) UNRELEASED; urgency=low
+fll-live-initscripts (1.99.00) unstable; urgency=low
 
   * Add fll-live-xorgconfig stuff
     - bin/fll_mkxorgconfig - make /etc/X11/xorg.conf
