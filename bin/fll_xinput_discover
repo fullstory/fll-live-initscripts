@@ -13,7 +13,6 @@ if (-f '/proc/bus/input/devices') {
 	open(INPUT, '<', '/proc/bus/input/devices')
 		or die "Unable to read '/proc/bus/input/devices': $!\n";
 	PI: while (<INPUT>) {
-		print;
 		chomp;
 		
 		unless (/^./) {
@@ -80,7 +79,6 @@ if (not keys %input and -x '/usr/sbin/hwinfo') {
 	open(HWINFO, '-|', '/usr/sbin/hwinfo --mouse --short')
 		or die("Unable to execute hwinfo --mouse: $!\n");
 	HW: while (<HWINFO>) {
-		print;
 		chomp;
 		($name, $device, $phys) = ();
 		if (m|^\s*(/dev/[^\s]+)\s+(.+)$|) {
