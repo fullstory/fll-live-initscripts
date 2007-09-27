@@ -1,4 +1,4 @@
-fll-live-initscripts (1.99.03) UNRELEASED; urgency=low
+fll-live-initscripts (1.99.03) unstable; urgency=low
 
   * Add noxrandr cheatcode
   * Handle xmodule= cheatcode slightly different, still do x_res_probe with
