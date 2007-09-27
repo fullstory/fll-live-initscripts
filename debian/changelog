@@ -1,8 +1,8 @@
-fll-live-initscripts (1.99.07) UNRELEASED; urgency=low
+fll-live-initscripts (1.99.07) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * add workaround to detect serial mice.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 18:20:38 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 21:57:33 +0200
 
 fll-live-initscripts (1.99.06) unstable; urgency=low
 
