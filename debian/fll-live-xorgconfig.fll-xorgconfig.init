@@ -163,6 +163,9 @@ x_res_probe() {
 }
 
 do_start() {
+	log_daemon_msg "${B}${NAME}${N}"
+	log_action_begin_msg " ${G}detcting ${Y}video${G} hardware${N}"
+	
 	# fll_xorgconfig option array
 	local XCFG_OPTS
 
@@ -171,37 +174,77 @@ do_start() {
 		XCFG_OPTS+=("--xkblayout '${XKBLAYOUT}'")
 		case "${XKBLAYOUT}" in
 		 	de)
-				XCFG_OPTS+=("--xkbvariant nodeadkeys")
+				[ "${XKBVARIANT}" ] || XCFG_OPTS+=("--xkbvariant nodeadkeys")
 				;;
 		esac
 	fi
 
-	[ "${XKBMODEL}" ]	&& XCFG_OPTS+=("--xkbmodel '${XKBMODEL}'")
-	[ "${XKBVARIANT}" ]	&& XCFG_OPTS+=("--xkbvariant '${XKBVARIANT}'")
+	if [ "${XKBMODEL}" ]; then
+		XCFG_OPTS+=("--xkbmodel '${XKBMODEL}'")
+	fi
 
-	[ "${XDEPTH}" ]		&& XCFG_OPTS+=("--colordepth '${XDEPTH}'")
+	if [ "${XKBVARIANT}" ]; then
+		XCFG_OPTS+=("--xkbvariant '${XKBVARIANT}'")
+	fi
 
 	# detect video hardware via fll_xserver_discover
 	#     XMODULE XVENDORNAME XBOARDNAME XBUSID
 	eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
 
+	log_end_msg 0
+	
+	log_daemon_msg "${B}${NAME}${N}"
+
 	if [ "${XNEWMODULE}" ]; then
+		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
 		# user override
 		XCFG_OPTS+=("--driver '${XNEWMODULE}'")
-	else
-		[ "${XMODULE}" ] && XCFG_OPTS+=("--driver '${XMODULE}'")
+	elif [ "${XMODULE}" ]; then
+		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
+		XCFG_OPTS+=("--driver '${XMODULE}'")
 	fi
 	
-	[ "${XVENDORNAME}" ]	&& XCFG_OPTS+=("--vendorname '${XVENDORNAME}'")
-	[ "${XBOARDNAME}" ]	&& XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
-	[ "${XBUSID}" ]		&& XCFG_OPTS+=("--busid '${XBUSID}'")
+	if [ "${XVENDORNAME}" ]; then
+		# log_progress_msg "${G}vendor: ${Y}${XVENDORNAME}${N}"
+		XCFG_OPTS+=("--vendorname '${XVENDORNAME}'")
+	fi
+	
+	if [ "${XBOARDNAME}" ]; then
+		log_progress_msg "${G}device: ${Y}${XBOARDNAME}${N}"
+		XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
+	fi
+	
+	if [ "${XBUSID}" ]; then
+		log_progress_msg "${G}busid: ${Y}${XBUSID}${N}"
+		XCFG_OPTS+=("--busid '${XBUSID}'")
+	fi
+
+	log_end_msg 0
+	
+	log_daemon_msg "${B}${NAME}${N}"
+	log_action_begin_msg " ${G}detcting ${Y}monitor${G} settings${N}"
+	log_end_msg 0
+
+	log_daemon_msg "${B}${NAME}${N}"
 
 	if xserver_has_xrandr "${XMODULE}"; then
+		log_progress_msg "${G}driver has ${Y}RandR 1.2${N} support${N}"
 		# xrandr aware, we don't have to probe monitor settings :)
 		XCFG_OPTS+=("--xrandr")
-		[ "${XMODES}" ]		&& XCFG_OPTS+=("--mode '${XMODES}'")
-		[ "${XRATE}" ]		&& XCFG_OPTS+=("--rate '${XRATE}'")
+		
+		if [ "${XMODES}" ]; then
+			log_progress_msg "${Y}${XMODES}${N}"
+			XCFG_OPTS+=("--mode '${XMODES}'")
+		fi
+
+		if [ "${XRATE}" ]; then
+			log_progress_msg "${G}@ ${Y}${XRATE}${N}"
+			XCFG_OPTS+=("--rate '${XRATE}'")
+		fi
+
+		log_end_msg 0
 	else
+		log_progress_msg "${Y}xresprobe ${XMODULE}${N}"
 		# legacy style config, we need to probe for optimal X settings
 		#     XID XRES XHFREQ XVFREQ XDISPTYPE
 		eval $(x_res_probe ${XMODULE})
@@ -209,34 +252,48 @@ do_start() {
 		# XXX: set default horizsync/vertfrefresh based on XDISPTYPE
 
 		# probed
-		[ "${XID}" ]		&& XCFG_OPTS+=("--modelname '${XID}'")
+		if [ "${XID}" ]; then
+			# too long: log_progress_msg "${G}id: ${Y}${XID}${N}"
+			XCFG_OPTS+=("--modelname '${XID}'")
+		fi
 		
 		if [ "${XMODES}" ]; then
 			# cheatcode
 			XCFG_OPTS+=("--modes '${XMODES}'")
-		else
+		elif [ "${XRES}" ]; then
+			log_progress_msg "${G}res: ${Y}${XRES}${N}"
 			# probed
-			[ "${XRES}" ]	&& XCFG_OPTS+=("--modes '${XRES}'")
+			XCFG_OPTS+=("--modes '${XRES}'")
 		fi
 		
 		if [ "${XHORIZSYNC}" ]; then
 			# cheatcode
 			XCFG_OPTS+=("--horizsync '${XHORIZSYNC}'")
-		else
+		elif [ "${XHFREQ}" ]; then
+			log_progress_msg "${G}hfreq: ${Y}${XHFREQ}${N}"
 			# probed
-			[ "${XHFREQ}" ]	&& XCFG_OPTS+=("--horizsync '${XHFREQ}'")
+			XCFG_OPTS+=("--horizsync '${XHFREQ}'")
 		fi
 		
 		if [ "${XVERTREFRESH}" ]; then
 			# cheatcode
 			XCFG_OPTS+=("--vertrefresh '${XVERTREFRESH}'")
-		else
+		elif [ "${XVFREQ}" ]; then
+			log_progress_msg "${G}vfreq: ${Y}${XVFREQ}${N}"
 			# probed
-			[ "${XVFREQ}" ]	&& XCFG_OPTS+=("--vertrefresh '${XVFREQ}'")
+			XCFG_OPTS+=("--vertrefresh '${XVFREQ}'")
 		fi
 
 		# cheatcode
-		[ "${XNOMODELINES}" ]	&& XCFG_OPTS+=("--no-modelines")
+		if [ "${XNOMODELINES}" ]; then
+			XCFG_OPTS+=("--no-modelines")
+		fi
+
+		log_end_msg 0
+	fi
+
+	if [ "${XDEPTH}" ]; then
+		XCFG_OPTS+=("--colordepth '${XDEPTH}'")
 	fi
 
 	# detect input devices, return string of args to fll_xorgconfig
@@ -244,7 +301,6 @@ do_start() {
 	
 	[ "${XINPUT}" ] && XCFG_OPTS+=("${XINPUT}")
 
-	
 	# write the configuration to file
 	eval "/usr/sbin/fll_xorgconfig ${XCFG_OPTS[@]}"
 }
