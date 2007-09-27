@@ -1,4 +1,4 @@
-fll-live-initscripts (1.99.06~test3) unstable; urgency=low
+fll-live-initscripts (1.99.06) unstable; urgency=low
 
   * fix hsync/ vsync overrides.
   * enhance override verbosity.
