@@ -296,24 +296,23 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 	
 	given ($type) {
 		when 'synaptics' {
-			#splice @module, -1, 0, "\tLoad\t\t\"synaptics\"";
-			$core_type = 'SendCoreEvents';
+			#$core_type = 'SendCoreEvents';
 			$protocol = "auto-dev";
 		}
 		when 'alps' {
-			$core_type = 'SendCoreEvents';
+			#$core_type = 'SendCoreEvents';
 			$protocol = "auto-dev";
 		}
 		when 'usb' {
-			$core_type = 'CorePointer';
+			#$core_type = 'CorePointer';
 			$protocol = 'IMPS/2';
 		}
 		when 'ps2' {
-			$core_type = 'CorePointer';
+			#$core_type = 'CorePointer';
 			$protocol = $x{'nowheel'} ? 'PS/2' : 'IMPS/2';
 		}
 		when 'serial' {
-			$core_type = 'CorePointer';
+			#$core_type = 'CorePointer';
 			$protocol = 'Microsoft';
 		}
 		default {

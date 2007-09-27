@@ -9,82 +9,108 @@ my %input;
 my @input_devices;
 my ($name, $device, $phys, $mouse);
 
-open(INPUT, '<', '/proc/bus/input/devices')
-	or die "Unable to read '/proc/bus/input/devices': $!\n";
-while (<INPUT>) {
-	chomp;
-	
-	unless (/^./) {
-		($name, $device, $phys, $mouse) = ();
-		next;
-	}
-	
-	my ($key, $val) = split '=';
-	($key and $val) or next;
-
-	$key =~ s/^\w:\s+//;
-
-	given (lc($key)) { 
-		when 'name' {
-			$name = $val;
+if (-f '/proc/bus/input/devices') {
+	open(INPUT, '<', '/proc/bus/input/devices')
+		or die "Unable to read '/proc/bus/input/devices': $!\n";
+	PI: while (<INPUT>) {
+		print;
+		chomp;
+		
+		unless (/^./) {
+			($name, $device, $phys, $mouse) = ();
+			next;
 		}
-		when 'handlers' {
-			$val =~ /mouse(\d+)/ and $mouse = $1;
-		}
-		when 'phys' {
-			$phys = $val;
-		}
-	}
+		
+		my ($key, $val) = split '=';
+		($key and $val) or next;
 
-	next unless (defined $mouse and $name and $phys);
+		$key =~ s/^\w:\s+//;
 
-	$device = '/dev/input/mice';
-
-	given ($phys) {
-		when m/^isa/ {
-			given ($name) {
-				when m/SynPS\/2/ {
-					$phys = 'synaptics';
-					$device = '/dev/psaux';
-				}
-				when m/AlpsPS\/2/ {
-					$phys = 'alps';
-					$device = '/dev/psaux';
-				}
-				default {
-					$phys = 'ps2';
-				}
+		given (lc($key)) { 
+			when 'name' {
+				$name = $val;
+			}
+			when 'handlers' {
+				$val =~ /mouse(\d+)/ and $mouse = $1;
+			}
+			when 'phys' {
+				$phys = $val;
 			}
 		}
-		when m/^usb/ { 
-			$phys = 'usb';
+
+		next unless (defined $mouse and $name and $phys);
+
+		$device = '/dev/input/mice';
+
+		given ($phys) {
+			when m/^isa/ {
+				given ($name) {
+					when m/SynPS\/2/ {
+						$phys = 'synaptics';
+						$device = '/dev/psaux';
+					}
+					when m/AlpsPS\/2/ {
+						$phys = 'alps';
+						$device = '/dev/psaux';
+					}
+					default {
+						#$phys = 'ps2';
+						next PI;
+					}
+				}
+			}
+			when m/^usb/ { 
+				#$phys = 'usb';
+				next PI;
+			}
 		}
+		
+		$input{$mouse} = {
+			'name' => $name,
+			'type' => $phys,
+			'device' => $device
+		};
+
+		($name, $phys, $mouse) = ();
 	}
-	
-	$input{$mouse} = {
-		'name' => $name,
-		'type' => $phys,
-		'device' => $device
-	};
-
-	($name, $phys, $mouse) = ();
+	close(INPUT);
 }
-close(INPUT);
 
-if (not $input_devices[1] and -x '/usr/sbin/hwinfo') {
+if (not keys %input and -x '/usr/sbin/hwinfo') {
 	open(HWINFO, '-|', '/usr/sbin/hwinfo --mouse --short')
 		or die("Unable to execute hwinfo --mouse: $!\n");
-	while (<HWINFO>) {
+	HW: while (<HWINFO>) {
+		print;
 		chomp;
-		($name, $device) = ();
-		if (m|^\s*(/dev/tty.+)\s+(.+)$|) {
-			$device = $1 if -c $1;
-			$name = $2;
+		($name, $device, $phys) = ();
+		if (m|^\s*(/dev/[^\s]+)\s+(.+)$|) {
+			$device = $1;
+			$name = "\"$2\"";
 			if ($name and $device) {
+				if ($device =~ m|/dev/tty.+\d$|) {
+					$phys = 'serial';
+				}
+				else {
+					given ($name) {
+						when m/SynPS\/2/ {
+							$phys = 'synaptics';
+							$device = '/dev/psaux';
+						}
+						when m/AlpsPS\/2/ {
+							$phys = 'alps';
+							$device = '/dev/psaux';
+						}
+						default {
+							next HW;
+						}
+					}
+				}
+
 				$mouse++;
+
 				$input{$mouse} = {
 					'name' => $name,
-					'type' => 'serial',
+					'type' => $phys,
 					'device' => $device
 				};
 			}
