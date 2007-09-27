@@ -1,3 +1,9 @@
+fll-live-initscripts (1.99.07) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 18:20:38 +0200
+
 fll-live-initscripts (1.99.06) unstable; urgency=low
 
   * fix hsync/ vsync overrides.
