@@ -1,3 +1,9 @@
+fll-live-initscripts (1.99.05) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 14:22:26 +0200
+
 fll-live-initscripts (1.99.04) unstable; urgency=low
 
   * fll-xorgconfig: use the lsb init functions, make alot of output.
