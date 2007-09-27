@@ -1,7 +1,6 @@
 Section "InputDevice"
 	Identifier	"@@NAME@@"
 	Driver		"synaptics"
-	Option		"SendCoreEvents"
 	Option		"Device"		"@@DEVICE@@"
 	Option		"Protocol"		"@@PROTOCOL@@"
 	Option		"LeftEdge"		"1700"
