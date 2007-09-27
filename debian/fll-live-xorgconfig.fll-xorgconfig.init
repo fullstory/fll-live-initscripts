@@ -164,7 +164,7 @@ x_res_probe() {
 
 do_start() {
 	log_daemon_msg "${B}${NAME}${N}"
-	log_action_begin_msg " ${G}detcting ${Y}video${G} hardware${N}"
+	log_action_begin_msg " ${G}detecting ${Y}video${G} hardware${N}"
 	
 	# fll_xorgconfig option array
 	local XCFG_OPTS

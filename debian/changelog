@@ -1,8 +1,9 @@
 fll-live-initscripts (1.99.05) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * fix typo.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 14:22:26 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 14:56:45 +0200
 
 fll-live-initscripts (1.99.04) unstable; urgency=low
 
