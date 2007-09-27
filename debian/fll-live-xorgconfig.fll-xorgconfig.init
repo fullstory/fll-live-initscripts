@@ -68,6 +68,9 @@ if [ -f /proc/cmdline ]; then
 			noxorgconfig|xorgconfig=no)
 				exit 0
 				;;
+			noxrandr)
+				XNOXRANDR="1"
+				;;
 			nomodelines|noml)
 				XNOMODELINES="1"
 				;;
@@ -106,7 +109,7 @@ fi
 # functions...
 ###
 xserver_has_xrandr() {
-	[ "${1}" ] || return 1
+	[ "${1}" ] && [ -z "${XNOXRANDR}" ] || return 1
 
 	# xserver driver
 	local DRIVER="${1}"
