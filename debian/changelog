@@ -1,3 +1,9 @@
+fll-live-initscripts (1.99.04) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 11:58:51 +0200
+
 fll-live-initscripts (1.99.03) unstable; urgency=low
 
   * Add noxrandr cheatcode
