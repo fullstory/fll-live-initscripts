@@ -90,7 +90,7 @@ if [ -f /proc/cmdline ]; then
 				XKBVARIANT="${param#xkbvariant=}"
 				;;
 			xmodule=*)
-				XMODULE="${param#xmodule=}"
+				XNEWMODULE="${param#xmodule=}"
 				;;
 			xrate=*|rate=*)
 				XRATE="${param#*rate=}"
@@ -183,13 +183,15 @@ do_start() {
 
 	# detect video hardware via fll_xserver_discover
 	#     XMODULE XVENDORNAME XBOARDNAME XBUSID
-	if [ "${XMODULE}" ]; then
-		eval $(/usr/sbin/fll_xserver_discover 2>/dev/null | grep -v '^XMODULE=')
-	else
-		eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
-	fi
+	eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
 
-	[ "${XMODULE}" ]	&& XCFG_OPTS+=("--driver '${XMODULE}'")
+	if [ "${XNEWMODULE}" ]; then
+		# user override
+		XCFG_OPTS+=("--driver '${XNEWMODULE}'")
+	else
+		[ "${XMODULE}" ] && XCFG_OPTS+=("--driver '${XMODULE}'")
+	fi
+	
 	[ "${XVENDORNAME}" ]	&& XCFG_OPTS+=("--vendorname '${XVENDORNAME}'")
 	[ "${XBOARDNAME}" ]	&& XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
 	[ "${XBUSID}" ]		&& XCFG_OPTS+=("--busid '${XBUSID}'")

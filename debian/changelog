@@ -1,8 +1,10 @@
 fll-live-initscripts (1.99.03) UNRELEASED; urgency=low
 
   * Add noxrandr cheatcode
+  * Handle xmodule= cheatcode slightly different, still do x_res_probe with
+    detected module as argument.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 27 Sep 2007 12:45:52 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 27 Sep 2007 17:19:35 +1000
 
 fll-live-initscripts (1.99.02) unstable; urgency=low
 
