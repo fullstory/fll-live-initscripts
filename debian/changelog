@@ -1,8 +1,9 @@
-fll-live-initscripts (1.99.06) UNRELEASED; urgency=low
+fll-live-initscripts (1.99.06~test3) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fix hsync/ vsync overrides.
+  * enhance override verbosity.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 15:03:59 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 18:05:25 +0200
 
 fll-live-initscripts (1.99.05) unstable; urgency=low
 

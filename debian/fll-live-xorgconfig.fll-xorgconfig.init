@@ -196,8 +196,8 @@ do_start() {
 	log_daemon_msg "${B}${NAME}${N}"
 
 	if [ "${XNEWMODULE}" ]; then
-		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
 		# user override
+		log_progress_msg "${G}driver(*): ${Y}${XMODULE}${N}"
 		XCFG_OPTS+=("--driver '${XNEWMODULE}'")
 	elif [ "${XMODULE}" ]; then
 		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
@@ -259,6 +259,7 @@ do_start() {
 		
 		if [ "${XMODES}" ]; then
 			# cheatcode
+			log_progress_msg "${G}res(*): ${Y}${XMODES}${N}"
 			XCFG_OPTS+=("--modes '${XMODES}'")
 		elif [ "${XRES}" ]; then
 			log_progress_msg "${G}res: ${Y}${XRES}${N}"
@@ -268,7 +269,15 @@ do_start() {
 		
 		if [ "${XHORIZSYNC}" ]; then
 			# cheatcode
-			XCFG_OPTS+=("--horizsync '${XHORIZSYNC}'")
+			XHORIZSYNC_MIN="${XHORIZSYNC%%-*}"
+			XHORIZSYNC_MAX="${XHORIZSYNC##*-}"
+
+			if [ "${XHORIZSYNC_MIN}" = "${XHORIZSYNC}" ]; then
+				XHORIZSYNC_MIN="28"
+			fi
+
+			log_progress_msg "${G}hfreq(*): ${Y}${XHORIZSYNC_MIN}kHz - ${XHORIZSYNC_MAX}kHz${N}"
+			XCFG_OPTS+=("--horizsync '${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX}'")
 		elif [ "${XHFREQ}" ]; then
 			log_progress_msg "${G}hfreq: ${Y}${XHFREQ}${N}"
 			# probed
@@ -277,7 +286,15 @@ do_start() {
 		
 		if [ "${XVERTREFRESH}" ]; then
 			# cheatcode
-			XCFG_OPTS+=("--vertrefresh '${XVERTREFRESH}'")
+			XVERTREFRESH_MIN="${XVERTREFRESH%%-*}"
+			XVERTREFRESH_MAX="${XVERTREFRESH##*-}"
+
+			if [ "${XVERTREFRESH_MIN}" = "${XVERTREFRESH}" ]; then
+				XVERTREFRESH_MIN="50"
+			fi
+
+			log_progress_msg "${G}vfreq(*): ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz${N}"
+			XCFG_OPTS+=("--vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'")
 		elif [ "${XVFREQ}" ]; then
 			log_progress_msg "${G}vfreq: ${Y}${XVFREQ}${N}"
 			# probed
