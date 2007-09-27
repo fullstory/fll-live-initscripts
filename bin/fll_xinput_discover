@@ -7,7 +7,7 @@ use Switch 'Perl6';
 
 my %input;
 my @input_devices;
-my ($name, $phys, $mouse);
+my ($name, $device, $phys, $mouse);
 
 open(INPUT, '<', '/proc/bus/input/devices')
 	or die "Unable to read '/proc/bus/input/devices': $!\n";
@@ -15,7 +15,7 @@ while (<INPUT>) {
 	chomp;
 	
 	unless (/^./) {
-		($name, $phys, $mouse) = ();
+		($name, $device, $phys, $mouse) = ();
 		next;
 	}
 	
@@ -38,7 +38,7 @@ while (<INPUT>) {
 
 	next unless (defined $mouse and $name and $phys);
 
-	my $device = '/dev/input/mice';
+	$device = '/dev/input/mice';
 
 	given ($phys) {
 		when m/^isa/ {
@@ -70,6 +70,28 @@ while (<INPUT>) {
 	($name, $phys, $mouse) = ();
 }
 close(INPUT);
+
+if (not $input_devices[1] and -x '/usr/sbin/hwinfo') {
+	open(HWINFO, '-|', '/usr/sbin/hwinfo --mouse --short')
+		or die("Unable to execute hwinfo --mouse: $!\n");
+	while (<HWINFO>) {
+		chomp;
+		($name, $device) = ();
+		if (m|^\s*(/dev/tty.+)\s+(.+)$|) {
+			$device = $1 if -c $1;
+			$name = $2;
+			if ($name and $device) {
+				$mouse++;
+				$input{$mouse} = {
+					'name' => $name,
+					'type' => 'serial',
+					'device' => $device
+				};
+			}
+		}
+	}
+	close(HWINFO);
+}			
 
 for my $key (sort keys %input) {
 	push @input_devices, '--input';

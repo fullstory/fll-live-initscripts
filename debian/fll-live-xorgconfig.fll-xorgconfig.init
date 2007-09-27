@@ -200,7 +200,7 @@ do_start() {
 
 	if [ "${XNEWMODULE}" ]; then
 		# user override
-		log_progress_msg "${G}driver(*): ${Y}${XMODULE}${N}"
+		log_progress_msg "${G}driver(*): ${Y}${XNEWMODULE}${N}"
 		XCFG_OPTS+=("--driver '${XNEWMODULE}'")
 	elif [ "${XMODULE}" ]; then
 		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
@@ -320,12 +320,6 @@ do_start() {
 	eval $(/usr/sbin/fll_xinput_discover 2>/dev/null)
 	
 	[ "${XINPUT}" ] && XCFG_OPTS+=("${XINPUT}")
-	if [ -z "${XINPUT}" ] || [ -n "${PROBE_SERIAL_MOUSE}" ]; then
-		#FIXME: layering violation, workaround to probe for serial mice if no other pointing device has been detected
-		if [ -x "$(which hwinfo)" ]; then
-			XCFG_OPTS+=($(hwinfo --mouse --short | awk '/\/dev\/ttyS[0-9]*/{print "--input name=\"" $2 "\" type=serial device=" $1}'))
-		fi
-	fi
 
 	# write the configuration to file
 	eval "/usr/sbin/fll_xorgconfig ${XCFG_OPTS[@]}"

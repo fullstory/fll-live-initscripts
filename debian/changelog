@@ -1,8 +1,10 @@
 fll-live-initscripts (1.99.08) UNRELEASED; urgency=low
+  
+  * fll-xorgconfig:
+    - typo in XNEWMODULE cheatcode verbosity
+    - move hwinfo serial mouse detection layer to fll_xinput_discovver
 
-  * NOT RELEASED YET
-
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Sep 2007 22:05:30 +0200
+ -- Kel Modderman <kel@otaku42.de>  Fri, 28 Sep 2007 08:03:57 +1000
 
 fll-live-initscripts (1.99.07) unstable; urgency=low
 
