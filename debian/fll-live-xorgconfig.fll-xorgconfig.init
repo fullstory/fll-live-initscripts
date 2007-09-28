@@ -128,7 +128,7 @@ xserver_has_xrandr() {
 			VERSION_HAS_RANDR="2:2.1.0-1"
 			;;
 		mga)
-			VERSION_HAS_RANDR="1:1.4.7.dfsg.1-3"
+			VERSION_HAS_RANDR="1:1.9.99.dfsg.1-1"
 			;;
 		*)
 			return 1

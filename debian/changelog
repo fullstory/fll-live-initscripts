@@ -3,8 +3,9 @@ fll-live-initscripts (1.99.09) UNRELEASED; urgency=low
   * fll-xorgconfig:
     - fix ansi output when announcing XrandR mode
     - just announce the highest res detected by xresprobe
+    - fix mga xrandr1.2 support package version
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 28 Sep 2007 17:32:00 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 28 Sep 2007 22:25:44 +1000
 
 fll-live-initscripts (1.99.08) unstable; urgency=low
 
