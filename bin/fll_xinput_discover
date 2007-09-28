@@ -141,6 +141,7 @@ if (($serial || not keys %input) and -x '/usr/sbin/hwinfo') {
 						default {
 							# xserver will autoconfigure usb/ps2 mice
 							# we cannot differentiate them here anyway
+							dbg "Ignoring $name";
 							next HW;
 						}
 					}
