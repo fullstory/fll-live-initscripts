@@ -98,9 +98,9 @@ if (-f '/proc/bus/input/devices') {
 		($name, $phys, $mouse) = ();
 	}
 	close(INPUT);
-}
 
-dbg \%input;
+	dbg \%input;
+}
 
 # fallback mouse detection via hwinfo - probe for serial mouse when
 # no other devices detected above via /proc/bus/input/devices
@@ -152,6 +152,8 @@ if (not keys %input and -x '/usr/sbin/hwinfo') {
 		}
 	}
 	close(HWINFO);
+
+	dbg \%input;
 }			
 
 for my $key (sort keys %input) {
