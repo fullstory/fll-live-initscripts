@@ -231,7 +231,7 @@ do_start() {
 	log_daemon_msg "${B}${NAME}${N}"
 
 	if xserver_has_xrandr "${XMODULE}"; then
-		log_progress_msg "${G}driver has ${Y}RandR 1.2${N} support${N}"
+		log_progress_msg "${G}driver has ${Y}RandR 1.2${G} support${N}"
 		# xrandr aware, we don't have to probe monitor settings :)
 		XCFG_OPTS+=("--xrandr")
 		
