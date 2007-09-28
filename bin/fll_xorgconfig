@@ -394,6 +394,10 @@ if ($x{'xrandr'}) {
 	$x{'screen'} = '"Screen0"';
 	delete $x{'horizsync'};
 	delete $x{'vertrefresh'};
+	# Virtual XXX XXX
+	# the Virual option would go in place of the Modes option for xrandr1.2 style
+	# Virtual specifies the dimensions of a large virtual screen in which you may
+	# configure two sub-screens (dual monitor)
 	delete $x{'modes'};
 }
 else {
