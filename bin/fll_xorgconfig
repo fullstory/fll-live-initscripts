@@ -310,6 +310,7 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 			$protocol = $x{'nowheel'} ? 'PS/2' : 'IMPS/2';
 		}
 		when 'serial' {
+			$core_type = 'SendCoreEvents';
 			$protocol = 'Microsoft';
 		}
 		default {

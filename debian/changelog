@@ -11,9 +11,9 @@ fll-live-initscripts (1.99.08) UNRELEASED; urgency=low
     - add handling for 'debug' as first argument
   * fll_xorgconfig:
     - do not push coretype to ServerLayout section for all types but
-    alps/synaptics
+    alps/synaptics touchpads and serial
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 28 Sep 2007 10:25:06 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 28 Sep 2007 11:40:59 +1000
 
 fll-live-initscripts (1.99.07) unstable; urgency=low
 
