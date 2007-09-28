@@ -5,6 +5,7 @@ fll-live-initscripts (1.99.08) UNRELEASED; urgency=low
     - move hwinfo serial mouse detection layer to fll_xinput_discover
     - honor xmouse=serial|smouse cheatcode by passing --serial to
     fll_xinput_discover
+    - reenable extensions section, it is required to turn composite on/off
   * fll_xinput_discover:
     - provide fallback detection method via hwinfo when no input devices
     present in /proc/bus/input/devices
@@ -17,7 +18,7 @@ fll-live-initscripts (1.99.08) UNRELEASED; urgency=low
     - do not push coretype to ServerLayout section for all types but
     alps/synaptics touchpads and serial
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 28 Sep 2007 12:43:12 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 28 Sep 2007 13:42:51 +1000
 
 fll-live-initscripts (1.99.07) unstable; urgency=low
 

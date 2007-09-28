@@ -269,7 +269,7 @@ my @monitor = get_template 'monitor';
 my @device = get_template 'device';
 my @screen = get_template 'screen';
 #my @dri = get_template 'dri';
-#my @extensions = get_template 'extensions';
+my @extensions = get_template 'extensions';
 
 # Note: http://bgoglin.livejournal.com/10214.html
 #
@@ -425,7 +425,7 @@ $x_o->flock;
 	@monitor,
 	@screen,
 	#@dri,
-	#@extensions,
+	@extensions,
 );
 
 ###########################################################
