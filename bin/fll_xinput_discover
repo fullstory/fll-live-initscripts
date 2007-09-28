@@ -4,11 +4,17 @@ use warnings;
 use strict;
 
 use Switch 'Perl6';
+use Getopt::Long;
 
 my $debug;
+my $serial;
 
-if ($ARGV[0] and $ARGV[0] eq 'debug') {
-	$debug++;
+GetOptions(
+	'debug' => \$debug,
+	'serial' => \$serial,
+);
+
+if ($debug) {
 	require Data::Dumper;
 	import Data::Dumper;
 	print "Debugging...\n";
@@ -33,7 +39,7 @@ my %input;
 my @input_devices;
 my ($name, $device, $phys, $mouse);
 
-if (-f '/proc/bus/input/devices') {
+if (-f '/proc/bus/input/devices' and not $serial) {
 	dbg "using primary detection method: /proc/bus/input/devices";
 	open(INPUT, '<', '/proc/bus/input/devices')
 		or die "Unable to read '/proc/bus/input/devices': $!\n";
@@ -105,7 +111,7 @@ if (-f '/proc/bus/input/devices') {
 
 # fallback mouse detection via hwinfo - probe for serial mouse when
 # no other devices detected above via /proc/bus/input/devices
-if (not keys %input and -x '/usr/sbin/hwinfo') {
+if (($serial || not keys %input) and -x '/usr/sbin/hwinfo') {
 	dbg "using fallback detection method: hwinfo --mouse --short";
 	open(HWINFO, '-|', '/usr/sbin/hwinfo --mouse --short')
 		or die("Unable to execute hwinfo --mouse: $!\n");

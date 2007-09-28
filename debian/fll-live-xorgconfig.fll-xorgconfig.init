@@ -74,8 +74,8 @@ if [ -f /proc/cmdline ]; then
 			nomodelines|noml)
 				XNOMODELINES="1"
 				;;
-			smouse)
-				PROBE_SERIAL_MOUSE="1"
+			xmouse=serial|smouse)
+				XPROBE_SERIAL_MOUSE="--serial"
 				;;
 			xdepth=*|depth=*)
 				XDEPTH="${param#*depth=}"
@@ -317,7 +317,7 @@ do_start() {
 	fi
 
 	# detect input devices, return string of args to fll_xorgconfig
-	eval $(/usr/sbin/fll_xinput_discover 2>/dev/null)
+	eval $(/usr/sbin/fll_xinput_discover ${XPROBE_SERIAL_MOUSE} 2>/dev/null)
 	
 	[ "${XINPUT}" ] && XCFG_OPTS+=("${XINPUT}")
 
