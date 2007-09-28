@@ -253,7 +253,7 @@ for my $key (keys %x) {
 			}
 		}
 		when 'rate' {
-			$x{$key} =~ /^\d+(\.\d+)$/ or $invalid = $key;
+			$x{$key} =~ /^\d+(\.\d+)?$/ or $invalid = $key;
 		}
 	}
 
