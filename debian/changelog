@@ -8,11 +8,12 @@ fll-live-initscripts (1.99.08) UNRELEASED; urgency=low
     present in /proc/bus/input/devices
     - filter ps2 and usb mice from XINPUT output, the Xserver will
     autoconfigure them.
+    - add handling for 'debug' as first argument
   * fll_xorgconfig:
     - do not push coretype to ServerLayout section for all types but
     alps/synaptics
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 28 Sep 2007 10:04:20 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 28 Sep 2007 10:25:06 +1000
 
 fll-live-initscripts (1.99.07) unstable; urgency=low
 

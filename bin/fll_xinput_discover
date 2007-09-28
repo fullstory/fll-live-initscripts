@@ -5,6 +5,30 @@ use strict;
 
 use Switch 'Perl6';
 
+my $debug;
+
+if ($ARGV[0] and $ARGV[0] eq 'debug') {
+	$debug++;
+	require Data::Dumper;
+	import Data::Dumper;
+	print "Debugging...\n";
+}
+
+sub dbg {
+	return unless $debug;
+	
+	for my $data (@_) {
+		next unless $data;
+
+		if (ref $data) {
+			print STDERR "DBG: " . Dumper($data);
+		}
+		else {
+			print STDERR "DBG: $data\n";
+		}
+	}
+}
+
 my %input;
 my @input_devices;
 my ($name, $device, $phys, $mouse);
@@ -14,6 +38,7 @@ if (-f '/proc/bus/input/devices') {
 		or die "Unable to read '/proc/bus/input/devices': $!\n";
 	PI: while (<INPUT>) {
 		chomp;
+		dbg $_;
 		
 		unless (/^./) {
 			($name, $device, $phys, $mouse) = ();
@@ -61,6 +86,8 @@ if (-f '/proc/bus/input/devices') {
 				$phys = 'usb';
 			}
 		}
+
+		dbg "'name' => $name, 'type' => $phys, 'device' => $device";
 		
 		$input{$mouse} = {
 			'name' => $name,
@@ -73,14 +100,20 @@ if (-f '/proc/bus/input/devices') {
 	close(INPUT);
 }
 
+dbg \%input;
+
 # fallback mouse detection via hwinfo - probe for serial mouse when
 # no other devices detected above via /proc/bus/input/devices
 if (not keys %input and -x '/usr/sbin/hwinfo') {
+	dbg "using fallback detection: hwinfo";
 	open(HWINFO, '-|', '/usr/sbin/hwinfo --mouse --short')
 		or die("Unable to execute hwinfo --mouse: $!\n");
 	HW: while (<HWINFO>) {
 		chomp;
+		dbg $_;
+
 		($name, $device, $phys) = ();
+		
 		if (m|^\s*(/dev/[^\s]+)\s+(.+)$|) {
 			$device = $1;
 			$name = "\"$2\"";
@@ -106,6 +139,8 @@ if (not keys %input and -x '/usr/sbin/hwinfo') {
 					}
 				}
 
+				dbg "'name' => $name, 'type' => $phys, 'device' => $device";
+
 				$mouse++;
 
 				$input{$mouse} = {
@@ -122,6 +157,7 @@ if (not keys %input and -x '/usr/sbin/hwinfo') {
 for my $key (sort keys %input) {
 	if ($input{$key}->{'type'} =~ /^(ps2|usb)$/) {
 		# xserver will autoconfigure usb/ps2 mice
+		dbg "Ignoring " . $input{$key}->{'type'} . " mouse ($key), xserver will autoconfigure it...";
 		next;
 	}
 	push @input_devices, '--input';
