@@ -20,6 +20,9 @@
 # On Debian GNU/Linux systems, the text of the GPL license can be
 # found in /usr/share/common-licenses/GPL.
 
+# Much information can be taken from:
+# http://wiki.debian.org/XStrikeForce/XSFTODO
+
 # legacy
 #
 # fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --horizsync 30-60 --vertrefresh 50-75 --colordepth 24 --xkbmodel pc105 --modes "1024x768 832x624 800x600 720x400 640x480" --modelname AL512 --output /tmp/xorg.conf
