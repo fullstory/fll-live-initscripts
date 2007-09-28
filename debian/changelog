@@ -1,4 +1,4 @@
-fll-live-initscripts (1.99.08) UNRELEASED; urgency=low
+fll-live-initscripts (1.99.08) unstable; urgency=low
 
   * fll-xorgconfig:
     - typo in XNEWMODULE cheatcode verbosity
