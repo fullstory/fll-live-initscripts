@@ -53,14 +53,12 @@ if (-f '/proc/bus/input/devices') {
 						$device = '/dev/psaux';
 					}
 					default {
-						#$phys = 'ps2';
-						next PI;
+						$phys = 'ps2';
 					}
 				}
 			}
 			when m/^usb/ { 
-				#$phys = 'usb';
-				next PI;
+				$phys = 'usb';
 			}
 		}
 		
@@ -75,6 +73,8 @@ if (-f '/proc/bus/input/devices') {
 	close(INPUT);
 }
 
+# fallback mouse detection via hwinfo - probe for serial mouse when
+# no other devices detected above via /proc/bus/input/devices
 if (not keys %input and -x '/usr/sbin/hwinfo') {
 	open(HWINFO, '-|', '/usr/sbin/hwinfo --mouse --short')
 		or die("Unable to execute hwinfo --mouse: $!\n");
@@ -99,6 +99,8 @@ if (not keys %input and -x '/usr/sbin/hwinfo') {
 							$device = '/dev/psaux';
 						}
 						default {
+							# xserver will autoconfigure usb/ps2 mice
+							# we cannot differentiate them here anyway
 							next HW;
 						}
 					}
@@ -118,6 +120,10 @@ if (not keys %input and -x '/usr/sbin/hwinfo') {
 }			
 
 for my $key (sort keys %input) {
+	if ($input{$key}->{'type'} =~ /^(ps2|usb)$/) {
+		# xserver will autoconfigure usb/ps2 mice
+		next;
+	}
 	push @input_devices, '--input';
 	for ('name', 'type', 'device') {
 		push @input_devices, $_ . '=' . $input{$key}->{$_},
