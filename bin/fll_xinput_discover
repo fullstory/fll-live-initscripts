@@ -11,7 +11,7 @@ my $hwinfo;
 
 GetOptions(
 	'debug' => \$debug,
-	'serial' => \$hwinfo,
+	'hwinfo' => \$hwinfo,
 );
 
 if ($debug) {
