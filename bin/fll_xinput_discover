@@ -112,7 +112,7 @@ if (-f '/proc/bus/input/devices' and not $hwinfo) {
 # fallback mouse detection via hwinfo - probe for serial mouse when
 # no other devices detected above via /proc/bus/input/devices
 if (($hwinfo || not keys %input) and -x '/usr/sbin/hwinfo') {
-	dbg "using fallback detection method: hwinfo --mouse --short";
+	dbg "using alternative detection method: hwinfo --mouse --short";
 	open(HWINFO, '-|', '/usr/sbin/hwinfo --mouse --short')
 		or die("Unable to execute hwinfo --mouse: $!\n");
 	HW: while (<HWINFO>) {
