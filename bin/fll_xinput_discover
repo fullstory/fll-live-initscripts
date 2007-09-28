@@ -59,7 +59,7 @@ my %input;
 my @input_devices;
 my ($name, $device, $phys, $mouse);
 
-if (-f '/proc/bus/input/devices' and not $hwinfo) {
+if (-f '/proc/bus/input/devices') {
 	dbg "using primary detection method: /proc/bus/input/devices";
 	open(INPUT, '<', '/proc/bus/input/devices')
 		or die "Unable to read '/proc/bus/input/devices': $!\n";
@@ -129,6 +129,11 @@ if (-f '/proc/bus/input/devices' and not $hwinfo) {
 	dbg \%input;
 }
 
+# set $mouse to current input device count
+if (keys %input) {
+	$mouse = keys %input;
+}
+
 # fallback mouse detection via hwinfo - probe for serial mouse when
 # no other devices detected above via /proc/bus/input/devices
 if (($hwinfo || not keys %input) and -x '/usr/sbin/hwinfo') {
@@ -185,11 +190,6 @@ if (($hwinfo || not keys %input) and -x '/usr/sbin/hwinfo') {
 }			
 
 for my $key (sort keys %input) {
-	if ($input{$key}->{'type'} =~ /^(ps2|usb)$/) {
-		# xserver will autoconfigure usb/ps2 mice
-		dbg "Ignoring " . $input{$key}->{'type'} . " mouse ($key), xserver will autoconfigure it...";
-		next;
-	}
 	push @input_devices, '--input';
 	for ('name', 'type', 'device') {
 		push @input_devices, $_ . '=' . $input{$key}->{$_},
