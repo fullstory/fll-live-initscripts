@@ -34,6 +34,7 @@ my @input_devices;
 my ($name, $device, $phys, $mouse);
 
 if (-f '/proc/bus/input/devices') {
+	dbg "using primary detection method: /proc/bus/input/devices";
 	open(INPUT, '<', '/proc/bus/input/devices')
 		or die "Unable to read '/proc/bus/input/devices': $!\n";
 	PI: while (<INPUT>) {
@@ -105,7 +106,7 @@ if (-f '/proc/bus/input/devices') {
 # fallback mouse detection via hwinfo - probe for serial mouse when
 # no other devices detected above via /proc/bus/input/devices
 if (not keys %input and -x '/usr/sbin/hwinfo') {
-	dbg "using fallback detection: hwinfo";
+	dbg "using fallback detection method: hwinfo --mouse --short";
 	open(HWINFO, '-|', '/usr/sbin/hwinfo --mouse --short')
 		or die("Unable to execute hwinfo --mouse: $!\n");
 	HW: while (<HWINFO>) {
