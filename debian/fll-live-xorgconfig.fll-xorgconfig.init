@@ -74,7 +74,7 @@ if [ -f /proc/cmdline ]; then
 			nomodelines|noml)
 				XNOMODELINES="1"
 				;;
-			xmouse=serial|smouse)
+			xmouse=hwinfo|xmouse=serial|smouse)
 				XPROBE_SERIAL_MOUSE="--serial"
 				;;
 			xdepth=*|depth=*)
