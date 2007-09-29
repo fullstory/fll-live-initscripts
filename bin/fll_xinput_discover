@@ -130,9 +130,8 @@ if (-f '/proc/bus/input/devices') {
 }
 
 # set $mouse to current input device count
-if (keys %input) {
-	$mouse = keys %input;
-}
+$mouse = keys %input ? keys %input : 0;
+dbg "mouse count: $mouse";
 
 # fallback mouse detection via hwinfo - probe for serial mouse when
 # no other devices detected above via /proc/bus/input/devices
@@ -174,13 +173,13 @@ if (($hwinfo || not keys %input) and -x '/usr/sbin/hwinfo') {
 
 				dbg "'name' => $name, 'type' => $phys, 'device' => $device";
 
-				$mouse++;
-
 				$input{$mouse} = {
 					'name' => $name,
 					'type' => $phys,
 					'device' => $device
 				};
+
+				$mouse++;
 			}
 		}
 	}
