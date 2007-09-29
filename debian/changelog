@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 29 Sep 2007 11:43:02 +0200
+
 fll-live-initscripts (2.0.1) unstable; urgency=low
 
   * fll-xorgconfig: fix typo when announcing detected resolution.
