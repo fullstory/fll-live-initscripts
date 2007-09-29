@@ -126,6 +126,9 @@ sub input {
 
 sub gtf_modelines {
 	my @ml;
+
+	# if no args are given to function, return a Modeline for each
+	# element of our mode/frequency library
 	my @f = $_[0] ? [ @_ ] : (
 		[ 640, 350, 85 ],	[ 640, 400, 85 ], 	[ 640, 480, 60 ],
 		[ 640, 480, 72 ],	[ 640, 480, 75 ],	[ 640, 480, 85 ],
@@ -158,13 +161,13 @@ sub gtf_modelines {
 			chomp;
 			next unless /^\s+(#|Modeline)/;
 			s/^\s+/\t/;
+			# strip the frequency marker for legacy Modeline entries
+			# keep the marker for PrefferredMode entry (xrandr1.2)
 			s/Modeline "(\d+x\d+)_[\d\.]+"/Modeline "$1"/ unless $x{'xrandr'};
 			push @ml, "$_";
 		}
 		close($fh);
 	}
-
-	#dbg \@ml;
 
 	return @ml;
 }
@@ -218,9 +221,9 @@ GetOptions(
 	'vertrefresh=s',
 
 	# input device
-	# --input type=<synaptics,alps,serial,usb,ps2,serial> dev=<> name=<> corepointer=<>
+	# --input type=<synaptics,alps,serial,usb,ps2,serial> \
+	# 	dev=<> name=<> corepointer=<CorePointer,SendCoreEvents>
 	'input=s%{4}' => \&input,
-	'nowheel',
 
 	# keyboard
 	'xkblayout=s',
@@ -291,7 +294,10 @@ my @inputdevices;
 # this sorts well for up to 9 input devices without using Tie::IxHash
 # or other means of maintaining hash order
 MICE: for my $m (sort keys %{$x{'mouse'}}) {
-	$x{'mouse'}{$m}{'name'} = "$m " . $x{'mouse'}{$m}{'name'};
+	# append current mouse number to name, ensuring it will be unique
+	$x{'mouse'}{$m}{'name'} = $x{'mouse'}{$m}{'name'} . " $m";
+
+	# take a slice of $x{'mouse'}{$m}
 	my ($type, $device, $name) = @{$x{'mouse'}{$m}}{'type', 'device', 'name'};
 	dbg "device=$device type=$type name=$name";
 
@@ -308,7 +314,7 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 			$protocol = 'IMPS/2';
 		}
 		when 'ps2' {
-			$protocol = $x{'nowheel'} ? 'PS/2' : 'IMPS/2';
+			$protocol = 'IMPS/2';
 		}
 		when 'serial' {
 			$protocol = 'Microsoft';
@@ -319,12 +325,12 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 		}
 	}
 
+	# define protocol for mouse
+	$x{'mouse'}{$m}{'protocol'} = $protocol;
+
 	# add inputdevice line to ServerLayout
 	dbg "pushing input_device '$name' to serverlayout section";
 	splice @serverlayout, -1, 0, "\tInputDevice\t\"$name\"";
-
-	# define protocol for mouse
-	$x{'mouse'}{$m}{'protocol'} = $protocol;
 
 	$n = 0;
 	my @section = get_template "inputdevice_$type";
@@ -346,12 +352,6 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 				}
 				next MOUSE;
 			}
-			when m/^\s+Option\s+"(Emulate3.+|ZAxisMapping)".*$/ {
-				if ($x{'nowheel'} and $type eq 'ps2') {
-					dbg "Ignoring line '$n'";
-					next MOUSE;
-				}
-			}
 		}
 
 		push @inputdevices, $line;
@@ -371,8 +371,10 @@ if ($x{'xrandr'}) {
 	if ($x{'mode'}) {
 		my @prefmode;
 		if ($x{'rate'}) {
+			# get Modeline from gtf, compute gtf args
 			my ($x_axis, $y_axis) = split 'x', $x{'mode'};
 			@prefmode = gtf_modelines $x_axis, $y_axis, $x{'rate'};
+			# match Modeline mode_freq marker that gtf outputs
 			for (@prefmode) {
 				if (m/^\s+Modeline\s+"(.+)"/) {
 					push @prefmode, "\tOption\t\"PreferredMode\"\t\"$1\"";
@@ -401,7 +403,9 @@ if ($x{'xrandr'}) {
 	delete $x{'modes'};
 }
 else {
+	# wrap each mode in quotation marks
 	($x{'modes'} = "Modes\t" . $x{'modes'}) =~ s/(\d+x\d+)/"$1"/g;
+	# slice our Modeline library into the monitor section
 	if ($x{'modelines'}) {
 		# add large modeline table for legacy config
 		splice @monitor, -1, 0, gtf_modelines;
@@ -453,7 +457,7 @@ XCONF: while ($x[$n]) {
 				redo XCONF if $x[$n];
 			}
 		}
-		# beautify
+		# beautify, seperate each section with blank line
 		when m/^EndSection$/ {
 			dbg "Adding whitespace";
 			splice @x, ++$n, 0, '';
