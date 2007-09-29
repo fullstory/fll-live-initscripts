@@ -1,8 +1,10 @@
 fll-live-initscripts (2.0.3) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - prune some unused cheatcodes
+    - enhance output when probing with xresprobe
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 29 Sep 2007 12:32:42 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sun, 30 Sep 2007 00:09:39 +1000
 
 fll-live-initscripts (2.0.2) unstable; urgency=low
 

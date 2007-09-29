@@ -74,7 +74,7 @@ if [ -f /proc/cmdline ]; then
 			nomodelines|noml)
 				XNOMODELINES="1"
 				;;
-			xmouse=hwinfo|xmouse=serial|smouse)
+			smouse)
 				XPROBE_SERIAL_MOUSE="--hwinfo"
 				;;
 			xdepth=*|depth=*)
@@ -95,10 +95,10 @@ if [ -f /proc/cmdline ]; then
 			xmodule=*)
 				XNEWMODULE="${param#xmodule=}"
 				;;
-			xrate=*|rate=*)
+			xrate=*)
 				XRATE="${param#*rate=}"
 				;;
-			xscreen=*|screen=*|xmode=*|mode=*)
+			xscreen=*|screen=*|xmode=*)
 				XMODES="${param#*=}"
 				;;
 			xvrefresh=*|vsync=*)
@@ -254,7 +254,7 @@ do_start() {
 
 		log_end_msg 0
 	else
-		log_progress_msg "${Y}xresprobe ${XMODULE}${N}"
+		log_progress_msg "${G}xresprobe ${Y}${XMODULE}${G}:${N}"
 		# legacy style config, we need to probe for optimal X settings
 		#     XID XRES XHFREQ XVFREQ XDISPTYPE
 		eval $(x_res_probe ${XMODULE})
