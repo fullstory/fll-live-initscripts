@@ -1,8 +1,8 @@
-fll-live-initscripts (2.0.2) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.2) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * remove hardcoded CorePointer/ SendCoreEvents references for pointing devices.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 29 Sep 2007 11:43:02 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 29 Sep 2007 12:31:18 +0200
 
 fll-live-initscripts (2.0.1) unstable; urgency=low
 
