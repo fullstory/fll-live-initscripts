@@ -1,16 +1,8 @@
 Section "Screen"
-	Identifier		"Screen0"
-	Device			"Card0"
-	Monitor			"Monitor0"
-	DefaultColorDepth	@@COLORDEPTH@@
-	SubSection "Display"
-		Depth	1
-		@@MODES@@
-	EndSubSection
-	SubSection "Display"
-		Depth	4
-		@@MODES@@
-	EndSubSection
+	Identifier	"Screen0"
+	Device		"Card0"
+	Monitor		"Monitor0"
+	DefaultColorDepth @@COLORDEPTH@@
 	SubSection "Display"
 		Depth	8
 		@@MODES@@

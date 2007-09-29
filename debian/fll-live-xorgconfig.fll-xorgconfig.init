@@ -205,6 +205,13 @@ do_start() {
 	elif [ "${XMODULE}" ]; then
 		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
 		XCFG_OPTS+=("--driver '${XMODULE}'")
+
+		# turn composite on for modules that support it well
+		case "${XMODULE}" in
+			ati|intel)
+				XCFG_OPTS+=("--composite on")
+				;;
+		esac
 	fi
 	
 	if [ "${XVENDORNAME}" ]; then

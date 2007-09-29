@@ -88,6 +88,9 @@ my %x = (
 	'xkblayout'	=> 'us',
 	'xkbmodel'	=> 'pc105',
 	'xkboptions'	=> 'altwin:super_win',
+
+	# extensions
+	'composite'	=> 'off',
 );
 
 ###########################################################
@@ -235,6 +238,9 @@ GetOptions(
 	'xrandr',
 	'mode=s',
 	'rate=s',
+
+	# extensions
+	'composite=s',
 );
 
 dbg \%x;

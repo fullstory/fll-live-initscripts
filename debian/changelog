@@ -5,6 +5,7 @@ fll-live-initscripts (2.0.0) UNRELEASED; urgency=low
     - fix ansi output when announcing XrandR mode
     - just announce the highest res detected by xresprobe
     - fix mga xrandr1.2 support package version
+    - turn composite on for ati and intel drivers
   * fll_xorgconfig:
     - elect serial mouse as "CorePointer" in ServerLayout section
     - don't elect CorePointer or SendCoreEvents in ServerLayout section at
@@ -16,6 +17,10 @@ fll-live-initscripts (2.0.0) UNRELEASED; urgency=low
     - append mouse number to name, not prepend (looks a bit better)
     - remove support for --nowheel, we don't use it
     - add a bunch of code comments
+    - cleanup the screen template, removing rarely used Display sections of
+    depth 1 and 4
+    - fix name of tool in heading template
+    - add --composite option
   * fll_xinput_discover:
     - readjust logic, detect and put all input devices into XINPUT
     - always attempt to probe proc
@@ -27,7 +32,7 @@ fll-live-initscripts (2.0.0) UNRELEASED; urgency=low
     - hwinfo method now only detects serial input device
     - add a bunch of code comments
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 29 Sep 2007 17:17:00 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 29 Sep 2007 17:48:58 +1000
 
 fll-live-initscripts (1.99.08) unstable; urgency=low
 
