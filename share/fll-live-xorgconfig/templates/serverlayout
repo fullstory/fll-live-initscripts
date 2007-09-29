@@ -1,5 +1,5 @@
 Section "ServerLayout"
 	Identifier	"Xorg Configured"
 	Screen		@@SCREEN@@
-	InputDevice     "Keyboard0"      "CoreKeyboard"
+	InputDevice     "Keyboard0"
 EndSection

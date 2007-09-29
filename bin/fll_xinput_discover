@@ -57,7 +57,7 @@ sub dbg {
 
 my %input;
 my @input_devices;
-my ($name, $device, $phys, $mouse);
+my ($name, $device, $phys, $mouse, $corepointer);
 
 if (-f '/proc/bus/input/devices') {
 	dbg "using primary detection method: /proc/bus/input/devices";
@@ -192,6 +192,14 @@ for my $key (sort keys %input) {
 	push @input_devices, '--input';
 	for ('name', 'type', 'device') {
 		push @input_devices, $_ . '=' . $input{$key}->{$_},
+	}
+	# if input device is not removable, and no corepointer has been
+	# assigned yet, do so. Everything else -> SendCoreEvents
+	if ($input{$key}->{'type'} ne 'usb' and not $corepointer) {
+		push @input_devices, 'corepointer=CorePointer' and $corepointer++;
+	}
+	else {
+		push @input_devices, 'corepointer=SendCoreEvents';
 	}
 }
 
