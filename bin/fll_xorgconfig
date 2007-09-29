@@ -295,15 +295,13 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 	my ($type, $device, $name) = @{$x{'mouse'}{$m}}{'type', 'device', 'name'};
 	dbg "device=$device type=$type name=$name";
 
-	my ($core_type, $protocol);
+	my $protocol;
 	
 	given ($type) {
 		when 'synaptics' {
-			$core_type = 'SendCoreEvents';
 			$protocol = "auto-dev";
 		}
 		when 'alps' {
-			$core_type = 'SendCoreEvents';
 			$protocol = "auto-dev";
 		}
 		when 'usb' {
@@ -313,7 +311,6 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 			$protocol = $x{'nowheel'} ? 'PS/2' : 'IMPS/2';
 		}
 		when 'serial' {
-			$core_type = 'CorePointer';
 			$protocol = 'Microsoft';
 		}
 		default {
@@ -322,12 +319,12 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 		}
 	}
 
-	$x{'mouse'}{$m}{'protocol'} = $protocol;
+	# add inputdevice line to ServerLayout
+	dbg "pushing input_device '$name' to serverlayout section";
+	splice @serverlayout, -1, 0, "\tInputDevice\t\"$name\"";
 
-	if ($core_type) {
-		dbg "pushing core type '$core_type' to serverlayout section";
-		splice @serverlayout, -1, 0, "\tInputDevice\t\"$name\"\t\"$core_type\"";
-	}
+	# define protocol for mouse
+	$x{'mouse'}{$m}{'protocol'} = $protocol;
 
 	$n = 0;
 	my @section = get_template "inputdevice_$type";
