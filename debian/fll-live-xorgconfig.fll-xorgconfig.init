@@ -273,7 +273,7 @@ do_start() {
 			XCFG_OPTS+=("--modes '${XMODES}'")
 		elif [ "${XRES}" ]; then
 			# just announce the highest res detected
-			log_progress_msg "${G}res: ${Y}${XRES%%\ *}}${N}"
+			log_progress_msg "${G}res: ${Y}${XRES%%\ *}${N}"
 			# probed
 			XCFG_OPTS+=("--modes '${XRES}'")
 		fi
