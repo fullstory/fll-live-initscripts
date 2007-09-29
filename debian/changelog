@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.0) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.0) unstable; urgency=low
 
   * Bump major version number.
   * fll-xorgconfig:
