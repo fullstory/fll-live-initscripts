@@ -193,7 +193,10 @@ for my $key (sort keys %input) {
 	# assigned yet, do so. Everything else -> SendCoreEvents.
 	# We could do some kind of advanced CorePointer heuristic, but I'm not
 	# convinced that it would really be worth it.
-	if ($input{$key}->{'type'} ne 'usb' and not $corepointer) {
+	if (keys %input == 1) {
+		push @input_devices, 'corepointer=CorePointer' and $corepointer++;
+	}
+	elsif ($input{$key}->{'type'} ne 'usb' and not $corepointer) {
 		push @input_devices, 'corepointer=CorePointer' and $corepointer++;
 	}
 	else {

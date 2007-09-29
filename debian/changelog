@@ -18,10 +18,12 @@ fll-live-initscripts (1.99.09) UNRELEASED; urgency=low
     - count %input keys before probing with hwinfo
     - assign a corepointer, logic is very basic, it will select first
     non-removable input device detected to be corepointer
+    - if only one input device is detected, make it the CorePointer no matter
+    what type it may be
     - hwinfo method now only detects serial input device
     - add a bunch of code comments
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 29 Sep 2007 13:12:49 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 29 Sep 2007 13:33:01 +1000
 
 fll-live-initscripts (1.99.08) unstable; urgency=low
 
