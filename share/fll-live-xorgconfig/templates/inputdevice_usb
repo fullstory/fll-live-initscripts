@@ -6,4 +6,5 @@ Section "InputDevice"
 	Option		"SendCoreEvents"	"true"
 	Option		"ZAxisMapping"		"4 5"
 	Option		"Buttons"		"5"
+	Option		"@@COREPOINTER@@"
 EndSection

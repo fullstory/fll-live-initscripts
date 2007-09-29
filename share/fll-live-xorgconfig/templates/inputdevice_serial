@@ -6,4 +6,5 @@ Section "InputDevice"
 	Option		"Emulate3Buttons"	"true"
 	Option		"Emulate3Timeout"	"70"
 	Option		"SendCoreEvents"	"true"
+	Option		"@@COREPOINTER@@"
 EndSection
