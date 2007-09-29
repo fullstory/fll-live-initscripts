@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.1) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.1) unstable; urgency=low
 
   * fll-xorgconfig: fix typo when announcing detected resolution.
 
