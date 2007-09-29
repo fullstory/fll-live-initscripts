@@ -25,15 +25,15 @@
 
 # legacy
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --horizsync 30-60 --vertrefresh 50-75 --colordepth 24 --xkbmodel pc105 --modes "1024x768 832x624 800x600 720x400 640x480" --modelname AL512 --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" corepointer=CorePointer --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --horizsync 30-60 --vertrefresh 50-75 --colordepth 24 --xkbmodel pc105 --modes "1024x768 832x624 800x600 720x400 640x480" --modelname AL512 --output /tmp/xorg.conf
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=synaptics device=/dev/psaux name="SynPS/2 Synaptics TouchPad" --driver i810 --vendorname "Intel Corporation" --boardname "Intel Corporation 945G Integrated Graphics Controller" --busid "PCI:0:2:0" --horizsync 30-81 --vertrefresh 56-76 --xkbmodel pc104 --xkblayout de --xkbvariant nodeadkeys --modes "1280x1024 1024x768 800x600" --modelname 2405FPW --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=synaptics device=/dev/psaux name="SynPS/2 Synaptics TouchPad" corepointer=CorePointer --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" corepointer=SendCoreEvents --driver i810 --vendorname "Intel Corporation" --boardname "Intel Corporation 945G Integrated Graphics Controller" --busid "PCI:0:2:0" --horizsync 30-81 --vertrefresh 56-76 --xkbmodel pc104 --xkblayout de --xkbvariant nodeadkeys --modes "1280x1024 1024x768 800x600" --modelname 2405FPW --output /tmp/xorg.conf
 
 # xrandr (--mode, --rate to force config options)
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver cirrus --vendorname "Cirrus Logic" --boardname "Cirrus Logics (QEMU)" --busid "PCI:5:0:0" --xkbmodel pc105 --mode 1280x1024 --rate 75 --modelname CM753 --xrandr --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" corepointer=CorePointer --driver cirrus --vendorname "Cirrus Logic" --boardname "Cirrus Logics (QEMU)" --busid "PCI:5:0:0" --xkbmodel pc105 --mode 1280x1024 --rate 75 --modelname CM753 --xrandr --output /tmp/xorg.conf
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --colordepth 16 --xkbmodel pc105 --mode 1024x768 --rate 85 --modelname AL512 --xrandr --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=ps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" corepointer=CorePointer --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --colordepth 16 --xkbmodel pc105 --mode 1024x768 --rate 85 --modelname AL512 --xrandr --output /tmp/xorg.conf
 
 use warnings;
 use strict;
@@ -121,7 +121,7 @@ sub input {
 
 	# call to &mouse, inciment $mice
 	# 3rd call to &mouse and inciment $mouse_index
-	$mouse_index++ if ++$mice % 3 == 0;
+	$mouse_index++ if ++$mice % 4 == 0;
 }
 
 sub gtf_modelines {
@@ -218,8 +218,8 @@ GetOptions(
 	'vertrefresh=s',
 
 	# input device
-	# --input type=<synaptics,alps,serial,usb,ps2,serial> dev=<> name=<>
-	'input=s%{3}' => \&input,
+	# --input type=<synaptics,alps,serial,usb,ps2,serial> dev=<> name=<> corepointer=<>
+	'input=s%{4}' => \&input,
 	'nowheel',
 
 	# keyboard
