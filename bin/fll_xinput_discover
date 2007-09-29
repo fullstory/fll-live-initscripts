@@ -66,8 +66,22 @@ if (-f '/proc/bus/input/devices') {
 	PI: while (<INPUT>) {
 		chomp;
 		dbg $_;
-		
+
+		#		
+		#I: Bus=0011 Vendor=0002 Product=0005 Version=0000
+		#N: Name="ImPS/2 Generic Wheel Mouse"
+		#P: Phys=isa0060/serio1/input0
+		#S: Sysfs=/class/input/input2
+		#U: Uniq=
+		#H: Handlers=mouse0 event2 ts0
+		#B: EV=7
+		#B: KEY=70000 0 0 0 0
+		#B: REL=103
+		#
+
 		unless (/^./) {
+			# each input device block is seperated by a blank line
+			# clear these variables when we reach end of each block
 			($name, $device, $phys, $mouse) = ();
 			next;
 		}
@@ -82,6 +96,7 @@ if (-f '/proc/bus/input/devices') {
 				$name = $val;
 			}
 			when 'handlers' {
+				# the mice have already been counted
 				$val =~ /mouse(\d+)/ and $mouse = $1;
 			}
 			when 'phys' {
@@ -91,8 +106,10 @@ if (-f '/proc/bus/input/devices') {
 
 		next unless (defined $mouse and $name and $phys);
 
+		# default mouse device, we still use /dev/psaux for touchpads
 		$device = '/dev/input/mice';
 
+		# redefine $phys to something fll_xorgconfig can use
 		given ($phys) {
 			when m/^isa/ {
 				given ($name) {
@@ -135,6 +152,7 @@ dbg "mouse count: $mouse";
 
 # fallback mouse detection via hwinfo - probe for serial mouse when
 # no other devices detected above via /proc/bus/input/devices
+# --hwinfo cli argument forces this detection method
 if (($hwinfo || not keys %input) and -x '/usr/sbin/hwinfo') {
 	dbg "using alternative detection method: hwinfo --mouse --short";
 	open(HWINFO, '-|', '/usr/sbin/hwinfo --mouse --short')
@@ -145,42 +163,20 @@ if (($hwinfo || not keys %input) and -x '/usr/sbin/hwinfo') {
 
 		($name, $device, $phys) = ();
 		
-		if (m|^\s*(/dev/[^\s]+)\s+(.+)$|) {
+		if (m|^\s*(/dev/tty[^\s]+)\s+(.+)$|) {
 			$device = $1;
 			$name = "\"$2\"";
-			if ($name and $device) {
-				if ($device =~ m|/dev/tty.+\d$|) {
-					$phys = 'serial';
-				}
-				else {
-					given ($name) {
-						when m/SynPS\/2/ {
-							$phys = 'synaptics';
-							$device = '/dev/psaux';
-						}
-						when m/AlpsPS\/2/ {
-							$phys = 'alps';
-							$device = '/dev/psaux';
-						}
-						default {
-							# xserver will autoconfigure usb/ps2 mice
-							# we cannot differentiate them here anyway
-							dbg "Ignoring $name";
-							next HW;
-						}
-					}
-				}
+			$phys = 'serial';
 
-				dbg "'name' => $name, 'type' => $phys, 'device' => $device";
+			dbg "'name' => $name, 'type' => $phys, 'device' => $device";
 
-				$input{$mouse} = {
-					'name' => $name,
-					'type' => $phys,
-					'device' => $device
-				};
+			$input{$mouse} = {
+				'name' => $name,
+				'type' => $phys,
+				'device' => $device
+			};
 
-				$mouse++;
-			}
+			$mouse++;
 		}
 	}
 	close(HWINFO);
@@ -193,8 +189,10 @@ for my $key (sort keys %input) {
 	for ('name', 'type', 'device') {
 		push @input_devices, $_ . '=' . $input{$key}->{$_},
 	}
-	# if input device is not removable, and no corepointer has been
-	# assigned yet, do so. Everything else -> SendCoreEvents
+	# If current input device is not removable, and no corepointer has been
+	# assigned yet, do so. Everything else -> SendCoreEvents.
+	# We could do some kind of advanced CorePointer heuristic, but I'm not
+	# convinced that it would really be worth it.
 	if ($input{$key}->{'type'} ne 'usb' and not $corepointer) {
 		push @input_devices, 'corepointer=CorePointer' and $corepointer++;
 	}
