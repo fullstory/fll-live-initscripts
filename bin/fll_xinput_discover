@@ -204,7 +204,7 @@ for my $key (sort keys %input) {
 
 # push a dummy USB mouse configuration if no usb mouse was detected
 # workaround for CorePointer election...
-unless ($usb) {
+if ($corepointer and not $usb) {
 	push @input_devices, 'name="Generic USB Mouse"', 'type=usb',
 		'device=/dev/input/mice', 'corepointer=SendCoreEvents';
 }
