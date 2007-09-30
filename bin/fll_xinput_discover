@@ -57,7 +57,7 @@ sub dbg {
 
 my %input;
 my @input_devices;
-my ($name, $device, $phys, $mouse, $corepointer);
+my ($name, $device, $phys, $mouse, $corepointer, $usb);
 
 if (-f '/proc/bus/input/devices') {
 	dbg "using primary detection method: /proc/bus/input/devices";
@@ -189,19 +189,24 @@ for my $key (sort keys %input) {
 	for ('name', 'type', 'device') {
 		push @input_devices, $_ . '=' . $input{$key}->{$_},
 	}
-	# If current input device is not removable, and no corepointer has been
-	# assigned yet, do so. Everything else -> SendCoreEvents.
-	# We could do some kind of advanced CorePointer heuristic, but I'm not
-	# convinced that it would really be worth it.
-	if (keys %input == 1) {
-		push @input_devices, 'corepointer=CorePointer' and $corepointer++;
-	}
-	elsif ($input{$key}->{'type'} ne 'usb' and not $corepointer) {
-		push @input_devices, 'corepointer=CorePointer' and $corepointer++;
-	}
-	else {
+	
+	# elect a Core Pointer - USB device hotplugged later currently
+	# will not work if we do this :/
+	if ($corepointer) {
 		push @input_devices, 'corepointer=SendCoreEvents';
 	}
+	else {
+		push @input_devices, 'corepointer=CorePointer';
+		$corepointer++;
+	}
+	$input{$key}->{'type'} eq 'usb' and $usb++;
+}
+
+# push a dummy USB mouse configuration if no usb mouse was detected
+# workaround for CorePointer election...
+unless ($usb) {
+	push @input_devices, 'name="Generic USB Mouse"', 'type=usb',
+		'device=/dev/input/mice', 'corepointer=SendCoreEvents';
 }
 
 print "XINPUT='@input_devices'\n";
