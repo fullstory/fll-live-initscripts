@@ -382,7 +382,7 @@ if ($x{'xrandr'}) {
 			@prefmode = gtf_modelines $x_axis, $y_axis, $x{'rate'};
 			# match Modeline mode_freq marker that gtf outputs
 			for (@prefmode) {
-				if (m/^\s+Modeline\s+"(.+)"/) {
+				if (m/^\s+Modeline\s+"(.+)"\s+/) {
 					push @prefmode, "\tOption\t\t\"PreferredMode\"\t\t\"$1\"";
 					last;
 				}

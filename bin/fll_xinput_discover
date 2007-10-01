@@ -146,11 +146,11 @@ if (-f '/proc/bus/input/devices') {
 		given ($phys) {
 			when m/^isa/ {
 				given ($name) {
-					when m/SynPS\/2/ {
+					when m/^"SynPS\/2/ {
 						$phys = 'synaptics';
 						$device = '/dev/psaux';
 					}
-					when m/AlpsPS\/2/ {
+					when m/^"AlpsPS\/2/ {
 						$phys = 'alps';
 						$device = '/dev/psaux';
 					}
