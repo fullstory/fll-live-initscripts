@@ -79,7 +79,7 @@ By default fll_fshelper prints fstab to stdout, and does not create mountpoints
   -f|--fstab <file>         target file to write output to
   -a|--auto                 set auto mount option where applicable
   -q|--quiet                surpress output when writing to file
-  -d|--debug                debug sh code execution
+  -d|--debug                enable debug output
 
 fll_fshelper is intended for initial creation of /etc/fstab by "live" linux
 distro's. It is not intended for ongoing maintenance of the fstab file on

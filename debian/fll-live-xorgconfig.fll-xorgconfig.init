@@ -47,6 +47,11 @@ if [ -s /etc/default/fll-locales ]; then
 fi
 
 ###
+# VERBOSE setting and other rcS variables
+###
+. /lib/init/vars.sh
+
+###
 # source lsb functions
 ###
 . /lib/lsb/init-functions
@@ -75,7 +80,7 @@ if [ -f /proc/cmdline ]; then
 				XNOMODELINES="1"
 				;;
 			smouse)
-				XPROBE_SERIAL_MOUSE="--hwinfo"
+				XPROBE_SERIAL_MOUSE="1"
 				;;
 			xdepth=*|depth=*)
 				XDEPTH="${param#*depth=}"
@@ -171,6 +176,10 @@ do_start() {
 	
 	# fll_xorgconfig option array
 	local XCFG_OPTS
+
+	if [ "${VERBOSE}" ]; then
+		XCFG_OPTS+=("--verbose")
+	fi
 
 	# sourced earlier from /etc/default/fll-locales
 	if [ "${XKBLAYOUT}" ]; then
@@ -324,10 +333,23 @@ do_start() {
 		XCFG_OPTS+=("--colordepth '${XDEPTH}'")
 	fi
 
+	local XINP_OPTS
+
+	if [ "${XPROBE_SERIAL_MOUSE}" ]; then
+		XINP_OPTS+=("--hwinfo")
+	fi
+
+	if [ "${VERBOSE}" ]; then
+		XINP_OPTS+=("--verbose")
+	fi
+
 	# detect input devices, return string of args to fll_xorgconfig
-	eval $(/usr/sbin/fll_xinput_discover ${XPROBE_SERIAL_MOUSE} 2>/dev/null)
+	#     XINPUT
+	eval $(/usr/sbin/fll_xinput_discover ${XINP_OPTS[@]} 2>/dev/null)
 	
-	[ "${XINPUT}" ] && XCFG_OPTS+=("${XINPUT}")
+	if [ "${XINPUT}" ]; then
+		XCFG_OPTS+=("${XINPUT}")
+	fi
 
 	# write the configuration to file
 	eval "/usr/sbin/fll_xorgconfig ${XCFG_OPTS[@]}"

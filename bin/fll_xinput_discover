@@ -34,7 +34,7 @@ my $debug;
 my $hwinfo;
 
 GetOptions(
-	'debug' => \$debug,
+	'verbose' => \$debug,
 	'hwinfo' => \$hwinfo,
 );
 
