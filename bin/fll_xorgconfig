@@ -82,7 +82,7 @@ my %x = (
 	'vertrefresh'	=> '50.0 - 75.0',
 
 	# screen
-	'screen'	=> "0\t\"Screen0\" 0 0",
+	'screen'	=> "0\t\"Screen 0\" 0 0",
 
 	# keyboard
 	'xkblayout'	=> 'us',
@@ -408,7 +408,7 @@ if ($x{'xrandr'}) {
 	$x{'modes'} = $x{'virtual'} ? "Virtual\t" . $x{'virtual'} : undef;
 	
 	# Simplify Screen name in ServerLayout
-	$x{'screen'} = '"Screen0"';
+	$x{'screen'} = '"Screen 0"';
 }
 else {
 	# wrap each mode in quotation marks
