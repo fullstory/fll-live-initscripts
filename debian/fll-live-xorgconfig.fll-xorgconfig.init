@@ -177,7 +177,7 @@ do_start() {
 	# fll_xorgconfig option array
 	local XCFG_OPTS
 
-	if [ "${VERBOSE}" ]; then
+	if [ "${VERBOSE}" = "yes" ]; then
 		XCFG_OPTS+=("--verbose")
 	fi
 
@@ -337,10 +337,6 @@ do_start() {
 
 	if [ "${XPROBE_SERIAL_MOUSE}" ]; then
 		XINP_OPTS+=("--hwinfo")
-	fi
-
-	if [ "${VERBOSE}" ]; then
-		XINP_OPTS+=("--verbose")
 	fi
 
 	# detect input devices, return string of args to fll_xorgconfig

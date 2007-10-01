@@ -16,13 +16,13 @@ fll-live-initscripts (2.0.5) UNRELEASED; urgency=low
     - reinstate display subsections for depths 1, 4 and 15
   * fll-xorgconfig:
     - source /lib/init/vars.sh for VERBOSE variable
-    - use VERBOSE to enable program output
+    - use VERBOSE to enable program output, fix use of VERBOSE
   * fll_fshelper:
     - fix help output for -d|--debug option
     - don't bother making backup for once only write
     - no need to explicitly truncate file
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 01 Oct 2007 17:39:40 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 01 Oct 2007 20:45:11 +1000
 
 fll-live-initscripts (2.0.4) unstable; urgency=low
 
