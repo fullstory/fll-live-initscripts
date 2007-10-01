@@ -314,17 +314,11 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 	my $protocol;
 	
 	given ($type) {
-		when 'synaptics' {
+		when m/^(alps|synaptics)$/ {
 			# splice @module, -1, 0, "\tLoad\t\t\"synaptics\"";
 			$protocol = "auto-dev";
 		}
-		when 'alps' {
-			$protocol = "auto-dev";
-		}
-		when 'usb' {
-			$protocol = 'IMPS/2';
-		}
-		when 'ps2' {
+		when m/^(ps2|usb)$/ {
 			$protocol = 'IMPS/2';
 		}
 		when 'serial' {
