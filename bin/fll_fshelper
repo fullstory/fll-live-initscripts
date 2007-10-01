@@ -25,7 +25,6 @@
 
 use warnings;
 use strict;
-use File::Copy;
 use File::Path;
 use Getopt::Long;
 use Tie::File;
@@ -233,19 +232,11 @@ dbg '%opts', \%opts;
 # preparation for writing fstab to file
 
 if ($opts{'write-fstab'}) {
-	# back it up before writing
-	if (-f $file) {
-		copy $file, $file . '.old'
-			or die "Cannot back up $file to $file.old: $!\n";
-	}
-	
 	# tie array to file, lock it
 	$f = tie @fstab, "Tie::File", $file
 		or die "Cannot open $file for writing: $!\n";
+	# flock it
 	$f->flock;
-	
-	# truncate file
-	@fstab = ();
 }
 
 @fstab = (
