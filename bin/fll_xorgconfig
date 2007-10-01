@@ -389,7 +389,7 @@ if ($x{'xrandr'}) {
 			}
 		}
 		else {
-			push @prefmode, "\tOption\t\"PreferredMode\"\t\"" . $x{'mode'} . "\"";
+			push @prefmode, "\tOption\t\t\"PreferredMode\"\t\t\"" . $x{'mode'} . "\"";
 		}
 			
 		dbg \@prefmode;
