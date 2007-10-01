@@ -12,13 +12,14 @@ fll-live-initscripts (2.0.5) UNRELEASED; urgency=low
     - simplify handling of $protocol for usb/ps2 and synaptics/alps, both
     pairs are handled identically
     - sort $x{mouse} keys numerically
+    - remove need for --composite option to require boolean as argument
   * fll-xorgconfig:
     - source /lib/init/vars.sh for VERBOSE variable
     - use VERBOSE to enable program output
   * fll_fshelper:
     - fix help output for -d|--debug option
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 01 Oct 2007 16:31:07 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 01 Oct 2007 16:41:50 +1000
 
 fll-live-initscripts (2.0.4) unstable; urgency=low
 

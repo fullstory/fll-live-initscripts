@@ -218,7 +218,7 @@ do_start() {
 		# turn composite on for modules that support it well
 		case "${XMODULE}" in
 			ati|intel)
-				XCFG_OPTS+=("--composite on")
+				XCFG_OPTS+=("--composite")
 				;;
 		esac
 	fi

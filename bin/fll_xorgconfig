@@ -241,18 +241,21 @@ GetOptions(
 	'virtual=s',
 
 	# extensions
-	'composite=s',
+	'composite',
 );
 
 dbg \%x;
 
-# sanitize input
+# sanitize/postprocess input
 for my $key (keys %x) {
 	my $invalid = undef;
 
 	given ($key) {
 		when 'colordepth' {
 			$x{$key} =~ /^(1|4|8|16|24)$/ or $invalid = $key;
+		}
+		when 'composite' {
+			$x{$key} ne 'off' and  $x{$key} = 'on';
 		}
 		when 'mode' {
 			$x{$key} =~ /^\d+x\d+$/ or $invalid = $key;
