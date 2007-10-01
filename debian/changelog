@@ -1,16 +1,16 @@
-fll-live-initscripts (2.0.5) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.5) unstable; urgency=low
 
   * fll_xinput_discover:
     - really enable usb workaround, forgot to prepend --input to Generic USB
-    mouse workaround
+      mouse workaround
     - add input_priority function -> input device priority sorting algorithm
-    that ensures CorePointer is elected to a device type that is most likely
-    to not be removed.
+      that ensures CorePointer is elected to a device type that is most likely
+      to not be removed.
   * fll_xorgconfig:
     - reinstate support for Virtual, even if only for my own good
     - enhance debug output
     - simplify handling of $protocol for usb/ps2 and synaptics/alps, both
-    pairs are handled identically
+      pairs are handled identically
     - sort $x{mouse} keys numerically
     - remove need for --composite option to require boolean as argument
     - reinstate display subsections for depths 1, 4 and 15
