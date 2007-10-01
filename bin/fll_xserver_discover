@@ -1,99 +1,149 @@
 #!/usr/bin/perl
+#
+# Copyright (C) 2007 Kel Modderman <kel@otaku42.de>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this package; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+# On Debian GNU/Linux systems, the text of the GPL license can be
+# found in /usr/share/common-licenses/GPL.
+#
+# Based on:
 #   hwsetup-xserver-discover, a Perl script that returns the driver and 
 #   description for the videocard detected in the machine it runs on, 
 #   plus fallback methods.
 #   Copyright (C) 2006  M.L. de Boer a.k.a locsmif <locsmif@kanotix.com>
-#   Copyright (C) 2007  Kel Modderman <kel@otaku42.de>
+#   (Sorry, the script is much bigger ang uglier now!)
 
 use strict;
+use File::Slurp;
+use Getopt::Long;
 
 use constant {
-	DEBUG => 0,
 	VGA => '0300',
 	PCILST => '/lib/discover/pci.lst',
+	PCIIDS => '/usr/share/xserver-xorg/pci/',
 };
 
-# Check for File::Slurp, catch errors in $@
-eval "require File::Slurp"; 
-if ($@) {
-	# Errors found, use own emulator
-	sub slurp {
-	 	open(EATFH, '<', $_[0]) or die($!);
-		my @lines = <EATFH>;
-		close(EATFH);
-		return @lines if wantarray;
-		chomp($lines[0]);
-		return $lines[0];
-	}
-	DEBUG and print("Using locsmif's File::Slurp emulator\n");
+my ($debug, $discover);
+
+GetOptions(
+        'verbose' => \$debug,
+        'discover' => \$discover,
+);
+
+if ($debug) {
+	require Data::Dumper;
+	import Data::Dumper;
+	print "Debugging...\n";
 }
-else {
-	# Present, import 'slurp'
-	import File::Slurp 'slurp';
-	DEBUG and print("Enabling File::Slurp\n");
+
+sub dbg {
+	return unless $debug;
+	
+	for my $data (@_) {
+		next unless $data;
+
+		if (ref $data) {
+			print STDERR "DBG: " . Dumper($data);
+		}
+		else {
+			print STDERR "DBG: $data\n";
+		}
+	}
 }
 
 # Declare variables
-my ($busid, $desc, $device, $drv, $mod, $pci, $type, $vname, $vendor);
+my ($busid, $boardname, $device, $driver, $module, $pci, $type, $vendor, $vendorname);
 
 # Glob /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class
 for (</sys/devices/pci*/*{,/*}/class>) {
+	dbg $_;
 	# Check for type VGA (see use constant at the top)
-	if (substr(slurp($_),2,4) eq VGA) {
+	if (substr(read_file($_),2,4) eq VGA) {
 		# Strip '/class' from the end of the path
 		($pci = $_) =~ s|/class$||;
+		dbg "\$pci: $pci";
 		last;
 	}
 }
 
 # Get vendor and device
-chomp($vendor = substr(slurp("$pci/vendor"),2,4));
-chomp($device = substr(slurp("$pci/device"),2,4));
+$vendor = substr(read_file("$pci/vendor"),2,4);
+$device = substr(read_file("$pci/device"),2,4);
+chomp($vendor, $device);
+dbg "\$vendor: $vendor \$device: $device";
+
+# strip leading pathname
+$pci =~ s|.*/([^/]+)$|$1|;
+dbg "\$pci: $pci";
 
 # Get BusID, ref: xserver-xorg.postinst
-open(L, '-|',  "LC_ALL=C lspci -n -d $vendor:$device 2>/dev/null")
-	or die("Failed to execute lspci: $!\n");
-while (<L>) {
-	chomp;
-	if (m/^(\w+:)?(\w+):(\w+)\.(\w+)\s+.*/) { 
-		$busid = join(':', 'PCI', hex("0x$2"),  hex("0x$3"), hex("0x$4"));
-		last;
-	}
+if ($pci =~  m/^(\w+):(\w+):(\w+)\.(\w+)$/) { 
+	$busid = join(':', 'PCI', hex("0x$2"),  hex("0x$3"), hex("0x$4"));
+	dbg "\$busid: $busid";
 }
-close(L);
-	
 
-# Open PCILST for reading
-open(F, '<', PCILST) or die("Failed to open pci.lst: $!\n");
-while (<F>) {
-	chomp;
-	# Inside vendor block and new vendor block found? Then exit loop.
-	$vname and last if /^\w/;
-	# Inside vendor?
-	if ($vname) {
-		# Match vendor and device of GFX card found or match fallback driver(ffffffff)?
-		if (/^\t(?:${vendor}${device}|ffffffff)\t(\S+)\t(\S+\((\S+)\))\t(.+)$/) { 
-			# Get strings captured from backreferences above.
-			($type, $drv, $mod, $desc) = ($1, $2, $3, "$vname $4");
-			# Break loop
+if ($discover and -T PCILST) {
+	dbg "Opening libdiscover1 pci.lst...";
+	# Open PCILST for reading
+	open(F, '<', PCILST) or die("Failed to open pci.lst: $!\n");
+	while (<F>) {
+		chomp;
+		# Inside vendor block and new vendor block found? Then exit loop.
+		$vendorname and last if /^\w/;
+		# Inside vendor?
+		if ($vendorname) {
+			# Match vendor and device of GFX card found or match fallback driver(ffffffff)?
+			if (/^\t(?:${vendor}${device}|ffffffff)\t(\S+)\t(\S+\((\S+)\))\t(.+)$/) {
+				# Get strings captured from backreferences above.
+				($type, $driver, $module, $boardname) = ($1, $2, $3, "$vendorname $4");
+				dbg "\$1: $type \$2: $driver \$3: $module \$4: $boardname";
+				# Break loop
+				last;
+			}
+		}
+		# Found target vendor block? Set $vendorname with the vendor name captured from backref.
+		/^$vendor\s+(.*)$/ and $vendorname = $1;
+	}
+	close(F);
+}
+else {
+	dbg "Reading Xorg xserver pci.ids lists...";
+	for my $ids (read_dir(PCIIDS)) {
+		dbg "$ids";
+		if (grep(/^${vendor}${device}$/i, read_file(PCIIDS . $ids))) {
+			($module = $ids) =~ s/\.ids$//;
+			dbg "\$module = $module";
 			last;
 		}
 	}
-	# Found target vendor block? Set $vname with the vendor name captured from backref.
-	/^$vendor\s+(.*)$/ and $vname = $1;
-}
-close(F);
 
-# If module and description are not both set, goto fallback.
-unless ($mod and $vname and $desc) {
-	($type, $drv, $mod, $vname, $desc) = (undef, undef, 'vesa', 'All', 'All');
+	#$boardname = `LC_ALL=C lspci -d ${vendor}:${device} 2>/dev/null`;
+	($boardname = `LC_ALL=C lspci -s $pci 2>/dev/null`) =~ s/^.*:\s+//;
+	chomp($boardname);
+	dbg "\$boardname: $boardname";
 }
+
+# fallback to vesa module
+$module ||= 'vesa';
 
 # Output stuff that can be sourced by shellscripts.
 print <<_EOF_
-XMODULE="$mod"
-XVENDORNAME="$vname"
-XBOARDNAME="$desc"
+XMODULE="$module"
+XBOARDNAME="$boardname"
 XBUSID="$busid"
 _EOF_
 ;
