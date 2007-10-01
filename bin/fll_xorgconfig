@@ -49,7 +49,7 @@ my $verbosity = 0;
 my $xorg_conf = '/etc/X11/xorg.conf';
 my $xorg_tmpl = '/usr/share/fll-live-xorgconfig/templates';
 
-# used for countint line numbers
+# used for counting line numbers
 my $n;
 
 # for handling multiple mice
@@ -301,9 +301,7 @@ my @extensions = get_template 'extensions';
 # input devices
 my @inputdevices;
 
-# this sorts well for up to 9 input devices without using Tie::IxHash
-# or other means of maintaining hash order
-MICE: for my $m (sort keys %{$x{'mouse'}}) {
+MICE: for my $m (sort { $a <=> $b } keys %{$x{'mouse'}}) {
 	# append current mouse number to name, ensuring it will be unique
 	$x{'mouse'}{$m}{'name'} = $x{'mouse'}{$m}{'name'} . " $m";
 
