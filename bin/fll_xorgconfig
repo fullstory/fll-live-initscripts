@@ -238,6 +238,7 @@ GetOptions(
 	'xrandr',
 	'mode=s',
 	'rate=s',
+	'virtual=s',
 
 	# extensions
 	'composite=s',
@@ -263,6 +264,9 @@ for my $key (keys %x) {
 		}
 		when 'rate' {
 			$x{$key} =~ /^\d+(\.\d+)?$/ or $invalid = $key;
+		}
+		when 'virtual' {
+			$x{$key} =~ /^\d+\s+\d+$/ or $invalid = $key;
 		}
 	}
 
@@ -311,6 +315,7 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 	
 	given ($type) {
 		when 'synaptics' {
+			# splice @module, -1, 0, "\tLoad\t\t\"synaptics\"";
 			$protocol = "auto-dev";
 		}
 		when 'alps' {
@@ -348,7 +353,7 @@ MICE: for my $m (sort keys %{$x{'mouse'}}) {
 		given ($line) {
 			when m/@@\w+@@/ {
 				if ($line =~ m/@@(\w+)@@/ and $x{'mouse'}{$m}{lc($1)}) {
-					dbg "Modifying line '$n'";
+					dbg "Modifying line '$n': $1 => " . $x{'mouse'}{$m}{lc($1)};
 					my $sub = $x{'mouse'}{$m}{lc($1)};
 					(my $newline = $line) =~ s/@@\w+@@/$sub/;
 					push @inputdevices, $newline;
@@ -383,7 +388,7 @@ if ($x{'xrandr'}) {
 			# match Modeline mode_freq marker that gtf outputs
 			for (@prefmode) {
 				if (m/^\s+Modeline\s+"(.+)"/) {
-					push @prefmode, "\tOption\t\"PreferredMode\"\t\"$1\"";
+					push @prefmode, "\tOption\t\t\"PreferredMode\"\t\t\"$1\"";
 					last;
 				}
 			}
@@ -398,19 +403,22 @@ if ($x{'xrandr'}) {
 	
 	# http://bgoglin.livejournal.com/10214.html
 	# * drop ModeLine, HorizSync and VertRefresh from the Monitor section
-	# * drop Modes line from the Display subsection
-	$x{'screen'} = '"Screen0"';
 	delete $x{'horizsync'};
 	delete $x{'vertrefresh'};
-	# Virtual XXX XXX
+	
+	# * drop Modes line from the Display subsection
 	# the Virual option would go in place of the Modes option for xrandr1.2 style
 	# Virtual specifies the dimensions of a large virtual screen in which you may
 	# configure two sub-screens (dual monitor)
-	delete $x{'modes'};
+	$x{'modes'} = $x{'virtual'} ? "Virtual\t" . $x{'virtual'} : undef;
+	
+	# Simplify Screen name in ServerLayout
+	$x{'screen'} = '"Screen0"';
 }
 else {
 	# wrap each mode in quotation marks
 	($x{'modes'} = "Modes\t" . $x{'modes'}) =~ s/(\d+x\d+)/"$1"/g;
+	
 	# slice our Modeline library into the monitor section
 	if ($x{'modelines'}) {
 		# add large modeline table for legacy config
@@ -453,7 +461,7 @@ XCONF: while ($x[$n]) {
 		# substitute placeholders
 		when m/@@\w+@@/ {
 			if ($$line =~ m/@@(\w+)@@/ and $x{lc($1)}) {
-				dbg "Modifying line '$n'";
+				dbg "Modifying line '$n': $1 => " . $x{lc($1)};
 				my $sub = $x{lc($1)};
 				$$line =~ s/@@\w+@@/$sub/;
 			}

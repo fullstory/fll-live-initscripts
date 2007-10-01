@@ -26,6 +26,10 @@ use strict;
 use Switch 'Perl6';
 use Getopt::Long;
 
+my %input;
+my @input_devices;
+my ($name, $device, $phys, $mouse, $corepointer, $usb);
+
 my $debug;
 my $hwinfo;
 
@@ -55,9 +59,38 @@ sub dbg {
 	}
 }
 
-my %input;
-my @input_devices;
-my ($name, $device, $phys, $mouse, $corepointer, $usb);
+sub input_priority {
+	my $retval = 0;
+	
+	my $a_type = $input{$a}->{'type'};
+	my $b_type = $input{$b}->{'type'};
+	
+	dbg $a_type . " ($a) <=> ($b) " . $b_type;
+	
+	# input device sorting function assigns priority according to type:
+	# alps/synaptics > ps/2 > serial > (?) > usb
+
+	# preserve order of detection for input devices of same type
+	if	($a_type eq $b_type)		{ $retval = $a <=> $b; }
+	# usb is always last -> removable
+	elsif	($a_type eq 'usb')		{ $retval++; }
+	elsif	($b_type eq 'usb')		{ $retval--; }
+	# top-down priority for the rest
+	elsif	($a_type eq 'alps')		{ $retval--; }
+	elsif	($b_type eq 'alps')		{ $retval++; }
+	elsif	($a_type eq 'synaptics')	{ $retval--; }
+	elsif	($b_type eq 'synaptics')	{ $retval++; }
+	elsif	($a_type eq 'ps2')		{ $retval--; }
+	elsif	($b_type eq 'ps2')		{ $retval++; }
+	elsif	($a_type eq 'serial')		{ $retval--; }
+	elsif	($b_type eq 'serial')		{ $retval++; }
+	# preserve order of detection for unhandled input devices
+	else					{ $retval = $a <=> $b; }
+
+	dbg "retval: $retval";
+	
+	return $retval;
+}
 
 if (-f '/proc/bus/input/devices') {
 	dbg "using primary detection method: /proc/bus/input/devices";
@@ -184,7 +217,7 @@ if (($hwinfo || not keys %input) and -x '/usr/sbin/hwinfo') {
 	dbg \%input;
 }			
 
-for my $key (sort keys %input) {
+for my $key (sort input_priority keys %input) {
 	push @input_devices, '--input';
 	for ('name', 'type', 'device') {
 		push @input_devices, $_ . '=' . $input{$key}->{$_},
