@@ -224,7 +224,7 @@ for my $key (sort input_priority keys %input) {
 	}
 	
 	# elect a Core Pointer - USB device hotplugged later currently
-	# will not work if we do this :/
+	# may not work if we do this :/
 	if ($corepointer) {
 		push @input_devices, 'corepointer=SendCoreEvents';
 	}
