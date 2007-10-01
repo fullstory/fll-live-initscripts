@@ -4,7 +4,19 @@ Section "Screen"
 	Monitor		"Monitor 0"
 	DefaultColorDepth @@COLORDEPTH@@
 	SubSection "Display"
+		Depth	1
+		@@MODES@@
+	EndSubSection
+	SubSection "Display"
+		Depth	4
+		@@MODES@@
+	EndSubSection
+	SubSection "Display"
 		Depth	8
+		@@MODES@@
+	EndSubSection
+	SubSection "Display"
+		Depth	15
 		@@MODES@@
 	EndSubSection
 	SubSection "Display"
