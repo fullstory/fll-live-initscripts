@@ -29,7 +29,7 @@
 
 use warnings;
 use strict;
-use File::Slurp;
+use File::Slurp qw(slurp read_dir);
 use Getopt::Long;
 
 use constant {
@@ -74,7 +74,7 @@ dbg "Globbing /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class";
 for (</sys/devices/pci*/*{,/*}/class>) {
 	dbg $_;
 	# Check for type VGA (see use constant at the top)
-	if (substr(read_file($_),2,4) eq VGA) {
+	if (substr(slurp($_),2,4) eq VGA) {
 		# Strip '/class' from the end of the path
 		($pci = $_) =~ s|/class$||;
 		dbg "\$pci: $pci";
@@ -83,8 +83,8 @@ for (</sys/devices/pci*/*{,/*}/class>) {
 }
 
 # Get vendor and device
-$vendor = substr(read_file("$pci/vendor"),2,4);
-$device = substr(read_file("$pci/device"),2,4);
+$vendor = substr(slurp("$pci/vendor"),2,4);
+$device = substr(slurp("$pci/device"),2,4);
 chomp($vendor, $device);
 dbg "\$vendor: $vendor \$device: $device";
 
@@ -127,8 +127,8 @@ else {
 	# http://lists.freedesktop.org/archives/xorg/2007-August/027567.html
 	dbg "Looking for ${vendor}${device} in Xorg xserver pci.ids lists...";
 	for my $ids (read_dir(PCIIDS)) {
-		dbg "read_file(" . PCIIDS . "${ids})";
-		if (grep { /^${vendor}${device}$/i } read_file(PCIIDS . $ids)) {
+		dbg "slurp(" . PCIIDS . "${ids})";
+		if (grep { /^${vendor}${device}$/i } slurp(PCIIDS . $ids)) {
 			($module = $ids) =~ s/\.ids$//;
 			dbg "\$module = $module";
 			last;
