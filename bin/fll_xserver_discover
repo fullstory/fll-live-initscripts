@@ -128,7 +128,7 @@ else {
 	dbg "Looking for ${vendor}${device} in Xorg xserver pci.ids lists...";
 	for my $ids (read_dir(PCIIDS)) {
 		dbg "read_file(" . PCIIDS . "${ids})";
-		if (grep(/^${vendor}${device}$/i, read_file(PCIIDS . $ids))) {
+		if (grep { /^${vendor}${device}$/i } read_file(PCIIDS . $ids)) {
 			($module = $ids) =~ s/\.ids$//;
 			dbg "\$module = $module";
 			last;
