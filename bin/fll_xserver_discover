@@ -122,6 +122,8 @@ if ($discover and -T PCILST) {
 	close(F);
 }
 else {
+	# Discussion about source and creation of pci-id lists
+	# http://lists.freedesktop.org/archives/xorg/2007-August/027567.html
 	dbg "Reading Xorg xserver pci.ids lists...";
 	for my $ids (read_dir(PCIIDS)) {
 		dbg "$ids";
