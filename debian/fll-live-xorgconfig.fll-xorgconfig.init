@@ -47,11 +47,6 @@ if [ -s /etc/default/fll-locales ]; then
 fi
 
 ###
-# VERBOSE setting and other rcS variables
-###
-. /lib/init/vars.sh
-
-###
 # source lsb functions
 ###
 . /lib/lsb/init-functions
