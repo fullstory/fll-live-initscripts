@@ -159,7 +159,7 @@ sub gtf_modelines {
 
 	for (@f) {
 		open(my $fh, '-|', '/usr/bin/gtf', @$_)
-			or die("cannot compute modeline with gtf: $!\n");
+			or die "cannot compute modeline with gtf: $!\n";
 		while (<$fh>) {
 			chomp;
 			next unless /^\s+(#|Modeline)/;
@@ -188,7 +188,7 @@ sub get_template {
 			if ($_ eq $file) {
 				dbg "reading template: $file";
 				open(my $fh, '<', $File::Find::name)
-					or die("cannot open template for reading: $!\n");
+					or die "cannot open template for reading: $!\n";
 				@template = <$fh>;
 				close($fh);
 			}
@@ -424,7 +424,7 @@ else {
 ###########################################################
 # tie @x to $xorg_conf, $x_o is the control object
 my $x_o = tie(@x, "Tie::File", $xorg_conf)
-	or die("Cannot open $xorg_conf for writing: $!\n");
+	or die "Cannot open $xorg_conf for writing: $!\n";
 
 # lock it for writing
 $x_o->flock;
