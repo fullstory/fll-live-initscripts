@@ -1,6 +1,13 @@
 fll-live-initscripts (2.0.7) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xserver_discover:
+    - export File::Slurp functions, use the slurp alias to alow for easier
+    future adaptation
+    - a few cleanups
+  * fll_xorgconfig:
+    - syntax cleanups
+  * fll_xinput_discover:
+    - name the extra imps2 mouse entry "Generic IMPS/2 Mouse"
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 02 Oct 2007 11:04:23 +0200
 
