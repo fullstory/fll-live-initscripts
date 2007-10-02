@@ -245,7 +245,7 @@ for my $key (sort input_priority keys %input) {
 # push a dummy USB mouse configuration if no usb mouse was detected
 # workaround for CorePointer election...
 if ($corepointer and not $imps2) {
-	push @input_devices, '--input', 'name="Generic USB Mouse"', 'type=imps2',
+	push @input_devices, '--input', 'name="Generic IMPS/2 Mouse"', 'type=imps2',
 		'device=/dev/input/mice', 'corepointer=SendCoreEvents';
 }
 
