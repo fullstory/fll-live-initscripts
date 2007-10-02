@@ -1,6 +1,6 @@
 Section "Screen"
 	Identifier	"Screen 0"
-	Device		"Card 0"
+	Device		"Device 0"
 	Monitor		"Monitor 0"
 	DefaultColorDepth @@COLORDEPTH@@
 	SubSection "Display"

@@ -222,23 +222,20 @@ do_start() {
 				;;
 		esac
 	fi
-	
-	if [ "${XVENDORNAME}" ]; then
-		# log_progress_msg "${G}vendor: ${Y}${XVENDORNAME}${N}"
-		XCFG_OPTS+=("--vendorname '${XVENDORNAME}'")
-	fi
-	
-	if [ "${XBOARDNAME}" ]; then
-		log_progress_msg "${G}device: ${Y}${XBOARDNAME}${N}"
-		XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
-	fi
-	
+
 	if [ "${XBUSID}" ]; then
 		log_progress_msg "${G}busid: ${Y}${XBUSID}${N}"
 		XCFG_OPTS+=("--busid '${XBUSID}'")
 	fi
 
 	log_end_msg 0
+	
+	if [ "${XBOARDNAME}" ]; then
+		log_daemon_msg "${B}${NAME}${N}"
+		log_progress_msg "${G}device: ${Y}${XBOARDNAME}${N}"
+		log_end_msg 0
+		XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
+	fi
 	
 	log_daemon_msg "${B}${NAME}${N}"
 	log_action_begin_msg " ${G}detcting ${Y}monitor${G} settings${N}"
