@@ -142,19 +142,19 @@ else {
 	else {
 		$boardname = `LC_ALL=C lspci -d ${vendor}:${device} 2>/dev/null`;
 	}
-	# fallback boardname
-	$boardname ||= "Unknown VGA Controller (${vendor}:${device})";
 	
-	# trim the string
-	chomp($boardname);
-	$boardname =~ s/^.*:\s+//;
-	$boardname =~ s/\s+\(rev\s+\d+\)$//;
-	
-	dbg "\$boardname: $boardname";
+	if ($boardname) {
+		# trim the string
+		chomp($boardname);
+		$boardname =~ s/^.*:\s+//;
+		$boardname =~ s/\s+\(rev\s+\d+\)$//;
+		dbg "\$boardname: $boardname";
+	}
 }
 
-# fallback to vesa module
+# fallbacks
 $module ||= 'vesa';
+$boardname ||= "Unknown VGA Controller ${vendor}:${device}";
 
 # Output stuff that can be sourced by shellscripts.
 $module and print "XMODULE=\"$module\"\n";
