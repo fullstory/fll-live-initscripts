@@ -159,7 +159,7 @@ sub gtf_modelines {
 
 	for (@f) {
 		open(my $fh, '-|', '/usr/bin/gtf', @$_)
-			or die "cannot compute modeline with gtf: $!\n";
+			or die("cannot compute modeline with gtf: $!\n");
 		while (<$fh>) {
 			chomp;
 			next unless /^\s+(#|Modeline)/;
@@ -187,15 +187,15 @@ sub get_template {
 			return unless -T $File::Find::name;
 			if ($_ eq $file) {
 				dbg "reading template: $file";
-				open my $fh, '<', $File::Find::name
-					or die "cannot open template for reading: $!\n";
+				open(my $fh, '<', $File::Find::name)
+					or die("cannot open template for reading: $!\n");
 				@template = <$fh>;
-				close $fh;
+				close($fh);
 			}
 		}, $xorg_tmpl
 	);
 	
-	chomp @template;
+	chomp(@template);
 	return @template;
 }
 
@@ -273,7 +273,7 @@ for my $key (keys %x) {
 		}
 	}
 
-	$invalid and warn "W: invalid --$invalid value: " .  $x{$invalid} . "\n";
+	$invalid and warn("W: invalid --$invalid value: " .  $x{$invalid} . "\n");
 }
 
 ###########################################################
@@ -316,7 +316,7 @@ MICE: for my $m (sort { $a <=> $b } keys %{$x{'mouse'}}) {
 	
 	given ($type) {
 		when m/^(alps|synaptics)$/ {
-			# splice @module, -1, 0, "\tLoad\t\t\"synaptics\"";
+			# splice(@module, -1, 0, "\tLoad\t\t\"synaptics\"");
 			$protocol = "auto-dev";
 		}
 		when 'imps2' {
@@ -336,7 +336,7 @@ MICE: for my $m (sort { $a <=> $b } keys %{$x{'mouse'}}) {
 
 	# add inputdevice line to ServerLayout
 	dbg "pushing input_device '$name' to serverlayout section";
-	splice @serverlayout, -1, 0, "\tInputDevice\t\"$name\"";
+	splice(@serverlayout, -1, 0, "\tInputDevice\t\"$name\"");
 
 	$n = 0;
 	my @section = get_template "inputdevice_$type";
@@ -351,7 +351,7 @@ MICE: for my $m (sort { $a <=> $b } keys %{$x{'mouse'}}) {
 					dbg "Modifying line '$n': $1 => " . $x{'mouse'}{$m}{lc($1)};
 					my $sub = $x{'mouse'}{$m}{lc($1)};
 					(my $newline = $line) =~ s/@@\w+@@/$sub/;
-					push @inputdevices, $newline;
+					push(@inputdevices, $newline);
 				}
 				else {
 					dbg "Ignoring line '$n'";
@@ -360,7 +360,7 @@ MICE: for my $m (sort { $a <=> $b } keys %{$x{'mouse'}}) {
 			}
 		}
 
-		push @inputdevices, $line;
+		push(@inputdevices, $line);
 	}
 	continue {
 		$n++;
@@ -383,17 +383,17 @@ if ($x{'xrandr'}) {
 			# match Modeline mode_freq marker that gtf outputs
 			for (@prefmode) {
 				if (m/^\s+Modeline\s+"(.+)"\s+/) {
-					push @prefmode, "\tOption\t\t\"PreferredMode\"\t\t\"$1\"";
+					push(@prefmode, "\tOption\t\t\"PreferredMode\"\t\t\"$1\"");
 					last;
 				}
 			}
 		}
 		else {
-			push @prefmode, "\tOption\t\t\"PreferredMode\"\t\t\"" . $x{'mode'} . "\"";
+			push(@prefmode, "\tOption\t\t\"PreferredMode\"\t\t\"" . $x{'mode'} . "\"");
 		}
 			
 		dbg \@prefmode;
-		splice @monitor, -1, 0, @prefmode;
+		splice(@monitor, -1, 0, @prefmode);
 	}
 	
 	# http://bgoglin.livejournal.com/10214.html
@@ -417,14 +417,14 @@ else {
 	# slice our Modeline library into the monitor section
 	if ($x{'modelines'}) {
 		# add large modeline table for legacy config
-		splice @monitor, -1, 0, gtf_modelines;
+		splice(@monitor, -1, 0, gtf_modelines);
 	}
 }
 
 ###########################################################
 # tie @x to $xorg_conf, $x_o is the control object
-my $x_o = tie @x, "Tie::File", $xorg_conf
-	or die "Cannot open $xorg_conf for writing: $!\n";
+my $x_o = tie(@x, "Tie::File", $xorg_conf)
+	or die("Cannot open $xorg_conf for writing: $!\n");
 
 # lock it for writing
 $x_o->flock;
@@ -462,14 +462,14 @@ XCONF: while ($x[$n]) {
 			}
 			else {
 				dbg "Removing line '$n'";
-				splice @x, $n, 1;
+				splice(@x, $n, 1);
 				redo XCONF if $x[$n];
 			}
 		}
 		# beautify, seperate each section with blank line
 		when m/^EndSection$/ {
 			dbg "Adding whitespace";
-			splice @x, ++$n, 0, '';
+			splice(@x, ++$n, 0, '');
 		}
 	}
 }
