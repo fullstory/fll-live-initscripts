@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.9) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.9) unstable; urgency=low
 
   * fll_xorgconfig: don't wrap serial mouse name in quotation marks either.
 
