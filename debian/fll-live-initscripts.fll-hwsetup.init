@@ -70,6 +70,16 @@ fi
 ###
 do_start() {
 	###
+	# don't start gpm if a mouse device is not present
+	###
+	if [ ! -c /dev/input/mice ]; then
+		update-rc.d -f gpm remove >/dev/null 2>&1
+	fi
+
+	# we don't depend on hwinfo, return if it is not installed
+	which hwinfo >/dev/null || return 0
+
+	###
 	# bluetooth management
 	###
 	BLUETOOTH=$(hwinfo --bluetooth --short | sed -n '/^[a-z]\+:/!s/[ \t]\+//p' | head -n1)
@@ -89,13 +99,6 @@ do_start() {
 		log_end_msg 0
 	else
 		update-rc.d -f cupsys remove >/dev/null 2>&1
-	fi
-
-	###
-	# don't start gpm if a mouse device is not present
-	###
-	if [ ! -c /dev/input/mice ]; then
-		update-rc.d -f gpm remove >/dev/null 2>&1
 	fi
 }
 
