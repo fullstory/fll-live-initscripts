@@ -38,6 +38,7 @@ use constant {
 	PCIIDS => '/usr/share/xserver-xorg/pci/',
 };
 
+my $count = 0;
 my ($debug, $discover);
 
 GetOptions(
@@ -66,8 +67,98 @@ sub dbg {
 	}
 }
 
-# Declare variables
-my ($busid, $boardname, $device, $module, $pci, $vendor, $vendorname);
+sub process {
+	my ($syspci, $num) = (shift, shift);
+	my ($busid, $boardname, $device, $module, $vendor, $vendorname);
+
+	# Get vendor and device
+	$vendor = substr(slurp("$syspci/vendor"),2,4);
+	$device = substr(slurp("$syspci/device"),2,4);
+	chomp($vendor, $device);
+	dbg "\$vendor: $vendor \$device: $device";
+
+	# strip leading pathname
+	$syspci =~ s|.*/([^/]+)$|$1|;
+	dbg "\$syspci: $syspci";
+
+	# Get BusID, ref: xserver-xorg.postinst
+	if ($syspci =~  m/^(\w+):(\w+):(\w+)\.(\w+)$/) { 
+		$busid = join(':', 'PCI', hex("0x$2"),  hex("0x$3"), hex("0x$4"));
+		dbg "\$busid: $busid";
+	}
+
+	if ($discover and -T PCILST) {
+		dbg "Opening libdiscover1 pci.lst...";
+		# Open PCILST for reading
+		open(F, '<', PCILST) or die("Failed to open pci.lst: $!\n");
+		while (<F>) {
+			chomp;
+			# Inside vendor block and new vendor block found? Then exit loop.
+			$vendorname and last if /^\w/;
+			# Inside vendor?
+			if ($vendorname) {
+				# Match vendor and device of GFX card found or match fallback driver(ffffffff)?
+				if (/^\t(?:${vendor}${device}|ffffffff)\t(\S+)\t(\S+\((\S+)\))\t(.+)$/) {
+					# Get strings captured from backreferences above.
+					($module, $boardname) = ($3, "$vendorname $4");
+					dbg "\$module: $module \$boardname: $boardname";
+					# Break loop
+					last;
+				}
+			}
+			# Found target vendor block? Set $vendorname with the vendor name captured from backref.
+			/^$vendor\s+(.*)$/ and $vendorname = $1;
+		}
+		close(F);
+	}
+	else {
+		# Discussion about source and creation of pci-id lists
+		# http://lists.freedesktop.org/archives/xorg/2007-August/027567.html
+		dbg "Looking for ${vendor}${device} in Xorg xserver pci.ids lists...";
+		for my $ids (read_dir(PCIIDS)) {
+			dbg "slurp(" . PCIIDS . "${ids})";
+			if (grep { /^${vendor}${device}$/i } slurp(PCIIDS . $ids)) {
+				($module = $ids) =~ s/\.ids$//;
+				dbg "\$module = $module";
+				last;
+			}
+		}
+
+		dbg "Invoking lspci to lookup \$boardname...";
+		# lspci lookup by $vendor:$device pair or by pci domain
+		if ($syspci) {
+			dbg "lspci -s $syspci";
+			$boardname = `LC_ALL=C lspci -s $syspci 2>/dev/null`;
+		}
+		else {
+			dbg "lspci -d ${vendor}:${device}";
+			$boardname = `LC_ALL=C lspci -d ${vendor}:${device} 2>/dev/null`;
+		}
+		
+		if ($boardname) {
+			# trim the string
+			chomp($boardname);
+			$boardname =~ s/^.*:\s+//;
+			$boardname =~ s/\s+\(rev\s+\d+\)$//;
+			dbg "\$boardname: $boardname";
+		}
+	}
+
+	# fallbacks
+	$module ||= 'vesa';
+	$boardname ||= "Unknown VGA Controller ${vendor}:${device}";
+
+	# Output stuff that can be sourced by shellscripts.
+	print "XMODULE=\"$module\"\n";
+	print "XBOARDNAME=\"$boardname\"\n";
+	print "XBUSID=\"$busid\"\n" if $busid;
+
+	# If the 'last' was removed from pci device glob, we could
+	# output something for all VGA devices in bash array form
+	#print "XMODULE[$num]=\"$module\"\n";
+	#print "XBOARDNAME[$num]=\"$boardname\"\n";
+	#print "XBUSID[$num]=\"$busid\"\n" if $busid;
+}
 
 # Glob /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class
 dbg "Globbing /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class";
@@ -76,90 +167,8 @@ for (</sys/devices/pci*/*{,/*}/class>) {
 	# Check for type VGA (see use constant at the top)
 	if (substr(slurp($_),2,4) eq VGA) {
 		# Strip '/class' from the end of the path
-		($pci = $_) =~ s|/class$||;
-		dbg "\$pci: $pci";
+		s|/class$||;
+		process($_, $count++);
 		last;
 	}
 }
-
-# Get vendor and device
-$vendor = substr(slurp("$pci/vendor"),2,4);
-$device = substr(slurp("$pci/device"),2,4);
-chomp($vendor, $device);
-dbg "\$vendor: $vendor \$device: $device";
-
-# strip leading pathname
-$pci =~ s|.*/([^/]+)$|$1|;
-dbg "\$pci: $pci";
-
-# Get BusID, ref: xserver-xorg.postinst
-if ($pci =~  m/^(\w+):(\w+):(\w+)\.(\w+)$/) { 
-	$busid = join(':', 'PCI', hex("0x$2"),  hex("0x$3"), hex("0x$4"));
-	dbg "\$busid: $busid";
-}
-
-if ($discover and -T PCILST) {
-	dbg "Opening libdiscover1 pci.lst...";
-	# Open PCILST for reading
-	open(F, '<', PCILST) or die("Failed to open pci.lst: $!\n");
-	while (<F>) {
-		chomp;
-		# Inside vendor block and new vendor block found? Then exit loop.
-		$vendorname and last if /^\w/;
-		# Inside vendor?
-		if ($vendorname) {
-			# Match vendor and device of GFX card found or match fallback driver(ffffffff)?
-			if (/^\t(?:${vendor}${device}|ffffffff)\t(\S+)\t(\S+\((\S+)\))\t(.+)$/) {
-				# Get strings captured from backreferences above.
-				($module, $boardname) = ($3, "$vendorname $4");
-				dbg "\$module: $module \$boardname: $boardname";
-				# Break loop
-				last;
-			}
-		}
-		# Found target vendor block? Set $vendorname with the vendor name captured from backref.
-		/^$vendor\s+(.*)$/ and $vendorname = $1;
-	}
-	close(F);
-}
-else {
-	# Discussion about source and creation of pci-id lists
-	# http://lists.freedesktop.org/archives/xorg/2007-August/027567.html
-	dbg "Looking for ${vendor}${device} in Xorg xserver pci.ids lists...";
-	for my $ids (read_dir(PCIIDS)) {
-		dbg "slurp(" . PCIIDS . "${ids})";
-		if (grep { /^${vendor}${device}$/i } slurp(PCIIDS . $ids)) {
-			($module = $ids) =~ s/\.ids$//;
-			dbg "\$module = $module";
-			last;
-		}
-	}
-
-	dbg "Invoking lspci to lookup \$boardname...";
-	# lspci lookup by $vendor:$device pair or by pci domain
-	if ($pci) {
-		dbg "lspci -s $pci";
-		$boardname = `LC_ALL=C lspci -s $pci 2>/dev/null`;
-	}
-	else {
-		dbg "lspci -d ${vendor}:${device}";
-		$boardname = `LC_ALL=C lspci -d ${vendor}:${device} 2>/dev/null`;
-	}
-	
-	if ($boardname) {
-		# trim the string
-		chomp($boardname);
-		$boardname =~ s/^.*:\s+//;
-		$boardname =~ s/\s+\(rev\s+\d+\)$//;
-		dbg "\$boardname: $boardname";
-	}
-}
-
-# fallbacks
-$module ||= 'vesa';
-$boardname ||= "Unknown VGA Controller ${vendor}:${device}";
-
-# Output stuff that can be sourced by shellscripts.
-print "XMODULE=\"$module\"\n";
-print "XBOARDNAME=\"$boardname\"\n";
-print "XBUSID=\"$busid\"\n" if $busid;
