@@ -67,7 +67,7 @@ sub dbg {
 }
 
 # Declare variables
-my ($busid, $boardname, $device, $driver, $module, $pci, $type, $vendor, $vendorname);
+my ($busid, $boardname, $device, $module, $pci, $vendor, $vendorname);
 
 # Glob /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class
 dbg "Globbing /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class";
@@ -111,8 +111,8 @@ if ($discover and -T PCILST) {
 			# Match vendor and device of GFX card found or match fallback driver(ffffffff)?
 			if (/^\t(?:${vendor}${device}|ffffffff)\t(\S+)\t(\S+\((\S+)\))\t(.+)$/) {
 				# Get strings captured from backreferences above.
-				($type, $driver, $module, $boardname) = ($1, $2, $3, "$vendorname $4");
-				dbg "\$1: $type \$2: $driver \$3: $module \$4: $boardname";
+				($module, $boardname) = ($3, "$vendorname $4");
+				dbg "\$module: $module \$boardname: $boardname";
 				# Break loop
 				last;
 			}
@@ -160,6 +160,6 @@ $module ||= 'vesa';
 $boardname ||= "Unknown VGA Controller ${vendor}:${device}";
 
 # Output stuff that can be sourced by shellscripts.
-$module and print "XMODULE=\"$module\"\n";
-$boardname and print "XBOARDNAME=\"$boardname\"\n";
-$busid and print "XBUSID=\"$busid\"\n";
+print "XMODULE=\"$module\"\n";
+print "XBOARDNAME=\"$boardname\"\n";
+print "XBUSID=\"$busid\"\n" if $busid;
