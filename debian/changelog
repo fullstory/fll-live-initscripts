@@ -1,8 +1,8 @@
 fll-live-initscripts (2.0.9) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xorgconfig: don't wrap serial mouse name in quotation marks either.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 03 Oct 2007 21:48:10 +0200
+ -- Kel Modderman <kel@otaku42.de>  Thu, 04 Oct 2007 08:25:39 +1000
 
 fll-live-initscripts (2.0.8) unstable; urgency=low
 

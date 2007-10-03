@@ -267,7 +267,7 @@ sub input_detect {
 			
 			if (m|^\s*(/dev/tty[^\s]+)\s+(.+)$|) {
 				$device = $1;
-				$name = "\"$2\"";
+				$name = $2;
 				$phys = 'serial';
 
 				dbg "'name' => $name, 'type' => $phys, 'device' => $device";
