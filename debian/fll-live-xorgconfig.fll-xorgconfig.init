@@ -260,8 +260,6 @@ do_start() {
 		#     XID XRES XHFREQ XVFREQ XDISPTYPE
 		eval $(x_res_probe ${XMODULE})
 
-		# XXX: set default horizsync/vertfrefresh based on XDISPTYPE
-
 		# probed
 		if [ "${XID}" ]; then
 			# too long: log_progress_msg "${G}id: ${Y}${XID}${N}"
@@ -325,18 +323,8 @@ do_start() {
 		XCFG_OPTS+=("--colordepth '${XDEPTH}'")
 	fi
 
-	local XINP_OPTS
-
 	if [ "${XPROBE_SERIAL_MOUSE}" ]; then
-		XINP_OPTS+=("--hwinfo")
-	fi
-
-	# detect input devices, return string of args to fll_xorgconfig
-	#     XINPUT
-	eval $(/usr/sbin/fll_xinput_discover ${XINP_OPTS[@]} 2>/dev/null)
-	
-	if [ "${XINPUT}" ]; then
-		XCFG_OPTS+=("${XINPUT}")
+		XCFG_OPTS+=("--serial-mouse")
 	fi
 
 	# write the configuration to file

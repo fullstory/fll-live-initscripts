@@ -25,15 +25,15 @@
 
 # legacy
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=imps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" corepointer=CorePointer --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --horizsync 30-60 --vertrefresh 50-75 --colordepth 24 --xkbmodel pc105 --modes "1024x768 832x624 800x600 720x400 640x480" --modelname AL512 --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --horizsync 30-60 --vertrefresh 50-75 --colordepth 24 --xkbmodel pc105 --modes "1024x768 832x624 800x600 720x400 640x480" --modelname AL512 --output /tmp/xorg.conf
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=synaptics device=/dev/psaux name="SynPS/2 Synaptics TouchPad" corepointer=CorePointer --input type=imps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" corepointer=SendCoreEvents --driver i810 --vendorname "Intel Corporation" --boardname "Intel Corporation 945G Integrated Graphics Controller" --busid "PCI:0:2:0" --horizsync 30-81 --vertrefresh 56-76 --xkbmodel pc104 --xkblayout de --xkbvariant nodeadkeys --modes "1280x1024 1024x768 800x600" --modelname 2405FPW --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --driver i810 --vendorname "Intel Corporation" --boardname "Intel Corporation 945G Integrated Graphics Controller" --busid "PCI:0:2:0" --horizsync 30-81 --vertrefresh 56-76 --xkbmodel pc104 --xkblayout de --xkbvariant nodeadkeys --modes "1280x1024 1024x768 800x600" --modelname 2405FPW --output /tmp/xorg.conf
 
 # xrandr (--mode, --rate to force config options)
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=imps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" corepointer=CorePointer --driver cirrus --vendorname "Cirrus Logic" --boardname "Cirrus Logics (QEMU)" --busid "PCI:5:0:0" --xkbmodel pc105 --mode 1280x1024 --rate 75 --modelname CM753 --xrandr --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --driver cirrus --vendorname "Cirrus Logic" --boardname "Cirrus Logics (QEMU)" --busid "PCI:5:0:0" --xkbmodel pc105 --mode 1280x1024 --rate 75 --modelname CM753 --xrandr --output /tmp/xorg.conf
 #
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --input type=imps2 device=/dev/input/mice name="ImExPS/2 Generic Explorer Mouse" corepointer=CorePointer --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --colordepth 16 --xkbmodel pc105 --mode 1024x768 --rate 85 --modelname AL512 --xrandr --output /tmp/xorg.conf
+# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --colordepth 16 --xkbmodel pc105 --mode 1024x768 --rate 85 --modelname AL512 --xrandr --output /tmp/xorg.conf
 
 use warnings;
 use strict;
@@ -53,6 +53,7 @@ my $xorg_tmpl = '/usr/share/fll-live-xorgconfig/templates';
 my $n;
 
 # for handling multiple mice
+my %input;
 my $mice = 0;
 my $mouse_index = 0;
 
@@ -125,6 +126,199 @@ sub input {
 	# call to &mouse, inciment $mice
 	# 3rd call to &mouse and inciment $mouse_index
 	$mouse_index++ if ++$mice % 4 == 0;
+}
+
+sub input_priority {
+	my $retval = 0;
+	
+	my $a_type = $input{$a}->{'type'};
+	my $b_type = $input{$b}->{'type'};
+	
+	dbg $a_type . " ($a) <=> ($b) " . $b_type;
+	
+	# input device sorting function assigns priority according to type:
+	# alps/synaptics > serial > (?) > ps2/usb
+
+	# preserve order of detection for input devices of same type
+	if	($a_type eq $b_type)		{ $retval = $a <=> $b; }
+	# ps2/usb is always last -> (semi)removable
+	elsif	($a_type eq 'imps2')		{ $retval++; }
+	elsif	($b_type eq 'imps2')		{ $retval--; }
+	# top-down priority for the rest
+	elsif	($a_type eq 'alps')		{ $retval--; }
+	elsif	($b_type eq 'alps')		{ $retval++; }
+	elsif	($a_type eq 'synaptics')	{ $retval--; }
+	elsif	($b_type eq 'synaptics')	{ $retval++; }
+	elsif	($a_type eq 'serial')		{ $retval--; }
+	elsif	($b_type eq 'serial')		{ $retval++; }
+	# preserve order of detection for unhandled input devices
+	else					{ $retval = $a <=> $b; }
+
+	dbg "retval: $retval";
+	
+	return $retval;
+}
+
+sub input_detect {
+	my $options = shift;
+	my ($name, $device, $phys, $mouse, $corepointer, $imps2);
+	
+	if (-f '/proc/bus/input/devices') {
+		dbg "using primary detection method: /proc/bus/input/devices";
+		open(my $id, '<', '/proc/bus/input/devices')
+			or die "Unable to read '/proc/bus/input/devices': $!\n";
+		while (<$id>) {
+			chomp;
+			dbg $_;
+
+			#		
+			#I: Bus=0011 Vendor=0002 Product=0005 Version=0000
+			#N: Name="ImPS/2 Generic Wheel Mouse"
+			#P: Phys=isa0060/serio1/input0
+			#S: Sysfs=/class/input/input2
+			#U: Uniq=
+			#H: Handlers=mouse0 event2 ts0
+			#B: EV=7
+			#B: KEY=70000 0 0 0 0
+			#B: REL=103
+			#
+
+			unless (/^./) {
+				# each input device block is seperated by a blank line
+				# clear these variables when we reach end of each block
+				($name, $device, $phys, $mouse) = ();
+				next;
+			}
+			
+			my ($key, $val) = split '=';
+			($key and $val) or next;
+
+			$key =~ s/^\w:\s+//;
+
+			given (lc($key)) { 
+				when 'name' {
+					$name = $val;
+				}
+				when 'handlers' {
+					# the mice have already been counted
+					$val =~ /mouse(\d+)/ and $mouse = $1;
+				}
+				when 'phys' {
+					$phys = $val;
+				}
+			}
+
+			next unless (defined $mouse and $name and $phys);
+
+			# default mouse device, we still use /dev/psaux for touchpads
+			$device = '/dev/input/mice';
+
+			given ($phys) {
+				when m/^isa/ {
+					given ($name) {
+						when m/^"SynPS\/2/ {
+							$phys = 'synaptics';
+							$device = '/dev/psaux';
+						}
+						when m/^"AlpsPS\/2/ {
+							$phys = 'alps';
+							$device = '/dev/psaux';
+						}
+						default {
+							$phys = 'imps2';
+						}
+					}
+				}
+				when m/^usb/ { 
+					$phys = 'imps2';
+				}
+			}
+
+			dbg "'name' => $name, 'type' => $phys, 'device' => $device";
+			
+			$input{$mouse} = {
+				'name' => $name,
+				'type' => $phys,
+				'device' => $device
+			};
+
+			($name, $phys, $mouse) = ();
+		}
+		close($id);
+
+		dbg \%input;
+	}
+
+	# set $mouse to current input device count
+	$mouse = keys %input ? keys %input : 0;
+	dbg "mouse count: $mouse";
+
+	# fallback mouse detection via hwinfo - probe for serial mouse when
+	# no other devices detected above via /proc/bus/input/devices
+	if (($options->{'serial'} || not keys %input) and -x '/usr/sbin/hwinfo') {
+		dbg "using alternative detection method: hwinfo --mouse --short";
+		open(my $hw, '-|', '/usr/sbin/hwinfo --mouse --short')
+			or die("Unable to execute hwinfo --mouse: $!\n");
+		while (<$hw>) {
+			chomp;
+			dbg $_;
+
+			($name, $device, $phys) = ();
+			
+			if (m|^\s*(/dev/tty[^\s]+)\s+(.+)$|) {
+				$device = $1;
+				$name = "\"$2\"";
+				$phys = 'serial';
+
+				dbg "'name' => $name, 'type' => $phys, 'device' => $device";
+
+				$input{$mouse} = {
+					'name' => $name,
+					'type' => $phys,
+					'device' => $device
+				};
+
+				$mouse++;
+			}
+		}
+		close($hw);
+
+		dbg \%input;
+	}			
+
+	for my $key (sort input_priority keys %input) {
+		dbg $input{$key};
+		
+		# only give one imps2 device to fll_xorgconfig
+		if ($input{$key}->{'type'} eq 'imps2' and $imps2) {
+			dbg "Avoiding duplicate imps2 device entry...";
+			next;
+		}
+		
+		# form --input argument string to give to fll_xorgconfig
+		for ('name', 'type', 'device') {
+			input(undef, $_, $input{$key}->{$_}),
+		}
+		
+		# elect a Core Pointer - USB device hotplugged later currently
+		# may not work if we do this :/
+		if ($corepointer) {
+			input(undef, 'corepointer', 'SendCoreEvents');
+		}
+		else {
+			input(undef, 'corepointer', 'CorePointer');
+			$corepointer++;
+		}
+		$input{$key}->{'type'} eq 'imps2' and $imps2++;
+	}
+
+	if ($corepointer and not $imps2) {
+		for ('name="Generic IMPS/2 Mouse"', 'type=imps2',
+			'device=/dev/input/mice', 'corepointer=SendCoreEvents') {
+			my ($k, $v) = split(/=/, $_);
+			input(undef, $k, $v);
+		}
+	}
 }
 
 sub gtf_modelines {
@@ -227,6 +421,7 @@ GetOptions(
 	# --input type=<synaptics,alps,serial,imps2> \
 	# 	dev=<> name=<> corepointer=<CorePointer,SendCoreEvents>
 	'input=s%{4}' => \&input,
+	'serial-mouse',
 
 	# keyboard
 	'xkblayout=s',
@@ -284,6 +479,7 @@ my @heading = get_template 'heading';
 my @serverlayout = get_template 'serverlayout';
 my @serverflags = get_template 'serverflags';
 my @keyboard = get_template 'inputdevice_keyboard';
+my @inputdevices; # template(s) handled below
 my @monitor = get_template 'monitor';
 my @device = get_template 'device';
 my @screen = get_template 'screen';
@@ -302,7 +498,7 @@ my @extensions = get_template 'extensions';
 
 ###########################################################
 # input devices
-my @inputdevices;
+input_detect({ 'serial' => $x{'serial-mouse'}, }) unless $mice;
 
 MICE: for my $m (sort { $a <=> $b } keys %{$x{'mouse'}}) {
 	# append current mouse number to name, ensuring it will be unique
