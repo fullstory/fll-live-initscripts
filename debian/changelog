@@ -6,10 +6,11 @@ fll-live-initscripts (2.0.8) UNRELEASED; urgency=low
   * fll_xorgconfig:
     - merge fll_xinput_discover functionality
     - add --serial-mouse cli option
+    - take care to strip quotation marks from mouse name
   * fll-xorgconfig:
     - adapt for merge of fll_xinput_discover into fll_xorgconfig
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 03 Oct 2007 19:54:16 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 03 Oct 2007 20:01:30 +1000
 
 fll-live-initscripts (2.0.7) unstable; urgency=low
 
