@@ -313,7 +313,7 @@ sub input_detect {
 	}
 
 	if ($corepointer and not $imps2) {
-		for ('name="Generic IMPS/2 Mouse"', 'type=imps2',
+		for ('name=Generic IMPS/2 Mouse', 'type=imps2',
 			'device=/dev/input/mice', 'corepointer=SendCoreEvents') {
 			my ($k, $v) = split(/=/, $_);
 			input(undef, $k, $v);

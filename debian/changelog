@@ -1,8 +1,9 @@
 fll-live-initscripts (2.0.10) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xorgconfig: brown paper bag error, don't quote fallback Generic USB
+    Mouse InputDevice Identifier.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 04 Oct 2007 00:49:27 +0200
+ -- Kel Modderman <kel@otaku42.de>  Thu, 04 Oct 2007 10:34:10 +1000
 
 fll-live-initscripts (2.0.9) unstable; urgency=low
 
