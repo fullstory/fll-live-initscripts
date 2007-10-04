@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.10) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.10) unstable; urgency=low
 
   * fll_xorgconfig: brown paper bag error, don't quote fallback Generic USB
     Mouse InputDevice Identifier.
