@@ -89,6 +89,9 @@ if [ -f /proc/cmdline ]; then
 			xkbmodel=*)
 				XKBMODEL="${param#xkbmodel=}"
 				;;
+			xkboptions=*)
+				XKBOPTIONS="${param#xkboptions=}"
+				;;
 			xkbvariant=*)
 				XKBVARIANT="${param#xkbvariant=}"
 				;;
@@ -192,6 +195,10 @@ do_start() {
 
 	if [ "${XKBVARIANT}" ]; then
 		XCFG_OPTS+=("--xkbvariant '${XKBVARIANT}'")
+	fi
+
+	if [ "${XKBOPTIONS}" ]; then
+		XCFG_OPTS+=("--xkboptions '${XKBOPTIONS}'")
 	fi
 
 	# detect video hardware via fll_xserver_discover
