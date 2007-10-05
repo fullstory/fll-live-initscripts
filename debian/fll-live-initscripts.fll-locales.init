@@ -147,7 +147,6 @@ esac
 case "${DEMO_CODE}" in
 	au)	### AU Australia kb:us ###
 		KEYTABLE="us"
-		KDEKEYBOARDS="us"
 		XKBLAYOUT="us"
 		TZ="Australia/Sydney"
 		CD_COUNTRY="us_american"
@@ -155,39 +154,34 @@ case "${DEMO_CODE}" in
 		;;
 	be) 	### BE Belgium kb:be ###
 		KEYTABLE="be2-latin1"
-		KDEKEYBOARDS="be,fr,us"
-		XKBLAYOUT="be"
+		XKBLAYOUT="be,fr,us"
 		TZ="Europe/Brussels"
 		CD_COUNTRY="Belgian"
 		MIRROR="ftp.belnet.be"
 		;;
 	bg)	### BG Bulgaria kb:bg ###
 		KEYTABLE="bg"
-		KDEKEYBOARDS="bg,us"
-		XKBLAYOUT="bg"
+		XKBLAYOUT="bg,us"
 		TZ="Europe/Sofia"
 		CD_COUNTRY="Bulgarian"
 		MIRROR="ftp.bg.debian.org"
 		;;
 	br)	### BR Brazil kb:br ###
 		KEYTABLE="br-abnt2"
-		KDEKEYBOARDS="br,us"
-		XKBLAYOUT="br"
+		XKBLAYOUT="br,us"
 		TZ="America/Sao_Paulo"
 		CD_COUNTRY="Brazilian"
 		MIRROR="ftp.br.debian.org"
 		;;
 	ch)	### CH Switzerland kb:de ###
 		KEYTABLE="sg-latin1"
-		KDEKEYBOARDS="de,fr,us"
-		XKBLAYOUT="de"
+		XKBLAYOUT="de,fr,us"
 		TZ="Europe/Zurich"
 		CD_COUNTRY="Swiss-de"
 		MIRROR="ftp.ch.debian.org"
 		;;
 	cn)	### CN Chinese (Simplified) kb:us ###
 		KEYTABLE="us"
-		KDEKEYBOARDS="us"
 		XKBLAYOUT="us"
 		TZ="Asia/Shanghai"
 		CD_COUNTRY=""
@@ -195,95 +189,83 @@ case "${DEMO_CODE}" in
 		;;
 	cz|cs)	### CZ CzechRepublic kb:cs ###
 		KEYTABLE="cz-lat2"
-		KDEKEYBOARDS="cs,us"
-		XKBLAYOUT="cs"
+		XKBLAYOUT="cs,us"
 		TZ="Europe/Prague"
 		CD_COUNTRY="Czech-qwerty"
 		MIRROR="ftp.cz.debian.org"
 		;;
 	de)	### DE Germany kb:de ###
 		KEYTABLE="de-latin1-nodeadkeys"
-		KDEKEYBOARDS="de,us"
-		XKBLAYOUT="de"
+		XKBLAYOUT="de,us"
 		TZ="Europe/Berlin"
 		CD_COUNTRY="German"
 		MIRROR="ftp.de.debian.org"
 		;;
 	dk|da)	### DK Denmark kb:dk ###
 		KEYTABLE="dk"
-		KDEKEYBOARDS="dk,us"
-		XKBLAYOUT="dk"
+		XKBLAYOUT="dk,us"
 		TZ="Europe/Copenhagen"
 		CD_COUNTRY="Danish"
 		MIRROR="ftp.dk.debian.org"
 		;;
 	es)	### ES Spain kb:es ###
 		KEYTABLE="es"
-		KDEKEYBOARDS="es,us"
-		XKBLAYOUT="es"
+		XKBLAYOUT="es,us"
 		TZ="Europe/Madrid"
 		CD_COUNTRY="Spanish"
 		MIRROR="ftp.es.debian.org"
 		;;
 	fi)	### FI Finland kb:fi ### 
 		KEYTABLE="fi-latin1"
-		KDEKEYBOARDS="fi,us"
-		XKBLAYOUT="fi"
+		XKBLAYOUT="fi,us"
 		TZ="Europe/Helsinki"
 		CD_COUNTRY="Swedish"
 		MIRROR="ftp.fi.debian.org"
 		;;
 	fr)	### FR France kb:fr ###
 		KEYTABLE="fr"
-		KDEKEYBOARDS="fr,us"
-		XKBLAYOUT="fr"
+		XKBLAYOUT="fr,us"
 		TZ="Europe/Paris"
 		CD_COUNTRY="French"
 		MIRROR="ftp.fr.debian.org"
 		;;
 	gr|el)	### GR Greece kb:gr ###
 		KEYTABLE="gr"
-		KDEKEYBOARDS="gr,us"
-		XKBLAYOUT="gr"
+		XKBLAYOUT="gr,us"
 		TZ="Europe/Athens"
 		CD_COUNTRY="Greek"
 		MIRROR="ftp.es.debian.org" # no primary mirror
 		;;
 	gb|uk)	### GB GreatBritain kb:gb ###
 		KEYTABLE="uk"
-		KDEKEYBOARDS="gb,us"
-		XKBLAYOUT="gb"
+		XKBLAYOUT="gb,us"
 		TZ="Europe/London"
 		CD_COUNTRY="British"
 		MIRROR="ftp.uk.debian.org"
 		;;
 	il|he)	### IL Israel (Hebrew) kb:il ###
 		KEYTABLE="us"
-		KDEKEYBOARDS="il,us"
-		XKBLAYOUT="il"
+		XKBLAYOUT="il,us"
 		TZ="Asia/Jerusalem"
 		CD_COUNTRY="Hebrew"
 		MIRROR="ftp.us.debian.org"
 		;;
 	hr) 	### HR Croatia kb:hr ###
 		KEYTABLE="hr" 
-		KDEKEYBOARDS="hr,us"
-		XKBLAYOUT="hr" 
+		XKBLAYOUT="hr,us"
 		TZ="Europe/Zagreb" 
 		CD_COUNTRY="Croatian"
 		MIRROR="ftp.hr.debian.org" # no primary mirror
 		;;
 	ie)	### IE Ireland (English) kb:ie ###
 		KEYTABLE="uk"
-		KDEKEYBOARDS="ie,gb,us"
-		XKBLAYOUT="ie"
+		XKBLAYOUT="ie,gb,us"
 		TZ="Europe/Dublin"
 		CD_COUNTRY="British"
 		MIRROR="ftp.uk.debian.org"
 		;;
 	ga)	### IE Ireland (Gaeilge) kb:ie ###
 		KEYTABLE="uk"
-		KDEKYBOARDS="ie"
 		XKBLAYOUT="ie"
 		TZ="Europe/Dublin"
 		CD_COUNTRY="British"
@@ -291,56 +273,49 @@ case "${DEMO_CODE}" in
 		;;
 	it)	### IT Italy kb:it ###
 		KEYTABLE="it"
-		KDEKEYBOARDS="it,us"
-		XKBLAYOUT="it"
+		XKBLAYOUT="it,us"
 		TZ="Europe/Rome"
 		CD_COUNTRY="Italian"
 		MIRROR="ftp.it.debian.org"
 		;;
 	jp|ja)	### JP Japanese (Limited) kb:jp ###
 		KEYTABLE="us"
-		KDEKEYBOARDS="jp,us"
-		XKBLAYOUT="jp"
+		XKBLAYOUT="jp,us"
 		TZ="Asia/Tokyo"
 		CD_COUNTRY="Japanese"
 		MIRROR="ftp.jp.debian.org"
 		;;
 	nl)	### NL Netherlands kb:nl ###
 		KEYTABLE="us"
-		KDEKEYBOARDS="nl,us"
-		XKBLAYOUT="nl"
+		XKBLAYOUT="nl,us"
 		TZ="Europe/Amsterdam"
 		CD_COUNTRY="Dutch"
 		MIRROR="ftp.nl.debian.org"
 		;;
 	pl)	### PL Poland kb:pl ###
 		KEYTABLE="pl"
-		KDEKEYBOARDS="pl,us"
-		XKBLAYOUT="pl"
+		XKBLAYOUT="pl,us"
 		TZ="Europe/Warsaw"
 		CD_COUNTRY="Polish"
 		MIRROR="ftp.pl.debian.org"
 		;;
 	pt)	### PT Portugal kb:pt ###
 		KEYTABLE="pt-latin1"
-		KDEKEYBOARDS="pt,us"
-		XKBLAYOUT="pt"
+		XKBLAYOUT="pt,us"
 		TZ="Europe/Lisbon"
 		CD_COUNTRY="Portugese"
 		MIRROR="ftp.es.debian.org"
 		;;
 	ru)	### RU Russia kb:ru ###
 		KEYTABLE="ru"
-		KDEKEYBOARDS="ru,us"
-		XKBLAYOUT="ru"
+		XKBLAYOUT="ru,us"
 		TZ="Europe/Moscow"
 		CD_COUNTRY="Russian"
 		MIRROR="ftp.ru.debian.org"
 		;;
 	si|sl)	### SI Slovenia kb:si ###
 		KEYTABLE="slovene"
-		KDEKEYBOARDS="si,us"
-		XKBLAYOUT="si"
+		XKBLAYOUT="si,us"
 		TZ="Europe/Ljubljana"
 		#CONSOLEFONT="iso02g"
 		CD_COUNTRY="Slovene"
@@ -348,23 +323,20 @@ case "${DEMO_CODE}" in
 		;;
 	sk)	### SK Slovakia kb:sk ###
 		KEYTABLE="sk-qwerty"
-		KDEKEYBOARDS="sk,us"
-		XKBLAYOUT="sk"
+		XKBLAYOUT="sk,us"
 		TZ="Europe/Bratislava"
 		CD_COUNTRY="Slovak-qwerty"
 		MIRROR="ftp.sk.debian.org"
 		;;
 	tr)	### TR Turkey kb:tr ###
 		KEYTABLE="tr_q-latin5"
-		KDEKEYBOARDS="tr,us"
-		XKBLAYOUT="tr"
+		XKBLAYOUT="tr,us"
 		TZ="Europe/Istanbul"
 		CD_COUNTRY="Turkish"
 		MIRROR="ftp.tr.debian.org"
 		;;
 	tw)	### TW Taiwan (TraditionalChinese) kb:us ###
 		KEYTABLE="us"
-		KDEKEYBOARDS="us"
 		XKBLAYOUT="us"
 		TZ="Asia/Taipei"
 		CD_COUNTRY=""
@@ -372,16 +344,14 @@ case "${DEMO_CODE}" in
 		;;
 	us)	### US UnitedStates kb:us ###
 		KEYTABLE="us"
-		KDEKEYBOARDS="us,ca"
-		XKBLAYOUT="us"
+		XKBLAYOUT="us,ca"
 		TZ="America/New_York"
 		CD_COUNTRY="us_american"
 		MIRROR="ftp.us.debian.org"
 		;;
 	*)
 		KEYTABLE="us"
-		KDEKEYBOARDS="us,ca"
-		XKBLAYOUT="us"
+		XKBLAYOUT="us,ca"
 		TZ="Europe/London"
 		CD_COUNTRY="us_american"
 		MIRROR="ftp.debian.org"
@@ -751,7 +721,7 @@ localize_sources_list() {
 save_locale_variables() {
 	[ -f "/etc/default/${NAME}" ] || return 0
 
-	for var in	LANGUAGE KEYTABLE XKBLAYOUT KDEKEYBOARDS MIRROR \
+	for var in	LANGUAGE KEYTABLE XKBLAYOUT MIRROR \
 			CD_COUNTRY CD_FAMILY CD_KEYMAP CD_VARIANT CD_FULL \
 			CD_LAYOUT CD_LAYOUT_PATH CD_VARIANT_PATH CD_FULL_FIX; do
 		
