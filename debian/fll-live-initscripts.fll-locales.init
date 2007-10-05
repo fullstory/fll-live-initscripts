@@ -179,7 +179,7 @@ case "${DEMO_CODE}" in
 		;;
 	ch)	### CH Switzerland kb:de ###
 		KEYTABLE="sg-latin1"
-		KDEKEYBOARDS="de_CH,de,fr,us"
+		KDEKEYBOARDS="de,fr,us"
 		XKBLAYOUT="de"
 		TZ="Europe/Zurich"
 		CD_COUNTRY="Swiss-de"

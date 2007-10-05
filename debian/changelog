@@ -12,8 +12,10 @@ fll-live-initscripts (2.0.11) UNRELEASED; urgency=low
   * fll-xorgconfig:
     - add xkboptions= cheatcode handling
     - add convenient xkboptions when xfce4-xkb-plugin is installed
+  * fll-locales:
+    - fix default xkblayout for de_CH
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 05 Oct 2007 15:16:16 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 05 Oct 2007 15:30:19 +1000
 
 fll-live-initscripts (2.0.10) unstable; urgency=low
 
