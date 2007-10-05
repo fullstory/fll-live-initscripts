@@ -38,7 +38,6 @@ use constant {
 	PCIIDS => '/usr/share/xserver-xorg/pci/',
 };
 
-my $count = 0;
 my ($debug, $discover);
 
 GetOptions(
@@ -68,7 +67,9 @@ sub dbg {
 }
 
 sub process {
-	my ($syspci, $num) = (shift, shift);
+	my $syspci = shift;
+	return unless -d $syspci;
+
 	my ($busid, $boardname, $device, $module, $vendor, $vendorname);
 
 	# Get vendor and device
@@ -152,12 +153,6 @@ sub process {
 	print "XMODULE=\"$module\"\n";
 	print "XBOARDNAME=\"$boardname\"\n";
 	print "XBUSID=\"$busid\"\n" if $busid;
-
-	# If the 'last' was removed from pci device glob, we could
-	# output something for all VGA devices in bash array form
-	#print "XMODULE[$num]=\"$module\"\n";
-	#print "XBOARDNAME[$num]=\"$boardname\"\n";
-	#print "XBUSID[$num]=\"$busid\"\n" if $busid;
 }
 
 # Glob /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class
@@ -168,7 +163,7 @@ for (</sys/devices/pci*/*{,/*}/class>) {
 	if (substr(slurp($_),2,4) eq VGA) {
 		# Strip '/class' from the end of the path
 		s|/class$||;
-		process($_, $count++);
+		process($_);
 		last;
 	}
 }

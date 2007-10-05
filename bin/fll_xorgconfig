@@ -67,10 +67,6 @@ my %x = (
 	'templates'	=> \$xorg_tmpl,
 	'verbose'	=> \$verbosity,
 
-	# device
-	'boardname'	=> 'All',
-	'vendorname'	=> 'All',
-
 	# xorg driver
 	'driver'	=> 'vesa',
 	'colordepth'	=> '24',
