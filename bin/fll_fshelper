@@ -209,7 +209,7 @@ sub add_mnt_pnt {
 # process cli arguments
 
 GetOptions(
-	\%opts, 'auto', 'debug', 'fstab=s', 'help', 'install-gui', 'labels',
+	\%opts, 'auto', 'debug|verbose', 'fstab=s', 'help', 'install-gui', 'labels',
 	'make-mountpoints', 'no-swap', 'quiet', 'uuids', 'write-fstab'
 );
 

@@ -116,13 +116,20 @@ sub process {
 		# Discussion about source and creation of pci-id lists
 		# http://lists.freedesktop.org/archives/xorg/2007-August/027567.html
 		dbg "Looking for ${vendor}${device} in Xorg xserver pci.ids lists...";
-		for my $ids (read_dir(PCIIDS)) {
-			dbg "slurp(" . PCIIDS . "${ids})";
-			if (grep { /^${vendor}${device}$/i } slurp(PCIIDS . $ids)) {
-				($module = $ids) =~ s/\.ids$//;
-				dbg "\$module = $module";
-				last;
+		IDS: for my $ids (read_dir(PCIIDS)) {
+			dbg "open(" . PCIIDS . "${ids})";
+			open(my $fh, '<', PCIIDS . $ids)
+				or die "Unable to read " . PCIIDS . $ids . ": $!\n";
+			while(<$fh>) {
+				chomp;
+				dbg $_;
+				if (/^${vendor}${device}$/i) {
+					($module = $ids) =~ s/\.ids$//;
+					dbg "\$module: $module";
+					last IDS;
+				}
 			}
+			close($fh);
 		}
 
 		dbg "Invoking lspci to lookup \$boardname...";
