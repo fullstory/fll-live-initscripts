@@ -3,12 +3,13 @@ fll-live-initscripts (2.0.12) UNRELEASED; urgency=low
   * fll_fshelper:
     - use Cwd::realpath to return the canonical pathnames rather than readlink
       system call capturned in backticks
+    - improve dbg output in device_is_removable test
   * fll_xorgconfig:
     - cleanup --composite post-processing
     - forget about passing hash ref to input_detect
     - allow 15 as --colordepth argument
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 06 Oct 2007 15:01:21 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 06 Oct 2007 15:15:59 +1000
 
 fll-live-initscripts (2.0.11) unstable; urgency=low
 

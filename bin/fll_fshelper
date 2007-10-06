@@ -140,7 +140,7 @@ sub device_is_removeable {
 	
 	$d =~ m|^(/dev/)?([^/0-9]+)([0-9]*)$| and $d = $2;
 
-	dbg "device_is_removeable: $d";
+	dbg "device_is_removeable($d)";
 
 	if (-l "/sys/block/$d/device") {
 		$link = realpath("/sys/block/$d/device");
@@ -152,6 +152,8 @@ sub device_is_removeable {
 			return 1;
 		}
 	}
+
+	dbg "$d is not removable";
 
 	return 0;
 }
