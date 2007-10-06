@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.12) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.12) unstable; urgency=low
 
   * fll_fshelper:
     - use Cwd::realpath to return the canonical pathnames rather than readlink
