@@ -322,7 +322,7 @@ sub gtf_modelines {
 
 	# if no args are given to function, return a Modeline for each
 	# element of our mode/frequency library
-	my @f = $_[0] ? [ @_ ] : (
+	my @f = @_ ? [ @_ ] : (
 		[ 640, 350, 85 ],	[ 640, 400, 85 ], 	[ 640, 480, 60 ],
 		[ 640, 480, 72 ],	[ 640, 480, 75 ],	[ 640, 480, 85 ],
 		[ 640, 480, 100 ],	[ 720, 400, 85 ],	[ 768, 576, 60 ],
