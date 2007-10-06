@@ -1,14 +1,13 @@
 fll-live-initscripts (2.0.12) UNRELEASED; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_fshelper:
     - use Cwd::realpath to return the canonical pathnames rather than readlink
       system call capturned in backticks
+  * fll_xorgconfig:
+    - cleanup --composite post-processing
+    - forget about passing hash ref to input_detect
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 06 Oct 2007 11:35:26 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 06 Oct 2007 14:58:32 +1000
 
 fll-live-initscripts (2.0.11) unstable; urgency=low
 

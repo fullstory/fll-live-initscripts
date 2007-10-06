@@ -87,7 +87,7 @@ my %x = (
 	'xkboptions'	=> 'altwin:super_win',
 
 	# extensions
-	'composite'	=> 'off',
+	'composite'	=> 0,
 );
 
 ###########################################################
@@ -251,7 +251,7 @@ sub input_detect {
 
 	# fallback mouse detection via hwinfo - probe for serial mouse when
 	# no other devices detected above via /proc/bus/input/devices
-	if (($options->{'serial'} || not keys %input) and -x '/usr/sbin/hwinfo') {
+	if (($x{'serial-mouse'} || not keys %input) and -x '/usr/sbin/hwinfo') {
 		dbg "using alternative detection method: hwinfo --mouse --short";
 		open(my $hw, '-|', '/usr/sbin/hwinfo --mouse --short')
 			or die("Unable to execute hwinfo --mouse: $!\n");
@@ -446,7 +446,7 @@ for my $key (keys %x) {
 			$x{$key} =~ /^(1|4|8|16|24)$/ or $invalid = $key;
 		}
 		when 'composite' {
-			$x{$key} ne 'off' and  $x{$key} = 'on';
+			$x{$key} = $x{$key} ? 'on' : 'off';
 		}
 		when 'mode' {
 			$x{$key} =~ /^\d+x\d+$/ or $invalid = $key;
@@ -494,7 +494,7 @@ my @extensions = get_template 'extensions';
 
 ###########################################################
 # input devices
-input_detect({ 'serial' => $x{'serial-mouse'}, }) unless $mice;
+input_detect unless $mice;
 
 MICE: for my $m (sort { $a <=> $b } keys %{$x{'mouse'}}) {
 	# append current mouse number to name, ensuring it will be unique
