@@ -1,8 +1,14 @@
 fll-live-initscripts (2.0.12) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 05 Oct 2007 11:31:28 +0200
+  [ Kel Modderman ]
+  * fll_fshelper:
+    - use Cwd::realpath to return the canonical pathnames rather than readlink
+      system call capturned in backticks
+
+ -- Kel Modderman <kel@otaku42.de>  Sat, 06 Oct 2007 11:35:26 +1000
 
 fll-live-initscripts (2.0.11) unstable; urgency=low
 

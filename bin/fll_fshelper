@@ -25,6 +25,7 @@
 
 use warnings;
 use strict;
+use Cwd qw(realpath);
 use File::Path;
 use Getopt::Long;
 use Tie::File;
@@ -142,8 +143,7 @@ sub device_is_removeable {
 	dbg "device_is_removeable: $d";
 
 	if (-l "/sys/block/$d/device") {
-		$link = `readlink -f /sys/block/$d/device`;
-		chomp $link;
+		$link = realpath("/sys/block/$d/device");
 		dbg $link;
 		# we filter out devices on the usb or firewire bus
 		# eg. /sys/devices/pci0000:00/0000:00:02.1/usb2/2-6/2-6:1.0/host7/target7:0:0/7:0:0:0
@@ -167,8 +167,7 @@ sub device_resolver {
 	}
 	elsif ($d =~ m|^/dev/disk/by-.+/[^/]+$|) {
 		# canonicalize device node symlink
-		$n = `readlink -f $d`;
-		chomp $n;
+		$n = realpath($d);
 	}
 	elsif ($d =~ m|^/dev/.+|) {
 		$n = $d;
@@ -297,8 +296,7 @@ if ($opts{'install-gui'}) {
 # parse ata/scsi disk id's without vol_id
 
 for my $id (</dev/disk/by-id/{ata,scsi,usb}-*>) {
-	my $name = `readlink -f $id`;
-	chomp($name);
+	my $name = realpath($id);
 	
 	$id =~ s%^/dev/disk/by-id/\w+-%%;
 	
