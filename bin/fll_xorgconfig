@@ -443,7 +443,7 @@ for my $key (keys %x) {
 
 	given ($key) {
 		when 'colordepth' {
-			$x{$key} =~ /^(1|4|8|16|24)$/ or $invalid = $key;
+			$x{$key} =~ /^(1|4|8|15|16|24)$/ or $invalid = $key;
 		}
 		when 'composite' {
 			$x{$key} = $x{$key} ? 'on' : 'off';
