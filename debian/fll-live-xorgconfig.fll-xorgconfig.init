@@ -182,11 +182,6 @@ do_start() {
 	# sourced earlier from /etc/default/fll-locales
 	if [ "${XKBLAYOUT}" ]; then
 		XCFG_OPTS+=("--xkblayout '${XKBLAYOUT}'")
-		case "${XKBLAYOUT}" in
-		 	de)
-				[ "${XKBVARIANT}" ] || XCFG_OPTS+=("--xkbvariant nodeadkeys")
-				;;
-		esac
 	fi
 
 	if [ "${XKBMODEL}" ]; then

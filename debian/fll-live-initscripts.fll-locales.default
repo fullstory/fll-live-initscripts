@@ -3,14 +3,12 @@
 # language cheatcode
 LANGUAGE=""
 
-# default language
+# console language setting
 KEYTABLE=""
 
-# default X i18n settings
+# local Xkb settings
 XKBLAYOUT=""
-
-# default KDE i18n settings
-KDEKEYBOARDS=""
+XKBVARIANT=""
 
 # local apt mirror
 MIRROR=""
