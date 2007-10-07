@@ -325,6 +325,7 @@ do_start() {
 		log_end_msg 0
 	fi
 
+	# x_res_probe() may also export this variable
 	if [ "${XDEPTH}" ]; then
 		XCFG_OPTS+=("--colordepth '${XDEPTH}'")
 	fi
