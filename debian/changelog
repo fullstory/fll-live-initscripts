@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.13) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.13) unstable; urgency=low
 
   * fll-xorgconfig:
     - when xmodule= cheatcode is used, do the xresprobe probe with that module
