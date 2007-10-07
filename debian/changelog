@@ -7,11 +7,12 @@ fll-live-initscripts (2.0.13) UNRELEASED; urgency=low
       fll-locales
     - add note above $XDEPTH handling that x_res_probe may also export this
       variable (xresprobe "depth:" field).
+    - add rate and mode cheatcode aliases
   * fll-locales:
     - add XKBVARIANT variable support
     - cleanup fll-locales.default, improve comments, remove defunct KDEKEYBOARDS
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 07 Oct 2007 12:25:10 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 07 Oct 2007 12:27:00 +1000
 
 fll-live-initscripts (2.0.12) unstable; urgency=low
 

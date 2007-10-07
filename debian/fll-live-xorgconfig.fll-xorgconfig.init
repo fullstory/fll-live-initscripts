@@ -98,10 +98,10 @@ if [ -f /proc/cmdline ]; then
 			xmodule=*)
 				XNEWMODULE="${param#xmodule=}"
 				;;
-			xrate=*)
+			xrate=*|rate=*)
 				XRATE="${param#*rate=}"
 				;;
-			xscreen=*|screen=*|xmode=*)
+			xscreen=*|screen=*|xmode=*|mode=*)
 				XMODES="${param#*=}"
 				;;
 			xvrefresh=*|vsync=*)
