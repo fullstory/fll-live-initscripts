@@ -1,8 +1,10 @@
 fll-live-initscripts (2.0.13) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - when xmodule= cheatcode is used, do the xresprobe probe with that module
+      as argument too, as this is almost always used to force the vesa driver
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 06 Oct 2007 11:04:26 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sun, 07 Oct 2007 11:48:52 +1000
 
 fll-live-initscripts (2.0.12) unstable; urgency=low
 

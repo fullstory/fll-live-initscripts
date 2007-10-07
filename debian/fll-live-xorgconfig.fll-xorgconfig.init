@@ -216,6 +216,7 @@ do_start() {
 		# user override
 		log_progress_msg "${G}driver(*): ${Y}${XNEWMODULE}${N}"
 		XCFG_OPTS+=("--driver '${XNEWMODULE}'")
+		XMODULE="${XNEWMODULE}"
 	elif [ "${XMODULE}" ]; then
 		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
 		XCFG_OPTS+=("--driver '${XMODULE}'")
