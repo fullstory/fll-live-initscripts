@@ -9,24 +9,23 @@ use File::Path;
 use Tie::File;
 
 my $self = 'fll_src_uri';
-my ($g, $m, $o, $p, $s, , $t, $v);
+my ($c, $m, $o, $s, , $t, $v);
 $o = getcwd();
 
 GetOptions(
-	'g|get'		=> \$g,
+	'c|cleanup'	=> \$c,
 	'm|manifest=s'	=> \$m,
 	'o|output=s'	=> \$o,
-	'p|preserve'	=> \$p,
 	's|sources=s'	=> \$s,
 	't|tar=s'	=> \$t,
 	'v|verbose'	=> \$v,
 );
 
-if	($s and $t) {
-	get_uri(realpath($s), $t, $o, $p);
-}
-elsif	($s and $m) {
+if	($s and $m) {
 	gen_uri(realpath($s), realpath($m));
+}
+elsif	($s) {
+	get_uri(realpath($s), $t, $o, $c);
 }
 else {
 	print STDERR <<_EOF_
@@ -47,12 +46,11 @@ else {
         [-o|--output /path/to/output] [-p|--preserve]
     
     $self will get the dsc URI's from the archive with dget(1) (from 
-    devscripts package) and put them in a tar archive. If no --output option
-    is given, the source package tree will be formed in the current
-    directory in a directory named 'source'. The tar file will be created
-    in the output directory with the string given by the --tar option. The
-    --preserve option prevent the automatic cleanup of the source tree after
-    the tarball has made.
+    devscripts package) and optionally put them in a tar archive. If no
+    --output option is given, the source package tree will be formed in the
+    current directory in a directory named 'source'. The tar file will be
+    created in the output directory with the string given by the --tar option.
+    The --cleanup option cleans up the source tree after the tarball has made.
 
 _EOF_
 ;
@@ -82,7 +80,7 @@ sub sysexec {
 
 
 sub get_uri {
-	my ($slist, $tar, $out, $preserve) = (shift, shift, shift, shift);
+	my ($slist, $tar, $out, $cleanup) = (shift, shift, shift, shift);
 	my %failed;
 
 	-x '/usr/bin/dget' or die "E: dget is required (devscripts)\n";
@@ -136,12 +134,14 @@ sub get_uri {
 	# make the source tarball
 	cd($out);
 
-	print "O: creating: $out/$tar\n";
-	my $cmd = $v ? "tar -cvf $tar ./source" : "tar -cf $tar ./source";
-	sysexec($cmd);
+	if ($tar) {
+		print "O: creating: $out/$tar\n";
+		my $cmd = $v ? "tar -cvf $tar ./source" : "tar -cf $tar ./source";
+		sysexec($cmd);
+	}
 
 	# cleanup
-	unless($preserve) {
+	if ($cleanup) {
 		print "O: cleaning: $out/source\n";
 		eval { rmtree("$out/source", $v, 1); };
 		$@ and die "E: failed to rmtree($out/source): $!\n";
