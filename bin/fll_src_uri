@@ -122,8 +122,6 @@ sub get_uri {
 		# manage the dget process with fork and exec, allow SIGINT
 		my $cmd = $v ? "/usr/bin/dget $s[$n]" : "/usr/bin/dget -q $s[$n]";
 		sysexec($cmd);
-
-		$n == 20 and last;
 	}
 	continue {
 		$n++;
