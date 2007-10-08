@@ -1,7 +1,6 @@
-fll-live-initscripts (2.0.14) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.14) unstable; urgency=low
 
   [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
   * update syntax for Vcs headers in debian/control
 
   [ Kel Modderman ]
