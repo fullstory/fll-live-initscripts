@@ -1,5 +1,6 @@
 fll-live-initscripts (2.0.15) unstable; urgency=low
 
+  * Add fll_src_ui to fll-live-initscripts binary package.
   * Run perltidy over perl scripts.
   * Use the 'use autoload' pragma for all perl scripts with dbg function.
   * fll_src_uri:
@@ -14,7 +15,7 @@ fll-live-initscripts (2.0.15) unstable; urgency=low
     - fix typo in comment
     - remove large if block around lspci lookup
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 09 Oct 2007 20:38:40 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 09 Oct 2007 21:00:51 +1000
 
 fll-live-initscripts (2.0.14) unstable; urgency=low
 
