@@ -9,7 +9,7 @@ use File::Path;
 use Tie::File;
 
 my $self = 'fll_src_uri';
-my ($c, $d, $m, $o, $s,, $t, $v);
+my ($c, $d, $m, $o, $s, $t, $v);
 $o = getcwd();
 
 GetOptions(
