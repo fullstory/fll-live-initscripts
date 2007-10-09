@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.16) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 09 Oct 2007 14:13:44 +0200
+
 fll-live-initscripts (2.0.15) unstable; urgency=low
 
   * Add fll_src_ui to fll-live-initscripts binary package.
