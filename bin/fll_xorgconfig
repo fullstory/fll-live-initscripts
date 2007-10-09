@@ -488,7 +488,7 @@ input_detect unless $mice;
 MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 
 	# append current mouse number to name, ensuring it will be unique
-	$x{'mouse'}{$m}{'name'} = $x{'mouse'}{$m}{'name'} . " $m";
+	$x{'mouse'}{$m}{'name'} .= " $m";
 
 	# take a slice of $x{'mouse'}{$m}
 	my ($type, $device, $name) = @{ $x{'mouse'}{$m} }{ 'type', 'device', 'name' };
