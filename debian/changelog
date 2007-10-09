@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.16) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.16) unstable; urgency=low
 
   * fll-xorgconfig:
     - remove bashism's, use dash
