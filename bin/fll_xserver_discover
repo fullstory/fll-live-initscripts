@@ -98,10 +98,8 @@ sub process {
 
 			# Inside vendor?
 			if ($vendorname) {
-
 				# Match vendor and device of GFX card found or match fallback driver(ffffffff)?
 				if (/^\t(?:${vendor}${device}|ffffffff)\t(\S+)\t(\S+\((\S+)\))\t(.+)$/) {
-
 					# Get strings captured from backreferences above.
 					($module, $boardname) = ($3, "$vendorname $4");
 					dbg "\$module: $module \$boardname: $boardname";
@@ -124,11 +122,14 @@ sub process {
 		IDS: for my $ids (read_dir(PCIIDS)) {
 			dbg "open(" . PCIIDS . "${ids})";
 			
-			open(my $fh, '<', PCIIDS . $ids) or die "Unable to read " . PCIIDS . $ids . ": $!\n";
+			open(my $fh, '<', PCIIDS . $ids)
+				or die "Unable to read " . PCIIDS . $ids . ": $!\n";
 			
 			while (<$fh>) {
 				chomp;
 				dbg $_;
+
+				# match pci id (listed in upper case)
 				if (/^${vendor}${device}$/i) {
 					($module = $ids) =~ s/\.ids$//;
 					dbg "\$module: $module";
@@ -169,8 +170,7 @@ sub process {
 	print "XBUSID=\"$busid\"\n" if $busid;
 }
 
-# Glob /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class
-dbg "Globbing /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class";
+dbg "Glob'ing /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class";
 for (</sys/devices/pci*/*{,/*}/class>) {
 	dbg $_;
 
