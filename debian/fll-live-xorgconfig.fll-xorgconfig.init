@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/dash
 
 ### BEGIN INIT INFO
 # Provides:          fll-xorgconfig
@@ -176,27 +176,27 @@ do_start() {
 	local XCFG_OPTS
 
 	if [ "${VERBOSE}" = "yes" ]; then
-		XCFG_OPTS+=("--verbose")
+		XCFG_OPTS="${XCFG_OPTS} --verbose"
 	fi
 
 	# sourced earlier from /etc/default/fll-locales
 	if [ "${XKBLAYOUT}" ]; then
-		XCFG_OPTS+=("--xkblayout '${XKBLAYOUT}'")
+		XCFG_OPTS="${XCFG_OPTS} --xkblayout '${XKBLAYOUT}'"
 	fi
 
 	if [ "${XKBMODEL}" ]; then
-		XCFG_OPTS+=("--xkbmodel '${XKBMODEL}'")
+		XCFG_OPTS="${XCFG_OPTS} --xkbmodel '${XKBMODEL}'"
 	fi
 
 	if [ "${XKBVARIANT}" ]; then
-		XCFG_OPTS+=("--xkbvariant '${XKBVARIANT}'")
+		XCFG_OPTS="${XCFG_OPTS} --xkbvariant '${XKBVARIANT}'"
 	fi
 
 	if [ "${XKBOPTIONS}" ]; then
-		XCFG_OPTS+=("--xkboptions '${XKBOPTIONS}'")
+		XCFG_OPTS="${XCFG_OPTS} --xkboptions '${XKBOPTIONS}'"
 	elif [ -f /usr/share/xfce4/panel-plugins/xkb-plugin.desktop ]; then
 		# needed for xfce4-xkb-plugin
-		XCFG_OPTS+=("--xkboptions 'grp:alt_shift_toggle,grp_led:scroll'")
+		XCFG_OPTS="${XCFG_OPTS} --xkboptions 'grp:alt_shift_toggle,grp_led:scroll'"
 	fi
 
 	# detect video hardware via fll_xserver_discover
@@ -210,23 +210,23 @@ do_start() {
 	if [ "${XNEWMODULE}" ]; then
 		# user override
 		log_progress_msg "${G}driver(*): ${Y}${XNEWMODULE}${N}"
-		XCFG_OPTS+=("--driver '${XNEWMODULE}'")
+		XCFG_OPTS="${XCFG_OPTS} --driver '${XNEWMODULE}'"
 		XMODULE="${XNEWMODULE}"
 	elif [ "${XMODULE}" ]; then
 		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
-		XCFG_OPTS+=("--driver '${XMODULE}'")
+		XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
 
 		# turn composite on for modules that support it well
 		case "${XMODULE}" in
 			ati|intel)
-				XCFG_OPTS+=("--composite")
+				XCFG_OPTS="${XCFG_OPTS} --composite"
 				;;
 		esac
 	fi
 
 	if [ "${XBUSID}" ]; then
 		log_progress_msg "${G}busid: ${Y}${XBUSID}${N}"
-		XCFG_OPTS+=("--busid '${XBUSID}'")
+		XCFG_OPTS="${XCFG_OPTS} --busid '${XBUSID}'"
 	fi
 
 	log_end_msg 0
@@ -235,7 +235,7 @@ do_start() {
 		log_daemon_msg "${B}${NAME}${N}"
 		log_progress_msg "${G}device: ${Y}${XBOARDNAME}${N}"
 		log_end_msg 0
-		XCFG_OPTS+=("--boardname '${XBOARDNAME}'")
+		XCFG_OPTS="${XCFG_OPTS} --boardname '${XBOARDNAME}'"
 	fi
 	
 	log_daemon_msg "${B}${NAME}${N}"
@@ -247,16 +247,16 @@ do_start() {
 	if xserver_has_xrandr "${XMODULE}"; then
 		log_progress_msg "${G}driver has ${Y}RandR 1.2${G} support${N}"
 		# xrandr aware, we don't have to probe monitor settings :)
-		XCFG_OPTS+=("--xrandr")
+		XCFG_OPTS="${XCFG_OPTS} --xrandr"
 		
 		if [ "${XMODES}" ]; then
 			log_progress_msg "${Y}${XMODES}${N}"
-			XCFG_OPTS+=("--mode '${XMODES}'")
+			XCFG_OPTS="${XCFG_OPTS} --mode '${XMODES}'"
 		fi
 
 		if [ "${XRATE}" ]; then
 			log_progress_msg "${G}@ ${Y}${XRATE}${N}"
-			XCFG_OPTS+=("--rate '${XRATE}'")
+			XCFG_OPTS="${XCFG_OPTS} --rate '${XRATE}'"
 		fi
 
 		log_end_msg 0
@@ -269,18 +269,18 @@ do_start() {
 		# probed
 		if [ "${XID}" ]; then
 			# too long: log_progress_msg "${G}id: ${Y}${XID}${N}"
-			XCFG_OPTS+=("--modelname '${XID}'")
+			XCFG_OPTS="${XCFG_OPTS} --modelname '${XID}'"
 		fi
 		
 		if [ "${XMODES}" ]; then
 			# cheatcode
 			log_progress_msg "${G}res(*): ${Y}${XMODES}${N}"
-			XCFG_OPTS+=("--modes '${XMODES}'")
+			XCFG_OPTS="${XCFG_OPTS} --modes '${XMODES}'"
 		elif [ "${XRES}" ]; then
 			# just announce the highest res detected
 			log_progress_msg "${G}res: ${Y}${XRES%%\ *}${N}"
 			# probed
-			XCFG_OPTS+=("--modes '${XRES}'")
+			XCFG_OPTS="${XCFG_OPTS} --modes '${XRES}'"
 		fi
 		
 		if [ "${XHORIZSYNC}" ]; then
@@ -293,11 +293,11 @@ do_start() {
 			fi
 
 			log_progress_msg "${G}hfreq(*): ${Y}${XHORIZSYNC_MIN}kHz - ${XHORIZSYNC_MAX}kHz${N}"
-			XCFG_OPTS+=("--horizsync '${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX}'")
+			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX}'"
 		elif [ "${XHFREQ}" ]; then
 			log_progress_msg "${G}hfreq: ${Y}${XHFREQ}${N}"
 			# probed
-			XCFG_OPTS+=("--horizsync '${XHFREQ}'")
+			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHFREQ}'"
 		fi
 		
 		if [ "${XVERTREFRESH}" ]; then
@@ -310,16 +310,16 @@ do_start() {
 			fi
 
 			log_progress_msg "${G}vfreq(*): ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz${N}"
-			XCFG_OPTS+=("--vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'")
+			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'"
 		elif [ "${XVFREQ}" ]; then
 			log_progress_msg "${G}vfreq: ${Y}${XVFREQ}${N}"
 			# probed
-			XCFG_OPTS+=("--vertrefresh '${XVFREQ}'")
+			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVFREQ}'"
 		fi
 
 		# cheatcode
 		if [ "${XNOMODELINES}" ]; then
-			XCFG_OPTS+=("--no-modelines")
+			XCFG_OPTS="${XCFG_OPTS} --no-modelines"
 		fi
 
 		log_end_msg 0
@@ -327,15 +327,15 @@ do_start() {
 
 	# x_res_probe() may also export this variable
 	if [ "${XDEPTH}" ]; then
-		XCFG_OPTS+=("--colordepth '${XDEPTH}'")
+		XCFG_OPTS="${XCFG_OPTS} --colordepth '${XDEPTH}'"
 	fi
 
 	if [ "${XPROBE_SERIAL_MOUSE}" ]; then
-		XCFG_OPTS+=("--serial-mouse")
+		XCFG_OPTS="${XCFG_OPTS} --serial-mouse"
 	fi
 
 	# write the configuration to file
-	eval "/usr/sbin/fll_xorgconfig ${XCFG_OPTS[@]}"
+	eval "/usr/sbin/fll_xorgconfig ${XCFG_OPTS}"
 }
 
 case "${1}" in
