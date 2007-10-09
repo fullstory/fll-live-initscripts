@@ -530,7 +530,7 @@ for (</dev/cdrom*>) {
 	s|^/dev/||;
 
 	push(@fstab, comment($desc));
-	push(@fstab, join "\t", "/dev/$_", "/media/$_", 'udf,iso9660', 'user,noauto', '0', '0');
+	push(@fstab, join("\t", "/dev/$_", "/media/$_", 'udf,iso9660', 'user,noauto', '0', '0'));
 	push(@fstab, '');
 
 	add_mnt_pnt("/media/$_");
@@ -545,7 +545,7 @@ for (</dev/fd*>) {
 	s|^/dev/||;
 
 	push(@fstab, comment);
-	push(@fstab, join "\t", "/dev/$_", "/media/$_", 'auto', 'rw,user,noauto', '0', '0');
+	push(@fstab, join("\t", "/dev/$_", "/media/$_", 'auto', 'rw,user,noauto', '0', '0'));
 	push(@fstab, '');
 
 	add_mnt_pnt("/media/$_");
