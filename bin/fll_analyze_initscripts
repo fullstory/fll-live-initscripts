@@ -24,19 +24,19 @@ my ($doit, $found, $frc, $rem) = (0, 0, 0, 0);
 my $urcd = "update-rc.d";
 
 my $res = GetOptions(
-	"a|apply"    => sub { $doit = "yes"; },
+	"a|apply"    => sub { $doit++; },
 	"f|force"    => \$frc,
-	"r|remove"   => sub { $rem = 1; $frc = 1; },
+	"r|remove"   => sub { $rem++; $frc++; },
 	"c|chroot=s" => \$chroot
 );
 
 -d $chroot . "/etc/rcS.d/" or die "invalid chroot '$chroot': $!";
 
 for $svc (@ARGV) {
-	push @glob, glob $chroot . "/etc/rc[0-6S].d/[KS][0-9][0-9]$svc";
+	push(@glob, glob($chroot . "/etc/rc[0-6S].d/[KS][0-9][0-9]$svc"));
 }
 
-@glob = glob $chroot . "/etc/rc[0-6S].d/[KS]*" unless @ARGV;
+@glob = glob($chroot . "/etc/rc[0-6S].d/[KS]*") unless @ARGV;
 
 for (@glob) {
 	next unless -L;
@@ -51,7 +51,7 @@ for $svc (sort keys %info) {
 	@par = ();
 	$prm = undef;
 
-	$frc and push @par, "-f";
+	$frc and push(@par, "-f");
 
 	next if not -x $chroot . "/etc/init.d/" . $svc;
 
@@ -59,23 +59,23 @@ for $svc (sort keys %info) {
 	@k = keys %{ $info{$svc}{K} };
 
 	if ($rem) {
-		push @par, $svc, "remove";
+		push(@par, $svc, "remove");
 	}
 	elsif ( "@s" eq "20"
 		and "@{$info{$svc}{S}{20}}" eq "2 3 4 5"
 		and "@k"                    eq "20"
 		and "@{$info{$svc}{K}{20}}" eq "0 1 6") {
-		push @par, $svc, "defaults";
+		push(@par, $svc, "defaults");
 	}
 	else {
 		$prm .= "start $_ @{$info{$svc}{S}{$_}} . " for (@s);
 		$prm .= "stop $_ @{$info{$svc}{K}{$_}} . "  for (@k);
-		push @par, $svc, $prm if ($prm);
+		push(@par, $svc, $prm) if $prm;
 	}
 
 	$found++;
 	print "$urcd @par\n";
-	system($urcd, @par) if $doit eq "yes";
+	system($urcd, @par) if $doit;
 }
 
 # If specific services were passed on the command line,
