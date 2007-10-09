@@ -325,7 +325,7 @@ if (-f '/proc/mounts') {
 		my ($device, $mount, $fstype, $options, $dump, $pass) = split;
 		my ($comment, $desc, $name, $label, $uuid) = ();
 
-		if (    not -b $device
+		if (   not -b $device
 			or $fstype eq 'swap'
 			or $mount =~ m%^(/dev/.static/[^/]+|/media/[^/]+|/fll/[^/]+)$%) {
 			next;
@@ -376,7 +376,7 @@ if (-f '/proc/mounts') {
 			}
 
 			# seen it
-			$u_seen{$uuid} = 1;
+			$u_seen{$uuid}++;
 		}
 
 		# if labels and uuids are wanted, prefer labels
@@ -392,7 +392,7 @@ if (-f '/proc/mounts') {
 			$comment .= ", $device" unless $opts{'uuids'};
 
 			# seen it
-			$l_seen{$label} = 1;
+			$l_seen{$label}++;
 		}
 
 		$name ||= $device;
@@ -461,6 +461,8 @@ for my $device (sort keys %p) {
 
 			# append device node name and label to comment
 			$comment .= ", $device";
+			
+			# append label only if we didn't use --labels
 			if ($label and not $opts{'labels'}) {
 				$comment .= ', LABEL=' . $label;
 			}
