@@ -443,7 +443,7 @@ dbg \%x;
 
 # sanitize/postprocess input
 for my $key (keys %x) {
-	my $invalid = undef;
+	my $invalid;
 
 	given ($key) {
 		when 'colordepth' {
@@ -521,13 +521,13 @@ MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 	dbg "pushing input_device '$name' to serverlayout section";
 	splice(@serverlayout, -1, 0, "\tInputDevice\t\"$name\"");
 
-	$n = 0;
 	my @section = get_template("inputdevice_$type");
 
+	$n = 0;
 	MOUSE: while ($section[$n]) {
 		my $line = $section[$n];
-
 		dbg "$n: $line";
+
 		given ($line) {
 			when m/@@\w+@@/ {
 				if ($line =~ m/@@(\w+)@@/ and $x{'mouse'}{$m}{ lc($1) }) {
