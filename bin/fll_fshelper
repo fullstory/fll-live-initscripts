@@ -92,14 +92,14 @@ _EOF_
 sub dbg {
 	return unless $opts{'debug'};
 
-	for my $data (@_) {
-		next unless $data;
+	for (@_) {
+		next unless defined;
 
-		if (ref $data) {
-			print STDERR "DBG: " . Dumper($data);
+		if (ref) {
+			print STDERR "DBG: " . Dumper($_);
 		}
 		else {
-			print STDERR "DBG: $data\n";
+			print STDERR "DBG: $_\n";
 		}
 	}
 }
@@ -109,7 +109,8 @@ sub vol_id {
 	return unless -b $v;
 
 	my %vol_id;
-	open(my $fh, '-|', "/lib/udev/vol_id $v 2>/dev/null");
+	open(my $fh, '-|', "/lib/udev/vol_id $v 2>/dev/null")
+		or die "Cannout execute vol_id: $!\n";
 	while (<$fh>) {
 		chomp;
 		dbg $_;
@@ -128,7 +129,7 @@ sub ata_id {
 	return unless -b $d;
 
 	my $id = `/lib/udev/ata_id $d`;
-	chomp $id;
+	chomp($id);
 	dbg $id;
 
 	return "$id";
@@ -161,12 +162,12 @@ sub device_is_removeable {
 
 sub device_resolver {
 	my $d = shift;
-	my $n = '';
+	my $n;
 
 	if ($d =~ /^(LABEL|UUID)=.+$/) {
 		# this is here for completeness only
 		$n = `findfs $d`;
-		chomp $n;
+		chomp($n);
 	}
 	elsif ($d =~ m|^/dev/disk/by-.+/[^/]+$|) {
 		# canonicalize device node symlink
@@ -176,7 +177,7 @@ sub device_resolver {
 		$n = $d;
 	}
 
-	dbg join ' -> ', $d, $n;
+	dbg join(' -> ', $d, $n);
 
 	-b $n and return "$n";
 
@@ -188,7 +189,7 @@ sub comment {
 
 	for my $extra (@_) {
 		next unless defined $extra;
-		chomp $extra;
+		chomp($extra);
 		$c .= ", $extra";
 	}
 
@@ -199,9 +200,10 @@ sub add_mnt_pnt {
 	return unless $opts{'make-mountpoints'};
 
 	my $mnt_pnt = shift;
+	
 	return if -d $mnt_pnt;
 
-	eval { mkpath $mnt_pnt, 0, 0755; };
+	eval { mkpath($mnt_pnt, 0, 0755); };
 	if ($@) {
 		print STDERR "Could not create $mnt_pnt: $@\n";
 	}
@@ -237,7 +239,8 @@ dbg '%opts', \%opts;
 if ($opts{'write-fstab'}) {
 
 	# tie array to file, lock it
-	$f = tie @fstab, "Tie::File", $file or die "Cannot open $file for writing: $!\n";
+	$f = tie(@fstab, "Tie::File", $file)
+		or die "Cannot open $file for writing: $!\n";
 
 	# flock it
 	$f->flock;
@@ -275,7 +278,7 @@ if (-f '/proc/partitions') {
 
 		next unless $blocks > 1;
 
-		$p{"/dev/$name"} = vol_id "/dev/$name";
+		$p{"/dev/$name"} = vol_id("/dev/$name");
 	}
 	close(PARTITIONS);
 
@@ -307,7 +310,7 @@ for my $id (</dev/disk/by-id/{ata,scsi,usb}-*>) {
 	$id =~ s%^/dev/disk/by-id/\w+-%%;
 
 	$p{$name}{'desc'} ||= $id;
-	dbg join ' -> ', $name, $id;
+	dbg join(' -> ', $name, $id);
 }
 
 #-------------------------------------------------------------------#
@@ -318,21 +321,22 @@ if (-f '/proc/mounts') {
 	while (<MOUNTS>) {
 		chomp;
 		dbg $_;
+		
 		my ($device, $mount, $fstype, $options, $dump, $pass) = split;
 		my ($comment, $desc, $name, $label, $uuid) = ();
 
-		if (   not -b $device
+		if (    not -b $device
 			or $fstype eq 'swap'
 			or $mount =~ m%^(/dev/.static/[^/]+|/media/[^/]+|/fll/[^/]+)$%) {
 			next;
 		}
 
 		# resolve device name and check that it is part of the %p structure
-		$device = device_resolver $device;
+		$device = device_resolver($device);
 		next unless $p{$device}{'type'};
 
 		# device is valid, seen it
-		$p_seen{$device} = 1;
+		$p_seen{$device}++;
 
 		# take a slice of %p
 		($fstype, $label, $uuid, $desc) =
@@ -353,7 +357,7 @@ if (-f '/proc/mounts') {
 		}
 
 		# begin creating fstab comment for $device
-		$comment = comment $desc;
+		$comment = comment($desc);
 
 		if ($opts{'uuids'} and $uuid) {
 			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
@@ -393,9 +397,9 @@ if (-f '/proc/mounts') {
 
 		$name ||= $device;
 
-		push @fstab, $comment;
-		push @fstab, join "\t", $name, $mount, $fstype, $options, $dump, $pass;
-		push @fstab, '';
+		push(@fstab, $comment);
+		push(@fstab, join("\t", $name, $mount, $fstype, $options, $dump, $pass));
+		push(@fstab, '');
 	}
 	close(MOUNTS);
 }
@@ -404,7 +408,7 @@ if (-f '/proc/mounts') {
 # process all unseen non-removable partitions
 
 for my $device (sort keys %p) {
-	if ($p_seen{$device} or device_is_removeable $device) {
+	if ($p_seen{$device} or device_is_removeable($device)) {
 		dbg "Skipping $device";
 		next;
 	}
@@ -428,7 +432,7 @@ for my $device (sort keys %p) {
 	}
 
 	# device is valid, seen it
-	$p_seen{$device} = 1;
+	$p_seen{$device}++;
 
 	my ($comment, $name, $mount, $options) = ();
 	my ($dump, $pass) = ('0', '2');
@@ -445,7 +449,7 @@ for my $device (sort keys %p) {
 	}
 
 	# pretty label for ata devices
-	$comment = comment $desc;
+	$comment = comment($desc);
 
 	if ($opts{'uuids'} and $uuid) {
 		if ($u_seen{$uuid}) {
@@ -462,7 +466,7 @@ for my $device (sort keys %p) {
 			}
 
 			# seen it
-			$u_seen{$uuid} = 1;
+			$u_seen{$uuid}++;
 		}
 	}
 
@@ -481,7 +485,7 @@ for my $device (sort keys %p) {
 			$comment .= ", $device" unless $opts{'uuids'};
 
 			# seen it
-			$l_seen{$label} = 1;
+			$l_seen{$label}++;
 		}
 	}
 
@@ -513,11 +517,11 @@ for my $device (sort keys %p) {
 		$options .= ',noatime';
 	}
 
-	push @fstab, $comment;
-	push @fstab, join "\t", $name, $mount, $fstype, $options, $dump, $pass;
-	push @fstab, '';
+	push(@fstab, $comment);
+	push(@fstab, join("\t", $name, $mount, $fstype, $options, $dump, $pass));
+	push(@fstab, '');
 
-	add_mnt_pnt $mount;
+	add_mnt_pnt($mount);
 }
 
 #-------------------------------------------------------------------#
@@ -525,13 +529,16 @@ for my $device (sort keys %p) {
 
 for (</dev/cdrom*>) {
 	next unless -b;
-	$_ =~ s|^/dev/||;
 
-	push @fstab, comment ata_id "/dev/$_";
-	push @fstab, join "\t", "/dev/$_", "/media/$_", 'udf,iso9660', 'user,noauto', '0', '0';
-	push @fstab, '';
+	my $desc = ata_id($_);
+	
+	s|^/dev/||;
 
-	add_mnt_pnt "/media/$_";
+	push(@fstab, comment($desc));
+	push(@fstab, join "\t", "/dev/$_", "/media/$_", 'udf,iso9660', 'user,noauto', '0', '0');
+	push(@fstab, '');
+
+	add_mnt_pnt("/media/$_");
 }
 
 #-------------------------------------------------------------------#
@@ -539,13 +546,14 @@ for (</dev/cdrom*>) {
 
 for (</dev/fd*>) {
 	next unless -b;
-	$_ =~ s|^/dev/||;
+	
+	s|^/dev/||;
 
-	push @fstab, comment;
-	push @fstab, join "\t", "/dev/$_", "/media/$_", 'auto', 'rw,user,noauto', '0', '0';
-	push @fstab, '';
+	push(@fstab, comment);
+	push(@fstab, join "\t", "/dev/$_", "/media/$_", 'auto', 'rw,user,noauto', '0', '0');
+	push(@fstab, '');
 
-	add_mnt_pnt "/media/$_";
+	add_mnt_pnt("/media/$_");
 }
 
 #-------------------------------------------------------------------#
