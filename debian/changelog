@@ -10,8 +10,11 @@ fll-live-initscripts (2.0.15) unstable; urgency=low
     - syntax cleanup, use round brackets to surroud function arguments
   * fll_xorgconfig
     - fairly invasive syntax cleanup
+  * fll_xserver_discover:
+    - fix typo in comment
+    - remove large if block around lspci lookup
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 09 Oct 2007 19:52:55 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 09 Oct 2007 20:38:40 +1000
 
 fll-live-initscripts (2.0.14) unstable; urgency=low
 

@@ -25,7 +25,7 @@
 #   description for the videocard detected in the machine it runs on,
 #   plus fallback methods.
 #   Copyright (C) 2006  M.L. de Boer a.k.a locsmif <locsmif@kanotix.com>
-#   (Sorry, the script is much bigger ang uglier now!)
+#   (Sorry, the script is much bigger and uglier now!)
 
 use warnings;
 use strict;
@@ -134,25 +134,13 @@ sub process {
 			close($fh);
 		}
 
-		dbg "Invoking lspci to lookup \$boardname...";
-
-		# lspci lookup by $vendor:$device pair or by pci domain
-		if ($syspci) {
-			dbg "lspci -s $syspci";
-			$boardname = `LC_ALL=C lspci -s $syspci 2>/dev/null`;
-		}
-		else {
-			dbg "lspci -d ${vendor}:${device}";
-			$boardname = `LC_ALL=C lspci -d ${vendor}:${device} 2>/dev/null`;
-		}
-
-		if ($boardname) {
-			# trim the string
-			chomp($boardname);
-			$boardname =~ s/^.*:\s+//;
-			$boardname =~ s/\s+\(rev\s+\d+\)$//;
-			dbg "\$boardname: $boardname";
-		}
+		# lspci lookup by pci domain
+		dbg "lspci -s $syspci";
+		$boardname = `LC_ALL=C lspci -s $syspci 2>/dev/null`;
+		# trim the string
+		chomp($boardname);
+		$boardname =~ s/(^.*:\s+|\s+\(rev\s+\d+\)$)//g;
+		dbg "\$boardname: $boardname";
 	}
 
 	# fallbacks
