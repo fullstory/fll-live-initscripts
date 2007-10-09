@@ -46,14 +46,14 @@ GetOptions('verbose' => \$debug, 'discover' => \$discover,);
 sub dbg {
 	return unless $debug;
 
-	for my $data (@_) {
-		next unless $data;
+	for (@_) {
+		next unless defined;
 
-		if (ref $data) {
-			print STDERR "DBG: " . Dumper($data);
+		if (ref) {
+			print STDERR "DBG: " . Dumper($_);
 		}
 		else {
-			print STDERR "DBG: $data\n";
+			print STDERR "DBG: $_\n";
 		}
 	}
 }
@@ -87,6 +87,7 @@ sub process {
 		open(F, '<', PCILST) or die("Failed to open pci.lst: $!\n");
 		while (<F>) {
 			chomp;
+			dbg $_;
 
 			# Inside vendor block and new vendor block found? Then exit loop.
 			$vendorname and last if /^\w/;
