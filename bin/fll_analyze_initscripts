@@ -20,7 +20,7 @@ use Getopt::Long qw(:config bundling no_auto_abbrev);
 my %info = ();
 my (@glob, @k, @par, @s);
 my ($count, $chroot, $pri, $prm, $sk, $svc, $rlev);
-my ($doit,  $found,  $frc, $rem) = (0, 0, 0, 0);
+my ($doit, $found, $frc, $rem) = (0, 0, 0, 0);
 my $urcd = "update-rc.d";
 
 my $res = GetOptions(
