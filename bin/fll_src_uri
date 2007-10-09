@@ -2,6 +2,7 @@
 
 use warnings;
 use strict;
+
 #use Data::Dumper;
 use Cwd qw(getcwd realpath);
 use Getopt::Long qw(:config bundling no_auto_abbrev);
@@ -9,22 +10,22 @@ use File::Path;
 use Tie::File;
 
 my $self = 'fll_src_uri';
-my ($c, $m, $o, $s, , $t, $v);
+my ($c, $m, $o, $s,, $t, $v);
 $o = getcwd();
 
 GetOptions(
-	'c|cleanup'	=> \$c,
-	'm|manifest=s'	=> \$m,
-	'o|output=s'	=> \$o,
-	's|sources=s'	=> \$s,
-	't|tar=s'	=> \$t,
-	'v|verbose'	=> \$v,
+	'c|cleanup'    => \$c,
+	'm|manifest=s' => \$m,
+	'o|output=s'   => \$o,
+	's|sources=s'  => \$s,
+	't|tar=s'      => \$t,
+	'v|verbose'    => \$v,
 );
 
-if	($s and $m) {
+if ($s and $m) {
 	gen_uri(realpath($s), realpath($m));
 }
-elsif	($s) {
+elsif ($s) {
 	get_uri(realpath($s), $t, $o, $c);
 }
 else {
@@ -53,7 +54,7 @@ else {
     The --cleanup option cleans up the source tree after the tarball has made.
 
 _EOF_
-;
+	        ;
 }
 
 sub cd {
@@ -63,7 +64,7 @@ sub cd {
 
 sub sysexec {
 	my $c = shift;
-	
+
 	# manage the process with fork and exec, allow SIGINT
 	if (my $pid = fork) {
 		local $SIG{'INT'} = sub {
@@ -78,7 +79,6 @@ sub sysexec {
 	}
 }
 
-
 sub get_uri {
 	my ($slist, $tar, $out, $cleanup) = (shift, shift, shift, shift);
 	my %failed;
@@ -86,8 +86,7 @@ sub get_uri {
 	-x '/usr/bin/dget' or die "E: dget is required (devscripts)\n";
 
 	# tie source list to array
-	my $s_o = tie(my @s, "Tie::File", $slist)
-		or die "E: cannot open $slist for reading: $!\n";
+	my $s_o = tie(my @s, "Tie::File", $slist) or die "E: cannot open $slist for reading: $!\n";
 
 	# create source directory
 	eval { mkpath("$out/source", $v, 0755); };
@@ -104,7 +103,7 @@ sub get_uri {
 		# determine name of package, get package prefix
 		if ($s[$n] =~ m|.*/([^/]+)_.+\.dsc$|) {
 			$name = $1;
-			$dir = $name =~ /^lib/ ? substr($name, 0 , 4) : substr($name, 0 , 1);
+			$dir = $name =~ /^lib/ ? substr($name, 0, 4) : substr($name, 0, 1);
 		}
 		else {
 			die "E: failed to get name from dsc\n";
@@ -153,26 +152,24 @@ sub gen_uri {
 	my (%done, %uris);
 
 	# tie source list to an array, flock it
-	my $s_o = tie(my @s, "Tie::File", $slist)
-		or die "E: cannot open $slist for writing: $!\n";
+	my $s_o = tie(my @s, "Tie::File", $slist) or die "E: cannot open $slist for writing: $!\n";
 	$s_o->flock;
 	@s = ();
 
 	# tie package list to array, flock it
-	my $p_o = tie(my @p, "Tie::File", $plist)
-		or die "E: cannot open $plist for writing: $!\n";
+	my $p_o = tie(my @p, "Tie::File", $plist) or die "E: cannot open $plist for writing: $!\n";
 	$p_o->flock;
 	@p = ();
 
 	eval "require AptPkg::Cache";
 	$@ and die "E: requires AptPkg::Cache (libapt-pkg-perl)\n";
 	import AptPkg::Cache;
-	
+
 	eval "require AptPkg::Source";
 	$@ and die "E: requires AptPkg::Source (libapt-pkg-perl)\n";
 	import AptPkg::Source;
 
-	my $cache = new AptPkg::Cache;
+	my $cache  = new AptPkg::Cache;
 	my $source = new AptPkg::Source;
 
 	for my $name (sort keys %$cache) {
@@ -188,7 +185,7 @@ sub gen_uri {
 		push(@p, sprintf("%-55s%s", $name, $version));
 
 		# get src uri's for $name
-		for my $vers (@{$source->{$name}}) {
+		for my $vers (@{ $source->{$name} }) {
 			#print Dumper $vers;
 
 			# make ref to files list of highest available version

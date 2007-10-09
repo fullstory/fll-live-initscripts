@@ -13,10 +13,10 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
-# along with this package; if not, write to the Free Software 
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+# along with this package; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
 # On Debian GNU/Linux systems, the text of the GPL license can be
@@ -86,12 +86,12 @@ distro's. It is not intended for ongoing maintenance of the fstab file on
 standard linux distro installations.
 
 _EOF_
-;
+	        ;
 }
 
 sub dbg {
 	return unless $opts{'debug'};
-	
+
 	for my $data (@_) {
 		next unless $data;
 
@@ -113,31 +113,31 @@ sub vol_id {
 	while (<$fh>) {
 		chomp;
 		dbg $_;
-		m/^ID_FS_([^=]+)=(.+)$/ and $vol_id{lc($1)} = $2;
+		m/^ID_FS_([^=]+)=(.+)$/ and $vol_id{ lc($1) } = $2;
 	}
 	close($fh);
-	
+
 	return \%vol_id;
 }
 
 sub ata_id {
 	return unless -x '/lib/udev/ata_id';
 	return unless -d '/sys/module/libata';
-	
+
 	my $d = shift;
 	return unless -b $d;
-	
+
 	my $id = `/lib/udev/ata_id $d`;
 	chomp $id;
 	dbg $id;
-	
+
 	return "$id";
 }
 
 sub device_is_removeable {
 	my $d = shift;
 	my $link;
-	
+
 	$d =~ m|^(/dev/)?([^/0-9]+)([0-9]*)$| and $d = $2;
 
 	dbg "device_is_removeable($d)";
@@ -145,6 +145,7 @@ sub device_is_removeable {
 	if (-l "/sys/block/$d/device") {
 		$link = realpath("/sys/block/$d/device");
 		dbg $link;
+
 		# we filter out devices on the usb or firewire bus
 		# eg. /sys/devices/pci0000:00/0000:00:02.1/usb2/2-6/2-6:1.0/host7/target7:0:0/7:0:0:0
 		if ($link =~ /\/(usb|fw)[0-9]+/) {
@@ -184,7 +185,7 @@ sub device_resolver {
 
 sub comment {
 	my $c = '# added by fll_fshelper';
-	
+
 	for my $extra (@_) {
 		next unless defined $extra;
 		chomp $extra;
@@ -196,22 +197,23 @@ sub comment {
 
 sub add_mnt_pnt {
 	return unless $opts{'make-mountpoints'};
-	
+
 	my $mnt_pnt = shift;
 	return if -d $mnt_pnt;
 
 	eval { mkpath $mnt_pnt, 0, 0755; };
 	if ($@) {
-		print STDERR "Could not create $mnt_pnt: $@\n"
-	}	
+		print STDERR "Could not create $mnt_pnt: $@\n";
+	}
 }
 
 #-------------------------------------------------------------------#
 # process cli arguments
 
 GetOptions(
-	\%opts, 'auto', 'debug|verbose', 'fstab=s', 'help', 'install-gui', 'labels',
-	'make-mountpoints', 'no-swap', 'quiet', 'uuids', 'write-fstab'
+	\%opts,    'auto',        'debug|verbose', 'fstab=s',
+	'help',    'install-gui', 'labels',        'make-mountpoints',
+	'no-swap', 'quiet',       'uuids',         'write-fstab'
 );
 
 if ($opts{'help'}) {
@@ -233,9 +235,10 @@ dbg '%opts', \%opts;
 # preparation for writing fstab to file
 
 if ($opts{'write-fstab'}) {
+
 	# tie array to file, lock it
-	$f = tie @fstab, "Tie::File", $file
-		or die "Cannot open $file for writing: $!\n";
+	$f = tie @fstab, "Tie::File", $file or die "Cannot open $file for writing: $!\n";
+
 	# flock it
 	$f->flock;
 }
@@ -260,17 +263,16 @@ if ($opts{'write-fstab'}) {
 
 if (-f '/proc/partitions') {
 	open(PARTITIONS, '<', '/proc/partitions')
-		or die "Cannot open /proc/partitions for reading: $!\n";
+	        or die "Cannot open /proc/partitions for reading: $!\n";
 	while (<PARTITIONS>) {
 		chomp;
 		dbg $_;
 		my ($major, $minor, $blocks, $name) = split;
-		
-		unless ($name and -b "/dev/$name"
-			and $name !~ /^(ram|cloop|loop)[0-9]*$/) {
+
+		unless ($name and -b "/dev/$name" and $name !~ /^(ram|cloop|loop)[0-9]*$/) {
 			next;
 		}
-		
+
 		next unless $blocks > 1;
 
 		$p{"/dev/$name"} = vol_id "/dev/$name";
@@ -284,10 +286,12 @@ if (-f '/proc/partitions') {
 # just for install-gui
 
 if ($opts{'install-gui'}) {
-	for my $device ( sort keys %p ) {
-		my ($usage, $fstype) = @{$p{$device}}{'usage', 'type'};
-		if ($fstype and $fstype !~ /^(unknown|iso9660|udf|squashfs)$/ and 
-			$usage and $usage eq 'filesystem') {
+	for my $device (sort keys %p) {
+		my ($usage, $fstype) = @{ $p{$device} }{ 'usage', 'type' };
+		if (    $fstype
+			and $fstype !~ /^(unknown|iso9660|udf|squashfs)$/
+			and $usage
+			and $usage eq 'filesystem') {
 			print join('-', $device, $fstype), "\n";
 		}
 	}
@@ -299,9 +303,9 @@ if ($opts{'install-gui'}) {
 
 for my $id (</dev/disk/by-id/{ata,scsi,usb}-*>) {
 	my $name = realpath($id);
-	
+
 	$id =~ s%^/dev/disk/by-id/\w+-%%;
-	
+
 	$p{$name}{'desc'} ||= $id;
 	dbg join ' -> ', $name, $id;
 }
@@ -310,43 +314,44 @@ for my $id (</dev/disk/by-id/{ata,scsi,usb}-*>) {
 # process mounted volumes
 
 if (-f '/proc/mounts') {
-	open(MOUNTS, '<', '/proc/mounts')
-		or die "Cannot open /proc/mounts for reading: $!\n";
+	open(MOUNTS, '<', '/proc/mounts') or die "Cannot open /proc/mounts for reading: $!\n";
 	while (<MOUNTS>) {
 		chomp;
 		dbg $_;
 		my ($device, $mount, $fstype, $options, $dump, $pass) = split;
 		my ($comment, $desc, $name, $label, $uuid) = ();
-		
-		if (not -b $device or $fstype eq 'swap'
+
+		if (   not -b $device
+			or $fstype eq 'swap'
 			or $mount =~ m%^(/dev/.static/[^/]+|/media/[^/]+|/fll/[^/]+)$%) {
 			next;
 		}
-		
+
 		# resolve device name and check that it is part of the %p structure
 		$device = device_resolver $device;
 		next unless $p{$device}{'type'};
-		
+
 		# device is valid, seen it
 		$p_seen{$device} = 1;
 
 		# take a slice of %p
-		($fstype, $label, $uuid, $desc) = @{$p{$device}}{'type', 'label_enc', 'uuid_enc', 'desc'};
-		
+		($fstype, $label, $uuid, $desc) =
+		        @{ $p{$device} }{ 'type', 'label_enc', 'uuid_enc', 'desc' };
+
 		# fallbacks, support older udev versions
-		$label ||= @{$p{$device}}{'label'};
-		$uuid ||= @{$p{$device}}{'uuid'};
-		
+		$label ||= @{ $p{$device} }{'label'};
+		$uuid  ||= @{ $p{$device} }{'uuid'};
+
 		# default options and fs_passno
 		$options = 'defaults,noatime';
-		$pass = '2';
-		
+		$pass    = '2';
+
 		# root fs_passno = 1, all others should be 2 or 0 as per fstab(5)
 		if ($mount eq '/') {
 			$pass = '1';
 			$fstype =~ /^ext[234]$/ and $options .= ',errors=remount-ro';
 		}
-		
+
 		# begin creating fstab comment for $device
 		$comment = comment $desc;
 
@@ -357,16 +362,19 @@ if (-f '/proc/mounts') {
 			else {
 				$name = "/dev/disk/by-uuid/$uuid";
 			}
+
 			# append device name to comment
 			$comment .= ", $device";
+
 			# show label in comment if one exists
 			if ($label and not $opts{'labels'}) {
 				$comment .= ", LABEL=$label";
 			}
+
 			# seen it
 			$u_seen{$uuid} = 1;
 		}
-		
+
 		# if labels and uuids are wanted, prefer labels
 		if ($opts{'labels'} and $label) {
 			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
@@ -375,8 +383,10 @@ if (-f '/proc/mounts') {
 			else {
 				$name = "/dev/disk/by-label/$label";
 			}
+
 			# avoid double appendage of device node name
 			$comment .= ", $device" unless $opts{'uuids'};
+
 			# seen it
 			$l_seen{$label} = 1;
 		}
@@ -393,23 +403,26 @@ if (-f '/proc/mounts') {
 #-------------------------------------------------------------------#
 # process all unseen non-removable partitions
 
-for my $device ( sort keys %p ) {
+for my $device (sort keys %p) {
 	if ($p_seen{$device} or device_is_removeable $device) {
 		dbg "Skipping $device";
 		next;
 	}
-	
+
 	dbg $device, $p{$device};
 
 	# $device info, take a slice of %p
-	my ($usage, $fstype, $label, $label_safe, $uuid, $desc) = @{$p{$device}}{'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc', 'desc'};
-		
+	my ($usage, $fstype, $label, $label_safe, $uuid, $desc) =
+	        @{ $p{$device} }{ 'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc', 'desc' };
+
 	# fallbacks, support older udev versions
-	$label ||= @{$p{$device}}{'label'};
-	$uuid ||= @{$p{$device}}{'uuid'};
-	
-	if (not $fstype or $fstype =~ /(unknown|iso9660|udf|squashfs)/ or 
-		not $usage or $usage !~ /(filesystem|other)/) {
+	$label ||= @{ $p{$device} }{'label'};
+	$uuid  ||= @{ $p{$device} }{'uuid'};
+
+	if (   not $fstype
+		or $fstype =~ /(unknown|iso9660|udf|squashfs)/
+		or not $usage
+		or $usage !~ /(filesystem|other)/) {
 		dbg "Skipping $device, unsuitable fstype or usage";
 		next;
 	}
@@ -419,7 +432,7 @@ for my $device ( sort keys %p ) {
 
 	my ($comment, $name, $mount, $options) = ();
 	my ($dump, $pass) = ('0', '2');
-	
+
 	# default mount and pass options
 	$options = $opts{'auto'} ? 'auto' : 'noauto';
 	$options .= ',users,exec';
@@ -441,11 +454,13 @@ for my $device ( sort keys %p ) {
 		}
 		else {
 			$name = "UUID=$uuid";
+
 			# append device node name and label to comment
 			$comment .= ", $device";
 			if ($label and not $opts{'labels'}) {
 				$comment .= ', LABEL=' . $label;
 			}
+
 			# seen it
 			$u_seen{$uuid} = 1;
 		}
@@ -458,10 +473,13 @@ for my $device ( sort keys %p ) {
 		}
 		else {
 			$name = "LABEL=$label";
+
 			# use safe label for mount point name
 			$label_safe and $mount = "/media/$label_safe";
+
 			# append device node name to comment, if not done already
 			$comment .= ", $device" unless $opts{'uuids'};
+
 			# seen it
 			$l_seen{$label} = 1;
 		}
@@ -489,7 +507,7 @@ for my $device ( sort keys %p ) {
 	elsif ($fstype eq 'swap') {
 		$opts{'no-swap'} and next;
 		$options = 'sw';
-		$mount = 'none';
+		$mount   = 'none';
 	}
 	elsif ($fstype =~ /^(ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
 		$options .= ',noatime';
@@ -508,11 +526,11 @@ for my $device ( sort keys %p ) {
 for (</dev/cdrom*>) {
 	next unless -b;
 	$_ =~ s|^/dev/||;
-	
+
 	push @fstab, comment ata_id "/dev/$_";
 	push @fstab, join "\t", "/dev/$_", "/media/$_", 'udf,iso9660', 'user,noauto', '0', '0';
 	push @fstab, '';
-	
+
 	add_mnt_pnt "/media/$_";
 }
 
@@ -526,7 +544,7 @@ for (</dev/fd*>) {
 	push @fstab, comment;
 	push @fstab, join "\t", "/dev/$_", "/media/$_", 'auto', 'rw,user,noauto', '0', '0';
 	push @fstab, '';
-	
+
 	add_mnt_pnt "/media/$_";
 }
 
@@ -534,5 +552,5 @@ for (</dev/fd*>) {
 # show fstab
 
 unless ($opts{'quiet'}) {
-	print "$_\n" for ( @fstab );
+	print "$_\n" for (@fstab);
 }

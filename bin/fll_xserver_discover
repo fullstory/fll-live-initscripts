@@ -21,8 +21,8 @@
 # found in /usr/share/common-licenses/GPL.
 #
 # Based on:
-#   hwsetup-xserver-discover, a Perl script that returns the driver and 
-#   description for the videocard detected in the machine it runs on, 
+#   hwsetup-xserver-discover, a Perl script that returns the driver and
+#   description for the videocard detected in the machine it runs on,
 #   plus fallback methods.
 #   Copyright (C) 2006  M.L. de Boer a.k.a locsmif <locsmif@kanotix.com>
 #   (Sorry, the script is much bigger ang uglier now!)
@@ -33,17 +33,14 @@ use File::Slurp qw(slurp read_dir);
 use Getopt::Long;
 
 use constant {
-	VGA => '0300',
+	VGA    => '0300',
 	PCILST => '/lib/discover/pci.lst',
 	PCIIDS => '/usr/share/xserver-xorg/pci/',
 };
 
 my ($debug, $discover);
 
-GetOptions(
-        'verbose' => \$debug,
-        'discover' => \$discover,
-);
+GetOptions('verbose' => \$debug, 'discover' => \$discover,);
 
 if ($debug) {
 	require Data::Dumper;
@@ -53,7 +50,7 @@ if ($debug) {
 
 sub dbg {
 	return unless $debug;
-	
+
 	for my $data (@_) {
 		next unless $data;
 
@@ -73,8 +70,8 @@ sub process {
 	my ($busid, $boardname, $device, $module, $vendor, $vendorname);
 
 	# Get vendor and device
-	$vendor = substr(slurp("$syspci/vendor"),2,4);
-	$device = substr(slurp("$syspci/device"),2,4);
+	$vendor = substr(slurp("$syspci/vendor"), 2, 4);
+	$device = substr(slurp("$syspci/device"), 2, 4);
 	chomp($vendor, $device);
 	dbg "\$vendor: $vendor \$device: $device";
 
@@ -83,44 +80,53 @@ sub process {
 	dbg "\$syspci: $syspci";
 
 	# Get BusID, ref: xserver-xorg.postinst
-	if ($syspci =~  m/^(\w+):(\w+):(\w+)\.(\w+)$/) { 
-		$busid = join(':', 'PCI', hex("0x$2"),  hex("0x$3"), hex("0x$4"));
+	if ($syspci =~ m/^(\w+):(\w+):(\w+)\.(\w+)$/) {
+		$busid = join(':', 'PCI', hex("0x$2"), hex("0x$3"), hex("0x$4"));
 		dbg "\$busid: $busid";
 	}
 
 	if ($discover and -T PCILST) {
 		dbg "Opening libdiscover1 pci.lst...";
+
 		# Open PCILST for reading
 		open(F, '<', PCILST) or die("Failed to open pci.lst: $!\n");
 		while (<F>) {
 			chomp;
+
 			# Inside vendor block and new vendor block found? Then exit loop.
 			$vendorname and last if /^\w/;
+
 			# Inside vendor?
 			if ($vendorname) {
+
 				# Match vendor and device of GFX card found or match fallback driver(ffffffff)?
 				if (/^\t(?:${vendor}${device}|ffffffff)\t(\S+)\t(\S+\((\S+)\))\t(.+)$/) {
+
 					# Get strings captured from backreferences above.
 					($module, $boardname) = ($3, "$vendorname $4");
 					dbg "\$module: $module \$boardname: $boardname";
+
 					# Break loop
 					last;
 				}
 			}
+
 			# Found target vendor block? Set $vendorname with the vendor name captured from backref.
 			/^$vendor\s+(.*)$/ and $vendorname = $1;
 		}
 		close(F);
 	}
 	else {
+
 		# Discussion about source and creation of pci-id lists
 		# http://lists.freedesktop.org/archives/xorg/2007-August/027567.html
 		dbg "Looking for ${vendor}${device} in Xorg xserver pci.ids lists...";
 		IDS: for my $ids (read_dir(PCIIDS)) {
 			dbg "open(" . PCIIDS . "${ids})";
-			open(my $fh, '<', PCIIDS . $ids)
-				or die "Unable to read " . PCIIDS . $ids . ": $!\n";
-			while(<$fh>) {
+			
+			open(my $fh, '<', PCIIDS . $ids) or die "Unable to read " . PCIIDS . $ids . ": $!\n";
+			
+			while (<$fh>) {
 				chomp;
 				dbg $_;
 				if (/^${vendor}${device}$/i) {
@@ -133,6 +139,7 @@ sub process {
 		}
 
 		dbg "Invoking lspci to lookup \$boardname...";
+
 		# lspci lookup by $vendor:$device pair or by pci domain
 		if ($syspci) {
 			dbg "lspci -s $syspci";
@@ -142,7 +149,7 @@ sub process {
 			dbg "lspci -d ${vendor}:${device}";
 			$boardname = `LC_ALL=C lspci -d ${vendor}:${device} 2>/dev/null`;
 		}
-		
+
 		if ($boardname) {
 			# trim the string
 			chomp($boardname);
@@ -153,7 +160,7 @@ sub process {
 	}
 
 	# fallbacks
-	$module ||= 'vesa';
+	$module    ||= 'vesa';
 	$boardname ||= "Unknown VGA Controller ${vendor}:${device}";
 
 	# Output stuff that can be sourced by shellscripts.
@@ -166,8 +173,9 @@ sub process {
 dbg "Globbing /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class";
 for (</sys/devices/pci*/*{,/*}/class>) {
 	dbg $_;
+
 	# Check for type VGA (see use constant at the top)
-	if (substr(slurp($_),2,4) eq VGA) {
+	if (substr(slurp($_), 2, 4) eq VGA) {
 		# Strip '/class' from the end of the path
 		s|/class$||;
 		process($_);

@@ -11,10 +11,10 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
-# along with this package; if not, write to the Free Software 
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+# along with this package; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
 # On Debian GNU/Linux systems, the text of the GPL license can be
@@ -22,18 +22,6 @@
 
 # Much information can be taken from:
 # http://wiki.debian.org/XStrikeForce/XSFTODO
-
-# legacy
-#
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --horizsync 30-60 --vertrefresh 50-75 --colordepth 24 --xkbmodel pc105 --modes "1024x768 832x624 800x600 720x400 640x480" --modelname AL512 --output /tmp/xorg.conf
-#
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --driver i810 --vendorname "Intel Corporation" --boardname "Intel Corporation 945G Integrated Graphics Controller" --busid "PCI:0:2:0" --horizsync 30-81 --vertrefresh 56-76 --xkbmodel pc104 --xkblayout de --xkbvariant nodeadkeys --modes "1280x1024 1024x768 800x600" --modelname 2405FPW --output /tmp/xorg.conf
-
-# xrandr (--mode, --rate to force config options)
-#
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --driver cirrus --vendorname "Cirrus Logic" --boardname "Cirrus Logics (QEMU)" --busid "PCI:5:0:0" --xkbmodel pc105 --mode 1280x1024 --rate 75 --modelname CM753 --xrandr --output /tmp/xorg.conf
-#
-# fll_xorgconfig --templates $HOME/svn/fullstory/fll-live-initscripts/trunk/share/fll-live-xorgconfig/templates/ --driver ati --vendorname "ATI Technologies Inc" --boardname "ATI Technologies Inc RV370 [Sapphire X550 Silent]" --colordepth 16 --xkbmodel pc105 --mode 1024x768 --rate 85 --modelname AL512 --xrandr --output /tmp/xorg.conf
 
 use warnings;
 use strict;
@@ -54,7 +42,7 @@ my $n;
 
 # for handling multiple mice
 my %input;
-my $mice = 0;
+my $mice        = 0;
 my $mouse_index = 0;
 
 # the array to be tied to xorg.conf
@@ -62,32 +50,33 @@ my @x;
 
 # the x config structure, provide defaults here. overridden by GetOptions down below
 my %x = (
+
 	# global variable refs
-	'output'	=> \$xorg_conf,
-	'templates'	=> \$xorg_tmpl,
-	'verbose'	=> \$verbosity,
+	'output'    => \$xorg_conf,
+	'templates' => \$xorg_tmpl,
+	'verbose'   => \$verbosity,
 
 	# xorg driver
-	'driver'	=> 'vesa',
-	'colordepth'	=> '24',
+	'driver'     => 'vesa',
+	'colordepth' => '24',
 
 	# monitor
-	'modes'		=> '1024x768 800x600 640x480',
-	'modelines'	=> 1,
-	'modelname'	=> 'Default Monitor',
-	'horizsync'	=> '28.0 - 96.0',
-	'vertrefresh'	=> '50.0 - 75.0',
+	'modes'       => '1024x768 800x600 640x480',
+	'modelines'   => 1,
+	'modelname'   => 'Default Monitor',
+	'horizsync'   => '28.0 - 96.0',
+	'vertrefresh' => '50.0 - 75.0',
 
 	# screen
-	'screen'	=> "0\t\"Screen 0\" 0 0",
+	'screen' => "0\t\"Screen 0\" 0 0",
 
 	# keyboard
-	'xkblayout'	=> 'us',
-	'xkbmodel'	=> 'pc105',
-	'xkboptions'	=> 'altwin:super_win',
+	'xkblayout'  => 'us',
+	'xkbmodel'   => 'pc105',
+	'xkboptions' => 'altwin:super_win',
 
 	# extensions
-	'composite'	=> 0,
+	'composite' => 0,
 );
 
 ###########################################################
@@ -96,7 +85,7 @@ my %x = (
 # debugging function
 sub dbg {
 	return unless $verbosity;
-	
+
 	# dump references, print everything else
 	for my $data (@_) {
 		next unless defined $data;
@@ -112,10 +101,11 @@ sub dbg {
 # mouse <option> <key> <value>
 # function to place multiple mice into %x structure
 sub input {
+
 	# For a hash destination, the second arguments is the key to the hash,
 	# and the third argument the value to be stored.
 	my ($option, $key, $value) = (shift, shift, shift);
-	
+
 	# store $key/$value in current $mouse_index
 	$x{'mouse'}{$mouse_index}{$key} = $value;
 
@@ -126,48 +116,51 @@ sub input {
 
 sub input_priority {
 	my $retval = 0;
-	
+
 	my $a_type = $input{$a}->{'type'};
 	my $b_type = $input{$b}->{'type'};
-	
+
 	dbg $a_type . " ($a) <=> ($b) " . $b_type;
-	
+
 	# input device sorting function assigns priority according to type:
 	# alps/synaptics > serial > (?) > ps2/usb
 
 	# preserve order of detection for input devices of same type
-	if	($a_type eq $b_type)		{ $retval = $a <=> $b; }
+	if ($a_type eq $b_type) { $retval = $a <=> $b; }
+
 	# ps2/usb is always last -> (semi)removable
-	elsif	($a_type eq 'imps2')		{ $retval++; }
-	elsif	($b_type eq 'imps2')		{ $retval--; }
+	elsif ($a_type eq 'imps2')     { $retval++; }
+	elsif ($b_type eq 'imps2')     { $retval--; }
+
 	# top-down priority for the rest
-	elsif	($a_type eq 'alps')		{ $retval--; }
-	elsif	($b_type eq 'alps')		{ $retval++; }
-	elsif	($a_type eq 'synaptics')	{ $retval--; }
-	elsif	($b_type eq 'synaptics')	{ $retval++; }
-	elsif	($a_type eq 'serial')		{ $retval--; }
-	elsif	($b_type eq 'serial')		{ $retval++; }
+	elsif ($a_type eq 'alps')      { $retval--; }
+	elsif ($b_type eq 'alps')      { $retval++; }
+	elsif ($a_type eq 'synaptics') { $retval--; }
+	elsif ($b_type eq 'synaptics') { $retval++; }
+	elsif ($a_type eq 'serial')    { $retval--; }
+	elsif ($b_type eq 'serial')    { $retval++; }
+
 	# preserve order of detection for unhandled input devices
-	else					{ $retval = $a <=> $b; }
+	else { $retval = $a <=> $b; }
 
 	dbg "retval: $retval";
-	
+
 	return $retval;
 }
 
 sub input_detect {
 	my $options = shift;
 	my ($name, $device, $phys, $mouse, $corepointer, $imps2);
-	
+
 	if (-f '/proc/bus/input/devices') {
 		dbg "using primary detection method: /proc/bus/input/devices";
 		open(my $id, '<', '/proc/bus/input/devices')
-			or die "Unable to read '/proc/bus/input/devices': $!\n";
+		        or die "Unable to read '/proc/bus/input/devices': $!\n";
 		while (<$id>) {
 			chomp;
 			dbg $_;
 
-			#		
+			#
 			#I: Bus=0011 Vendor=0002 Product=0005 Version=0000
 			#N: Name="ImPS/2 Generic Wheel Mouse"
 			#P: Phys=isa0060/serio1/input0
@@ -185,13 +178,13 @@ sub input_detect {
 				($name, $device, $phys, $mouse) = ();
 				next;
 			}
-			
+
 			my ($key, $val) = split '=';
 			($key and $val) or next;
 
 			$key =~ s/^\w:\s+//;
 
-			given (lc($key)) { 
+			given (lc($key)) {
 				when 'name' {
 					($name = $val) =~ s/"//g;
 				}
@@ -213,11 +206,11 @@ sub input_detect {
 				when m/^isa/ {
 					given ($name) {
 						when m/^SynPS\/2/ {
-							$phys = 'synaptics';
+							$phys   = 'synaptics';
 							$device = '/dev/psaux';
 						}
 						when m/^AlpsPS\/2/ {
-							$phys = 'alps';
+							$phys   = 'alps';
 							$device = '/dev/psaux';
 						}
 						default {
@@ -225,18 +218,14 @@ sub input_detect {
 						}
 					}
 				}
-				when m/^usb/ { 
+				when m/^usb/ {
 					$phys = 'imps2';
 				}
 			}
 
 			dbg "'name' => $name, 'type' => $phys, 'device' => $device";
-			
-			$input{$mouse} = {
-				'name' => $name,
-				'type' => $phys,
-				'device' => $device
-			};
+
+			$input{$mouse} = { 'name' => $name, 'type' => $phys, 'device' => $device };
 
 			($name, $phys, $mouse) = ();
 		}
@@ -254,25 +243,21 @@ sub input_detect {
 	if (($x{'serial-mouse'} || not keys %input) and -x '/usr/sbin/hwinfo') {
 		dbg "using alternative detection method: hwinfo --mouse --short";
 		open(my $hw, '-|', '/usr/sbin/hwinfo --mouse --short')
-			or die("Unable to execute hwinfo --mouse: $!\n");
+		        or die("Unable to execute hwinfo --mouse: $!\n");
 		while (<$hw>) {
 			chomp;
 			dbg $_;
 
 			($name, $device, $phys) = ();
-			
+
 			if (m|^\s*(/dev/tty[^\s]+)\s+(.*)$|) {
 				$device = $1;
-				$name = $2;
-				$phys = 'serial';
+				$name   = $2;
+				$phys   = 'serial';
 
 				dbg "'name' => $name, 'type' => $phys, 'device' => $device";
 
-				$input{$mouse} = {
-					'name' => $name,
-					'type' => $phys,
-					'device' => $device
-				};
+				$input{$mouse} = { 'name' => $name, 'type' => $phys, 'device' => $device };
 
 				$mouse++;
 			}
@@ -280,22 +265,22 @@ sub input_detect {
 		close($hw);
 
 		dbg \%input;
-	}			
+	}
 
 	for my $key (sort input_priority keys %input) {
 		dbg $input{$key};
-		
+
 		# only give one imps2 device to fll_xorgconfig
 		if ($input{$key}->{'type'} eq 'imps2' and $imps2) {
 			dbg "Avoiding duplicate imps2 device entry...";
 			next;
 		}
-		
+
 		# form --input argument string to give to fll_xorgconfig
 		for ('name', 'type', 'device') {
-			input(undef, $_, $input{$key}->{$_}),
+			input(undef, $_, $input{$key}->{$_}),;
 		}
-		
+
 		# elect a Core Pointer - USB device hotplugged later currently
 		# may not work if we do this :/
 		if ($corepointer) {
@@ -309,8 +294,10 @@ sub input_detect {
 	}
 
 	if ($corepointer and not $imps2) {
-		for ('name=Generic IMPS/2 Mouse', 'type=imps2',
-			'device=/dev/input/mice', 'corepointer=SendCoreEvents') {
+		for (
+			'name=Generic IMPS/2 Mouse', 'type=imps2',
+			'device=/dev/input/mice',    'corepointer=SendCoreEvents'
+		        ) {
 			my ($k, $v) = split(/=/, $_);
 			input(undef, $k, $v);
 		}
@@ -323,37 +310,37 @@ sub gtf_modelines {
 	# if no args are given to function, return a Modeline for each
 	# element of our mode/frequency library
 	my @f = @_ ? [ @_ ] : (
-		[ 640, 350, 85 ],	[ 640, 400, 85 ], 	[ 640, 480, 60 ],
-		[ 640, 480, 72 ],	[ 640, 480, 75 ],	[ 640, 480, 85 ],
-		[ 640, 480, 100 ],	[ 720, 400, 85 ],	[ 768, 576, 60 ],
-		[ 768, 576, 72 ],	[ 768, 576, 75 ],	[ 768, 576, 85 ],
-		[ 768, 576, 100 ],	[ 800, 600, 56 ],	[ 800, 600, 60 ],
-		[ 800, 600, 72 ],	[ 800, 600, 75 ],	[ 800, 600, 85 ],
-		[ 800, 600, 100 ],	[ 1024, 600, 60 ],	[ 1024, 768, 60 ],
-		[ 1024, 768, 70 ],	[ 1024, 768, 75 ],	[ 1024, 768, 85 ],
-		[ 1024, 768, 100 ],	[ 1152, 864, 75 ],	[ 1152, 864, 60 ],
-		[ 1152, 864, 85 ],	[ 1152, 864, 100 ],	[ 1152, 900, 77 ],
-		[ 1152, 900, 66 ],	[ 1280, 768, 60 ],	[ 1280, 800, 60 ],
-		[ 1280, 960, 60 ],	[ 1280, 960, 72 ],	[ 1280, 960, 75 ],
-		[ 1280, 960, 85 ],	[ 1280, 960, 100 ],	[ 1280, 1024, 60 ],
+		[ 640,  350,  85 ],	[ 640,  400,  85 ],	[ 640,  480,  60 ],
+		[ 640,  480,  72 ],	[ 640,  480,  75 ],	[ 640,  480,  85 ],
+		[ 640,  480,  100 ],	[ 720,  400,  85 ],	[ 768,  576,  60 ],
+		[ 768,  576,  72 ],	[ 768,  576,  75 ],	[ 768,  576,  85 ],
+		[ 768,  576,  100 ],	[ 800,  600,  56 ],	[ 800,  600,  60 ],
+		[ 800,  600,  72 ],	[ 800,  600,  75 ],	[ 800,  600,  85 ],
+		[ 800,  600,  100 ],	[ 1024, 600,  60 ],	[ 1024, 768,  60 ],
+		[ 1024, 768,  70 ],	[ 1024, 768,  75 ],	[ 1024, 768,  85 ],
+		[ 1024, 768,  100 ],	[ 1152, 864,  75 ],	[ 1152, 864,  60 ],
+		[ 1152, 864,  85 ],	[ 1152, 864,  100 ],	[ 1152, 900,  77 ],
+		[ 1152, 900,  66 ],	[ 1280, 768,  60 ],	[ 1280, 800,  60 ],
+		[ 1280, 960,  60 ],	[ 1280, 960,  72 ],	[ 1280, 960,  75 ],
+		[ 1280, 960,  85 ],	[ 1280, 960,  100 ],	[ 1280, 1024, 60 ],
 		[ 1280, 1024, 67 ],	[ 1280, 1024, 75 ],	[ 1280, 1024, 76 ],
-		[ 1280, 1024, 85 ],	[ 1280, 1024, 100 ],	[ 1368, 768, 60 ],
-		[ 1440, 900, 60 ],	[ 1400, 1050, 60 ],	[ 1400, 1050, 72 ],
+		[ 1280, 1024, 85 ],	[ 1280, 1024, 100 ], 	[ 1368, 768,  60 ],
+		[ 1440, 900,  60 ],	[ 1400, 1050, 60 ], 	[ 1400, 1050, 72 ],
 		[ 1400, 1050, 75 ],	[ 1400, 1050, 85 ],	[ 1400, 1050, 100 ],
-		[ 1440, 900, 60 ],	[ 1600, 1200, 60 ],	[ 1600, 1200, 65 ],
-		[ 1600, 1200, 70 ],	[ 1600, 1200, 75 ],	[ 1600, 1200, 85 ],
-		[ 1600, 1200, 100 ],	[ 1680, 1050, 60 ],	[ 1792, 1344, 60 ],
+		[ 1440, 900,  60 ],	[ 1600, 1200, 60 ], 	[ 1600, 1200, 65 ],
+		[ 1600, 1200, 70 ],	[ 1600, 1200, 75 ], 	[ 1600, 1200, 85 ],
+		[ 1600, 1200, 100 ],	[ 1680, 1050, 60 ], 	[ 1792, 1344, 60 ],
 		[ 1792, 1344, 75 ],	[ 1856, 1392, 60 ],	[ 1856, 1392, 75 ],
 		[ 1920, 1200, 60 ],	[ 1920, 1440, 60 ],	[ 1920, 1440, 75 ],
 	);
 
 	for (@f) {
-		open(my $fh, '-|', '/usr/bin/gtf', @$_)
-			or die "cannot compute modeline with gtf: $!\n";
+		open(my $fh, '-|', '/usr/bin/gtf', @$_) or die "cannot compute modeline with gtf: $!\n";
 		while (<$fh>) {
 			chomp;
 			next unless /^\s+(#|Modeline)/;
 			s/^\s+/\t/;
+
 			# strip the frequency marker for legacy Modeline entries
 			# keep the marker for PrefferredMode entry (xrandr1.2)
 			s/Modeline "(\d+x\d+)_[\d\.]+"/Modeline "$1"/ unless $x{'xrandr'};
@@ -370,7 +357,7 @@ sub get_template {
 	my @template;
 
 	dbg "looking for template: $file";
-	
+
 	find(
 		sub {
 			return if $File::Find::name =~ m|/\.svn/|;
@@ -378,13 +365,14 @@ sub get_template {
 			if ($_ eq $file) {
 				dbg "reading template: $file";
 				open(my $fh, '<', $File::Find::name)
-					or die "cannot open template for reading: $!\n";
+				        or die "cannot open template for reading: $!\n";
 				@template = <$fh>;
 				close($fh);
 			}
-		}, $xorg_tmpl
+		},
+		$xorg_tmpl
 	);
-	
+
 	chomp(@template);
 	return @template;
 }
@@ -464,48 +452,36 @@ for my $key (keys %x) {
 		}
 	}
 
-	$invalid and warn("W: invalid --$invalid value: " .  $x{$invalid} . "\n");
+	$invalid and warn("W: invalid --$invalid value: " . $x{$invalid} . "\n");
 }
 
 ###########################################################
 # read in the templates
-my @heading = get_template 'heading';
-#my @files = get_template 'files';
-#my @module = get_template 'module';
+my @heading      = get_template 'heading';
 my @serverlayout = get_template 'serverlayout';
-my @serverflags = get_template 'serverflags';
-my @keyboard = get_template 'inputdevice_keyboard';
-my @inputdevices; # template(s) handled below
-my @monitor = get_template 'monitor';
-my @device = get_template 'device';
-my @screen = get_template 'screen';
-#my @dri = get_template 'dri';
-my @extensions = get_template 'extensions';
-
-# Note: http://bgoglin.livejournal.com/10214.html
-#
-# [quote]
-# Additionally, thanks to the X server autoconfiguration capabilities,
-# most trivial sections become useless. The only really required one for
-# a regular setup is the InputDevice section for the keyboard since you
-# still need to configure the layout (there is no way to detect this
-# automatically).
-# [/quote]
+my @serverflags  = get_template 'serverflags';
+my @keyboard     = get_template 'inputdevice_keyboard';
+my @inputdevices;
+my @monitor      = get_template 'monitor';
+my @device       = get_template 'device';
+my @screen       = get_template 'screen';
+my @extensions   = get_template 'extensions';
 
 ###########################################################
 # input devices
 input_detect unless $mice;
 
-MICE: for my $m (sort { $a <=> $b } keys %{$x{'mouse'}}) {
+MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
+
 	# append current mouse number to name, ensuring it will be unique
 	$x{'mouse'}{$m}{'name'} = $x{'mouse'}{$m}{'name'} . " $m";
 
 	# take a slice of $x{'mouse'}{$m}
-	my ($type, $device, $name) = @{$x{'mouse'}{$m}}{'type', 'device', 'name'};
+	my ($type, $device, $name) = @{ $x{'mouse'}{$m} }{ 'type', 'device', 'name' };
 	dbg "device=$device type=$type name=$name";
 
 	my $protocol;
-	
+
 	given ($type) {
 		when m/^(alps|synaptics)$/ {
 			# splice(@module, -1, 0, "\tLoad\t\t\"synaptics\"");
@@ -535,13 +511,13 @@ MICE: for my $m (sort { $a <=> $b } keys %{$x{'mouse'}}) {
 
 	MOUSE: while ($section[$n]) {
 		my $line = $section[$n];
-		
+
 		dbg "$n: $line";
 		given ($line) {
 			when m/@@\w+@@/ {
-				if ($line =~ m/@@(\w+)@@/ and $x{'mouse'}{$m}{lc($1)}) {
-					dbg "Modifying line '$n': $1 => " . $x{'mouse'}{$m}{lc($1)};
-					my $sub = $x{'mouse'}{$m}{lc($1)};
+				if ($line =~ m/@@(\w+)@@/ and $x{'mouse'}{$m}{ lc($1) }) {
+					dbg "Modifying line '$n': $1 => " . $x{'mouse'}{$m}{ lc($1) };
+					my $sub = $x{'mouse'}{$m}{ lc($1) };
 					(my $newline = $line) =~ s/@@\w+@@/$sub/;
 					push(@inputdevices, $newline);
 				}
@@ -572,6 +548,7 @@ if ($x{'xrandr'}) {
 			# get Modeline from gtf, compute gtf args
 			my ($x_axis, $y_axis) = split 'x', $x{'mode'};
 			@prefmode = gtf_modelines $x_axis, $y_axis, $x{'rate'};
+
 			# match Modeline mode_freq marker that gtf outputs
 			for (@prefmode) {
 				if (m/^\s+Modeline\s+"(.+)"\s+/) {
@@ -583,29 +560,30 @@ if ($x{'xrandr'}) {
 		else {
 			push(@prefmode, "\tOption\t\t\"PreferredMode\"\t\t\"" . $x{'mode'} . "\"");
 		}
-			
+
 		dbg \@prefmode;
 		splice(@monitor, -1, 0, @prefmode);
 	}
-	
+
 	# http://bgoglin.livejournal.com/10214.html
 	# * drop ModeLine, HorizSync and VertRefresh from the Monitor section
 	delete $x{'horizsync'};
 	delete $x{'vertrefresh'};
-	
+
 	# * drop Modes line from the Display subsection
 	# the Virual option would go in place of the Modes option for xrandr1.2 style
 	# Virtual specifies the dimensions of a large virtual screen in which you may
 	# configure two sub-screens (dual monitor)
 	$x{'modes'} = $x{'virtual'} ? "Virtual\t" . $x{'virtual'} : undef;
-	
+
 	# Simplify Screen name in ServerLayout
 	$x{'screen'} = '"Screen 0"';
 }
 else {
+
 	# wrap each mode in quotation marks
 	($x{'modes'} = "Modes\t" . $x{'modes'}) =~ s/(\d+x\d+)/"$1"/g;
-	
+
 	# slice our Modeline library into the monitor section
 	if ($x{'modelines'}) {
 		# add large modeline table for legacy config
@@ -615,8 +593,7 @@ else {
 
 ###########################################################
 # tie @x to $xorg_conf, $x_o is the control object
-my $x_o = tie(@x, "Tie::File", $xorg_conf)
-	or die "Cannot open $xorg_conf for writing: $!\n";
+my $x_o = tie(@x, "Tie::File", $xorg_conf) or die "Cannot open $xorg_conf for writing: $!\n";
 
 # lock it for writing
 $x_o->flock;
@@ -624,8 +601,6 @@ $x_o->flock;
 # write the config
 @x = (
 	@heading,
-	#@files,
-	#@module,
 	@serverlayout,
 	@serverflags,
 	@keyboard,
@@ -633,7 +608,6 @@ $x_o->flock;
 	@device,
 	@monitor,
 	@screen,
-	#@dri,
 	@extensions,
 );
 
@@ -643,13 +617,13 @@ $n = 0;
 XCONF: while ($x[$n]) {
 	my $line = \$x[$n];
 	dbg "$n: $$line";
-	
+
 	given ($$line) {
 		# substitute placeholders
 		when m/@@\w+@@/ {
-			if ($$line =~ m/@@(\w+)@@/ and $x{lc($1)}) {
-				dbg "Modifying line '$n': $1 => " . $x{lc($1)};
-				my $sub = $x{lc($1)};
+			if ($$line =~ m/@@(\w+)@@/ and $x{ lc($1) }) {
+				dbg "Modifying line '$n': $1 => " . $x{ lc($1) };
+				my $sub = $x{ lc($1) };
 				$$line =~ s/@@\w+@@/$sub/;
 			}
 			else {

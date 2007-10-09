@@ -5,8 +5,10 @@
 # to only enable it when needed, for debugging. I agree.
 #use warnings;
 use strict;
+
 #use Data::Dumper;
 use Getopt::Long qw(:config bundling no_auto_abbrev);
+
 # bundling is combining multiple short options together,
 # no_auto_abbrev makes sure the error messages never
 # abbreviate the parameter that was unknown.
@@ -18,15 +20,15 @@ use Getopt::Long qw(:config bundling no_auto_abbrev);
 my %info = ();
 my (@glob, @k, @par, @s);
 my ($count, $chroot, $pri, $prm, $sk, $svc, $rlev);
-my ($doit, $found, $frc, $rem) = (0, 0, 0, 0);
+my ($doit,  $found,  $frc, $rem) = (0, 0, 0, 0);
 my $urcd = "update-rc.d";
 
-my $res = GetOptions(	
-		"a|apply" => sub { $doit = "yes"; },
-		"f|force" => \$frc,
-		"r|remove" => sub { $rem = 1; $frc = 1; }, 
-		"c|chroot=s" => \$chroot
-	);
+my $res = GetOptions(
+	"a|apply"    => sub { $doit = "yes"; },
+	"f|force"    => \$frc,
+	"r|remove"   => sub { $rem = 1; $frc = 1; },
+	"c|chroot=s" => \$chroot
+);
 
 -d $chroot . "/etc/rcS.d/" or die "invalid chroot '$chroot': $!";
 
@@ -39,11 +41,12 @@ for $svc (@ARGV) {
 for (@glob) {
 	next unless -L;
 	next unless ($rlev, $sk, $pri, $svc) = m|/rc(.)\.d/([SK])([0-9]{2})(.+)$|;
-	push(@{$info{$svc}{$sk}{$pri}}, $rlev);
+	push(@{ $info{$svc}{$sk}{$pri} }, $rlev);
 }
 
 for $svc (sort keys %info) {
-	# Prevent filling up variables with data from previous iterations 
+
+	# Prevent filling up variables with data from previous iterations
 	# by starting from undefined state
 	@par = ();
 	$prm = undef;
@@ -51,20 +54,22 @@ for $svc (sort keys %info) {
 	$frc and push @par, "-f";
 
 	next if not -x $chroot . "/etc/init.d/" . $svc;
-	
-	@s = keys %{$info{$svc}{S}};
-	@k = keys %{$info{$svc}{K}};
-	
+
+	@s = keys %{ $info{$svc}{S} };
+	@k = keys %{ $info{$svc}{K} };
+
 	if ($rem) {
 		push @par, $svc, "remove";
 	}
-	elsif ("@s" eq "20" and "@{$info{$svc}{S}{20}}" eq "2 3 4 5" and 
-	    "@k" eq "20" and "@{$info{$svc}{K}{20}}" eq "0 1 6") { 
+	elsif ( "@s" eq "20"
+		and "@{$info{$svc}{S}{20}}" eq "2 3 4 5"
+		and "@k"                    eq "20"
+		and "@{$info{$svc}{K}{20}}" eq "0 1 6") {
 		push @par, $svc, "defaults";
 	}
 	else {
 		$prm .= "start $_ @{$info{$svc}{S}{$_}} . " for (@s);
-		$prm .= "stop $_ @{$info{$svc}{K}{$_}} . " for (@k);
+		$prm .= "stop $_ @{$info{$svc}{K}{$_}} . "  for (@k);
 		push @par, $svc, $prm if ($prm);
 	}
 
