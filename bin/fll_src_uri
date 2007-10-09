@@ -2,19 +2,19 @@
 
 use warnings;
 use strict;
-
-#use Data::Dumper;
+use autouse 'Data::Dumper' => qw(Dumper);
 use Cwd qw(getcwd realpath);
 use Getopt::Long qw(:config bundling no_auto_abbrev);
 use File::Path;
 use Tie::File;
 
 my $self = 'fll_src_uri';
-my ($c, $m, $o, $s,, $t, $v);
+my ($c, $d, $m, $o, $s,, $t, $v);
 $o = getcwd();
 
 GetOptions(
 	'c|cleanup'    => \$c,
+	'd|debug'      => \$d,
 	'm|manifest=s' => \$m,
 	'o|output=s'   => \$o,
 	's|sources=s'  => \$s,
@@ -55,6 +55,22 @@ else {
 
 _EOF_
 	        ;
+}
+
+sub dbg {
+	return unless $d;
+
+	# dump references, print everything else
+	for (@_) {
+		next unless defined;
+		
+		if (ref) {
+			print STDERR Dumper($_);
+		}
+		else {
+			print STDERR "$_\n";
+		}
+	}
 }
 
 sub cd {
@@ -186,7 +202,7 @@ sub gen_uri {
 
 		# get src uri's for $name
 		for my $vers (@{ $source->{$name} }) {
-			#print Dumper $vers;
+			dbg $vers;
 
 			# make ref to files list of highest available version
 			my $files = $vers->{'Files'};
@@ -196,7 +212,7 @@ sub gen_uri {
 			# version string of currently installed package for
 			# _all_ packages, do not ask me why!
 			for my $file (@$files) {
-				#print Dumper $file;
+				dbg $file;
 
 				# collect available dsc uri's only
 				my $type = $file->{'Type'};

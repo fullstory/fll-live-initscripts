@@ -29,6 +29,7 @@
 
 use warnings;
 use strict;
+use autouse 'Data::Dumper' => qw(Dumper);
 use File::Slurp qw(slurp read_dir);
 use Getopt::Long;
 
@@ -41,12 +42,6 @@ use constant {
 my ($debug, $discover);
 
 GetOptions('verbose' => \$debug, 'discover' => \$discover,);
-
-if ($debug) {
-	require Data::Dumper;
-	import Data::Dumper;
-	print "Debugging...\n";
-}
 
 sub dbg {
 	return unless $debug;

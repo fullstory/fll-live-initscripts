@@ -25,6 +25,7 @@
 
 use warnings;
 use strict;
+use autouse 'Data::Dumper' => qw(Dumper);
 use Cwd qw(realpath);
 use File::Path;
 use Getopt::Long;
@@ -221,14 +222,6 @@ GetOptions(
 if ($opts{'help'}) {
 	help;
 	exit 0;
-}
-
-#-------------------------------------------------------------------#
-# debugging
-
-if ($opts{'debug'}) {
-	require Data::Dumper;
-	import Data::Dumper;
 }
 
 dbg '%opts', \%opts;

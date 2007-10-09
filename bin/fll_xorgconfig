@@ -25,8 +25,9 @@
 
 use warnings;
 use strict;
-use Data::Dumper;
+use autouse 'Data::Dumper' => qw(Dumper);
 use File::Find;
+use FindBin qw($Bin);
 use Getopt::Long;
 use Tie::File;
 use Switch 'Perl6';
@@ -35,7 +36,7 @@ use Switch 'Perl6';
 # global vars
 my $verbosity = 0;
 my $xorg_conf = '/etc/X11/xorg.conf';
-my $xorg_tmpl = '/usr/share/fll-live-xorgconfig/templates';
+my $xorg_tmpl = "$Bin/../share/fll-live-xorgconfig/templates";
 
 # used for counting line numbers
 my $n;
@@ -87,13 +88,14 @@ sub dbg {
 	return unless $verbosity;
 
 	# dump references, print everything else
-	for my $data (@_) {
-		next unless defined $data;
-		if (ref $data) {
-			print STDERR Dumper $data;
+	for (@_) {
+		next unless defined;
+
+		if (ref) {
+			print STDERR Dumper($_);
 		}
 		else {
-			print STDERR "$data\n";
+			print STDERR "$_\n";
 		}
 	}
 }
@@ -227,7 +229,7 @@ sub input_detect {
 			$input{$mouse} = {
 				'name'   => $name,
 				'type'   => $phys,
-				'device' => $device
+				'device' => $device,
 			};
 
 			($name, $phys, $mouse) = ();
@@ -245,6 +247,7 @@ sub input_detect {
 	# no other devices detected above via /proc/bus/input/devices
 	if (($x{'serial-mouse'} || not keys %input) and -x '/usr/sbin/hwinfo') {
 		dbg "using alternative detection method: hwinfo --mouse --short";
+		
 		open(my $hw, '-|', '/usr/sbin/hwinfo --mouse --short')
 		        or die("Unable to execute hwinfo --mouse: $!\n");
 		while (<$hw>) {
@@ -260,7 +263,11 @@ sub input_detect {
 
 				dbg "'name' => $name, 'type' => $phys, 'device' => $device";
 
-				$input{$mouse} = { 'name' => $name, 'type' => $phys, 'device' => $device };
+				$input{$mouse} = {
+					'name'   => $name,
+					'type'   => $phys,
+					'device' => $device,
+				};
 
 				$mouse++;
 			}
@@ -293,14 +300,18 @@ sub input_detect {
 			input(undef, 'corepointer', 'CorePointer');
 			$corepointer++;
 		}
+		
+		# count imps2 devices, we don't want to add > 1 of them
 		$input{$key}->{'type'} eq 'imps2' and $imps2++;
 	}
 
 	if ($corepointer and not $imps2) {
 		for (
-			'name=Generic IMPS/2 Mouse', 'type=imps2',
-			'device=/dev/input/mice',    'corepointer=SendCoreEvents'
-		        ) {
+			'name=Generic IMPS/2 Mouse',
+			'type=imps2',
+			'device=/dev/input/mice',
+			'corepointer=SendCoreEvents',
+			) {
 			my ($k, $v) = split(/=/, $_);
 			input(undef, $k, $v);
 		}
@@ -348,7 +359,7 @@ sub gtf_modelines {
 			# strip the frequency marker for legacy Modeline entries
 			# keep the marker for PrefferredMode entry (xrandr1.2)
 			s/Modeline "(\d+x\d+)_[\d\.]+"/Modeline "$1"/ unless $x{'xrandr'};
-			push @ml, "$_";
+			push(@ml, $_);
 		}
 		close($fh);
 	}
@@ -368,6 +379,7 @@ sub get_template {
 			return unless -T $File::Find::name;
 			if ($_ eq $file) {
 				dbg "reading template: $file";
+				
 				open(my $fh, '<', $File::Find::name)
 					or die "cannot open template for reading: $!\n";
 				@template = <$fh>;
@@ -456,20 +468,20 @@ for my $key (keys %x) {
 		}
 	}
 
-	$invalid and warn("W: invalid --$invalid value: " . $x{$invalid} . "\n");
+	$invalid and warn "W: invalid --$invalid value: " . $x{$invalid} . "\n";
 }
 
 ###########################################################
 # read in the templates
-my @heading      = get_template 'heading';
-my @serverlayout = get_template 'serverlayout';
-my @serverflags  = get_template 'serverflags';
-my @keyboard     = get_template 'inputdevice_keyboard';
-my @inputdevices;
-my @monitor      = get_template 'monitor';
-my @device       = get_template 'device';
-my @screen       = get_template 'screen';
-my @extensions   = get_template 'extensions';
+my @heading      = get_template('heading');
+my @serverlayout = get_template('serverlayout');
+my @serverflags  = get_template('serverflags');
+my @keyboard     = get_template('inputdevice_keyboard');
+my @input;       # template(s) handled below
+my @monitor      = get_template('monitor');
+my @device       = get_template('device');
+my @screen       = get_template('screen');
+my @extensions   = get_template('extensions');
 
 ###########################################################
 # input devices
@@ -488,7 +500,6 @@ MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 
 	given ($type) {
 		when m/^(alps|synaptics)$/ {
-			# splice(@module, -1, 0, "\tLoad\t\t\"synaptics\"");
 			$protocol = "auto-dev";
 		}
 		when 'imps2' {
@@ -511,7 +522,7 @@ MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 	splice(@serverlayout, -1, 0, "\tInputDevice\t\"$name\"");
 
 	$n = 0;
-	my @section = get_template "inputdevice_$type";
+	my @section = get_template("inputdevice_$type");
 
 	MOUSE: while ($section[$n]) {
 		my $line = $section[$n];
@@ -523,7 +534,7 @@ MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 					dbg "Modifying line '$n': $1 => " . $x{'mouse'}{$m}{ lc($1) };
 					my $sub = $x{'mouse'}{$m}{ lc($1) };
 					(my $newline = $line) =~ s/@@\w+@@/$sub/;
-					push(@inputdevices, $newline);
+					push(@input, $newline);
 				}
 				else {
 					dbg "Ignoring line '$n'";
@@ -532,14 +543,14 @@ MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 			}
 		}
 
-		push(@inputdevices, $line);
+		push(@input, $line);
 	}
 	continue {
 		$n++;
 	}
 }
 
-dbg \@inputdevices;
+dbg \@input;
 
 ###########################################################
 # monitor settings
@@ -551,7 +562,7 @@ if ($x{'xrandr'}) {
 		if ($x{'rate'}) {
 			# get Modeline from gtf, compute gtf args
 			my ($x_axis, $y_axis) = split 'x', $x{'mode'};
-			@prefmode = gtf_modelines $x_axis, $y_axis, $x{'rate'};
+			@prefmode = gtf_modelines($x_axis, $y_axis, $x{'rate'});
 
 			# match Modeline mode_freq marker that gtf outputs
 			for (@prefmode) {
@@ -609,7 +620,7 @@ $x_o->flock;
 	@serverlayout,
 	@serverflags,
 	@keyboard,
-	@inputdevices,
+	@input,
 	@device,
 	@monitor,
 	@screen,
