@@ -120,7 +120,6 @@ sub process {
 			
 			open(my $fh, '<', PCIIDS . $ids)
 				or die "Unable to read " . PCIIDS . $ids . ": $!\n";
-			
 			while (<$fh>) {
 				chomp;
 				dbg $_;
