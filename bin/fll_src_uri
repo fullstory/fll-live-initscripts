@@ -130,9 +130,9 @@ sub get_uri {
 		die "E: some files failed to download, try again or fix manually\n";
 	}
 
-	# make the source tarball
 	cd($out);
 
+	# make the source tarball
 	if ($tar) {
 		print "O: creating: $out/$tar\n";
 		my $cmd = $v ? "tar -cvf $tar ./source" : "tar -cf $tar ./source";
