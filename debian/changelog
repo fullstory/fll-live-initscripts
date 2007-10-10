@@ -1,12 +1,16 @@
-fll-live-initscripts (2.0.18) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.18) unstable; urgency=low
 
+  [ Kel Modderman ]
   * fll-init.default: s/whitelist/blacklist/.
   * fll_analyze_initscripts:
     - make sure we don't process an initscript name as a package when it turns
       out to be wrong/missing
     - fix up parsing of whitelisted initscript names.
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 10 Oct 2007 22:56:47 +1000
+  [ Stefan Lippers-Hollmann ]
+  * small shifting between depends/ recommends/ suggests.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 10 Oct 2007 21:51:59 +0200
 
 fll-live-initscripts (2.0.17) unstable; urgency=low
 
