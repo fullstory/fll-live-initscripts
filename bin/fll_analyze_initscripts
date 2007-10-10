@@ -67,7 +67,6 @@ for my $svc (sort keys %info) {
 
 	$found++;
 	print "$urcd @par\n";
-	system($urcd, @par) if $doit;
 }
 
 # If specific services were passed on the command line,
