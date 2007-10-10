@@ -139,7 +139,7 @@ sub process {
 		$boardname = `LC_ALL=C lspci -s $syspci 2>/dev/null`;
 		# trim the string
 		chomp($boardname);
-		$boardname =~ s/(^.*:\s+|\s+\(rev\s+\d+\)$)//g;
+		$boardname =~ s/(^.*:\s+|\s+\(rev\s+.+\)$)//g;
 		dbg "\$boardname: $boardname";
 	}
 
