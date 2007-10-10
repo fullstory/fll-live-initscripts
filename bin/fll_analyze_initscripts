@@ -61,8 +61,8 @@ sub bnwlist {
 		/^#/ and next;
 
 		# script name
-		if (-x and m|^/etc/init.d/(.+)$|) {
-			$binit{$1}++;
+		if (m|^/etc/init.d/(.+)$|) {
+			-x and $binit{$1}++;
 			next;
 		}
 
@@ -87,8 +87,8 @@ sub bnwlist {
 		/^#/ and next;
 
 		# script name
-		if (-x and m|^/etc/init.d/(.+)$|) {
-			$binit{$1}++;
+		if (m|^/etc/init.d/(.+)$|) {
+			-x and $binit{$1}++;
 			next;
 		}
 
