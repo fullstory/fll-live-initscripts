@@ -18,7 +18,7 @@ use Getopt::Long qw(:config bundling no_auto_abbrev);
 # Variables start with undefined values, which evaluates
 # to "" in scalar context.
 my (%init, @glob);
-my ($blist, $wlist); 
+my ($blist, $wlist);
 my ($chroot, $found, $frc, $keep, $rem);
 my $urcd = "update-rc.d";
 
@@ -49,7 +49,7 @@ for (@glob) {
 
 sub bnwlist {
 	my ($b, $w) = (shift, shift);
-	
+
 	-s $b or die "Cannot read $b: $!\n";
 	-s $w or die "Cannot read $w: $!\n";
 
@@ -59,11 +59,13 @@ sub bnwlist {
 	while (<$fh>) {
 		chomp;
 		/^#/ and next;
+
 		# script name
 		if (-x and m|^/etc/init.d/(.+)$|) {
 			$binit{$1}++;
 			next;
 		}
+
 		# package name
 		open(my $dq, '-|', "dpkg-query -L $_ 2>/dev/null")
 			or die "Cannot execute dpkg-query: $!\n";
@@ -83,17 +85,20 @@ sub bnwlist {
 	while (<$fh>) {
 		chomp;
 		/^#/ and next;
+
 		# script name
 		if (-x and m|^/etc/init.d/(.+)$|) {
 			$binit{$1}++;
 			next;
 		}
+
 		# package name
 		open(my $dq, '-|', "dpkg-query -L $_ 2>/dev/null")
 			or die "Cannot execute dpkg-query: $!\n";
 		while (<$dq>) {
 			chomp;
 			if (-x and m|^/etc/init.d/(.+)$|) {
+
 				# check for blacklisting
 				$binit{$1} or $winit{$1}++;
 			}
@@ -103,10 +108,10 @@ sub bnwlist {
 	close($fh);
 
 	#print Dumper \%winit;
-	
+
 	for my $svc (sort keys %init) {
 		my $out;
-		
+
 		if ($keep) {
 			$winit{$svc} and $out = $svc;
 		}
@@ -116,7 +121,7 @@ sub bnwlist {
 		else {
 			$out = $winit{$svc} ? "W: $svc" : "B: $svc";
 		}
-		
+
 		print "$out\n" if $out;
 	}
 }
@@ -151,7 +156,7 @@ sub analyze {
 	}
 
 	my $eval = (@_ and $found != @_) ? 1 : 0;
-	exit($eval)
+	exit($eval);
 }
 
 if ($blist and $wlist) {
