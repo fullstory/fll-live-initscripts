@@ -7,12 +7,17 @@ fll-live-initscripts (2.0.20) UNRELEASED; urgency=low
   * Purge fll-EXAMPLE, we have enough of them now.
   * fll_analyze_initscripts.1:
     - remove ref to --apply option, it was unused, and now absent.
-  * fll_cpufreq:
+  * fll-cpufreq:
     - do not write cpufreq module to /etc/modules, this is annoying with
       persistency. If this turns out to be painful, we may be better served
       hacking the cpufrequtils package initscript into something useable
+  * fll-network:
+    - refactor netdev detection into simple shell function, get rid of perl
+      heavyweight
+    - split out code that writes to e/n/i, we may use it for alternative
+      routines later
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 11 Oct 2007 16:04:05 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 11 Oct 2007 16:41:27 +1000
 
 fll-live-initscripts (2.0.19) unstable; urgency=low
 

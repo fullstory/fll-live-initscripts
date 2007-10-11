@@ -69,6 +69,43 @@ if [ -f /proc/cmdline ]; then
 	done
 fi
 
+detect_netdevs() {
+	for netdev in /sys/class/net/*; do
+		if [ ! -L ${netdev}/device ]; then
+			# not a valid device
+			continue
+		fi
+
+		if [ -d ${netdev}/wireless ] || [ -d ${netdev}/phy80211 ]; then
+			# no sane defaults for wireless
+			continue
+		fi
+
+		if [ -f ${netdev}/addr_len ]; then
+			# unwanted, > 6 byte mac length
+			[ "$(cat ${netdev}/addr_len)" -eq 6 ] || continue
+		fi
+
+		case ${netdev##*/} in
+			lo|br*|sit*|vmnet*)
+				# blacklisted
+				continue
+				;;
+			*)
+				echo ${netdev##*/}
+				;;
+		esac
+	done
+}
+
+write_dhcp_to_eni() {
+	# add /e/n/i entry for dhcp if not already present (persistency)
+	if ! grep -s -q -w "${1}" /etc/network/interfaces; then
+		printf "\nallow-hotplug ${1}\niface ${1} inet dhcp\n" >> \
+			/etc/network/interfaces
+	fi
+}
+
 ifplug_dhcp() {
 	[ "${1}" ] || return 1
 
@@ -82,12 +119,7 @@ ifplug_dhcp() {
 		if [ "${?}" -eq 2 ]; then
 			# link beat detected
 			log_progress_msg "${Y}${1}${N}"
-			
-			# add /e/n/i entry for dhcp if not already present (persistency)
-			if ! grep -s -q -w "${1}" /etc/network/interfaces; then
-				printf "\nallow-hotplug ${1}\niface ${1} inet dhcp\n" >> \
-					/etc/network/interfaces
-			fi
+			write_dhcp_to_eni "${1}"
 		else
 			# link beat not detected
 			ifconfig "${1}" down
@@ -98,23 +130,13 @@ ifplug_dhcp() {
 }
 
 do_start() {
-	NETDEVICES=$(perl -le 'print for map {s/.*\///; grep( !/^(lo|br|sit)\d*/,$_);} </sys/class/net/*>')
+	NETDEVICES=$(detect_netdevs)
 	
 	if [ "${NETDEVICES}" ]; then
 		log_daemon_msg "${B}${NAME}${N}"
 		log_action_begin_msg " ${G}probing for an ${Y}ethernet${G} link${N}"
 		
 		for netdev in ${NETDEVICES}; do
-			if [ -d /sys/class/net/${netdev}/wireless ] || [ -d /sys/class/net/${netdev}/phy80211 ]; then
-				# wireless
-				continue
-			fi
-			
-			if [ -f /sys/class/net/${netdev}/addr_len ]; then
-				# unwanted, > 6 byte mac length (eg, placeholder interface, eth1394)
-				[ "$(cat /sys/class/net/${netdev}/addr_len)" -gt 6 ] && continue
-			fi
-			
 			# fork child process to do cable link test
 			ifplug_dhcp "${netdev}" &
 		done
