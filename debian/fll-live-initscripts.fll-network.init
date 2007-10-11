@@ -172,13 +172,6 @@ do_start() {
 	log_action_begin_msg " ${G}probing for an ${Y}ethernet${G} link${N}"
 	
 	for netdev in ${NETDEVICES}; do
-		# if in persistent modus, we may have written a config
-		# for this network device already
-		if grep -s -q -w "${netdev}" /etc/network/interfaces; then
-			log_progress_msg "${Y}${netdev}${N}"
-			continue
-		fi
-		
 		# fork child process to do cable link test
 		ifplug_dhcp "${netdev}" &
 	done
