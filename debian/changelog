@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.21) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.21) unstable; urgency=low
 
   * fll-cpufreq:
     - do write cpufreq module to /etc/modules, but this time, manage what is
