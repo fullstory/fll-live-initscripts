@@ -1,9 +1,5 @@
-fll-live-initscripts (2.0.20) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.20) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * Fix poor grammar in debian/copyright.
   * Purge fll-EXAMPLE, we have enough of them now.
   * fll_analyze_initscripts.1:
