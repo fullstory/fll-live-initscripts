@@ -185,11 +185,6 @@ do_start() {
 			fi
 		fi
 		log_end_msg 0
-
-		###
-		# add cpufreq module to /etc/modules. avoid hacking config files of power management packages
-		###
-		printf "\n# Added by: ${NAME}\n${CPUFREQ}\n" >> /etc/modules
 	else
 		###
 		# purge these services from latter runlevels, no cpufreq support
