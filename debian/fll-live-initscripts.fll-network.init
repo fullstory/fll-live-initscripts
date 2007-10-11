@@ -158,7 +158,8 @@ ifplug_dhcp() {
 do_start() {
 	write_skel_to_eni
 
-	if [ "${NODHCP}" = "yes" ]; then
+	if [ "${NODHCP}" = "yes" ] || [ -x /usr/sbin/NetworkManager ]; then
+		# we don't manage network interfaces
 		return 0
 	fi
 

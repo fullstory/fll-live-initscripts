@@ -22,8 +22,9 @@ fll-live-initscripts (2.0.20) UNRELEASED; urgency=low
     - write a new /e/n/i on each boot, we may provide a persistent hook in the
       future
     - extend write_dhcp_to_eni to accept auto|allow-hotplug as first arguments
+    - don't do anything if network-manager is installed
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 11 Oct 2007 18:33:48 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 11 Oct 2007 18:41:38 +1000
 
 fll-live-initscripts (2.0.19) unstable; urgency=low
 
