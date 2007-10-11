@@ -71,28 +71,28 @@ fi
 
 detect_netdevs() {
 	for netdev in /sys/class/net/*; do
-		if [ ! -L ${netdev}/device ]; then
+		if [ ! -L "${netdev}/device" ]; then
 			# not a valid device
 			continue
 		fi
 
-		if [ -d ${netdev}/wireless ] || [ -d ${netdev}/phy80211 ]; then
+		if [ -d "${netdev}/wireless" ] || [ -d "${netdev}/phy80211" ]; then
 			# no sane defaults for wireless
 			continue
 		fi
 
-		if [ -f ${netdev}/addr_len ]; then
+		if [ -f "${netdev}/addr_len" ]; then
 			# unwanted, > 6 byte mac length
 			[ "$(cat ${netdev}/addr_len)" -eq 6 ] || continue
 		fi
 
-		case ${netdev##*/} in
+		case "${netdev##*/}" in
 			lo|br*|sit*|vmnet*)
 				# blacklisted
 				continue
 				;;
 			*)
-				echo ${netdev##*/}
+				echo "${netdev##*/}"
 				;;
 		esac
 	done
