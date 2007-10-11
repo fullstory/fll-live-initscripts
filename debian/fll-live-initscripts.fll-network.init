@@ -63,7 +63,7 @@ if [ -f /proc/cmdline ]; then
 				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
 			nodhcp|dhcp=no)
-				exit 0
+				NODHCP="yes"
 				;;
 		esac
 	done
@@ -98,10 +98,38 @@ detect_netdevs() {
 	done
 }
 
+write_skel_to_eni() {
+	cat > /etc/network/interfaces \
+<<EOF
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+EOF
+}
+
 write_dhcp_to_eni() {
-	# add /e/n/i entry for dhcp if not already present (persistency)
-	printf "\nallow-hotplug ${1}\niface ${1} inet dhcp\n" >> \
-		/etc/network/interfaces
+	while [ "${#}" -gt 0 ]; do
+		case "${1}" in
+			auto)
+				shift
+				printf "\nauto ${1}\n" >> \
+					/etc/network/interfaces
+				;;
+			allow-hotplug)
+				shift
+				printf "\nallow-hotplug ${1}\n" >> \
+					/etc/network/interfaces
+				;;
+			*)
+				printf "iface ${1} inet dhcp\n" >> \
+					/etc/network/interfaces
+				shift
+				;;
+		esac
+	done
 }
 
 ifplug_dhcp() {
@@ -117,7 +145,7 @@ ifplug_dhcp() {
 		if [ "${?}" -eq 2 ]; then
 			# link beat detected
 			log_progress_msg "${Y}${1}${N}"
-			write_dhcp_to_eni "${1}"
+			write_dhcp_to_eni allow-hotplug "${1}"
 		else
 			# link beat not detected
 			ifconfig "${1}" down
@@ -128,29 +156,37 @@ ifplug_dhcp() {
 }
 
 do_start() {
-	NETDEVICES=$(detect_netdevs)
-	
-	if [ "${NETDEVICES}" ]; then
-		log_daemon_msg "${B}${NAME}${N}"
-		log_action_begin_msg " ${G}probing for an ${Y}ethernet${G} link${N}"
-		
-		for netdev in ${NETDEVICES}; do
-			# if in persistent modus, we may have written a config
-			# for this network device already
-			if grep -s -q -w "${1}" /etc/network/interfaces; then
-				log_progress_msg "${Y}${1}${N}"
-				continue
-			fi
-			
-			# fork child process to do cable link test
-			ifplug_dhcp "${netdev}" &
-		done
+	write_skel_to_eni
 
-		# wait for child processes to finish. yes, dash supports this.
-		wait
-
-		log_end_msg 0
+	if [ "${NODHCP}" = "yes" ]; then
+		return 0
 	fi
+
+	NETDEVICES=$(detect_netdevs)
+
+	if [ -z "${NETDEVICES}" ]; then
+		return 0
+	fi
+	
+	log_daemon_msg "${B}${NAME}${N}"
+	log_action_begin_msg " ${G}probing for an ${Y}ethernet${G} link${N}"
+	
+	for netdev in ${NETDEVICES}; do
+		# if in persistent modus, we may have written a config
+		# for this network device already
+		if grep -s -q -w "${netdev}" /etc/network/interfaces; then
+			log_progress_msg "${Y}${netdev}${N}"
+			continue
+		fi
+		
+		# fork child process to do cable link test
+		ifplug_dhcp "${netdev}" &
+	done
+
+	# wait for child processes to finish. yes, dash supports this.
+	wait
+
+	log_end_msg 0
 }
 
 case "${1}" in
