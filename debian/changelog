@@ -1,8 +1,12 @@
 fll-live-initscripts (2.0.22) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 11 Oct 2007 13:09:10 +0200
+  [ Kel Modderman ]
+  * Use curly braces in awk if/else if block in fll_cp_with_perc()
+
+ -- Kel Modderman <kel@otaku42.de>  Fri, 12 Oct 2007 08:18:19 +1000
 
 fll-live-initscripts (2.0.21) unstable; urgency=low
 
