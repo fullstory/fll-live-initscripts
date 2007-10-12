@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.23) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.23) unstable; urgency=low
 
   * fll_xorgconfig:
     - more scrutiny over what we accept as valid values for handler and phys
