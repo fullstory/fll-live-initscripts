@@ -86,6 +86,11 @@ detect_netdevs() {
 			[ "$(cat ${netdev}/addr_len)" -eq 6 ] || continue
 		fi
 
+		if [ -f "${netdev}/type" ]; then
+			# unwanted type
+			[ "$(cat ${netdev}/type" -eq 1 ] || continue
+		fi
+
 		case "${netdev##*/}" in
 			lo|br*|sit*|vmnet*)
 				# blacklisted
