@@ -1,8 +1,10 @@
 fll-live-initscripts (2.0.23) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xorgconfig:
+    - more scrutiny over what we accept as valid values for handler and phys
+      fields while parsing /proc/bus/input/devices
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 12 Oct 2007 00:32:55 +0200
+ -- Kel Modderman <kel@otaku42.de>  Fri, 12 Oct 2007 10:22:12 +1000
 
 fll-live-initscripts (2.0.22) unstable; urgency=low
 
