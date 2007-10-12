@@ -7,8 +7,10 @@ fll-live-initscripts (2.0.23) UNRELEASED; urgency=low
     - fix cpufreq module/regexp detection for archs != x86_64
   * fll-network:
     - filter out devices with type != 1 in detect_netdevs()
+  * fll-init:
+    - check blacklist before adding extra data to it
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 12 Oct 2007 11:43:47 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 12 Oct 2007 11:47:29 +1000
 
 fll-live-initscripts (2.0.22) unstable; urgency=low
 
