@@ -88,7 +88,7 @@ detect_netdevs() {
 
 		if [ -f "${netdev}/type" ]; then
 			# unwanted type
-			[ "$(cat ${netdev}/type" -eq 1 ] || continue
+			[ "$(cat ${netdev}/type)" -eq 1 ] || continue
 		fi
 
 		case "${netdev##*/}" in

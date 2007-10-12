@@ -1,8 +1,12 @@
 fll-live-initscripts (2.0.24) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 12 Oct 2007 10:08:04 +0200
+  [ Joaquim Boura ]
+  * fixed typo
+
+ -- Joaquim Boura <x-un-i@sidux.com>  Sat, 13 Oct 2007 00:08:18 +0200
 
 fll-live-initscripts (2.0.23) unstable; urgency=low
 
