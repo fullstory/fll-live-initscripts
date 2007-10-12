@@ -3,8 +3,10 @@ fll-live-initscripts (2.0.23) UNRELEASED; urgency=low
   * fll_xorgconfig:
     - more scrutiny over what we accept as valid values for handler and phys
       fields while parsing /proc/bus/input/devices
+  * fll-cpufreq:
+    - fix cpufreq module/regexp detection for archs != x86_64
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 12 Oct 2007 10:22:12 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 12 Oct 2007 11:18:36 +1000
 
 fll-live-initscripts (2.0.22) unstable; urgency=low
 
