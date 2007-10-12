@@ -190,7 +190,7 @@ sub input_detect {
 					($name = $val) =~ s/"//g;
 				}
 				when 'handlers' {
-					# filter out handlers containing kbd
+					# filter out handlers containing kbd (eg, usb remote)
 					# the mice have already been counted
 					if ($val !~ /^kbd/ and $val =~ /mouse(\d+)/) {
 						$mouse = $1;
