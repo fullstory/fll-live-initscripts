@@ -1,9 +1,5 @@
-fll-live-initscripts (2.0.24) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.24) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Joaquim Boura ]
   * fixed typo
 
  -- Joaquim Boura <x-un-i@sidux.com>  Sat, 13 Oct 2007 00:08:18 +0200
