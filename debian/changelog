@@ -1,8 +1,9 @@
-fll-live-initscripts (2.0.25) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.25) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * disable nodeadkeys for german keyboard layouts, it breaks virtualbox in
+    combination with X.org 7.3.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 13 Oct 2007 01:27:12 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 13 Oct 2007 14:33:40 +0200
 
 fll-live-initscripts (2.0.24) unstable; urgency=low
 
