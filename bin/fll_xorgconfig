@@ -130,8 +130,8 @@ sub input_priority {
 	if ($a_type eq $b_type) { $retval = $a <=> $b; }
 
 	# ps2/usb is always last -> (semi)removable
-	elsif ($a_type eq 'imps2')     { $retval++; }
-	elsif ($b_type eq 'imps2')     { $retval--; }
+	elsif ($a_type eq 'auto')     { $retval++; }
+	elsif ($b_type eq 'auto')     { $retval--; }
 
 	# top-down priority for the rest
 	elsif ($a_type eq 'alps')      { $retval--; }
@@ -151,7 +151,7 @@ sub input_priority {
 
 sub input_detect {
 	my $options = shift;
-	my ($name, $device, $phys, $mouse, $corepointer, $imps2);
+	my ($name, $device, $phys, $mouse, $corepointer, $auto);
 
 	if (-f '/proc/bus/input/devices') {
 		dbg "using primary detection method: /proc/bus/input/devices";
@@ -222,12 +222,12 @@ sub input_detect {
 							$device = '/dev/psaux';
 						}
 						default {
-							$phys = 'imps2';
+							$phys = 'auto';
 						}
 					}
 				}
 				when m/^usb/ {
-					$phys = 'imps2';
+					$phys = 'auto';
 				}
 			}
 
@@ -285,9 +285,9 @@ sub input_detect {
 	for my $key (sort input_priority keys %input) {
 		dbg $input{$key};
 
-		# only give one imps2 device to fll_xorgconfig
-		if ($input{$key}->{'type'} eq 'imps2' and $imps2) {
-			dbg "Avoiding duplicate imps2 device entry...";
+		# only give one auto device to fll_xorgconfig
+		if ($input{$key}->{'type'} eq 'auto' and $auto) {
+			dbg "Avoiding duplicate auto device entry...";
 			next;
 		}
 
@@ -306,14 +306,14 @@ sub input_detect {
 			$corepointer++;
 		}
 		
-		# count imps2 devices, we don't want to add > 1 of them
-		$input{$key}->{'type'} eq 'imps2' and $imps2++;
+		# count auto devices, we don't want to add > 1 of them
+		$input{$key}->{'type'} eq 'auto' and $auto++;
 	}
 
-	if ($corepointer and not $imps2) {
+	if ($corepointer and not $auto) {
 		for (
-			'name=Generic IMPS/2 Mouse',
-			'type=imps2',
+			'name=Generic Mouse',
+			'type=auto',
 			'device=/dev/input/mice',
 			'corepointer=SendCoreEvents',
 			) {
@@ -423,7 +423,7 @@ GetOptions(
 	'vertrefresh=s',
 
 	# input device
-	# --input type=<synaptics,alps,serial,imps2> \
+	# --input type=<synaptics,alps,serial,auto> \
 	# 	dev=<> name=<> corepointer=<CorePointer,SendCoreEvents>
 	'input=s%{4}' => \&input,
 	'serial-mouse',
@@ -505,10 +505,10 @@ MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 
 	given ($type) {
 		when m/^(alps|synaptics)$/ {
-			$protocol = "auto-dev";
+			$protocol = 'auto-dev';
 		}
-		when 'imps2' {
-			$protocol = 'IMPS/2';
+		when 'auto' {
+			$protocol = 'Auto';
 		}
 		when 'serial' {
 			$protocol = 'Microsoft';

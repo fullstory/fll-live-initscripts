@@ -1,8 +1,12 @@
 fll-live-initscripts (2.0.26) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xorgconfig:
+    - stop treating all ps/2 and USB mice as IMPS/@ protocol explicitly, this
+      caused ExplorerPS/2 imput devices to go mad. Instead, attempt to allow
+      xserver to do the right thing by using the auto protocal in all places
+      we were hardcoding IMPS/2
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 13 Oct 2007 14:35:37 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sun, 14 Oct 2007 23:59:39 +1000
 
 fll-live-initscripts (2.0.25) unstable; urgency=low
 
