@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.26) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.26) unstable; urgency=low
 
   * fll_xorgconfig:
     - stop treating all ps/2 and USB mice as IMPS/@ protocol explicitly, this
