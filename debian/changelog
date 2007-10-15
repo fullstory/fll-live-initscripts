@@ -1,9 +1,6 @@
 fll-live-initscripts (2.0.29) UNRELEASED; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
+  * DO NOT UPLOAD - need to finalize pciid listings for xrandr support.
   * Add contrib/nv_driver_parse_G8x.awk, its a gawk script to help with
     possible G8X nv + xrandr extension test.
   * Add contrib/atipciids_parse_r234_hundred.awk, a gawk script to help with
@@ -21,7 +18,7 @@ fll-live-initscripts (2.0.29) UNRELEASED; urgency=low
   * fll_xserver_discover:
     - print out device and vendor id
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 15 Oct 2007 18:57:49 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 15 Oct 2007 20:24:00 +1000
 
 fll-live-initscripts (2.0.28) unstable; urgency=low
 

@@ -134,7 +134,12 @@ xserver_has_xrandr() {
 
 	case "${DRIVER}" in
 		ati)
-			VERSION_HAS_RANDR="1:6.7.193-1"
+			VERSION_HAS_RANDR="1:6.7.191-1"
+			# find ${DEVICE} in a list of r[234]00 device ids
+			if [ -z "${DEVICE}" ] || ! grep -q "^${DEVICE}" \
+				"/usr/share/fll-live-xorgconfig/xrandr/${DRIVER}"; then
+				return 1
+			fi
 			;;
 		intel)
 			VERSION_HAS_RANDR="2:2.1.0-1"
@@ -142,10 +147,14 @@ xserver_has_xrandr() {
 		mga)
 			VERSION_HAS_RANDR="1:1.9.99.dfsg.1-1"
 			;;
-#		nv)
-#			VERSION_HAS_RANDR="1:2.0.96-1"
-#			# match ${DEVICE} against list of G8x device ids
-#			;;
+		nv)
+			VERSION_HAS_RANDR="1:2.0.96-1"
+			# find ${DEVICE} in a list of G8x device ids
+			if [ -z "${DEVICE}" ] || ! grep -q "^${DEVICE}" \
+				"/usr/share/fll-live-xorgconfig/xrandr/${DRIVER}"; then
+				return 1
+			fi
+			;;
 		*)
 			return 1
 			;;
