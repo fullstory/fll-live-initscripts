@@ -316,7 +316,7 @@ do_start() {
 			XVERTREFRESH_MIN="${XVFREQ%%-*}"
 			XVERTREFRESH_MAX="${XVFREQ##*-}"
 
-			if [ "${XDISPTYPE}" = "crt" ] && [ "$XVERTREFRESH_MAX" -ge "85" ]; then
+			if [ "${XDISPTYPE}" = "crt" ] && [ "${XVERTREFRESH_MAX}" -ge "85" ]; then
 				XVERTREFRESH_MIN="73"
 				log_progress_msg "${G}vfreq(+): ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz{N}"
 			else
