@@ -1,4 +1,5 @@
-# input file = src/nv_driver.c (xserver-xorg-video-nv)
+# Isolate a list of nVidia GeForce G8X family device ids
+# input = src/nv_driver.c (xserver-xorg-video-nv)
 $0 == "/*************** G8x ***************/" {
 	while(getline > 0) {
 		# they are listed in one block

@@ -1,3 +1,4 @@
+# Isolate a list of ATI Radeon r200/r300/r400 device ids
 # input = src/atipciids.h (xserver-xorg-video-ati)
 {
 	if($3 !~ /^0x[0-9A-Z]+$/)
