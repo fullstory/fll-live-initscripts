@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.29) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 15 Oct 2007 02:39:11 +0200
+
 fll-live-initscripts (2.0.28) unstable; urgency=low
 
   * actually use the newly set lower limits for CRTs, don't only display
