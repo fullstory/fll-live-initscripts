@@ -6,6 +6,8 @@ fll-live-initscripts (2.0.29) UNRELEASED; urgency=low
   [ Kel Modderman ]
   * Add contrib/nv_driver_parse_G8x.awk, its a gawk script to help with
     possible G8X nv + xrandr extension test.
+  * Add contrib/atipciids_parse_r234_hundred.awk, a gawk script to help with
+    possible r[234]00 ati + xrandr extension test.
   * fll-xorgconfig:
     - make xrate= cheatcode an alias for vsync when used in non xrandr config
       context
@@ -15,10 +17,11 @@ fll-live-initscripts (2.0.29) UNRELEASED; urgency=low
       return true for G8X series nvidia boards (to be done)
     - pass device id (from XDEVICE) to xserver_has_xrandr() for more complex
       checking
+    - adjust regexp for leading whitespace in x_res_probe()
   * fll_xserver_discover:
     - print out device and vendor id
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 15 Oct 2007 17:22:55 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 15 Oct 2007 18:57:49 +1000
 
 fll-live-initscripts (2.0.28) unstable; urgency=low
 

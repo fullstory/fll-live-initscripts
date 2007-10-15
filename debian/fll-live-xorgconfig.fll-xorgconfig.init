@@ -168,7 +168,7 @@ x_res_probe() {
 		BEGIN {
 			cmd = "xresprobe " driver
 			while ((cmd | getline) > 0) {
-				sub(/^[ ]/,"",$2)
+				sub(/^[ \t]+/,"",$2)
 				if ($1 == "freq") {
 					split($2,f," ")
 					print "XHFREQ" "=\"" f[1] "\""
