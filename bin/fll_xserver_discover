@@ -151,6 +151,8 @@ sub process {
 	print "XMODULE=\"$module\"\n";
 	print "XBOARDNAME=\"$boardname\"\n";
 	print "XBUSID=\"$busid\"\n" if $busid;
+	print "XVENDOR=\"$vendor\"\n";
+	print "XDEVICE=\"$device\"\n";
 }
 
 dbg "Glob'ing /sys/devices/pci*/*/class and /sys/device/pci*/*/*/class";

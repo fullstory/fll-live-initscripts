@@ -117,8 +117,17 @@ fi
 xserver_has_xrandr() {
 	[ "${1}" ] && [ -z "${XNOXRANDR}" ] || return 1
 
+	# http://wiki.debian.org/XStrikeForce/HowToRandR12
+	# As of today (20071015), the following drivers/boards support RandR 1.2:
+	#  * the Intel driver on all boards (since 1.9.91)
+	#  * the NV driver on G80 boards (since 2.0.95)
+	#  * the ATI driver on r200/r300/r400 boards (since 6.7.191)
+	#  * the MGA driver on all boards (since 1.9.99)
+
 	# xserver driver
 	local DRIVER="${1}"
+	# device id of VGA hardware (lower case)
+	local DEVICE="${2}"
 	
 	# package version with randr1.2 support
 	local VERSION_HAS_RANDR
@@ -133,6 +142,10 @@ xserver_has_xrandr() {
 		mga)
 			VERSION_HAS_RANDR="1:1.9.99.dfsg.1-1"
 			;;
+#		nv)
+#			VERSION_HAS_RANDR="1:2.0.96-1"
+#			# match ${DEVICE} against list of G8x device ids
+#			;;
 		*)
 			return 1
 			;;
@@ -200,7 +213,7 @@ do_start() {
 	fi
 
 	# detect video hardware via fll_xserver_discover
-	#     XMODULE XVENDORNAME XBOARDNAME XBUSID
+	#     XMODULE XBOARDNAME XBUSID XVENDOR XDEVICE
 	eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
 
 	log_end_msg 0
@@ -224,6 +237,10 @@ do_start() {
 		esac
 	fi
 
+	if [ "${XVENDOR}" ] && [ "${XDEVICE}" ]; then
+		log_progress_msg "${G}pciid: ${Y}${XVENDOR}:${XDEVICE}${N}"
+	fi
+
 	if [ "${XBUSID}" ]; then
 		log_progress_msg "${G}busid: ${Y}${XBUSID}${N}"
 		XCFG_OPTS="${XCFG_OPTS} --busid '${XBUSID}'"
@@ -244,7 +261,7 @@ do_start() {
 
 	log_daemon_msg "${B}${NAME}${N}"
 
-	if xserver_has_xrandr "${XMODULE}"; then
+	if xserver_has_xrandr "${XMODULE}" "${XDEVICE}"; then
 		log_progress_msg "${G}driver has ${Y}RandR 1.2${G} support${N}"
 		# xrandr aware, we don't have to probe monitor settings :)
 		XCFG_OPTS="${XCFG_OPTS} --xrandr"
