@@ -1,3 +1,4 @@
 bin/fll_xorgconfig			usr/sbin
 bin/fll_xserver_discover		usr/sbin
 share/fll-live-xorgconfig/templates	usr/share/fll-live-xorgconfig
+share/fll-live-xorgconfig/xrandr	usr/share/fll-live-xorgconfig

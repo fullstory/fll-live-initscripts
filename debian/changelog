@@ -5,6 +5,10 @@ fll-live-initscripts (2.0.29) UNRELEASED; urgency=low
     possible G8X nv + xrandr extension test.
   * Add contrib/atipciids_parse_r234_hundred.awk, a gawk script to help with
     possible r[234]00 ati + xrandr extension test.
+  * Add gawk to Build-Deps, use awk scripts in ./contrib to make a list of
+    device id's that should support xrandr extensions for required drivers.
+  * Add contrib/src/atipciids.h and  contrib/src/nv_driver.c for the gawk to
+    harvest device id's from.
   * fll-xorgconfig:
     - make xrate= cheatcode an alias for vsync when used in non xrandr config
       context
@@ -18,7 +22,7 @@ fll-live-initscripts (2.0.29) UNRELEASED; urgency=low
   * fll_xserver_discover:
     - print out device and vendor id
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 15 Oct 2007 20:24:00 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 15 Oct 2007 20:47:58 +1000
 
 fll-live-initscripts (2.0.28) unstable; urgency=low
 
