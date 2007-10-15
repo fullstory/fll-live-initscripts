@@ -323,7 +323,7 @@ do_start() {
 				log_progress_msg "${G}vfreq: ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz${N}"
 			fi
 
-			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVFREQ}'"
+			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'"
 		fi
 
 		# cheatcode
