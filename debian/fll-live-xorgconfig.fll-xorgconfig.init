@@ -299,6 +299,11 @@ do_start() {
 			# probed
 			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHFREQ}'"
 		fi
+
+		# compat. with xrandr style refresh rate override
+		if [ "${XRATE}" ] && [ -z "${XVERTREFRESH}" ]; then
+			XVERTREFRESH="${XRATE}"
+		fi			
 		
 		if [ "${XVERTREFRESH}" ]; then
 			# cheatcode
