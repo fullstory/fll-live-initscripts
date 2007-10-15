@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.29) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.29) unstable; urgency=low
 
   * Add contrib/nv_driver_parse_G8x.awk, its a gawk script to help with
     possible G8X nv + xrandr extension test.
