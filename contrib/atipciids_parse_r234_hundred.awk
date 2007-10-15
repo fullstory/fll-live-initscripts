@@ -5,5 +5,5 @@
 	if($2 !~ /^PCI_CHIP_R[A-Z]?[2-4]/)
 		next
 	sub(/^PCI_CHIP_/, "", $2)
-	print substr($3, 3, 4), $2
+	print substr(tolower($3), 3, 4), $2
 }
