@@ -216,9 +216,6 @@ do_start() {
 
 	if [ "${XKBOPTIONS}" ]; then
 		XCFG_OPTS="${XCFG_OPTS} --xkboptions '${XKBOPTIONS}'"
-	elif [ -f /usr/share/xfce4/panel-plugins/xkb-plugin.desktop ]; then
-		# needed for xfce4-xkb-plugin
-		XCFG_OPTS="${XCFG_OPTS} --xkboptions 'grp:alt_shift_toggle,grp_led:scroll'"
 	fi
 
 	# detect video hardware via fll_xserver_discover
