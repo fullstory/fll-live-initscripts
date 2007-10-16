@@ -101,6 +101,9 @@ if [ -f /proc/cmdline ]; then
 			xrate=*|rate=*)
 				XRATE="${param#*rate=}"
 				;;
+			xrandr)
+				XFORCERANDR="1"
+				;;
 			xscreen=*|screen=*|xmode=*|mode=*)
 				XMODES="${param#*=}"
 				;;
@@ -116,6 +119,11 @@ fi
 ###
 xserver_has_xrandr() {
 	[ "${1}" ] && [ -z "${XNOXRANDR}" ] || return 1
+	
+	if [ "${XFORCERANDR}" ]; then
+		# force xrandr style configuration
+		return 0
+	fi
 
 	# http://wiki.debian.org/XStrikeForce/HowToRandR12
 	# As of today (20071015), the following drivers/boards support RandR 1.2:
@@ -346,7 +354,7 @@ do_start() {
 
 			if [ "${XDISPTYPE}" = "crt" ] && [ "${XVERTREFRESH_MAX}" -ge "85" ]; then
 				XVERTREFRESH_MIN="73"
-				log_progress_msg "${G}vfreq(+): ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz{N}"
+				log_progress_msg "${G}vfreq(+): ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz${N}"
 			else
 				log_progress_msg "${G}vfreq: ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz${N}"
 			fi

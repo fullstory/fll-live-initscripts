@@ -1,8 +1,11 @@
 fll-live-initscripts (2.0.31) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - fix typo when displaying maximum vertical refresh, ansi escape sequence
+      variable was missing a $
+    - add xrandr cheatcode to force use of randr style xorg.conf
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 16 Oct 2007 01:31:33 +0200
+ -- Kel Modderman <kel@otaku42.de>  Tue, 16 Oct 2007 14:14:49 +1000
 
 fll-live-initscripts (2.0.30) unstable; urgency=low
 
