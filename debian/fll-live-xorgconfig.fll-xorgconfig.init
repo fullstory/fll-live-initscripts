@@ -323,10 +323,10 @@ do_start() {
 				XHORIZSYNC_MIN="28"
 			fi
 
-			log_progress_msg "${G}hfreq(*): ${Y}${XHORIZSYNC_MIN}kHz - ${XHORIZSYNC_MAX}kHz${N}"
+			log_progress_msg "${G}hfreq(*): ${Y}${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX} kHz${N}"
 			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX}'"
 		elif [ "${XHFREQ}" ]; then
-			log_progress_msg "${G}hfreq: ${Y}${XHFREQ}${N}"
+			log_progress_msg "${G}hfreq: ${Y}${XHFREQ} kHz${N}"
 			# probed
 			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHFREQ}'"
 		fi
@@ -345,7 +345,7 @@ do_start() {
 				XVERTREFRESH_MIN="50"
 			fi
 
-			log_progress_msg "${G}vfreq(*): ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz${N}"
+			log_progress_msg "${G}vfreq(*): ${Y}${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz${N}"
 			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'"
 		elif [ "${XVFREQ}" ]; then
 			# probed
@@ -354,9 +354,9 @@ do_start() {
 
 			if [ "${XDISPTYPE}" = "crt" ] && [ "${XVERTREFRESH_MAX}" -ge "85" ]; then
 				XVERTREFRESH_MIN="73"
-				log_progress_msg "${G}vfreq(+): ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz${N}"
+				log_progress_msg "${G}vfreq(+): ${Y}${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz${N}"
 			else
-				log_progress_msg "${G}vfreq: ${Y}${XVERTREFRESH_MIN}Hz - ${XVERTREFRESH_MAX}Hz${N}"
+				log_progress_msg "${G}vfreq: ${Y}${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz${N}"
 			fi
 
 			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'"
