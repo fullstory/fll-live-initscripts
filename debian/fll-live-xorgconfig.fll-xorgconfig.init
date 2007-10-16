@@ -286,7 +286,7 @@ do_start() {
 		fi
 
 		if [ "${XRATE}" ]; then
-			log_progress_msg "${G}@ ${Y}${XRATE}${N}"
+			log_progress_msg "${G}@${Y}${XRATE} Hz${N}"
 			XCFG_OPTS="${XCFG_OPTS} --rate '${XRATE}'"
 		fi
 
