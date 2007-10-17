@@ -285,9 +285,9 @@ do_start() {
 			XCFG_OPTS="${XCFG_OPTS} --mode '${XMODES}'"
 		fi
 
-		# compat. with legacy style refresh rate override
+		# warn about override semantic difference
 		if [ "${XVERTREFRESH}" ] && [ -z "${XRATE}" ]; then
-			XRATE="${XVERTREFRESH}"
+			log_warning_msg "ignoring vsync=${XVERTREFRESH}"
 		fi
 
 		if [ "${XRATE}" ]; then
@@ -336,9 +336,9 @@ do_start() {
 			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHFREQ}'"
 		fi
 
-		# compat. with xrandr style refresh rate override
+		# warn about override semantic difference
 		if [ "${XRATE}" ] && [ -z "${XVERTREFRESH}" ]; then
-			XVERTREFRESH="${XRATE}"
+			log_warning_msg "ignoring xrate=${XRATE}"
 		fi			
 		
 		if [ "${XVERTREFRESH}" ]; then

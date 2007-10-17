@@ -228,6 +228,6 @@ sub gen_uri {
 		$done{$name} or warn "W: no source uri for $name\n";
 	}
 
-	# write src uri list to file with md5sum
+	# write src uri list to file
 	push(@s, $_) for (sort keys %uris);
 }
