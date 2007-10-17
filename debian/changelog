@@ -1,7 +1,6 @@
-fll-live-initscripts (2.0.33) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.33) unstable; urgency=low
 
   [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
   * minor cosmetic tweaking of xrandr 1.2 refresh rate feedback.
 
   [ Kel Modderman ]
