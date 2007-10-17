@@ -285,6 +285,11 @@ do_start() {
 			XCFG_OPTS="${XCFG_OPTS} --mode '${XMODES}'"
 		fi
 
+		# compat. with legacy style refresh rate override
+		if [ "${XVERTREFRESH}" ] && [ -z "${XRATE}" ]; then
+			XRATE="${XVERTREFRESH}"
+		fi
+
 		if [ "${XRATE}" ]; then
 			log_progress_msg "${G}@${Y}${XRATE} Hz${N}"
 			XCFG_OPTS="${XCFG_OPTS} --rate '${XRATE}'"

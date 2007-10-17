@@ -1,9 +1,15 @@
 fll-live-initscripts (2.0.33) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
   * minor cosmetic tweaking of xrandr 1.2 refresh rate feedback.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 16 Oct 2007 16:48:23 +0200
+  [ Kel Modderman ]
+  * fll-xorgconfig:
+    - honour vsync= cheatcode when used in context of a randr1.2 style
+      configuration (an alias for xrate=)
+
+ -- Kel Modderman <kel@otaku42.de>  Wed, 17 Oct 2007 11:13:49 +1000
 
 fll-live-initscripts (2.0.32) unstable; urgency=low
 
