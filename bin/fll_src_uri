@@ -177,11 +177,11 @@ sub gen_uri {
 	$p_o->flock;
 	@p = ();
 
-	eval "require AptPkg::Cache";
+	eval { require AptPkg::Cache };
 	$@ and die "E: requires AptPkg::Cache (libapt-pkg-perl)\n";
 	import AptPkg::Cache;
 
-	eval "require AptPkg::Source";
+	eval { require AptPkg::Source };
 	$@ and die "E: requires AptPkg::Source (libapt-pkg-perl)\n";
 	import AptPkg::Source;
 

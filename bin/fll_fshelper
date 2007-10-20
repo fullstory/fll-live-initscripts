@@ -182,7 +182,7 @@ sub device_resolver {
 
 	-b $n and return "$n";
 
-	return undef;
+	return;
 }
 
 sub comment {
