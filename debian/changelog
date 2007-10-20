@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.35) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.35) unstable; urgency=low
 
   * Run the perl scripts through perlcritic.
 
