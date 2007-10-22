@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.36) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.36) unstable; urgency=low
 
   * fll_analyze_initscripts:
     - support globbing in fll_init_{white,black}list
