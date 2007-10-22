@@ -61,8 +61,13 @@ sub bnwlist {
 		/^#/ and next;
 
 		# script name
-		if (m|^/etc/init.d/(.+)$|) {
-			-x and $binit{$1}++;
+		if (m|^/etc/init.d/|) {
+			for (glob) {
+				-x or next;
+				if (m|^/etc/init.d/(.+)$|) {
+					$binit{$1}++;
+				}
+			}
 			next;
 		}
 
@@ -87,10 +92,13 @@ sub bnwlist {
 		/^#/ and next;
 
 		# script name
-		if (m|^/etc/init.d/(.+)$|) {
-			# check for blacklisting
-			$binit{$1} and next;
-			-x and $winit{$1}++;
+		if (m|^/etc/init.d/|) {
+			for (glob) {
+				-x or next;
+				if (m|^/etc/init.d/(.+)$|) {
+					$binit{$1} or $winit{$1}++;
+				}
+			}
 			next;
 		}
 
