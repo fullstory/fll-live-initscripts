@@ -16,6 +16,5 @@ Section "InputDevice"
 	Option		"MaxSpeed"		"0.12"
 	Option		"AccelFactor"		"0.0010"
 	Option		"SHMConfig"		"on"
-	Option		"Repeater"		"/dev/ps2mouse"
 	Option		"@@COREPOINTER@@"
 EndSection

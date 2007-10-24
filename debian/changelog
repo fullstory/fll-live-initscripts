@@ -7,8 +7,10 @@ fll-live-initscripts (2.0.38) UNRELEASED; urgency=low
   * fll_xorgconfig:
     - experiment with /dev/input/mouse for touchpad mice, this should be
       future proof
+    - remove repeater from touchpad template, i could not find any useful
+      information about what this does
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 24 Oct 2007 22:34:30 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 24 Oct 2007 22:36:33 +1000
 
 fll-live-initscripts (2.0.37) unstable; urgency=low
 
