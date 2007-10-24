@@ -22,41 +22,6 @@ GetOptions(
 	'v|verbose'    => \$v,
 );
 
-if ($s and $m) {
-	gen_uri(realpath($s), realpath($m));
-}
-elsif ($s) {
-	get_uri(realpath($s), $t, $o, $c);
-}
-else {
-	print STDERR <<_EOF_
-  This is $self, Copyright (C) 2007 Kel Modderman <kel\@otaku42.de>
-  $self is licensed GPLv2, or any later version.
-
-  Usage:
-
-  To create a list of dsc URI's to fetch:
-    $self -s|--source source.list -m|--manifest manifest.list
-
-    Requires the libapt-pkg-perl package to be installed. $self will
-    generate a list of dsc URI's in the source.list, and a list of installed
-    packages in the manifest.list.
-
-  To fetch dsc URI's from a list:
-    $self -s|--source source.list -t|--tar name \
-        [-o|--output /path/to/output] [-p|--preserve]
-    
-    $self will get the dsc URI's from the archive with dget(1) (from 
-    devscripts package) and optionally put them in a tar archive. If no
-    --output option is given, the source package tree will be formed in the
-    current directory in a directory named 'source'. The tar file will be
-    created in the output directory with the string given by the --tar option.
-    The --cleanup option cleans up the source tree after the tarball has made.
-
-_EOF_
-	        ;
-}
-
 sub dbg {
 	return unless $d;
 
@@ -95,76 +60,8 @@ sub sysexec {
 	}
 }
 
-sub get_uri {
-	my ($slist, $tar, $out, $cleanup) = (shift, shift, shift, shift);
-	my %failed;
-
-	-x '/usr/bin/dget' or die "E: dget is required (devscripts)\n";
-
-	# tie source list to array
-	my $s_o = tie(my @s, "Tie::File", $slist) or die "E: cannot open $slist for reading: $!\n";
-
-	# create source directory
-	eval { mkpath("$out/source", $v, 0755); };
-	$@ and die "E: could not create $out: $@\n";
-
-	# canonacalize path to source parent dir
-	$out = realpath($out);
-
-	# process the dsc list
-	my $n = 0;
-	while ($s[$n]) {
-		my ($name, $dir);
-
-		# determine name of package, get package prefix
-		if ($s[$n] =~ m|.*/([^/]+)_.+\.dsc$|) {
-			$name = $1;
-			$dir = $name =~ /^lib/ ? substr($name, 0, 4) : substr($name, 0, 1);
-		}
-		else {
-			die "E: failed to get name from dsc\n";
-		}
-
-		# create nice source tree layout
-		eval { mkpath("$out/source/$dir/$name", $v, 0755); };
-		$@ and die "E: could not create $out/source/$dir/$name: $@\n";
-
-		# move to $name/$dir
-		cd("$out/source/$dir/$name");
-
-		# manage the dget process with fork and exec, allow SIGINT
-		my $cmd = $v ? "/usr/bin/dget $s[$n]" : "/usr/bin/dget -q $s[$n]";
-		sysexec($cmd);
-	}
-	continue {
-		$n++;
-	}
-
-	# check for failures
-	if (keys %failed) {
-		warn "W: failed to dget: $_\n" for (sort keys %failed);
-		die "E: some files failed to download, try again or fix manually\n";
-	}
-
-	cd($out);
-
-	# make the source tarball
-	if ($tar) {
-		print "O: creating: $out/$tar\n";
-		my $cmd = $v ? "tar -cvf $tar ./source" : "tar -cf $tar ./source";
-		sysexec($cmd);
-	}
-
-	# cleanup
-	if ($cleanup) {
-		print "O: cleaning: $out/source\n";
-		eval { rmtree("$out/source", $v, 1); };
-		$@ and die "E: failed to rmtree($out/source): $!\n";
-	}
-}
-
-sub gen_uri {
-	my ($slist, $plist) = (shift, shift);
+if ($s and $m) {
+	my ($slist, $plist) = (realpath($s), realpath($m));
 	my (%done, %uris);
 
 	# tie source list to an array, flock it
@@ -230,4 +127,99 @@ sub gen_uri {
 
 	# write src uri list to file
 	push(@s, $_) for (sort keys %uris);
+}
+elsif ($s) {
+	my ($slist, $tar, $out, $cleanup) = (realpath($s), $t, $o, $c);
+	my %failed;
+
+	-x '/usr/bin/dget' or die "E: dget is required (devscripts)\n";
+
+	# tie source list to array
+	my $s_o = tie(my @s, "Tie::File", $slist) or die "E: cannot open $slist for reading: $!\n";
+
+	# create source directory
+	eval { mkpath("$out/source", $v, 0755); };
+	$@ and die "E: could not create $out: $@\n";
+
+	# canonacalize path to source parent dir
+	$out = realpath($out);
+
+	# process the dsc list
+	my $n = 0;
+	while ($s[$n]) {
+		my ($name, $dir);
+
+		# determine name of package, get package prefix
+		if ($s[$n] =~ m|.*/([^/]+)_.+\.dsc$|) {
+			$name = $1;
+			$dir = $name =~ /^lib/ ? substr($name, 0, 4) : substr($name, 0, 1);
+		}
+		else {
+			die "E: failed to get name from dsc\n";
+		}
+
+		# create nice source tree layout
+		eval { mkpath("$out/source/$dir/$name", $v, 0755); };
+		$@ and die "E: could not create $out/source/$dir/$name: $@\n";
+
+		# move to $name/$dir
+		cd("$out/source/$dir/$name");
+
+		# manage the dget process with fork and exec, allow SIGINT
+		my $cmd = $v ? "/usr/bin/dget $s[$n]" : "/usr/bin/dget -q $s[$n]";
+		sysexec($cmd);
+	}
+	continue {
+		$n++;
+	}
+
+	# check for failures
+	if (keys %failed) {
+		warn "W: failed to dget: $_\n" for (sort keys %failed);
+		die "E: some files failed to download, try again or fix manually\n";
+	}
+
+	cd($out);
+
+	# make the source tarball
+	if ($tar) {
+		print "O: creating: $out/$tar\n";
+		my $cmd = $v ? "tar -cvf $tar ./source" : "tar -cf $tar ./source";
+		sysexec($cmd);
+	}
+
+	# cleanup
+	if ($cleanup) {
+		print "O: cleaning: $out/source\n";
+		eval { rmtree("$out/source", $v, 1); };
+		$@ and die "E: failed to rmtree($out/source): $!\n";
+	}
+}
+else {
+	print STDERR <<_EOF_
+  This is $self, Copyright (C) 2007 Kel Modderman <kel\@otaku42.de>
+  $self is licensed GPLv2, or any later version.
+
+  Usage:
+
+  To create a list of dsc URI's to fetch:
+    $self -s|--source source.list -m|--manifest manifest.list
+
+    Requires the libapt-pkg-perl package to be installed. $self will
+    generate a list of dsc URI's in the source.list, and a list of installed
+    packages in the manifest.list.
+
+  To fetch dsc URI's from a list:
+    $self -s|--source source.list -t|--tar name \
+        [-o|--output /path/to/output] [-p|--preserve]
+    
+    $self will get the dsc URI's from the archive with dget(1) (from 
+    devscripts package) and optionally put them in a tar archive. If no
+    --output option is given, the source package tree will be formed in the
+    current directory in a directory named 'source'. The tar file will be
+    created in the output directory with the string given by the --tar option.
+    The --cleanup option cleans up the source tree after the tarball has made.
+
+_EOF_
+	        ;
 }

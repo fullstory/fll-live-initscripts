@@ -1,8 +1,9 @@
 fll-live-initscripts (2.0.37) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_analyze_initscripts, fll_src_uri:
+    - remove trivial use of functions
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 22 Oct 2007 18:21:55 +0200
+ -- Kel Modderman <kel@otaku42.de>  Wed, 24 Oct 2007 20:47:43 +1000
 
 fll-live-initscripts (2.0.36) unstable; urgency=low
 

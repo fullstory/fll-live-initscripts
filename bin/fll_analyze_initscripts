@@ -47,8 +47,8 @@ for (@glob) {
 
 #print Dumper \%init;
 
-sub bnwlist {
-	my ($b, $w) = (shift, shift);
+if ($blist and $wlist) {
+	my ($b, $w) = ($blist, $wlist);
 
 	-s $b or die "Cannot read $b: $!\n";
 	-s $w or die "Cannot read $w: $!\n";
@@ -134,8 +134,7 @@ sub bnwlist {
 		print "$out\n" if $out;
 	}
 }
-
-sub analyze {
+else {
 	for my $svc (sort keys %init) {
 		my (@par, $prm);
 
@@ -164,13 +163,6 @@ sub analyze {
 		print "$urcd @par\n";
 	}
 
-	my $eval = (@_ and $found != @_) ? 1 : 0;
+	my $eval = (@ARGV and $found != @ARGV) ? 1 : 0;
 	exit($eval);
-}
-
-if ($blist and $wlist) {
-	bnwlist($blist, $wlist);
-}
-else {
-	analyze(@ARGV);
 }
