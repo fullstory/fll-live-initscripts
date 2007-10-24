@@ -508,8 +508,6 @@ MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 	my ($type, $device, $name, $protocol) =
 		@{ $x{'mouse'}{$m} }{ 'type', 'device', 'name', 'protocol' };
 	
-	dbg "device=$device type=$type name=$name protocol=$protocol";
-
 	# add inputdevice line to ServerLayout
 	dbg "pushing input_device '$name' to serverlayout section";
 	splice(@serverlayout, -1, 0, "\tInputDevice\t\"$name\"");
