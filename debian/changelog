@@ -1,9 +1,5 @@
-fll-live-initscripts (2.0.38) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.38) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_xorgconfig:
     - experiment with /dev/input/mouse for touchpad mice, this should be
       future proof
