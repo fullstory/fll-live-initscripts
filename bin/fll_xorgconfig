@@ -215,12 +215,12 @@ sub input_detect {
 					given ($name) {
 						when m/^SynPS\/2/ {
 							$phys   = 'synaptics';
-							$device = '/dev/psaux';
+							#$device = '/dev/psaux';
 							$protocol = 'auto-dev';
 						}
 						when m/^AlpsPS\/2/ {
 							$phys   = 'alps';
-							$device = '/dev/psaux';
+							#$device = '/dev/psaux';
 							$protocol = 'auto-dev';
 						}
 						default {
