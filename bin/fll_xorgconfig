@@ -112,7 +112,7 @@ sub input {
 
 	# call to &mouse, inciment $mice
 	# 3rd call to &mouse and inciment $mouse_index
-	$mouse_index++ if ++$mice % 4 == 0;
+	$mouse_index++ if ++$mice % 5 == 0;
 }
 
 sub input_priority {
@@ -151,7 +151,7 @@ sub input_priority {
 
 sub input_detect {
 	my $options = shift;
-	my ($name, $device, $phys, $mouse, $corepointer, $auto);
+	my ($name, $device, $phys, $mouse, $protocol, $corepointer, $auto);
 
 	if (-f '/proc/bus/input/devices') {
 		dbg "using primary detection method: /proc/bus/input/devices";
@@ -176,7 +176,7 @@ sub input_detect {
 			unless (/^./) {
 				# each input device block is seperated by a blank line
 				# clear these variables when we reach end of each block
-				($name, $device, $phys, $mouse) = ();
+				($name, $device, $phys, $mouse, $protocol) = ();
 				next;
 			}
 
@@ -216,28 +216,33 @@ sub input_detect {
 						when m/^SynPS\/2/ {
 							$phys   = 'synaptics';
 							$device = '/dev/psaux';
+							$protocol = 'auto-dev';
 						}
 						when m/^AlpsPS\/2/ {
 							$phys   = 'alps';
 							$device = '/dev/psaux';
+							$protocol = 'auto-dev';
 						}
 						default {
 							$phys = 'auto';
+							$protocol = 'Auto';
 						}
 					}
 				}
 				when m/^usb/ {
 					$phys = 'auto';
+					$protocol = 'Auto';
 				}
 			}
 
-			dbg "'name' => $name, 'type' => $phys, 'device' => $device";
-
 			$input{$mouse} = {
-				'name'   => $name,
-				'type'   => $phys,
-				'device' => $device,
+				'name'     => $name,
+				'type'     => $phys,
+				'device'   => $device,
+				'protocol' => $protocol,
 			};
+
+			dbg \%{ $input{$mouse} };
 
 			($name, $phys, $mouse) = ();
 		}
@@ -266,13 +271,14 @@ sub input_detect {
 			if (m|^\s*(/dev/tty[^\s]+)\s+(.*)$|) {
 				($device, $name, $phys) = ($1, $2, 'serial');
 
-				dbg "'name' => $name, 'type' => $phys, 'device' => $device";
-
 				$input{$mouse} = {
-					'name'   => $name,
-					'type'   => $phys,
-					'device' => $device,
+					'name'     => $name,
+					'type'     => $phys,
+					'device'   => $device,
+					'protocol' => 'Microsoft',
 				};
+
+				dbg \%{ $input{$mouse} };
 
 				$mouse++;
 			}
@@ -292,7 +298,7 @@ sub input_detect {
 		}
 
 		# form --input argument string to give to fll_xorgconfig
-		for ('name', 'type', 'device') {
+		for ('name', 'type', 'device', 'protocol') {
 			input(undef, $_, $input{$key}->{$_}),;
 		}
 
@@ -316,6 +322,7 @@ sub input_detect {
 			'type=auto',
 			'device=/dev/input/mice',
 			'corepointer=SendCoreEvents',
+			'protocol=Auto',
 			) {
 			my ($k, $v) = split(/=/, $_);
 			input(undef, $k, $v);
@@ -328,7 +335,7 @@ sub gtf_modelines {
 
 	# if no args are given to function, return a Modeline for each
 	# element of our mode/frequency library
-	my @f = @_ ? [ @_ ] : (
+	my @f = @_ == 3 ? [ @_ ] : (
 		[ 640,  350,  85  ], [ 640,  400,  85  ], [ 640,  480,  60  ],
 		[ 640,  480,  72  ], [ 640,  480,  75  ], [ 640,  480,  85  ],
 		[ 640,  480,  100 ], [ 720,  400,  85  ], [ 768,  576,  60  ],
@@ -423,7 +430,7 @@ GetOptions(
 	'vertrefresh=s',
 
 	# input device
-	# --input type=<synaptics,alps,serial,auto> \
+	# --input type=<synaptics,alps,serial,auto> protocol=<> \
 	# 	dev=<> name=<> corepointer=<CorePointer,SendCoreEvents>
 	'input=s%{4}' => \&input,
 	'serial-mouse',
@@ -498,29 +505,10 @@ MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 	$x{'mouse'}{$m}{'name'} .= " $m";
 
 	# take a slice of $x{'mouse'}{$m}
-	my ($type, $device, $name) = @{ $x{'mouse'}{$m} }{ 'type', 'device', 'name' };
-	dbg "device=$device type=$type name=$name";
-
-	my $protocol;
-
-	given ($type) {
-		when m/^(alps|synaptics)$/ {
-			$protocol = 'auto-dev';
-		}
-		when 'auto' {
-			$protocol = 'Auto';
-		}
-		when 'serial' {
-			$protocol = 'Microsoft';
-		}
-		default {
-			dbg "unknown mouse type '$type'";
-			next MICE;
-		}
-	}
-
-	# define protocol for mouse
-	$x{'mouse'}{$m}{'protocol'} = $protocol;
+	my ($type, $device, $name, $protocol) =
+		@{ $x{'mouse'}{$m} }{ 'type', 'device', 'name', 'protocol' };
+	
+	dbg "device=$device type=$type name=$name protocol=$protocol";
 
 	# add inputdevice line to ServerLayout
 	dbg "pushing input_device '$name' to serverlayout section";
@@ -529,7 +517,7 @@ MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
 	my @section = get_template("inputdevice_$type");
 
 	$n = 0;
-	MOUSE: while ($section[$n]) {
+MOUSE:	while ($section[$n]) {
 		my $line = $section[$n];
 		dbg "$n: $line";
 

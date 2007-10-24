@@ -2,8 +2,11 @@ fll-live-initscripts (2.0.37) UNRELEASED; urgency=low
 
   * fll_analyze_initscripts, fll_src_uri:
     - remove trivial use of functions
+  * fll_xorgconfig:
+    - move 'protocol' handling into complex input_detect() function
+    - check number of args to gtf_modielines() is equal to 3
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 24 Oct 2007 20:47:43 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 24 Oct 2007 21:02:37 +1000
 
 fll-live-initscripts (2.0.36) unstable; urgency=low
 
