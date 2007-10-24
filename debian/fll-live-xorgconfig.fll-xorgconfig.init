@@ -357,7 +357,8 @@ do_start() {
 			XVERTREFRESH_MIN="${XVFREQ%%-*}"
 			XVERTREFRESH_MAX="${XVFREQ##*-}"
 
-			if [ "${XDISPTYPE}" = "crt" ] && [ "${XVERTREFRESH_MAX}" -ge "85" ]; then
+			if [ "${XVERTREFRESH_MAX}" -ge "85" ]; then
+				# raise minimum vertical refresh threshold
 				XVERTREFRESH_MIN="73"
 				log_progress_msg "${G}vfreq(+): ${Y}${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz${N}"
 			else

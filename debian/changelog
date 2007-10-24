@@ -1,8 +1,9 @@
 fll-live-initscripts (2.0.39) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - don't check XDISPTYPE for vertrefresh workaround
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 24 Oct 2007 14:52:18 +0200
+ -- Kel Modderman <kel@otaku42.de>  Wed, 24 Oct 2007 22:56:07 +1000
 
 fll-live-initscripts (2.0.38) unstable; urgency=low
 
