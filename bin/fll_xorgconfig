@@ -207,20 +207,15 @@ sub input_detect {
 
 			next unless (defined $mouse and $name and $phys);
 
-			# default mouse device, we still use /dev/psaux for touchpads
-			$device = '/dev/input/mice';
-
 			given ($phys) {
 				when m/^isa/ {
 					given ($name) {
 						when m/^SynPS\/2/ {
 							$phys   = 'synaptics';
-							#$device = '/dev/psaux';
 							$protocol = 'auto-dev';
 						}
 						when m/^AlpsPS\/2/ {
 							$phys   = 'alps';
-							#$device = '/dev/psaux';
 							$protocol = 'auto-dev';
 						}
 						default {
@@ -238,7 +233,7 @@ sub input_detect {
 			$input{$mouse} = {
 				'name'     => $name,
 				'type'     => $phys,
-				'device'   => $device,
+				'device'   => '/dev/input/mice',
 				'protocol' => $protocol,
 			};
 
