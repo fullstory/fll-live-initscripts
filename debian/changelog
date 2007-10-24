@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.37) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.37) unstable; urgency=low
 
   * fll_analyze_initscripts, fll_src_uri:
     - remove trivial use of functions
