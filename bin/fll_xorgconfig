@@ -151,7 +151,7 @@ sub input_priority {
 
 sub input_detect {
 	my $options = shift;
-	my ($name, $device, $phys, $mouse, $protocol, $corepointer, $auto);
+	my ($name, $device, $phys, $mouse, $type, $protocol, $corepointer, $auto);
 
 	if (-f '/proc/bus/input/devices') {
 		dbg "using primary detection method: /proc/bus/input/devices";
@@ -176,7 +176,7 @@ sub input_detect {
 			unless (/^./) {
 				# each input device block is seperated by a blank line
 				# clear these variables when we reach end of each block
-				($name, $device, $phys, $mouse, $protocol) = ();
+				($name, $device, $phys, $mouse, $type, $protocol) = ();
 				next;
 			}
 
@@ -211,28 +211,33 @@ sub input_detect {
 				when m/^isa/ {
 					given ($name) {
 						when m/^SynPS\/2/ {
-							$phys   = 'synaptics';
+							$type   = 'synaptics';
 							$protocol = 'auto-dev';
 						}
 						when m/^AlpsPS\/2/ {
-							$phys   = 'alps';
+							$type   = 'alps';
 							$protocol = 'auto-dev';
 						}
 						default {
-							$phys = 'auto';
+							$type = 'auto';
 							$protocol = 'Auto';
 						}
 					}
 				}
 				when m/^usb/ {
-					$phys = 'auto';
+					$type = 'auto';
 					$protocol = 'Auto';
 				}
 			}
 
+			unless ($type) {
+				dbg "Unknown type, skipping...";
+				next;
+			}
+
 			$input{$mouse} = {
 				'name'     => $name,
-				'type'     => $phys,
+				'type'     => $type,
 				'device'   => '/dev/input/mice',
 				'protocol' => $protocol,
 			};
@@ -261,14 +266,14 @@ sub input_detect {
 			chomp;
 			dbg $_;
 
-			($name, $device, $phys) = ();
+			($name, $device, $type) = ();
 
 			if (m|^\s*(/dev/tty[^\s]+)\s+(.*)$|) {
-				($device, $name, $phys) = ($1, $2, 'serial');
+				($device, $name, $type) = ($1, $2, 'serial');
 
 				$input{$mouse} = {
 					'name'     => $name,
-					'type'     => $phys,
+					'type'     => $type,
 					'device'   => $device,
 					'protocol' => 'Microsoft',
 				};
