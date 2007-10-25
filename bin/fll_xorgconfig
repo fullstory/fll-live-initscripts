@@ -500,7 +500,6 @@ my @extensions   = get_template('extensions');
 input_detect unless $mice;
 
 MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
-
 	# append current mouse number to name, ensuring it will be unique
 	$x{'mouse'}{$m}{'name'} .= " $m";
 
@@ -586,7 +585,6 @@ if ($x{'xrandr'}) {
 	$x{'screen'} = '"Screen 0"';
 }
 else {
-
 	# wrap each mode in quotation marks
 	($x{'modes'} = "Modes\t" . $x{'modes'}) =~ s/(\d+x\d+)/"$1"/g;
 
