@@ -1,9 +1,5 @@
-fll-live-initscripts (2.0.40) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.40) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_src_uri:
     - castrate the script to bare minimum now that we have the more portable
       sh source fetcher back
