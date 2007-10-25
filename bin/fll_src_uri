@@ -5,60 +5,17 @@ use strict;
 use autouse 'Data::Dumper' => qw(Dumper);
 use Cwd qw(getcwd realpath);
 use Getopt::Long qw(:config bundling no_auto_abbrev);
-use File::Path;
 use Tie::File;
 
 my $self = 'fll_src_uri';
-my ($c, $d, $m, $o, $s, $t, $v);
-$o = getcwd();
+my ($c, $d, $m, $s, $v);
 
 GetOptions(
-	'c|cleanup'    => \$c,
 	'd|debug'      => \$d,
 	'm|manifest=s' => \$m,
-	'o|output=s'   => \$o,
 	's|sources=s'  => \$s,
-	't|tar=s'      => \$t,
 	'v|verbose'    => \$v,
 );
-
-sub dbg {
-	return unless $d;
-
-	# dump references, print everything else
-	for (@_) {
-		next unless defined;
-		
-		if (ref) {
-			print STDERR Dumper($_);
-		}
-		else {
-			print STDERR "$_\n";
-		}
-	}
-}
-
-sub cd {
-	my $dir = shift;
-	chdir($dir) or die "E: could not chdir($dir): $!\n";
-}
-
-sub sysexec {
-	my $c = shift;
-
-	# manage the process with fork and exec, allow SIGINT
-	if (my $pid = fork) {
-		local $SIG{'INT'} = sub {
-			kill(9, $pid) and die "\nE: caught SIGINT: kill($pid)\n";
-		};
-		waitpid($pid, 0);
-	}
-	else {
-		defined($pid) or die "E: cannot fork: $!\n";
-		$v and print "V: $c\n";
-		exec($c) or die "E: cannot exec: $!\n";
-	}
-}
 
 if ($s and $m) {
 	my ($slist, $plist) = (realpath($s), realpath($m));
@@ -99,7 +56,7 @@ if ($s and $m) {
 
 		# get src uri's for $name
 		for my $vers (@{ $source->{$name} }) {
-			dbg $vers;
+			$d and print STDERR Dumper $vers;
 
 			# make ref to files list of highest available version
 			my $files = $vers->{'Files'};
@@ -109,11 +66,7 @@ if ($s and $m) {
 			# version string of currently installed package for
 			# _all_ packages, do not ask me why!
 			for my $file (@$files) {
-				dbg $file;
-
-				# collect available dsc uri's only
-				my $type = $file->{'Type'};
-				next unless $type eq 'dsc';
+				$d and print STDERR Dumper $file;
 
 				# add uri to hash
 				my $auri = $file->{'ArchiveURI'};
@@ -128,73 +81,6 @@ if ($s and $m) {
 	# write src uri list to file
 	push(@s, $_) for (sort keys %uris);
 }
-elsif ($s) {
-	my ($slist, $tar, $out, $cleanup) = (realpath($s), $t, $o, $c);
-	my %failed;
-
-	-x '/usr/bin/dget' or die "E: dget is required (devscripts)\n";
-
-	# tie source list to array
-	my $s_o = tie(my @s, "Tie::File", $slist) or die "E: cannot open $slist for reading: $!\n";
-
-	# create source directory
-	eval { mkpath("$out/source", $v, 0755); };
-	$@ and die "E: could not create $out: $@\n";
-
-	# canonacalize path to source parent dir
-	$out = realpath($out);
-
-	# process the dsc list
-	my $n = 0;
-	while ($s[$n]) {
-		my ($name, $dir);
-
-		# determine name of package, get package prefix
-		if ($s[$n] =~ m|.*/([^/]+)_.+\.dsc$|) {
-			$name = $1;
-			$dir = $name =~ /^lib/ ? substr($name, 0, 4) : substr($name, 0, 1);
-		}
-		else {
-			die "E: failed to get name from dsc\n";
-		}
-
-		# create nice source tree layout
-		eval { mkpath("$out/source/$dir/$name", $v, 0755); };
-		$@ and die "E: could not create $out/source/$dir/$name: $@\n";
-
-		# move to $name/$dir
-		cd("$out/source/$dir/$name");
-
-		# manage the dget process with fork and exec, allow SIGINT
-		my $cmd = $v ? "/usr/bin/dget $s[$n]" : "/usr/bin/dget -q $s[$n]";
-		sysexec($cmd);
-	}
-	continue {
-		$n++;
-	}
-
-	# check for failures
-	if (keys %failed) {
-		warn "W: failed to dget: $_\n" for (sort keys %failed);
-		die "E: some files failed to download, try again or fix manually\n";
-	}
-
-	cd($out);
-
-	# make the source tarball
-	if ($tar) {
-		print "O: creating: $out/$tar\n";
-		my $cmd = $v ? "tar -cvf $tar ./source" : "tar -cf $tar ./source";
-		sysexec($cmd);
-	}
-
-	# cleanup
-	if ($cleanup) {
-		print "O: cleaning: $out/source\n";
-		eval { rmtree("$out/source", $v, 1); };
-		$@ and die "E: failed to rmtree($out/source): $!\n";
-	}
-}
 else {
 	print STDERR <<_EOF_
   This is $self, Copyright (C) 2007 Kel Modderman <kel\@otaku42.de>
@@ -202,23 +88,11 @@ else {
 
   Usage:
 
-  To create a list of dsc URI's to fetch:
-    $self -s|--source source.list -m|--manifest manifest.list
+    $self -s|--source source.list -m|--manifest manifest.list [--verbose]
 
     Requires the libapt-pkg-perl package to be installed. $self will
     generate a list of dsc URI's in the source.list, and a list of installed
     packages in the manifest.list.
-
-  To fetch dsc URI's from a list:
-    $self -s|--source source.list -t|--tar name \
-        [-o|--output /path/to/output] [-p|--preserve]
-    
-    $self will get the dsc URI's from the archive with dget(1) (from 
-    devscripts package) and optionally put them in a tar archive. If no
-    --output option is given, the source package tree will be formed in the
-    current directory in a directory named 'source'. The tar file will be
-    created in the output directory with the string given by the --tar option.
-    The --cleanup option cleans up the source tree after the tarball has made.
 
 _EOF_
 	        ;
