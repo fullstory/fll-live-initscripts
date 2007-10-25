@@ -18,17 +18,17 @@ use Getopt::Long qw(:config bundling no_auto_abbrev);
 # Variables start with undefined values, which evaluates
 # to "" in scalar context.
 my (%init, @glob);
-my ($blist, $wlist);
+my ($bl, $wl);
 my ($chroot, $found, $frc, $keep, $rem);
 my $urcd = "update-rc.d";
 
 GetOptions(
-	"b|blacklist=s" => \$blist,
+	"b|blacklist=s" => \$bl,
 	"c|chroot=s"    => \$chroot,
 	"f|force"       => \$frc,
 	"k|keep"        => \$keep,
 	"r|remove"      => \$rem,
-	"w|whitelist=s" => \$wlist,
+	"w|whitelist=s" => \$wl,
 );
 
 -d $chroot . "/etc/rcS.d/" or die "invalid chroot '$chroot': $!";
@@ -47,15 +47,13 @@ for (@glob) {
 
 #print Dumper \%init;
 
-if ($blist and $wlist) {
-	my ($b, $w) = ($blist, $wlist);
-
-	-s $b or die "Cannot read $b: $!\n";
-	-s $w or die "Cannot read $w: $!\n";
+if ($bl and $wl) {
+	-s $bl or die "Cannot read $bl: $!\n";
+	-s $wl or die "Cannot read $wl: $!\n";
 
 	my (%binit, %winit);
 
-	open(my $fh, '<', $b) or die "Cannot open $b: $!\n";
+	open(my $fh, '<', $bl) or die "Cannot open $bl: $!\n";
 	while (<$fh>) {
 		chomp;
 		/^#/ and next;
@@ -86,7 +84,7 @@ if ($blist and $wlist) {
 
 	#print Dumper \%binit;
 
-	open(my $fh, '<', $w) or die "Cannot open $w: $!\n";
+	open(my $fh, '<', $wl) or die "Cannot open $wl: $!\n";
 	while (<$fh>) {
 		chomp;
 		/^#/ and next;
