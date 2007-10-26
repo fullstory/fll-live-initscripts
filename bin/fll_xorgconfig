@@ -425,9 +425,9 @@ sub sort_modes {
 		$retval++;
 	}
 
-	dbg $retval;
+	dbg "retval: $retval";
 
-	return "retval: $retval";
+	return $retval;
 }
 
 # xresprobe sometimes returns a list of modes in a _non_
