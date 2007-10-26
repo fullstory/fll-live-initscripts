@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.41) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.41) unstable; urgency=low
 
   * fll_xorgconfig:
     - xresprobe sometimes returns a list of modes in a _non_ descending
