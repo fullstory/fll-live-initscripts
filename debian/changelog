@@ -1,8 +1,12 @@
 fll-live-initscripts (2.0.41) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xorgconfig:
+    - xresprobe sometimes returns a list of modes in a _non_ descending
+      order, add sanitize_modes() to combat this phenomenon. From the string
+      of probed resolutions, prefer the left most reolution, discarding all
+      other higher resolutions from the rest of the string.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 25 Oct 2007 12:01:03 +0200
+ -- Kel Modderman <kel@otaku42.de>  Fri, 26 Oct 2007 19:03:34 +1000
 
 fll-live-initscripts (2.0.40) unstable; urgency=low
 

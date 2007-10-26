@@ -405,6 +405,57 @@ sub get_template {
 	return @template;
 }
 
+sub sort_modes {
+	my $retval = 0;
+	my @ma = split(/x/, $a);
+	my @mb = split(/x/, $b);
+
+	dbg "@ma <=> @mb\n";
+
+	if ($ma[0] > $mb[0]) {
+		$retval--;
+	}
+	elsif ($ma[0] < $mb[0]) {
+		$retval++;
+	}
+	elsif ($ma[0] == $mb[0] and $ma[1] > $mb[1]) {
+		$retval--;
+	}
+	elsif ($ma[0] == $mb[0] and $ma[1] < $mb[1]) {
+		$retval++;
+	}
+
+	dbg $retval;
+
+	return $retval;
+}
+
+# xresprobe sometimes returns a list of modes in a _non_
+# descending order.
+#
+# given a string of supported resolutions, put it into
+# a list, copy and sort the list in order of descending
+# resolutions from left to right. take the first res of the
+# unsorted list as wanted, and shift all elements in the
+# sorted list until the wanted resolution is found.
+# return the remainder of the sorted list as a string.
+#
+# given:
+#     "1600x1050 1600x1200 1400x1050 1024x768 800x600"
+# return:
+#     "1600x1050 1400x1050 1024x768 800x600"
+#
+sub sanitize_modes {
+	my @modes = split(/\s+/, shift);
+	my @modes_sorted = sort sort_modes @modes;
+
+	until ($modes[0] eq $modes_sorted[0]) {
+		shift(@modes_sorted);
+	}
+
+	return "@modes_sorted";
+}
+
 ###########################################################
 # process cli args
 GetOptions(
@@ -469,7 +520,13 @@ for my $key (keys %x) {
 		}
 		when 'modes' {
 			for (split /\s+/, $x{$key}) {
-				/^\d+x\d+$/ or $invalid = $key;
+				unless (/^\d+x\d+$/) {
+					$invalid = $key;
+					last;
+				}
+			}
+			if (not $invalid) {
+				$x{$key} = sanitize_modes($x{$key});
 			}
 		}
 		when 'rate' {
