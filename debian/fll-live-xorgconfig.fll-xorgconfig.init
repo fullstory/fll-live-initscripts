@@ -169,7 +169,7 @@ xserver_has_xrandr() {
 	esac
 
 	# get xserver-xorg-video-$driver package version
-	local VERSION=$(grep-dctrl -n -s Version -XP "xserver-xorg-video-${DRIVER}" /var/lib/dpkg/status)
+	local VERSION=$(dpkg -l "xserver-xorg-video-${DRIVER}" | awk '/^ii/{ print $3 }')
 
 	# compare versions, return status
 	if [ "${VERSION}" ]; then
