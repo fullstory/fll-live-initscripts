@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.43) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.43) unstable; urgency=low
 
   * fll-xorgconfig:
     - force colordepth of 16 for vesa, this helps with antiquated graphics
