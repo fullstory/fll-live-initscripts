@@ -377,8 +377,12 @@ do_start() {
 	fi
 
 	# x_res_probe() may also export this variable
+	# force colordepth of 16 for vesa, this helps with antiquated
+	# graphics chipsets.
 	if [ "${XDEPTH}" ]; then
 		XCFG_OPTS="${XCFG_OPTS} --colordepth '${XDEPTH}'"
+	elif [ "${XMODULE}" = "vesa" ]; then
+		XCFG_OPTS="${XCFG_OPTS} --colordepth 16"
 	fi
 
 	if [ "${XPROBE_SERIAL_MOUSE}" ]; then
