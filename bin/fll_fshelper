@@ -186,7 +186,7 @@ sub device_resolver {
 }
 
 sub comment {
-	my $c = '# added by fll_fshelper';
+	my $c = '# automatically added';
 
 	for my $extra (@_) {
 		next unless defined $extra;

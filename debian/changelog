@@ -2,9 +2,12 @@ fll-live-initscripts (2.0.43) UNRELEASED; urgency=low
 
   * fll-xorgconfig:
     - force colordepth of 16 for vesa, this helps with antiquated graphics
-    chipsets.
+      chipsets.
+  * fll_fshelper:
+    - don't include a name of tool that goes missing after live-cd in a
+      persistent configfile.
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 29 Oct 2007 10:53:20 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 29 Oct 2007 10:55:29 +1000
 
 fll-live-initscripts (2.0.42) unstable; urgency=low
 
