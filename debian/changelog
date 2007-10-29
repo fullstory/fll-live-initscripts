@@ -6,8 +6,11 @@ fll-live-initscripts (2.0.43) UNRELEASED; urgency=low
   * fll_fshelper:
     - don't include a name of tool that goes missing after live-cd in a
       persistent configfile.
+  * fll-cpufreq:
+    - use -type & -name options to locate arch specific cpufreq dir rather
+      than -path.
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 29 Oct 2007 10:55:29 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 29 Oct 2007 11:15:29 +1000
 
 fll-live-initscripts (2.0.42) unstable; urgency=low
 

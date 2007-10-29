@@ -195,7 +195,7 @@ do_start() {
 
 	# manage /etc/modules, in a persistent setup we may have written a different module
 	# to /etc/modules
-	CPUFREQ_MODDIR=$(find /lib/modules/$(uname -r)/kernel/arch/ -path '*/cpufreq')
+	CPUFREQ_MODDIR=$(find /lib/modules/$(uname -r)/kernel/arch/ -type d -name 'cpufreq')
 	CPUFREQ_MODULES=$(find ${CPUFREQ_MODDIR} \
 		-type f -name "*.ko" -printf "basename %f .ko\n" 2>/dev/null | /bin/sh)
 	if [ "${CPUFREQ_MODULES}" ]; then
