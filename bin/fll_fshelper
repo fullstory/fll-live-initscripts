@@ -28,6 +28,7 @@ use strict;
 use autouse 'Data::Dumper' => qw(Dumper);
 use Cwd qw(realpath);
 use File::Path;
+use File::Slurp qw(slurp);
 use Getopt::Long;
 use Tie::File;
 
@@ -142,21 +143,14 @@ sub device_is_removeable {
 
 	$d =~ m|^(/dev/)?([^/0-9]+)([0-9]*)$| and $d = $2;
 
-	dbg "device_is_removeable($d)";
-
-	if (-l "/sys/block/$d/device") {
-		$link = realpath("/sys/block/$d/device");
-		dbg $link;
-
-		# we filter out devices on the usb or firewire bus
-		# eg. /sys/devices/pci0000:00/0000:00:02.1/usb2/2-6/2-6:1.0/host7/target7:0:0/7:0:0:0
-		if ($link =~ /\/(usb|fw)[0-9]+/) {
-			dbg "$d is removable";
+	if (-s "/sys/block/$d/removable") {
+		if (slurp("/sys/block/$d/removable") > 0) {
+			dbg "$d _is_ removable";
 			return 1;
 		}
 	}
 
-	dbg "$d is not removable";
+	dbg "$d is _not_ removable";
 
 	return 0;
 }
