@@ -425,17 +425,17 @@ sub sanitize_modes {
 	my ($x_max, $y_max) = split(/x/, $modes[0]);
 	dbg "MAX $x_max, $y_max";
 
-	my $count = 0;
-	for my $mode (@modes) {
-		my ($x_now, $y_now) = split(/x/, $mode);
+	for my $count (1..$#{modes}) {
+		last unless $modes[$count];
+		
+		my ($x_now, $y_now) = split(/x/, $modes[$count]);
 		dbg "NOW $x_now, $y_now";
+		
 		if ($x_now > $x_max or $y_now > $y_max) {
 			dbg "REM $modes[$count]";
 			splice(@modes, $count, 1);
+			redo;
 		}
-	}
-	continue {
-		$count ++
 	}
 
 	return "@modes";
