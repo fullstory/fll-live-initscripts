@@ -1,9 +1,5 @@
-fll-live-initscripts (2.0.44) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.44) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_xorgconfig:
     - my synopsis about xresprobe reporting erraticly sorted list of
       resolutions was wrong, therefore sort_modes() has been removed
