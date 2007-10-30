@@ -405,55 +405,40 @@ sub get_template {
 	return @template;
 }
 
-sub sort_modes {
-	my $retval = 0;
-	my @ma = split(/x/, $a);
-	my @mb = split(/x/, $b);
-
-	dbg "@ma <=> @mb";
-
-	if ($ma[0] > $mb[0]) {
-		$retval--;
-	}
-	elsif ($ma[0] < $mb[0]) {
-		$retval++;
-	}
-	elsif ($ma[0] == $mb[0] and $ma[1] > $mb[1]) {
-		$retval--;
-	}
-	elsif ($ma[0] == $mb[0] and $ma[1] < $mb[1]) {
-		$retval++;
-	}
-
-	dbg "retval: $retval";
-
-	return $retval;
-}
-
-# xresprobe sometimes returns a list of modes in a _non_
-# descending order.
+# I have observed the Xserver using 1680x1200 when Modes
+# looked like:
+#     Modes "1680x1050" "1600x1200" "1400x1050" ...
 #
-# given a string of supported resolutions, put it into
-# a list, copy and sort the list in order of descending
-# resolutions from left to right. take the first res of the
-# unsorted list as wanted, and shift all elements in the
-# sorted list until the wanted resolution is found.
-# return the remainder of the sorted list as a string.
+# Take the preferred resolution (first, or left most) as
+# returned by xresprobe and calculate its X and Y axes.
+#
+# Remove any mode in the remaining list with X or Y values
+# greater than that of the preferred resolution.
 #
 # given:
-#     "1600x1050 1600x1200 1400x1050 1024x768 800x600"
+#     "1680x1050 1600x1200 1400x1050 1280x1024 ..."
 # return:
-#     "1600x1050 1400x1050 1024x768 800x600"
+#     "1680x1050 1400x1050 1280x1024 ..."
 #
 sub sanitize_modes {
 	my @modes = split(/\s+/, shift);
-	my @modes_sorted = sort sort_modes @modes;
+	my ($x_max, $y_max) = split(/x/, $modes[0]);
+	dbg "MAX $x_max, $y_max";
 
-	until ($modes[0] eq $modes_sorted[0]) {
-		shift(@modes_sorted);
+	my $count = 0;
+	for my $mode (@modes) {
+		my ($x_now, $y_now) = split(/x/, $mode);
+		dbg "NOW $x_now, $y_now";
+		if ($x_now > $x_max or $y_now > $y_max) {
+			dbg "REM $modes[$count]";
+			splice(@modes, $count, 1);
+		}
+	}
+	continue {
+		$count ++
 	}
 
-	return "@modes_sorted";
+	return "@modes";
 }
 
 ###########################################################

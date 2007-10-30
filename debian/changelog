@@ -1,8 +1,18 @@
 fll-live-initscripts (2.0.44) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 29 Oct 2007 14:52:40 +0100
+  [ Kel Modderman ]
+  * fll_xorgconfig:
+    - my synopsis about xresprobe reporting erraticly sorted list of
+      resolutions was wrong, therefore sort_modes() has been removed
+    - take the left most resolution value that xresprobe returns as preferred
+      (this is arguable, xresprobe sometimes returns a too high mode than can
+      be preferred by a human eye) and discard any modes in the list with X or
+      Y axis values greater than that of the preferred
+
+ -- Kel Modderman <kel@otaku42.de>  Tue, 30 Oct 2007 15:43:17 +1000
 
 fll-live-initscripts (2.0.43) unstable; urgency=low
 
