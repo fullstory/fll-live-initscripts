@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.45) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.45) unstable; urgency=low
 
   * fll_xorgconfig:
     - don't specify the device section to use in the screen section, the first
