@@ -1,14 +1,14 @@
 fll-live-initscripts (2.0.45) UNRELEASED; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_xorgconfig:
     - don't specify the device section to use in the screen section, the first
       device section listed will be selected by xserver-xorg-core >= 2:1.4-3
+  * fll-xorgconfig:
+    - nv devices are falling back to vesa way too often. In this case grep the
+      boardname for 4xxx, 5xxx, 6xxx, 7xxx generation device descriptions and
+      force use of nv driver
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 01 Nov 2007 16:59:26 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 01 Nov 2007 20:25:42 +1000
 
 fll-live-initscripts (2.0.44) unstable; urgency=low
 

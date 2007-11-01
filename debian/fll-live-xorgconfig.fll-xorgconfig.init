@@ -230,6 +230,14 @@ do_start() {
 	#     XMODULE XBOARDNAME XBUSID XVENDOR XDEVICE
 	eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
 
+	# nv driver override logic - not all 4xxx, 5xxx, 6xxx and 7xxx device
+	# ids are listed in nv_driver.c, these are well supported by nv
+	if [ "${XVENDOR}" = "10de" ] && [ "${XMODULE}" = "vesa" ]; then
+		if echo "${XBOARDNAME}" | egrep -q -i 'nvidia\>.*\<[4-7][0-9]{3}'; then
+			XMODULE="nv"
+		fi
+	fi
+
 	log_end_msg 0
 	
 	log_daemon_msg "${B}${NAME}${N}"
