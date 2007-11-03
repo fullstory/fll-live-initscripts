@@ -1,8 +1,11 @@
-fll-live-initscripts (2.0.46) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.46) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * start with the lazy ass mirror selection adaption, switching to easier
+    methods through sources.list.d requires additional knowledge about
+    selected suites and components and will be dereffered just like random
+    sidux mirror selection post pre2.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 01 Nov 2007 19:57:11 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 03 Nov 2007 23:04:52 +0100
 
 fll-live-initscripts (2.0.45) unstable; urgency=low
 
