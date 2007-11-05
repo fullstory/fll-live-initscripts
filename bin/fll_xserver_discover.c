@@ -42,6 +42,7 @@ int printxdriver(char *string)
 				if (sscanf(entry->d_name, "%31[^.].ids", driver) == 1)
 					printf("XDRIVER='%s'\n", driver);
 				found++;
+				fclose(file);
 				goto end;
 			}
 		}
