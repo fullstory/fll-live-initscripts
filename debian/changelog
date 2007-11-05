@@ -1,8 +1,13 @@
 fll-live-initscripts (2.0.47) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 03 Nov 2007 23:13:45 +0100
+  [ Kel Modderman ]
+  * Add bin/fll_xserver_discover.c, a C port using libpci to detect VGA
+    hardware. It is currently unused. Requires pciutils-dev and zlib1g-dev.
+
+ -- Kel Modderman <kel@otaku42.de>  Mon, 05 Nov 2007 23:59:18 +1000
 
 fll-live-initscripts (2.0.46) unstable; urgency=low
 
