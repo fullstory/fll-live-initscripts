@@ -1,7 +1,7 @@
 /*
  *	fll_xserver_discover -- detect PCI VGA class hardware
  *
- *	Copyright (c) 2007 Kel Modderman <kel@otaku42,de>
+ *	Copyright (c) 2007 Kel Modderman <kel@otaku42.de>
  *
  *	Can be freely distributed and used under the terms of the GNU GPLv2.
  */
@@ -12,6 +12,11 @@
 
 #include "pci/pci.h"
 
+/*
+ * These device id textual lists will be exported for a limited time only.
+ * Eventually the Xorg drivers will export symbols correlating to supported
+ * devices for automatic configuration.
+ */
 int printxdriver(char *string)
 {
 	int found;
@@ -57,6 +62,10 @@ int printxdriver(char *string)
 	return 0;
 }
 
+/*
+ * Simple adaptation of example.c from pciutils. Find first VGA class device
+ * and export some information about the device that a shell script can source.
+ */
 int main(void)
 {
 	struct pci_access *pacc;
