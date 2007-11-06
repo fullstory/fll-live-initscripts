@@ -16,8 +16,9 @@ fll-live-initscripts (2.0.47) UNRELEASED; urgency=low
     source to troff at build time.
   * Port existing manpages to ascii text, add ascii manpage source for
     fll_xserver_discover(8).
+  * Add ascii manpage source for fll_xorgconfig(8).
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 06 Nov 2007 12:25:11 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 06 Nov 2007 13:06:02 +1000
 
 fll-live-initscripts (2.0.46) unstable; urgency=low
 
