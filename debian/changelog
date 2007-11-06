@@ -18,8 +18,13 @@ fll-live-initscripts (2.0.47) UNRELEASED; urgency=low
   * Port existing manpages to ascii text, add ascii manpage source for
     fll_xserver_discover(8).
   * Add ascii manpage source for fll_xorgconfig(8).
+  * fll_xorgconfig:
+    - hardcode the Screen option in Serverlayout section, save 6 lines of
+      obsolete code
+    - remove template support for Depth's 1 and 4
+    - remove the obsolete files, module and dri templates
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 06 Nov 2007 13:50:41 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 06 Nov 2007 15:56:57 +1000
 
 fll-live-initscripts (2.0.46) unstable; urgency=low
 

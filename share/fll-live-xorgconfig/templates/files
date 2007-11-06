@@ -1,9 +1,0 @@
-Section "Files"
-	FontPath	"/usr/share/fonts/X11/misc"
-	FontPath	"/usr/share/fonts/X11/100dpi/:unscaled"
-	FontPath	"/usr/share/fonts/X11/75dpi/:unscaled"
-	FontPath	"/usr/share/fonts/X11/100dpi"
-	FontPath	"/usr/share/fonts/X11/75dpi"
-	# path to defoma fonts
-	FontPath	"/var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType"
-EndSection

@@ -68,9 +68,6 @@ my %x = (
 	'horizsync'   => '28.0 - 96.0',
 	'vertrefresh' => '50.0 - 75.0',
 
-	# screen
-	'screen' => "0\t\"Screen 0\" 0 0",
-
 	# keyboard
 	'xkblayout'  => 'us',
 	'xkbmodel'   => 'pc105',
@@ -622,9 +619,6 @@ if ($x{'xrandr'}) {
 	# Virtual specifies the dimensions of a large virtual screen in which you may
 	# configure two sub-screens (dual monitor)
 	$x{'modes'} = $x{'virtual'} ? "Virtual\t" . $x{'virtual'} : undef;
-
-	# Simplify Screen name in ServerLayout
-	$x{'screen'} = '"Screen 0"';
 }
 else {
 	# wrap each mode in quotation marks
