@@ -11,8 +11,9 @@ fll-live-initscripts (2.0.47) UNRELEASED; urgency=low
     discover1-data.
   * fll-live-xorgconfig becomes arch: all, adapt debian/rules to build
     fll_xserver_discover.
+  * Export XMODULE and not XDRIVER.
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 06 Nov 2007 09:50:23 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 06 Nov 2007 10:02:26 +1000
 
 fll-live-initscripts (2.0.46) unstable; urgency=low
 

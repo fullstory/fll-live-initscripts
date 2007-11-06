@@ -45,7 +45,7 @@ int printxdriver(char *string)
 		while(fgets(line, 10, file) != NULL) {
 			if (strncasecmp(line, string, 8) == 0) {
 				if (sscanf(entry->d_name, "%31[^.].ids", driver) == 1)
-					printf("XDRIVER='%s'\n", driver);
+					printf("XMODULE='%s'\n", driver);
 				found++;
 				fclose(file);
 				goto end;
@@ -57,7 +57,7 @@ int printxdriver(char *string)
 	end:
 	
 	if (!found)
-		printf("XDRIVER='vesa'\n");
+		printf("XMODULE='vesa'\n");
 
 	return 0;
 }
