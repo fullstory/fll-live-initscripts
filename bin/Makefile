@@ -4,4 +4,4 @@ fll_xserver_discover:
 clean:
 	rm -f fll_xserver_discover
 
-.PHONY: clean fll_xserver_discover
+.PHONY: clean
