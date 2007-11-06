@@ -1,0 +1,46 @@
+FLL_XSERVER_DISCOVER(8)
+=======================
+Kel Modderman <kel@otaku42.de>
+
+
+NAME
+----
+fll_xserver_discover - output information about local VGA hardware
+
+
+SYNOPSIS
+--------
+'fll_xserver_discover'
+
+
+DESCRIPTION
+-----------
+fll_xserver_discover(8) uses the PCI access library to scan the PCI bus for VGA
+class hardware. It outputs information about the detected hardware, such as
+vendor id, device id, busid and board name/description.
+
+Currently, fll_xserver_discover(8) searches for the device in flat text lists
+of supported hardware exposed by the individual xserver-xorg-video driver
+packages, and outputs the xserver driver that claims support for the hardware.
+
+
+OPTIONS
+-------
+'fll_xserver_discover' takes no options
+
+
+AUTHOR
+------
+Kel Modderman <kel@otaku42.de>
+
+
+RESOURCES
+---------
+FULLSTORY Homepage: http://developer.berlios.de/projects/fullstory/[]
+
+
+COPYING
+-------
+Copyright \(C) 2007 Kel Modderman. Free use of this software is
+granted under the terms of the GNU General Public License (GPL)
+version 2, or at your choice, any later version.

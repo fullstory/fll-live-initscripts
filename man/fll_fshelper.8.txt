@@ -1,0 +1,78 @@
+FLL_FSHELPER(8)
+===============
+Kel Modderman <kel@otaku42.de>
+
+
+NAME
+----
+fll_fshelper - FULLSTORY live fstab and mountpoint helper
+
+
+SYNOPSIS
+--------
+'fll_fshelper' [OPTIONS...]
+
+
+DESCRIPTION
+-----------
+fll_fshelper(8) is used for the initial creation of '/etc/fstab' while in the
+fll live linux environment. By parsing '/proc/partitions', fll_fshelper can
+determine the filesystem type and other attributes via udev\'s utilities and
+output a suitable fstab entry for each partition.
+
+fll_fshelper also creates fstab entries for optical and floppy devices.
+
+
+OPTIONS
+-------
+-h, --help::
+	Print help.
+
+-w, --write-fstab::
+	Write to '/etc/fstab' instead of displaying output.
+
+-m, --make-mountpoints::
+	Create mount points in /media for partitions written to '/etc/fstab'.
+
+-n, --no-swap::
+	Do not write a fstab entry for swap partitions.
+
+-u, --uuids::
+	Use UUID tokens for mount names when possible.
+
+-l, --labels::
+	Use LABELS tokens for mount names when possible.
+
+-f, --fstab '/path/to/fstab'::
+	Target fstab file to write to.
+
+-a, --auto::
+	Set 'auto' mount option where applicable.
+
+-q, --quiet::
+	Surpress output when writing to file.
+
+-d, --debug::
+	Enable perl debug output.
+
+
+SEE ALSO
+--------
+fstab(5)
+
+
+AUTHOR
+------
+Kel Modderman <kel@otaku42.de>
+
+
+RESOURCES
+---------
+FULLSTORY Homepage: http://developer.berlios.de/projects/fullstory/[]
+
+
+COPYING
+-------
+Copyright \(C) 2007 Kel Modderman. Free use of this software is
+granted under the terms of the GNU General Public License (GPL)
+version 2, or at your choice, any later version.

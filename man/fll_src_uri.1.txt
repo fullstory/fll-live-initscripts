@@ -1,0 +1,52 @@
+FLL_SRC_URI(1)
+==============
+Kel Modderman <kel@otaku42.de>
+
+
+NAME
+----
+fll_src_uri - FULLSTORY package manifest and source URI lookup tool
+
+
+SYNOPSIS
+--------
+'fll_src_uri' --manifest '/path/to/manifest' --sources '/path/to/sources'
+
+
+DESCRIPTION
+-----------
+fll_src_uri(1) uses libapt-pkg-perl to generate a list of installed packages
+and their version numbers (manifest file) and a list of source URI's for the
+installed packages (sources file).
+
+
+OPTIONS
+-------
+-m, --manifest '/path/to/manifest'::
+	Path to generate the manifest file.
+
+-s, --sources '/path/to/sources'::
+	Path to generate the sources file.
+
+-v, --verbose::
+	Verbose output.
+
+-d, --debug::
+	Dump data structures during process.
+
+
+AUTHOR
+------
+Kel Modderman <kel@otaku42.de>
+
+
+RESOURCES
+---------
+FULLSTORY Homepage: http://developer.berlios.de/projects/fullstory/[]
+
+
+COPYING
+-------
+Copyright \(C) 2007 Kel Modderman. Free use of this software is
+granted under the terms of the GNU General Public License (GPL)
+version 2, or at your choice, any later version.

@@ -1,0 +1,61 @@
+FLL_ANALYZE_INITSCRIPTS(1)
+==========================
+Kel Modderman <kel@otaku42.de>
+
+
+NAME
+----
+fll_analyze_initscripts - analyze runlevel configuration of a SysV init system
+
+
+SYNOPSIS
+--------
+'fll_analyze_initscripts' [OPTIONS...]
+
+
+DESCRIPTION
+-----------
+The purpose of fll_analyze_initscripts(1) is to recurse a directory tree
+containing SysV-Init style init script links, and formulate update-rc.d(8)
+commands required to replicate the runlevel configuration of each script.
+
+OPTIONS
+-------
+-r, --remove::
+	Print update-rc.d command that would remove the initscripts.
+
+-f, --force::
+	Print update-rc.d command using -f force option.
+
+-c, --chroot '/path/to/chroot'::
+	Path to chroot which will provide the SysV init runlevel directory
+	tree for analysis. If no directory path is given as an argument, / is
+	assumed.
+
+'initscript1 initscript2 ...'::
+	List of initscript names to compute update-rc.d commands for. If no
+	initscript names are given as arguments, analyze all configured init
+	scripts existing on the target chroot. Returns false (1) for invalid
+	initscripts.
+
+
+SEE ALSO
+--------
+update-rc.d(8)
+
+
+AUTHOR
+------
+Kel Modderman <kel@otaku42.de>
+
+
+RESOURCES
+---------
+FULLSTORY Homepage: http://developer.berlios.de/projects/fullstory/[]
+
+
+COPYING
+-------
+Copyright \(C) 2007 Kel Modderman. Free use of this software is
+granted under the terms of the GNU General Public License (GPL)
+version 2, or at your choice, any later version.
