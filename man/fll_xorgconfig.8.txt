@@ -27,7 +27,8 @@ based on what options are given.
 OPTIONS
 -------
 --output '/path/to/xorg.conf'::
-	Alternative path to xorg.conf file. Defaults to '/etc/X11/xorg.conf'.
+	Alternative path to xorg.conf file.
+	Default: '/etc/X11/xorg.conf'
 
 --templates '/path/to/templates/dir'::
 	Alternative path to templates directory.
@@ -46,6 +47,7 @@ OPTIONS
 
 --colordepth 'integer'::
 	Default colour depth to be used in 'Monitor' section.
+	Default: 24
 
 --modelname 'string'::
 	String describing monitor hardware.
