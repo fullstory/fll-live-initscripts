@@ -12,18 +12,20 @@
 
 #include "pci/pci.h"
 
+#define XSERVER_PCIIDS_DIR "/usr/share/xserver-xorg/pci/"
+
 /*
  * These device id textual lists will be exported for a limited time only.
  * Eventually the Xorg drivers will export symbols correlating to supported
  * devices for automatic configuration.
  */
-int printxdriver(char *string)
+char *lookup_xorg_dvr_for(const char *string)
 {
-	int found;
-	DIR *dir;
+	char *driver = "vesa";
+	char *ptr;
 	struct dirent *entry;
 
-	dir = opendir("/usr/share/xserver-xorg/pci/");
+	DIR *dir = opendir(XSERVER_PCIIDS_DIR);
 	if (!dir)
 		return 0;
 		
@@ -31,23 +33,23 @@ int printxdriver(char *string)
 		if (entry->d_name[0] == '.')
 			continue;
 		
-		char filename[128];
+		char filename[256];
 		char line[10];
-		FILE *file;
-		char driver[32];
-
+				
 		snprintf(filename, sizeof(filename),
-			"/usr/share/xserver-xorg/pci/%s", entry->d_name);
+			"%s/%s", XSERVER_PCIIDS_DIR, entry->d_name);
 		
-		file = fopen(filename, "r");
+		FILE *file = fopen(filename, "r");
 		if (!file)
 			continue;
-		while(fgets(line, 10, file) != NULL) {
-			if (strncasecmp(line, string, 8) == 0) {
-				if (sscanf(entry->d_name, "%31[^.].ids", driver) == 1)
-					printf("XMODULE='%s'\n", driver);
-				found++;
+		while (fgets(line, sizeof(line), file) != NULL) {
+			if (strncasecmp(line, string, strlen(string)) == 0) {
 				fclose(file);
+				driver = entry->d_name;
+				/* strip .ids extenstion */
+				ptr = strrchr(driver, '.');
+				*ptr = '\0';
+				ptr++;
 				goto end;
 			}
 		}
@@ -55,11 +57,7 @@ int printxdriver(char *string)
 	}
 
 	end:
-	
-	if (!found)
-		printf("XMODULE='vesa'\n");
-
-	return 0;
+	return driver;
 }
 
 /*
@@ -85,8 +83,9 @@ int main(void)
 				pci_lookup_name(pacc, devbuf, sizeof(devbuf),
 					PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE,
 					dev->vendor_id, dev->device_id));
-			snprintf(str, sizeof(str), "%04x%04x", dev->vendor_id, dev->device_id);
-			printxdriver(str);
+			snprintf(str, sizeof(str), "%04x%04x",
+				dev->vendor_id, dev->device_id);
+			printf("XMODULE='%s'\n", lookup_xorg_dvr_for(str));
 			break;
 		}
 	}

@@ -1,8 +1,13 @@
 fll-live-initscripts (2.0.48) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xserver_discover:
+    - define XSERVER_PCIIDS_DIR
+    - int printxdriver() -> char *lookup_xorg_dvr_for, function now returns a
+      point to string that is the xorg driver to be used
+    - instead of sscanf, strip the .ids extension from current enrty->d_name
+      with strrchr plus a pointer trick
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 06 Nov 2007 12:03:44 +0100
+ -- Kel Modderman <kel@otaku42.de>  Thu, 08 Nov 2007 17:20:32 +1000
 
 fll-live-initscripts (2.0.47) unstable; urgency=low
 
