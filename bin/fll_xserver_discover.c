@@ -21,14 +21,17 @@
  */
 char *lookup_xorg_dvr_for(const char *string)
 {
+	/* vesa is default driver */
 	char *driver = "vesa";
 	char *ptr;
 	struct dirent *entry;
 
+	/* open dir containing pciids */
 	DIR *dir = opendir(XSERVER_PCIIDS_DIR);
 	if (!dir)
 		return 0;
-		
+
+	/* read each pciid list */
 	while ((entry = readdir(dir))) {
 		if (entry->d_name[0] == '.')
 			continue;
@@ -44,6 +47,7 @@ char *lookup_xorg_dvr_for(const char *string)
 			continue;
 		while (fgets(line, sizeof(line), file) != NULL) {
 			if (strncasecmp(line, string, strlen(string)) == 0) {
+				/* found string in $driver.ids */
 				fclose(file);
 				driver = entry->d_name;
 				/* strip .ids extenstion */
@@ -77,15 +81,28 @@ int main(void)
 	
 	for (dev = pacc->devices; dev; dev = dev->next) {
 		if (dev->device_class == 0x0300) {
-			printf("XBUSID='PCI:%d:%d:%d'\nXVENDOR='%04x'\nXDEVICE='%04x'\n",
-				dev->bus, dev->dev, dev->func, dev->vendor_id, dev->device_id);
+			/* convert bus:dev.func into BusID */
+			printf("XBUSID='PCI:%d:%d:%d'\n",
+				dev->bus, dev->dev, dev->func);
+			
+			/*  print vendor + device ids */
+			printf("XVENDOR='%04x'\nXDEVICE='%04x'\n",
+				dev->vendor_id, dev->device_id);
+			
+			/* look up board description */
 			printf("XBOARDNAME='%s'\n",
 				pci_lookup_name(pacc, devbuf, sizeof(devbuf),
 					PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE,
 					dev->vendor_id, dev->device_id));
+			
+			/* concatenate vendor:device into string */
 			snprintf(str, sizeof(str), "%04x%04x",
 				dev->vendor_id, dev->device_id);
+			
+			/* search for string in xserver pciids lists */
 			printf("XMODULE='%s'\n", lookup_xorg_dvr_for(str));
+			
+			/* only do one VGA device */
 			break;
 		}
 	}
