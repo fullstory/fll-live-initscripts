@@ -501,6 +501,7 @@ for my $device (sort keys %p) {
 		$opts{'no-swap'} and next;
 		$options = 'sw';
 		$mount   = 'none';
+		$pass    = '0';
 	}
 	elsif ($fstype =~ /^(ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
 		$options .= ',noatime';
