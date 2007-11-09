@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.50) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 09 Nov 2007 03:08:37 +0100
+
 fll-live-initscripts (2.0.49) unstable; urgency=low
 
   * Also fix readdir call to match ISO C90.
