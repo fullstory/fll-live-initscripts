@@ -718,7 +718,7 @@ localize_sources_list() {
 	if [ "${MIRROR}" ] && [ -f /etc/apt/sources.list ]; then
 		sed -i 's|/ftp\.\(..\.\)\?debian\.org/|/'"${MIRROR}"'/|' \
 			/etc/apt/sources.list \
-			/etc/apt/sources.list.d/mirror.debian.org.list
+			/etc/apt/sources.list.d/debian.list
 	fi
 }
 
