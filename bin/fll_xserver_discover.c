@@ -40,16 +40,20 @@ char *lookup_xorg_dvr_for(const char *string)
 		char line[10];
 				
 		snprintf(filename, sizeof(filename),
-			"%s/%s", XSERVER_PCIIDS_DIR, entry->d_name);
+			"%s%s", XSERVER_PCIIDS_DIR, entry->d_name);
 		
 		FILE *file = fopen(filename, "r");
 		if (!file)
 			continue;
 		while (fgets(line, sizeof(line), file) != NULL) {
+			/* printf("%s: %s", filename, line); */
 			if (strncasecmp(line, string, strlen(string)) == 0) {
+				/* printf("%s: %s (match)\n", filename, string); */
+				
 				/* found string in $driver.ids */
 				fclose(file);
 				driver = entry->d_name;
+				
 				/* strip .ids extenstion */
 				ptr = strrchr(driver, '.');
 				*ptr = '\0';

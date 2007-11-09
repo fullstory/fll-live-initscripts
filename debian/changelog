@@ -7,8 +7,10 @@ fll-live-initscripts (2.0.48) UNRELEASED; urgency=low
     - instead of sscanf, strip the .ids extension from current enrty->d_name
       with strrchr plus a pointer trick
     - add a few code comments
+    - remove extra / in filename seperator
+    - add some commented debug printf's
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 09 Nov 2007 09:54:13 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 09 Nov 2007 10:04:11 +1000
 
 fll-live-initscripts (2.0.47) unstable; urgency=low
 
