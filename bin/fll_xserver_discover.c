@@ -12,6 +12,7 @@
 
 #include "pci/pci.h"
 
+#define VGA_CLASS 0x0300
 #define XSERVER_PCIIDS_DIR "/usr/share/xserver-xorg/pci/"
 
 /*
@@ -84,7 +85,7 @@ int main(void)
 	pci_scan_bus(pacc);
 	
 	for (dev = pacc->devices; dev; dev = dev->next) {
-		if (dev->device_class == 0x0300) {
+		if (dev->device_class == VGA_CLASS) {
 			/* convert bus:dev.func into BusID */
 			printf("XBUSID='PCI:%d:%d:%d'\n",
 				dev->bus, dev->dev, dev->func);
