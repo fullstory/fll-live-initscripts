@@ -29,7 +29,8 @@ char *lookup_xorg_dvr_for(const char *string)
 	struct dirent *entry;
 
 	/* open dir containing pciids */
-	DIR *dir = opendir(XSERVER_PCIIDS_DIR);
+	DIR *dir;
+	dir = opendir(XSERVER_PCIIDS_DIR);
 	if (!dir)
 		return 0;
 
