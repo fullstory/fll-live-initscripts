@@ -58,6 +58,7 @@ char *lookup_xorg_dvr_for(const char *string)
 				ptr = strrchr(driver, '.');
 				*ptr = '\0';
 				ptr++;
+				
 				break;
 			}
 		}
