@@ -1,5 +1,6 @@
-fll-live-initscripts (2.0.48) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.48) unstable; urgency=low
 
+  [ Kel Modderman ]
   * fll_xserver_discover:
     - define XSERVER_PCIIDS_DIR
     - int printxdriver() -> char *lookup_xorg_dvr_for(), function now returns a
@@ -11,7 +12,11 @@ fll-live-initscripts (2.0.48) UNRELEASED; urgency=low
     - add some commented debug printf's
     - define VGA_CLASS as 0x0300
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 09 Nov 2007 10:12:05 +1000
+  [ Stefan Lippers-Hollmann ]
+  * include strings.h, needed for strncasecmp().
+  * fix fopen call to match ISO C90.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 09 Nov 2007 02:17:41 +0100
 
 fll-live-initscripts (2.0.47) unstable; urgency=low
 

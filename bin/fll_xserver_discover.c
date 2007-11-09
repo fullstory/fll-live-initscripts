@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <dirent.h>
 
 #include "pci/pci.h"
@@ -43,7 +44,8 @@ char *lookup_xorg_dvr_for(const char *string)
 		snprintf(filename, sizeof(filename),
 			"%s%s", XSERVER_PCIIDS_DIR, entry->d_name);
 		
-		FILE *file = fopen(filename, "r");
+		FILE *file;
+		file = fopen(filename, "r");
 		if (!file)
 			continue;
 		while (fgets(line, sizeof(line), file) != NULL) {
