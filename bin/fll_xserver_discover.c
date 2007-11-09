@@ -52,20 +52,18 @@ char *lookup_xorg_dvr_for(const char *string)
 				/* printf("%s: %s (match)\n", filename, string); */
 				
 				/* found string in $driver.ids */
-				fclose(file);
 				driver = entry->d_name;
 				
 				/* strip .ids extenstion */
 				ptr = strrchr(driver, '.');
 				*ptr = '\0';
 				ptr++;
-				goto end;
+				break;
 			}
 		}
 		fclose(file);
 	}
 
-	end:
 	return driver;
 }
 

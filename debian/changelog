@@ -10,8 +10,9 @@ fll-live-initscripts (2.0.48) UNRELEASED; urgency=low
     - remove extra / in filename seperator
     - add some commented debug printf's
     - define VGA_CLASS as 0x0300
+    - remove bogus goto
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 09 Nov 2007 10:06:34 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 09 Nov 2007 10:08:52 +1000
 
 fll-live-initscripts (2.0.47) unstable; urgency=low
 
