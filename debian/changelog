@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.52) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 11 Nov 2007 12:59:57 +0100
+
 fll-live-initscripts (2.0.51) unstable; urgency=low
 
   * use also param xdriver with the same meaning as xmodule
