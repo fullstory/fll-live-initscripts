@@ -95,7 +95,7 @@ if [ -f /proc/cmdline ]; then
 			xkbvariant=*)
 				XKBVARIANT="${param#xkbvariant=}"
 				;;
-			xmodule=*)
+			xdriver=*|xmodule=*)
 				XNEWMODULE="${param#xmodule=}"
 				;;
 			xrate=*|rate=*)
