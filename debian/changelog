@@ -1,9 +1,5 @@
-fll-live-initscripts (2.0.51) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.51) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Joaquim Boura ]
   * use also param xdriver with the same meaning as xmodule
 
  -- Joaquim Boura <x-un-i@sidux.com>  Sun, 11 Nov 2007 11:43:56 +0100
