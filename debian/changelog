@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.53) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.53) unstable; urgency=low
 
   * fll_fshelper:
     - mount a tmpfs on /tmp per default. Allows booting on systems with full
