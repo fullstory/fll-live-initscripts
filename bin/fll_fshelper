@@ -75,7 +75,7 @@ By default fll_fshelper prints fstab to stdout, and does not create mountpoints
   -h|--help                 print this help
   -w|--write-fstab          (re)create the fstab file
   -m|--make-mountpoints     (re)create mountpoints in /media
-  --no-swap                 don't write fstab entry for swap partitions
+  -n|--no-swap                 don't write fstab entry for swap partitions
   -u|--uuids                use UUID's for mount names when possible
   -l|--labels               use LABELS's for mount names when possible
   -f|--fstab <file>         target file to write output to
@@ -545,6 +545,12 @@ for (</dev/fd*>) {
 
 	add_mnt_pnt("/media/$_");
 }
+
+#-------------------------------------------------------------------#
+# tmpfs on /tmp
+push(@fstab, "# temporary filesystem in virtual memory");
+push(@fstab, join("\t", "tmpfs", '/tmp', 'tmpfs', 'defaults', '0', '0'));
+push(@fstab, '');
 
 #-------------------------------------------------------------------#
 # show fstab
