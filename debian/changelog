@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.54) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 12 Nov 2007 13:13:16 +0100
+
 fll-live-initscripts (2.0.53) unstable; urgency=low
 
   * fll_fshelper:
