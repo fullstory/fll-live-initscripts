@@ -1,8 +1,9 @@
 fll-live-initscripts (2.0.52) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Add debian/fll-live-xorgconfig.preinst to prevent installation in
+    non-chroot environment.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 11 Nov 2007 12:59:57 +0100
+ -- Kel Modderman <kel@otaku42.de>  Mon, 12 Nov 2007 11:19:47 +1000
 
 fll-live-initscripts (2.0.51) unstable; urgency=low
 
