@@ -1,8 +1,13 @@
 fll-live-initscripts (2.0.54) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 12 Nov 2007 13:13:16 +0100
+  [ Kel Modderman ]
+  * fll_xserver_discover:
+    - add a CFLAGS variable to tiny Makefile
+
+ -- Kel Modderman <kel@otaku42.de>  Tue, 13 Nov 2007 19:12:26 +1000
 
 fll-live-initscripts (2.0.53) unstable; urgency=low
 
