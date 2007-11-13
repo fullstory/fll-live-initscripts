@@ -6,8 +6,10 @@ fll-live-initscripts (2.0.54) UNRELEASED; urgency=low
   [ Kel Modderman ]
   * fll_xserver_discover:
     - add a CFLAGS variable to tiny Makefile
+  * fll-network:
+    - add "nonetwork" cheatcode, as per request of "nico" in forums
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 13 Nov 2007 19:12:26 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 14 Nov 2007 09:29:27 +1000
 
 fll-live-initscripts (2.0.53) unstable; urgency=low
 
