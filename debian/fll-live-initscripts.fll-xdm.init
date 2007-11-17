@@ -53,6 +53,11 @@ fi
 . /lib/fll/fll-init-cols
 
 ###
+# debian's default-display-manager control file
+###
+DEFAULT_DISPLAY_MANAGER_FILE=/etc/X11/default-display-manager
+
+###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then
@@ -136,15 +141,16 @@ setup_gdm() {
 
 case "${1}" in
 	start)
-		if [ -x /usr/bin/kdm ]; then
-			log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring ${Y}kdm${N}"
-			setup_kdm
+		# the desktop manager processed _last_ will trump all (default: kdm)
+		if [ -x /usr/sbin/gdm ]; then
+			log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring ${Y}gdm${N}"
+			setup_gdm && echo /usr/sbin/gdm > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
 
-		if [ -x /usr/sbin/gdm ]; then
-			log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring ${Y}gdm${N}"
-			setup_gdm
+		if [ -x /usr/bin/kdm ]; then
+			log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring ${Y}kdm${N}"
+			setup_kdm && echo /usr/bin/kdm > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
 		;;

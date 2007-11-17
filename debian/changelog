@@ -1,8 +1,12 @@
 fll-live-initscripts (2.0.55) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xdm:
+    - set DEFAULT_DISPLAY_MANAGER_FILE when successfully registering a desktop
+      manager
+    - change order that supported desktop manager's are processed, last one
+      gets priority
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 14 Nov 2007 10:29:45 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sat, 17 Nov 2007 10:15:03 +1000
 
 fll-live-initscripts (2.0.54) unstable; urgency=low
 
