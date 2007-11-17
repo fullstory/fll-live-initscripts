@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.55) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.55) unstable; urgency=low
 
   * fll-xdm:
     - set DEFAULT_DISPLAY_MANAGER_FILE when successfully registering a desktop
