@@ -1,0 +1,99 @@
+#!/bin/dash
+
+### BEGIN INIT INFO
+# Provides:          fll-virtual
+# Required-Start:    udev
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: fll virtualization init service
+# Description:       The purpose of this script is to invoke special methods
+#                    and capabilities for running in virtual or emulated
+#                    hardware environments.
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-virtual"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+#. /lib/init/vars.sh
+
+###
+# source lsb functions
+###
+. /lib/lsb/init-functions
+
+###
+# ANSI escape sequences (N, R, G, Y, B, M, C, W)
+###
+. /lib/fll/fll-init-cols
+
+###
+# cheatcode handling
+###
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			virt=no)
+				VIRT="no"
+				;;
+			virt=vbox|virt=virtualbox)
+				VIRT="virtualbox"
+				;;
+		esac
+	done
+fi
+
+###
+# functions...
+###
+do_start() {
+	if [ ! -d /sys/module/vboxadd ] || [ -n "$VIRT" ] && [ ! "$VIRT" = "virtualbox" ]; then
+		update-rc.d -f virtualbox-ose-guest-utils remove >/dev/null 2>&1
+	fi
+}
+
+case "${1}" in
+	start)
+		if [ ! "$VIRT" = "no" ]; then
+			do_start
+		fi
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop}" >&2
+		exit 3
+		;;
+esac
+
+:
