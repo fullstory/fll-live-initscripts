@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.57~kelmo1) unstable; urgency=low
+fll-live-initscripts (2.0.57) UNRELEASED; urgency=low
 
   [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
@@ -13,7 +13,7 @@ fll-live-initscripts (2.0.57~kelmo1) unstable; urgency=low
     - add new "noxprobe" cheatcode, to disable the detection of monitor
       settings for legacy X drivers that do that
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 18 Nov 2007 16:18:15 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 18 Nov 2007 16:51:02 +1000
 
 fll-live-initscripts (2.0.56) unstable; urgency=low
 
