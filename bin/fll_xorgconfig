@@ -465,7 +465,7 @@ GetOptions(
 	# input device
 	# --input type=<synaptics,alps,serial,auto> protocol=<> \
 	# 	dev=<> name=<> corepointer=<CorePointer,SendCoreEvents>
-	'input=s%{4}' => \&input,
+	'input=s%{5}' => \&input,
 	'serial-mouse',
 
 	# keyboard

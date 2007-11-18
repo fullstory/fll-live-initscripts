@@ -238,6 +238,29 @@ do_start() {
 		fi
 	fi
 
+	# detected virtualbox emulated VGA hardware
+	if [ "${XVENDOR}" = "80ee" ] && [ "${XDEVICE}" = "beef" ]; then
+		# check for virtualbox kernel support
+		if [ -d /sys/module/vboxadd ]; then
+			XMODULE="vboxvideo"
+			# override mouse detction
+			XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
+		else
+			# disable guest extensions support initscript
+			if [ -x /etc/init.d/virtualbox-ose-guest-utils ]; then
+				update-rc.d -f virtualbox-ose-guest-utils remove >/dev/null
+			fi
+		fi
+		
+		# omit modeline library
+		XCFG_OPTS="${XCFG_OPTS} --no-modelines"
+		
+		# give virtualbox emulated hardware a nice name
+		if echo "${XBOARDNAME}" | grep -i -q unknown; then
+			XBOARDNAME="innotek VirtualBox VGA Device"
+		fi
+	fi
+
 	log_end_msg 0
 	
 	log_daemon_msg "${B}${NAME}${N}"
