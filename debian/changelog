@@ -1,7 +1,6 @@
-fll-live-initscripts (2.0.57) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.57) unstable; urgency=low
 
   [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
   * revert 2.0.56, we need additional changes as well.
 
   [ Kel Modderman ]
