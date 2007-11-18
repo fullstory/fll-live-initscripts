@@ -250,18 +250,16 @@ do_start() {
 			XMODULE="vboxvideo"
 			# override mouse detction
 			XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
-		else
-			# disable guest extensions support initscript
-			if [ -x /etc/init.d/virtualbox-ose-guest-utils ]; then
-				update-rc.d -f virtualbox-ose-guest-utils remove >/dev/null
-			fi
 		fi
-		
 		# omit modeline library
 		XCFG_OPTS="${XCFG_OPTS} --no-modelines"
-
 		# disable x_res_probe()
 		XNOXRESPROBE="1"
+	fi
+
+	# disable guest extensions support initscript
+	if [ "${XMODULE}" != "vboxvideo" ] && [ -x /etc/init.d/virtualbox-ose-guest-utils ]; then
+		update-rc.d -f virtualbox-ose-guest-utils remove >/dev/null
 	fi
 
 	log_end_msg 0

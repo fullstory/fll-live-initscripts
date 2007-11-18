@@ -1,8 +1,10 @@
 fll-live-initscripts (2.0.58) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - if vbox vga hardware is not detected, make sure to purge start of
+      guest-utils initscript
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 18 Nov 2007 12:25:52 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 18 Nov 2007 21:33:24 +1000
 
 fll-live-initscripts (2.0.57) unstable; urgency=low
 
