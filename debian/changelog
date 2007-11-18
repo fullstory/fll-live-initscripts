@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.58) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.58) unstable; urgency=low
 
   * fll-xorgconfig:
     - if vbox vga hardware is not detected, make sure to purge start of
