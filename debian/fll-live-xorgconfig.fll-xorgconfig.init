@@ -71,6 +71,9 @@ if [ -f /proc/cmdline ]; then
 			noxrandr)
 				XNOXRANDR="1"
 				;;
+			noxresprobe|noxprobe)
+				XNOXRESPROBE="1"
+				;;
 			nomodelines|noml)
 				XNOMODELINES="1"
 				;;
@@ -181,6 +184,8 @@ xserver_has_xrandr() {
 }
 
 x_res_probe() {
+	[ "${XNOXRESPROBE}" ] && return 0
+	
 	awk -F: -v driver="${1}" '
 		BEGIN {
 			cmd = "xresprobe " driver
@@ -254,11 +259,9 @@ do_start() {
 		
 		# omit modeline library
 		XCFG_OPTS="${XCFG_OPTS} --no-modelines"
-		
-		# give virtualbox emulated hardware a nice name
-		if echo "${XBOARDNAME}" | grep -i -q unknown; then
-			XBOARDNAME="innotek VirtualBox VGA Device"
-		fi
+
+		# disable x_res_probe()
+		XNOXRESPROBE="1"
 	fi
 
 	log_end_msg 0
@@ -332,6 +335,10 @@ do_start() {
 		# legacy style config, we need to probe for optimal X settings
 		#     XID XRES XHFREQ XVFREQ XDISPTYPE
 		eval $(x_res_probe ${XMODULE})
+
+		if [ "${XNOXRESPROBE}" ]; then
+			log_progress_msg "${G}skipping probe${N}"
+		fi
 
 		# probed
 		if [ "${XID}" ]; then

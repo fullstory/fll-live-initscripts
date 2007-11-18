@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.57) unstable; urgency=low
+fll-live-initscripts (2.0.57~kelmo1) unstable; urgency=low
 
   [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
@@ -10,8 +10,10 @@ fll-live-initscripts (2.0.57) unstable; urgency=low
   * fll-xorgconfig:
     - add initial support for innotek VirtualBox guest extensions
     - add inputdevice_vboxmouse template
+    - add new "noxprobe" cheatcode, to disable the detection of monitor
+      settings for legacy X drivers that do that
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 18 Nov 2007 13:11:54 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 18 Nov 2007 16:18:15 +1000
 
 fll-live-initscripts (2.0.56) unstable; urgency=low
 
