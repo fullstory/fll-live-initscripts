@@ -1,8 +1,14 @@
 fll-live-initscripts (2.0.59) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 18 Nov 2007 12:49:06 +0100
+  [ Kel Modderman ]
+  * fll-locales:
+    - discard the generic UTC fallback locale, just use the "us" settings
+    - update "ie" mirror to "ftp.ie.debian.org"
+
+ -- Kel Modderman <kel@otaku42.de>  Tue, 20 Nov 2007 09:49:52 +1000
 
 fll-live-initscripts (2.0.58) unstable; urgency=low
 

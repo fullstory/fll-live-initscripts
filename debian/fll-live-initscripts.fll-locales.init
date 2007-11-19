@@ -264,7 +264,7 @@ case "${DEMO_CODE}" in
 		XKBLAYOUT="ie,gb,us"
 		TZ="Europe/Dublin"
 		CD_COUNTRY="British"
-		MIRROR="ftp.uk.debian.org"
+		MIRROR="ftp.ie.debian.org"
 		;;
 	ga)	### IE Ireland (Gaeilge) kb:ie ###
 		KEYTABLE="uk"
@@ -344,19 +344,12 @@ case "${DEMO_CODE}" in
 		CD_COUNTRY=""
 		MIRROR="ftp.tw.debian.org"
 		;;
-	us)	### US UnitedStates kb:us ###
+	us|*)	### US UnitedStates kb:us ###
 		KEYTABLE="us"
 		XKBLAYOUT="us,ca"
 		TZ="America/New_York"
 		CD_COUNTRY="us_american"
 		MIRROR="ftp.us.debian.org"
-		;;
-	*)
-		KEYTABLE="us"
-		XKBLAYOUT="us,ca"
-		TZ="Europe/London"
-		CD_COUNTRY="us_american"
-		MIRROR="ftp.debian.org"
 		;;
 esac
 
