@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.60) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.60) unstable; urgency=low
 
   * fll_xserver_discover:
     - uncrustify (code beautification)
