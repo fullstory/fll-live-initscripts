@@ -38,13 +38,13 @@ char *lookup_xorg_dvr_for(const char *string)
 	while ((entry = readdir(dir))) {
 		if (entry->d_name[0] == '.')
 			continue;
-		
+
 		char filename[256];
 		char line[10];
-				
+
 		snprintf(filename, sizeof(filename),
-			"%s%s", XSERVER_PCIIDS_DIR, entry->d_name);
-		
+		         "%s%s", XSERVER_PCIIDS_DIR, entry->d_name);
+
 		FILE *file;
 		file = fopen(filename, "r");
 		if (!file)
@@ -54,22 +54,22 @@ char *lookup_xorg_dvr_for(const char *string)
 			if (strncasecmp(line, string, strlen(string)) == 0) {
 				/* printf("%s: %s (match)\n", filename, string); */
 				fclose(file);
-				
+
 				/* found string in $driver.ids */
 				driver = entry->d_name;
-				
+
 				/* strip .ids extenstion */
 				ptr = strrchr(driver, '.');
 				*ptr = '\0';
 				ptr++;
-				
+
 				goto end;
 			}
 		}
 		fclose(file);
 	}
 
-	end:
+end:
 	return driver;
 }
 
@@ -87,36 +87,36 @@ int main(void)
 	pacc = pci_alloc();
 	pci_init(pacc);
 	pci_scan_bus(pacc);
-	
+
 	for (dev = pacc->devices; dev; dev = dev->next) {
 		if (dev->device_class == VGA_CLASS) {
 			/* convert bus:dev.func into BusID */
 			printf("XBUSID='PCI:%d:%d:%d'\n",
-				dev->bus, dev->dev, dev->func);
-			
+			       dev->bus, dev->dev, dev->func);
+
 			/*  print vendor + device ids */
 			printf("XVENDOR='%04x'\nXDEVICE='%04x'\n",
-				dev->vendor_id, dev->device_id);
-			
+			       dev->vendor_id, dev->device_id);
+
 			/* look up board description */
 			printf("XBOARDNAME='%s'\n",
-				pci_lookup_name(pacc, devbuf, sizeof(devbuf),
-					PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE,
-					dev->vendor_id, dev->device_id));
-			
+			       pci_lookup_name(pacc, devbuf, sizeof(devbuf),
+			                       PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE,
+			                       dev->vendor_id, dev->device_id));
+
 			/* concatenate vendor:device into string */
 			snprintf(str, sizeof(str), "%04x%04x",
-				dev->vendor_id, dev->device_id);
-			
+			         dev->vendor_id, dev->device_id);
+
 			/* search for string in xserver pciids lists */
 			printf("XMODULE='%s'\n", lookup_xorg_dvr_for(str));
-			
+
 			/* only do one VGA device */
 			break;
 		}
 	}
-	
+
 	pci_cleanup(pacc);
-	
+
 	return 0;
 }
