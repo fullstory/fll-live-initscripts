@@ -10,7 +10,7 @@ Vcs-Browser: http://svn.berlios.de/wsvn/fullstory/fll-live-initscripts/trunk/
 
 Package: fll-live-initscripts
 Architecture: all
-Depends: lsb-base (>= 3.0-6), adduser, dash, perl, distro-defaults, eject, udev, ifplugd
+Depends: lsb-base (>= 3.0-6), distro-defaults, adduser, dash, perl, libfile-slurp-perl, eject, udev, ifplugd
 Recommends: tzdata, hwinfo
 Suggests: hotkey-setup
 Description: fll live media sysv initscripts
@@ -19,7 +19,7 @@ Description: fll live media sysv initscripts
 
 Package: fll-live-xorgconfig
 Architecture: any
-Depends: lsb-base (>= 3.0-6), dash, perl, distro-defaults, libfile-slurp-perl, xserver-xorg-core (>= 2:1.4-3), xresprobe
+Depends: lsb-base (>= 3.0-6), distro-defaults, dash, perl, libfile-slurp-perl, xserver-xorg-core (>= 2:1.4-3), xresprobe
 Recommends: kdm | gdm
 Description: fll live media xorg related tools
  A set of scripts to generate a Xorg configuration.

@@ -1,8 +1,9 @@
 fll-live-initscripts (2.0.61) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-live-initscripts musy depend on libfile-slurp-perl. Shuffle the names
+    around to group them better. Fixes fll-fstab for and non-X build.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 20 Nov 2007 20:53:46 +0100
+ -- Kel Modderman <kel@otaku42.de>  Wed, 21 Nov 2007 23:05:33 +1000
 
 fll-live-initscripts (2.0.60) unstable; urgency=low
 
