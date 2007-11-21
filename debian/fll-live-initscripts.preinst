@@ -18,7 +18,7 @@ case "$1" in
 		if ! chrooted; then
 			echo '############################################################'
 			echo 'Installing this package is dangerous and not supported!'
-			echo 'Aborting installion.'
+			echo 'Aborting installation.'
 			echo '############################################################'
 			exit 1
 		fi
