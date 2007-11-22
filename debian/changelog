@@ -1,15 +1,10 @@
-fll-live-initscripts (2.0.61) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.61) unstable; urgency=low
 
-  [ Kel Modderman ]
-  * fll-live-initscripts musy depend on libfile-slurp-perl. Shuffle the names
+  * fll-live-initscripts must depend on libfile-slurp-perl. Shuffle the names
     around to group them better. Fixes fll-fstab for and non-X build.
   * Fix spelling in preinst scripts.
 
-  [ Bernard Gray ]
-  * attempt to resolve gdm initscript failure
-  * revert the above change, the bug is debians 
-
- -- Bernard Gray <bernard.gray@gmail.com>  Thu, 22 Nov 2007 11:42:58 +1100
+ -- Kel Modderman <kel@otaku42.de>  Thu, 22 Nov 2007 09:57:35 +1000
 
 fll-live-initscripts (2.0.60) unstable; urgency=low
 
