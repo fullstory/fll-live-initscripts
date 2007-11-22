@@ -1,8 +1,13 @@
 fll-live-initscripts (2.0.63) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 22 Nov 2007 14:06:32 +0100
+  [ Bernard Gray ]
+  * /etc/X11/default-display-manager requires a bogus path to start gdm
+   - /etc/bin/gdm - see debian bug #452344
+
+ -- Bernard Gray <bernard.gray@gmail.com>  Fri, 23 Nov 2007 10:19:50 +1100
 
 fll-live-initscripts (2.0.62) unstable; urgency=low
 
