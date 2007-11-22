@@ -144,6 +144,7 @@ case "${1}" in
 		# the desktop manager processed _last_ will trump all (default: kdm)
 		if [ -x /usr/sbin/gdm ]; then
 			log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring ${Y}gdm${N}"
+			# /usr/bin/gdm is a bogus path required by /etc/init.d/gdm, see debian bug #452344
 			setup_gdm && echo /usr/bin/gdm > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
