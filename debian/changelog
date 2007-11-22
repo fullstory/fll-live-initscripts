@@ -1,9 +1,5 @@
-fll-live-initscripts (2.0.62) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.62) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_fshelper:
     - make sure we are using the /dev/disk/by-* udev symlink for all
       non-native, non blkid supported filesystems. We were doing it when
