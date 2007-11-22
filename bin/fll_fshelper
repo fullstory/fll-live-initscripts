@@ -444,7 +444,12 @@ for my $device (sort keys %p) {
 			next;
 		}
 		else {
-			$name = "UUID=$uuid";
+			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
+				$name = "UUID=$uuid";
+			}
+			else {
+				$name = "/dev/disk/by-uuid/$uuid";
+			}
 
 			# append device node name and label to comment
 			$comment .= ", $device";
@@ -465,7 +470,12 @@ for my $device (sort keys %p) {
 			next;
 		}
 		else {
-			$name = "LABEL=$label";
+			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
+				$name = "LABEL=$label";
+			}
+			else {
+				$name = "/dev/disk/by-label/$label";
+			}
 
 			# use safe label for mount point name
 			$label_safe and $mount = "/media/$label_safe";
