@@ -6,9 +6,10 @@ fll-live-initscripts (2.0.61) UNRELEASED; urgency=low
   * Fix spelling in preinst scripts.
 
   [ Bernard Gray ]
-  * attempt to resolve gdm initscript failure  
+  * attempt to resolve gdm initscript failure
+  * revert the above change, the bug is debians 
 
- -- Bernard Gray <bernard.gray@gmail.com>  Thu, 22 Nov 2007 11:29:38 +1100
+ -- Bernard Gray <bernard.gray@gmail.com>  Thu, 22 Nov 2007 11:42:58 +1100
 
 fll-live-initscripts (2.0.60) unstable; urgency=low
 
