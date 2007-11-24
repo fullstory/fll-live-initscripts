@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.64) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.64) unstable; urgency=low
 
   * fll_fshelper:
     - when --install-gui option is used, use , as field seperator
