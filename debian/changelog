@@ -1,8 +1,9 @@
 fll-live-initscripts (2.0.64) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_fshelper:
+    - when --install-gui option is used, use , as field seperator
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 23 Nov 2007 23:34:56 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sat, 24 Nov 2007 18:34:05 +1000
 
 fll-live-initscripts (2.0.63) unstable; urgency=low
 

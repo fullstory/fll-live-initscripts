@@ -282,7 +282,7 @@ if ($opts{'install-gui'}) {
 			and $fstype !~ /^(unknown|iso9660|udf|squashfs)$/
 			and $usage
 			and $usage eq 'filesystem') {
-			print join('-', $device, $fstype), "\n";
+			print join(',', $device, $fstype), "\n";
 		}
 	}
 	exit 0;
