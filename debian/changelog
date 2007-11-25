@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.66) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.66) unstable; urgency=low
 
   * Depend on libapt-pkg-perl for fll_src_uri.
   * fll-shell:
