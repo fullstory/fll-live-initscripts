@@ -139,6 +139,12 @@ setup_gdm() {
 	return 1
 }
 
+setup_x_cursor_theme() {
+	if [ -e /usr/share/icons/DMZ-Black/cursor.theme ]; then
+		update-alternatives --set x-cursor-theme /usr/share/icons/DMZ-Black/cursor.theme >/dev/null
+	fi
+}
+
 case "${1}" in
 	start)
 		# the desktop manager processed _last_ will trump all (default: kdm)
@@ -154,6 +160,8 @@ case "${1}" in
 			setup_kdm && echo /usr/bin/kdm > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
+
+		setup_x_cursor_theme
 		;;
 	stop)
 		;;

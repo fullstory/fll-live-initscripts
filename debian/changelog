@@ -1,8 +1,16 @@
 fll-live-initscripts (2.0.66) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Depend on libapt-pkg-perl for fll_src_uri.
+  * fll-shell:
+    - rename fll-rootsh to fll-shell
+    - do shell-centric preseeding that was done in fll-builder here
+      (vimrc.local, $PAGER)
+  * fll-network:
+    - do kppp "noauth" fixup here, and not in fll-builder
+  * fll-xdm:
+    - set x-cursor-theme
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 25 Nov 2007 01:54:14 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 25 Nov 2007 17:43:56 +1000
 
 fll-live-initscripts (2.0.65) unstable; urgency=low
 

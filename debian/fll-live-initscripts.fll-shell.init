@@ -1,14 +1,14 @@
 #!/bin/dash
 
 ### BEGIN INIT INFO
-# Provides:          fll-rootsh
+# Provides:          fll-shell
 # Required-Start:    
 # Required-Stop:     
 # Default-Start:     S
 # Default-Stop:      
-# Short-Description: configure root for immutable shell login
+# Short-Description: configure shell
 # Description:       Populate /root/.bash* for a more comfortable root shell
-#                    login.
+#                    login. Preset some shell application settings.
 ### END INIT INFO
 
 ###
@@ -22,7 +22,7 @@
 ###
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-NAME="fll-rootsh"
+NAME="fll-shell"
 
 ###
 # source distro-defaults, no-op unless in live mode
@@ -74,6 +74,21 @@ do_start() {
 	done
 
 	:> /root/.hushlogin
+
+	if [ -x /usr/bin/vim ]; then
+		cat > /etc/vim/vimrc.local \
+<<EOF
+syntax on
+set background=dark
+set showmatch
+set pastetoggle=<F10>
+au FileType debchangelog normal z0
+EOF
+	fi
+
+	if [ -x /usr/bin/most ]; then
+		update-alternatives --set pager /usr/bin/most >/dev/null
+	fi
 }
 
 case "${1}" in
