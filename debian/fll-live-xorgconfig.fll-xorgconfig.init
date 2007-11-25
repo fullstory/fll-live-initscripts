@@ -166,6 +166,9 @@ xserver_has_xrandr() {
 				return 1
 			fi
 			;;
+		radeonhd)
+			VERSION_HAS_RANDR="0.0.4~git20071124-1"
+			;;
 		*)
 			return 1
 			;;

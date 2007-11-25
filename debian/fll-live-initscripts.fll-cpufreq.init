@@ -142,7 +142,14 @@ do_start() {
 		CentaurHauls*)
 			# VIA
 			if [ "${CPU_FAMILY}" = 6 ]; then
-				CPUFREQ=longhaul;
+				case "$MODEL_NAME" in
+					VIA\ Esther\ processor*)
+						CPUFREQ=e_powersaver
+						;;
+					*)
+						CPUFREQ=longhaul
+						;;
+				esac
 			fi
 			;;
 		GenuineTMx86*)

@@ -1,8 +1,12 @@
 fll-live-initscripts (2.0.65) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - add radeonhd >= 0.0.4~git20071124-1 to list of randr1.2 aware driver
+      packages
+  * fll-cpufreq:
+    - add support for VIA Esther cpufreq via e_powersaver
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 24 Nov 2007 10:54:46 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 25 Nov 2007 09:59:22 +1000
 
 fll-live-initscripts (2.0.64) unstable; urgency=low
 
