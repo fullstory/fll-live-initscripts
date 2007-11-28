@@ -559,7 +559,7 @@ for (</dev/fd*>) {
 #-------------------------------------------------------------------#
 # tmpfs on /tmp
 push(@fstab, "# temporary filesystem in virtual memory");
-push(@fstab, join("\t", "tmpfs", '/tmp', 'tmpfs', 'defaults', '0', '0'));
+push(@fstab, join("\t", "#tmpfs", '/tmp', 'tmpfs', 'defaults', '0', '0'));
 push(@fstab, '');
 
 #-------------------------------------------------------------------#

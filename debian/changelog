@@ -1,8 +1,10 @@
 fll-live-initscripts (2.0.67) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_fshelper:
+    - disable tmpfs on /tmp per default, add it to fstab commented out. Memory
+      footprint too large on constrained systems
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 25 Nov 2007 13:10:29 +0100
+ -- Kel Modderman <kel@otaku42.de>  Wed, 28 Nov 2007 22:18:03 +1000
 
 fll-live-initscripts (2.0.66) unstable; urgency=low
 
