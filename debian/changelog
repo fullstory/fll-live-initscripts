@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.67) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.67) unstable; urgency=low
 
   * fll_fshelper:
     - disable tmpfs on /tmp per default, add it to fstab commented out. Memory
