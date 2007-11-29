@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.68) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.68) unstable; urgency=low
 
   * fll_fshelper:
     - check if partition is in %p_seen hash when parsing /proc/mounts
