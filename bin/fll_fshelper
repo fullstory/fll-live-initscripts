@@ -47,7 +47,7 @@ die "udev utility 'vol_id' is required!\n" unless -x '/lib/udev/vol_id';
 #   %l_seen	- labels seen so far
 #   %p_seen	- partitions seen so far
 #   %u_seen	- uuids seen so far
-my (%p, %l_seen, %p_seen, %u_seen);
+my (%p, %l_seen, %p_seen, %u_seen, %m_seen);
 
 # fstab file location
 my $file = '/etc/fstab';
@@ -313,6 +313,7 @@ if (-f '/proc/mounts') {
 		my ($comment, $desc, $name, $label, $uuid) = ();
 
 		if (   not -b $device
+			or $p_seen{$device}
 			or $fstype eq 'swap'
 			or $mount =~ m%^(/dev/.static/[^/]+|/media/[^/]+|/fll/[^/]+)$%) {
 			next;
@@ -443,25 +444,24 @@ for my $device (sort keys %p) {
 			print STDERR "Duplicate UUID ($device): $uuid\n";
 			next;
 		}
-		else {
-			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
-				$name = "UUID=$uuid";
-			}
-			else {
-				$name = "/dev/disk/by-uuid/$uuid";
-			}
-
-			# append device node name and label to comment
-			$comment .= ", $device";
-			
-			# append label only if we didn't use --labels
-			if ($label and not $opts{'labels'}) {
-				$comment .= ', LABEL=' . $label;
-			}
-
-			# seen it
-			$u_seen{$uuid}++;
+		
+		if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
+			$name = "UUID=$uuid";
 		}
+		else {
+			$name = "/dev/disk/by-uuid/$uuid";
+		}
+
+		# append device node name and label to comment
+		$comment .= ", $device";
+		
+		# append label only if we didn't use --labels
+		if ($label and not $opts{'labels'}) {
+			$comment .= ', LABEL=' . $label;
+		}
+
+		# seen it
+		$u_seen{$uuid}++;
 	}
 
 	if ($opts{'labels'} and $label) {
@@ -469,28 +469,34 @@ for my $device (sort keys %p) {
 			print STDERR "Duplicate LABEL ($device): $label\n";
 			next;
 		}
-		else {
-			if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
-				$name = "LABEL=$label";
-			}
-			else {
-				$name = "/dev/disk/by-label/$label";
-			}
-
-			# use safe label for mount point name
-			$label_safe and $mount = "/media/$label_safe";
-
-			# append device node name to comment, if not done already
-			$comment .= ", $device" unless $opts{'uuids'};
-
-			# seen it
-			$l_seen{$label}++;
+		
+		if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
+			$name = "LABEL=$label";
 		}
+		else {
+			$name = "/dev/disk/by-label/$label";
+		}
+
+		# use safe label for mount point name
+		$label_safe and $mount = "/media/$label_safe";
+
+		# append device node name to comment, if not done already
+		$comment .= ", $device" unless $opts{'uuids'};
+
+		# seen it
+		$l_seen{$label}++;
 	}
 
 	# device name as default/fallback
 	$name ||= $device;
 	($mount ||= "/media/$device") =~ s|/dev/||;
+
+	if ($m_seen{$mount}) {
+		print STDERR "Duplicate mount point: $mount\n";
+		next;
+	}
+	# seen it
+	$m_seen{$mount}++;
 
 	if ($fstype eq 'ntfs') {
 		$options .= ',ro,dmask=0022,fmask=0133';
