@@ -47,7 +47,7 @@ die "udev utility 'vol_id' is required!\n" unless -x '/lib/udev/vol_id';
 #   %l_seen	- labels seen so far
 #   %p_seen	- partitions seen so far
 #   %u_seen	- uuids seen so far
-my (%p, %l_seen, %p_seen, %u_seen, %m_seen);
+my (%p, %l_seen, %p_seen, %u_seen);
 
 # fstab file location
 my $file = '/etc/fstab';
@@ -94,7 +94,9 @@ _EOF_
 sub dbg {
 	return unless $opts{'debug'};
 
-	for (@_) {
+	my @data = $@;
+
+	for (@data) {
 		next unless defined;
 
 		if (ref) {
@@ -395,6 +397,7 @@ if (-f '/proc/mounts') {
 #-------------------------------------------------------------------#
 # process all unseen non-removable partitions
 
+my $disk = 0;
 for my $device (sort keys %p) {
 	if ($p_seen{$device} or device_is_removeable($device)) {
 		dbg "Skipping $device";
@@ -489,14 +492,9 @@ for my $device (sort keys %p) {
 
 	# device name as default/fallback
 	$name ||= $device;
-	($mount ||= "/media/$device") =~ s|/dev/||;
-
-	if ($m_seen{$mount}) {
-		print STDERR "Duplicate mount point: $mount\n";
-		next;
-	}
-	# seen it
-	$m_seen{$mount}++;
+	
+	# generic mount point name
+	$mount = "/media/disk" . $disk++;
 
 	if ($fstype eq 'ntfs') {
 		$options .= ',ro,dmask=0022,fmask=0133';
