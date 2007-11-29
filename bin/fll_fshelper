@@ -94,7 +94,9 @@ _EOF_
 sub dbg {
 	return unless $opts{'debug'};
 
-	for (@_) {
+	my @data = @_;
+
+	for (@data) {
 		next unless defined;
 
 		if (ref) {
