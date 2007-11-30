@@ -1,8 +1,10 @@
 fll-live-initscripts (2.0.69) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_fshelper:
+    - reinstate usb/fw /sys/block/*/device symlink test for the
+      device_is_removable() function
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 29 Nov 2007 13:46:02 +0100
+ -- Kel Modderman <kel@otaku42.de>  Fri, 30 Nov 2007 15:12:24 +1000
 
 fll-live-initscripts (2.0.68) unstable; urgency=low
 

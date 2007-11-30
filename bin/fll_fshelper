@@ -141,13 +141,19 @@ sub ata_id {
 
 sub device_is_removeable {
 	my $d = shift;
-	my $link;
 
 	$d =~ m|^(/dev/)?([^/0-9]+)([0-9]*)$| and $d = $2;
 
+	if (-l "/sys/block/$d/device") {
+		if (realpath("/sys/block/$d/device") =~ /\/(usb|fw)[0-9]+/) {
+			dbg "$d _is_ removable (link test)";
+			return 1;
+		}
+	}
+
 	if (-s "/sys/block/$d/removable") {
 		if (slurp("/sys/block/$d/removable") > 0) {
-			dbg "$d _is_ removable";
+			dbg "$d _is_ removable (udev test)";
 			return 1;
 		}
 	}
