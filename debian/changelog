@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.70) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.70) unstable; urgency=low
 
   * fll_fshelper:
     - add --wanted /dev/sdxx=1 command line option to prevent inhibition of
