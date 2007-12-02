@@ -1,8 +1,10 @@
 fll-live-initscripts (2.0.70) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_fshelper:
+    - add --wanted /dev/sdxx=1 command line option to prevent inhibition of
+      removable devices from resulting fstab
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 01 Dec 2007 01:11:14 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 02 Dec 2007 21:32:28 +1000
 
 fll-live-initscripts (2.0.69) unstable; urgency=low
 

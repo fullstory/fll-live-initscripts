@@ -62,6 +62,10 @@ my %opts = ('fstab' => \$file);
 my $charmap = `locale charmap`;
 chomp($charmap);
 
+# this hash will comprise of keys that describe partitions that
+# should not be discarded as removable devices
+my %wanted;
+
 #-------------------------------------------------------------------#
 # internal functions
 
@@ -144,6 +148,11 @@ sub device_is_removeable {
 
 	$d =~ m|^(/dev/)?([^/0-9]+)([0-9]*)$| and $d = $2;
 
+	if ($opts{'wanted'}{$d} or $opts{'wanted'}{'/dev/' . $d}) {
+		dbg "$d is wanted!";
+		return 0;
+	}
+
 	if (-l "/sys/block/$d/device") {
 		if (realpath("/sys/block/$d/device") =~ /\/(usb|fw)[0-9]+/) {
 			dbg "$d _is_ removable (link test)";
@@ -218,7 +227,8 @@ sub add_mnt_pnt {
 GetOptions(
 	\%opts,    'auto',        'debug|verbose', 'fstab=s',
 	'help',    'install-gui', 'labels',        'make-mountpoints',
-	'no-swap', 'quiet',       'uuids',         'write-fstab'
+	'no-swap', 'quiet',       'uuids',         'wanted=s%',
+	'write-fstab'
 );
 
 if ($opts{'help'}) {

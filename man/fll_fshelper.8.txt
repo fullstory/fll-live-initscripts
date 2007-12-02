@@ -34,6 +34,10 @@ OPTIONS
 -m, --make-mountpoints::
 	Create mount points in /media for partitions written to '/etc/fstab'.
 
+-w, --wanted 'device=1'::
+	Do not inhibit partitions on this device from being in the fstab. This
+	option may be supplied on the command line multiple times.
+
 -n, --no-swap::
 	Do not write a fstab entry for swap partitions.
 
