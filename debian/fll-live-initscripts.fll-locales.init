@@ -150,7 +150,7 @@ case "${DEMO_CODE}" in
 		XKBLAYOUT="us"
 		TZ="Australia/Sydney"
 		CD_COUNTRY="us_american"
-		MIRROR="ftp.au.debian.org"
+		MIRROR="mirror.linux.org.au"
 		;;
 	be) 	### BE Belgium kb:be ###
 		KEYTABLE="be2-latin1"

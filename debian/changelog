@@ -1,9 +1,9 @@
-fll-live-initscripts (2.0.71) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.71) unstable; urgency=low
 
-  * NOT RELEASED YET
   * update to Standards-Version 3.7.3, no changes necessary.
+  * replace ftp.au.debian.org by mirror.linux.org.au.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 03 Dec 2007 13:48:50 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 03 Dec 2007 22:28:30 +0100
 
 fll-live-initscripts (2.0.70) unstable; urgency=low
 
