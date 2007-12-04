@@ -83,6 +83,7 @@ do_start() {
 	CPU=$(grep -E '^cpud[^:]+:' "$CPUINFO" | head -1 | sed -e 's/^.*: //;')
 	VENDOR_ID=$(grep -E '^vendor_id[^:]+:' "${CPUINFO}" | head -1 | sed -e 's/^.*: //;')
 	CPU_FAMILY=$(sed -e '/^cpu family/ {s/.*: //;p;Q};d' ${CPUINFO})
+	CPU_MODEL=$(sed -e '/^model/ {s/.*: //;p;Q};d' ${CPUINFO})
 
 	CPUFREQ=
 
@@ -143,14 +144,11 @@ do_start() {
 		CentaurHauls*)
 			# VIA
 			if [ "${CPU_FAMILY}" = 6 ]; then
-				case "$MODEL_NAME" in
-					VIA\ Esther\ processor*)
-						CPUFREQ=e_powersaver
-						;;
-					*)
-						CPUFREQ=longhaul
-						;;
-				esac
+				if [ "${CPU_MODEL}" = 10 ] && grep -q est ${CPUINFO}; then
+					CPUFREQ=e_powersaver
+				else
+					CPUFREQ=longhaul
+				fi
 			fi
 			;;
 		GenuineTMx86*)
