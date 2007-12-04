@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.73) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 04 Dec 2007 12:56:19 +0100
+
 fll-live-initscripts (2.0.72) unstable; urgency=low
 
   * fll-resume: 1st revision.
