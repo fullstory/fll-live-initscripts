@@ -1,0 +1,128 @@
+#!/bin/dash
+
+### BEGIN INIT INFO
+# Provides:          fll-resume
+# Required-Start:    udev fll-fstab
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: generates /etc/initramfs-tools/conf.d/resume
+# Description:       The purpose of fll-resume is to generate a configuration
+#                    file for initramfs-tools and resume
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2007 F.U.L.L.S.T.O.R.Y Project
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-resume"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+###
+# VERBOSE setting and other rcS variables
+###
+#. /lib/init/vars.sh
+
+###
+# source lsb functions
+###
+. /lib/lsb/init-functions
+
+###
+# ANSI escape sequences (N, R, G, Y, B, M, C, W)
+###
+. /lib/fll/fll-init-cols
+
+###
+# cheatcode handling
+###
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
+				;;
+			noresume|resume=no)
+				exit 0
+				;;
+		esac
+	done
+fi
+
+do_start() {
+	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}detecting ${Y}resume${G} partition${N}"
+	
+	local RESUME SWAPUUID
+
+	if [ -s /etc/initramfs-tools/conf.d/resume ]; then
+		. /etc/initramfs-tools/conf.d/resume
+	fi
+
+	if [ -n "${RESUME}" ]; then
+		case "${RESUME}" in
+			UUID=*|LABEL=*)
+				if findfs "${RESUME}"; then
+					log_end_msg 0
+				fi
+				;;
+			/dev/disk/by-*)
+				RESUMELINK=$(readlink -f ${RESUME})
+				if [ -b "${RESUMELINK}" ]; then
+					log_end_msg 0
+				fi
+				;;
+			/dev/*)
+				if [ -b "${RESUME}" ]; then
+					SWAPUUID=$(blkid -t TYPE=swap -o value -s UUID ${RESUME})
+				fi
+				;;
+		esac
+	fi
+
+	if [ -z "${SWAPUUID}" ]; then
+		SWAPUUID=$(blkid -l -t TYPE=swap -o value -s UUID)
+	fi
+
+	if echo "${SWAPUUID}" | egrep -q '^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$'; then
+		echo "RESUME=UUID=${SWAPUUID}" > /etc/initramfs-tools/conf.d/resume
+	fi
+
+	log_end_msg 0
+}
+
+case "${1}" in
+	start)
+		do_start
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop}" >&2
+		exit 3
+		;;
+esac
+
+:

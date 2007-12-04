@@ -23,6 +23,7 @@ install/fll-live-initscripts::
 	dh_installinit --no-start --name=fll-init	-- start 00 S .
 	dh_installinit --no-start --name=fll-locales	-- start 04 S .
 	dh_installinit --no-start --name=fll-fstab	-- start 34 S .
+	dh_installinit --no-start --name=fll-resume	-- start 34 S .
 	dh_installinit --no-start --name=fll-network	-- start 34 S .
 	dh_installinit --no-start --name=fll-hwsetup	-- start 80 S .
 	dh_installinit --no-start --name=fll-cpufreq	-- start 80 S .
