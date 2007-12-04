@@ -1,9 +1,5 @@
-fll-live-initscripts (2.0.72) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.72) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll-resume: 1st revision.
   * Add a real person to copyright headers.
   * fll-cpufreq:
