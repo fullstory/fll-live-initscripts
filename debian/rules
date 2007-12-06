@@ -7,7 +7,7 @@ common-build-indep::
 
 build/fll-live-xorgconfig::
 	# RandR 1.2 device compat. lists
-	gawk -f contrib/ati.awk contrib/src/atipciids.h \
+	gawk -f contrib/ati.awk contrib/src/ati_pciids_gen.h \
 		> share/fll-live-xorgconfig/xrandr/ati
 	gawk -f contrib/nv.awk contrib/src/nv_driver.c \
 		> share/fll-live-xorgconfig/xrandr/nv
