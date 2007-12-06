@@ -1,9 +1,5 @@
-fll-live-initscripts (2.0.73) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.73) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * Import contrib/src/ati_pciids_gen.h from xserver-xorg-video-ati
     (1:6.7.196-2).
   * fll-resume:
