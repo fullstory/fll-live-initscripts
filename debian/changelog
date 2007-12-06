@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.74) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 06 Dec 2007 10:20:49 +0100
+
 fll-live-initscripts (2.0.73) unstable; urgency=low
 
   * Import contrib/src/ati_pciids_gen.h from xserver-xorg-video-ati
