@@ -81,14 +81,17 @@ do_start() {
 	if [ -n "${RESUME}" ]; then
 		case "${RESUME}" in
 			UUID=*|LABEL=*)
-				if findfs "${RESUME}"; then
-					log_end_msg 0
+				RESUME=$(findfs "${RESUME}" 2>/dev/null)
+				if [ -b "${RESUME}" ]; then
+					log_action_end_msg 0 "${RESUME}"
+					return 0
 				fi
 				;;
 			/dev/disk/by-*)
-				RESUMELINK=$(readlink -f ${RESUME})
-				if [ -b "${RESUMELINK}" ]; then
-					log_end_msg 0
+				RESUME=$(readlink -f "${RESUME}" 2>/dev/null)
+				if [ -b "${RESUME}" ]; then
+					log_action_end_msg 0 "${RESUME}"
+					return 0
 				fi
 				;;
 			/dev/*)
@@ -105,9 +108,10 @@ do_start() {
 
 	if echo "${SWAPUUID}" | egrep -q '^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$'; then
 		echo "RESUME=UUID=${SWAPUUID}" > /etc/initramfs-tools/conf.d/resume
+		log_action_end_msg 0 "$(findfs UUID=${SWAPUUID} 2>/dev/null)"
+	else
+		log_action_end_msg 0 none
 	fi
-
-	log_end_msg 0
 }
 
 case "${1}" in
