@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.76) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 21 Dec 2007 00:36:43 +0100
+
 fll-live-initscripts (2.0.75) unstable; urgency=low
 
   * add norwegian locale support.
