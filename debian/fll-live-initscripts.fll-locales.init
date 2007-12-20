@@ -131,6 +131,7 @@ case "${LANG_CODE}" in
 	it)	LANG="it_IT.UTF-8" ;;
 	jp|ja)	LANG="ja_JP.UTF-8" ;;
 	nl)	LANG="nl_NL.UTF-8" ;;
+	no)	LANG="no_NO.UTF-8" ;;
 	pl)	LANG="pl_PL.UTF-8" ;;
 	pt)	LANG="pt_PT.UTF-8" ;;
 	ru)	LANG="ru_RU.UTF-8" ;;
@@ -294,6 +295,13 @@ case "${DEMO_CODE}" in
 		TZ="Europe/Amsterdam"
 		CD_COUNTRY="Dutch"
 		MIRROR="ftp.nl.debian.org"
+		;;
+	nl)	### NO Norway kb:no ###
+		KEYTABLE="no"
+		XKBLAYOUT="no,nb,nn,us"
+		TZ="Europe/Oslo"
+		CD_COUNTRY="Norwegian"
+		MIRROR="ftp.no.debian.org"
 		;;
 	pl)	### PL Poland kb:pl ###
 		KEYTABLE="pl"
@@ -494,6 +502,12 @@ case "${CD_COUNTRY}" in
 		CD_FULL="${CD_COUNTRY}"
 		;;
 	Dutch)
+		CD_FAMILY="qwerty"
+		CD_KEYMAP="Standard"
+		CD_VARIANT="Standard"
+		CD_FULL="${CD_COUNTRY}"
+		;;
+	Norwegian)
 		CD_FAMILY="qwerty"
 		CD_KEYMAP="Standard"
 		CD_VARIANT="Standard"
