@@ -298,7 +298,7 @@ case "${DEMO_CODE}" in
 		;;
 	nl)	### NO Norway kb:no ###
 		KEYTABLE="no"
-		XKBLAYOUT="no,nb,nn,us"
+		XKBLAYOUT="no,us"
 		TZ="Europe/Oslo"
 		CD_COUNTRY="Norwegian"
 		MIRROR="ftp.no.debian.org"
