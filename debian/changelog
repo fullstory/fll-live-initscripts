@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.78) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 26 Dec 2007 19:52:43 +0100
+
 fll-live-initscripts (2.0.77) unstable; urgency=low
 
   * fix collision between dutch and norwegian cheatcodes.
