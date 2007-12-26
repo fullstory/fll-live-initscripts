@@ -296,7 +296,7 @@ case "${DEMO_CODE}" in
 		CD_COUNTRY="Dutch"
 		MIRROR="ftp.nl.debian.org"
 		;;
-	nl)	### NO Norway kb:no ###
+	no)	### NO Norway kb:no ###
 		KEYTABLE="no"
 		XKBLAYOUT="no,us"
 		TZ="Europe/Oslo"
