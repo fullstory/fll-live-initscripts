@@ -1,8 +1,12 @@
 fll-live-initscripts (2.0.78) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 26 Dec 2007 19:52:43 +0100
+  [ Andreas Weber ]
+  * Fluxbox Start fixed. 
+
+ -- Andreas Weber <andreas@it-weber.com>  Mon, 31 Dec 2007 07:59:39 +0100
 
 fll-live-initscripts (2.0.77) unstable; urgency=low
 

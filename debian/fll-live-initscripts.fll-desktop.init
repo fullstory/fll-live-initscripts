@@ -115,7 +115,7 @@ do_start() {
 				XSESSION="gnome"
 				;;
 			"/usr/bin/startfluxbox")
-				XSESSION="X-Debian-Window Managers-fluxbox"
+				XSESSION="X-Debian-Window-Managers-fluxbox"
 				;;
 			"/usr/bin/xfwm4")
 				XSESSION="xfce4"
