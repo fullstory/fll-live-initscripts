@@ -1,8 +1,8 @@
-fll-live-initscripts (2.0.79) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.79) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fix XSESSION entry for fluxbox.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 01 Jan 2008 14:19:26 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 06 Jan 2008 03:36:20 +0100
 
 fll-live-initscripts (2.0.78) unstable; urgency=low
 
