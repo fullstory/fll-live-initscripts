@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.83) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 17 Jan 2008 02:32:59 +0100
+
 fll-live-initscripts (2.0.82) unstable; urgency=low
 
   * fix conditional when to preseed su-to-rootrc (only if it doesn't exist),
