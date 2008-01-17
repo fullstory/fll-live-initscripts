@@ -1,8 +1,8 @@
-fll-live-initscripts (2.0.80) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.80) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * preseed /etc/su-to-root to use sudo, revert it in fll-installer.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 06 Jan 2008 03:39:35 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 17 Jan 2008 01:18:31 +0100
 
 fll-live-initscripts (2.0.79) unstable; urgency=low
 

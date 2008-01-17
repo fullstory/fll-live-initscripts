@@ -102,6 +102,11 @@ hack_bashrc() {
 	fi
 }
 
+configure_su-to-root() {
+	printf "SU_TO_ROOT_SU=sudo" \
+		> /etc/su-to-rootrc
+}
+
 case "${1}" in
 	start)
 		log_daemon_msg "${B}${NAME}${N}"
@@ -114,6 +119,10 @@ case "${1}" in
 		
 		if ! grep -q -w "${FLL_LIVE_USER}" /etc/sudoers; then
 			hack_sudoers
+		fi
+
+		if [ -e /etc/su-to-rootrc ]; then
+			configure_su-to-root
 		fi
 
 		# disable lastlog for autologin on console
