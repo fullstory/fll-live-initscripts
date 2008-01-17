@@ -121,7 +121,7 @@ case "${1}" in
 			hack_sudoers
 		fi
 
-		if [ -e /etc/su-to-rootrc ]; then
+		if [ ! -e /etc/su-to-rootrc ]; then
 			configure_sutoroot
 		fi
 
