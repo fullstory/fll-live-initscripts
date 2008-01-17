@@ -102,7 +102,7 @@ hack_bashrc() {
 	fi
 }
 
-configure_su-to-root() {
+configure_sutoroot() {
 	printf "SU_TO_ROOT_SU=sudo" \
 		> /etc/su-to-rootrc
 }
@@ -122,7 +122,7 @@ case "${1}" in
 		fi
 
 		if [ -e /etc/su-to-rootrc ]; then
-			configure_su-to-root
+			configure_sutoroot
 		fi
 
 		# disable lastlog for autologin on console
