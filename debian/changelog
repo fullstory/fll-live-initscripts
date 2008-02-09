@@ -1,8 +1,12 @@
 fll-live-initscripts (2.0.86) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 18 Jan 2008 23:24:02 +0100
+  [ Joaquim Boura ]
+  * Local-settings for Korean. thanks to muchan
+
+ -- Joaquim Boura <x-un-i@sidux.com>  Sat, 09 Feb 2008 19:44:08 +0100
 
 fll-live-initscripts (2.0.85) unstable; urgency=low
 
