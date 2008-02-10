@@ -1,7 +1,4 @@
-fll-live-initscripts (2.0.86) UNRELEASED; urgency=low
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (2.0.86) unstable; urgency=low
 
   [ Joaquim Boura ]
   * Local-settings for Korean. thanks to muchan
