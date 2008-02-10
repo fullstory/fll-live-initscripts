@@ -6,7 +6,10 @@ fll-live-initscripts (2.0.86) UNRELEASED; urgency=low
   [ Joaquim Boura ]
   * Local-settings for Korean. thanks to muchan
 
- -- Joaquim Boura <x-un-i@sidux.com>  Sat, 09 Feb 2008 19:44:08 +0100
+  [ Kel Modderman ]
+  * fll-cpufreq: dropped, depend on cpufrequtils for this functionality.
+
+ -- Kel Modderman <kel@otaku42.de>  Sun, 10 Feb 2008 22:34:25 +1000
 
 fll-live-initscripts (2.0.85) unstable; urgency=low
 
