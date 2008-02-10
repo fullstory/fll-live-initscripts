@@ -53,8 +53,6 @@ char *lookup_xorg_dvr_for(const char *string)
 			/* printf("%s: %s", filename, line); */
 			if (strncasecmp(line, string, strlen(string)) == 0) {
 				/* printf("%s: %s (match)\n", filename, string); */
-				fclose(file);
-
 				/* found string in $driver.ids */
 				driver = entry->d_name;
 
@@ -63,13 +61,12 @@ char *lookup_xorg_dvr_for(const char *string)
 				*ptr = '\0';
 				ptr++;
 
-				goto end;
+				break;
 			}
 		}
 		fclose(file);
 	}
 
-end:
 	return driver;
 }
 
