@@ -19,7 +19,7 @@ Description: fll live media sysv initscripts
 
 Package: fll-live-xorgconfig
 Architecture: any
-Depends: lsb-base (>= 3.0-6), distro-defaults, dash, perl, libfile-slurp-perl, xserver-xorg-core (>= 2:1.4-3), xresprobe
+Depends: ${shlibs:Depends}, lsb-base (>= 3.0-6), distro-defaults, dash, perl, libfile-slurp-perl, xserver-xorg-core (>= 2:1.4-3), xresprobe
 Recommends: kdm | gdm
 Description: fll live media xorg related tools
  A set of scripts to generate a Xorg configuration.

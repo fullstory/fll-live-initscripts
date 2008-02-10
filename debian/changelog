@@ -1,8 +1,9 @@
-fll-live-initscripts (2.0.87) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.87) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * add ${shlibs:Depends} to dependencies of fll-live-xorgconfig, we do link
+    against glibc.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 10 Feb 2008 15:31:17 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 10 Feb 2008 15:49:30 +0100
 
 fll-live-initscripts (2.0.86) unstable; urgency=low
 
