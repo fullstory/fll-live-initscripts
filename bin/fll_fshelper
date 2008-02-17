@@ -118,7 +118,7 @@ sub vol_id {
 
 	my %vol_id;
 	open(my $fh, '-|', "/lib/udev/vol_id $v 2>/dev/null")
-		or die "Cannout execute vol_id: $!\n";
+		or die "Cannot execute vol_id: $!\n";
 	while (<$fh>) {
 		chomp;
 		dbg $_;
@@ -148,7 +148,7 @@ sub device_is_removeable {
 
 	$d =~ m|^(/dev/)?([^/0-9]+)([0-9]*)$| and $d = $2;
 
-	if ($opts{'wanted'}{$d} or $opts{'wanted'}{'/dev/' . $d}) {
+	if ($opts{'wanted'}{$d} or $opts{'wanted'}{ '/dev/' . $d }) {
 		dbg "$d is wanted!";
 		return 0;
 	}
@@ -177,12 +177,10 @@ sub device_resolver {
 	my $n;
 
 	if ($d =~ /^(LABEL|UUID)=.+$/) {
-		# this is here for completeness only
 		$n = `findfs $d`;
 		chomp($n);
 	}
 	elsif ($d =~ m|^/dev/disk/by-.+/[^/]+$|) {
-		# canonicalize device node symlink
 		$n = realpath($d);
 	}
 	elsif ($d =~ m|^/dev/.+|) {
@@ -212,7 +210,7 @@ sub add_mnt_pnt {
 	return unless $opts{'make-mountpoints'};
 
 	my $mnt_pnt = shift;
-	
+
 	return if -d $mnt_pnt;
 
 	eval { mkpath($mnt_pnt, 0, 0755); };
@@ -269,6 +267,7 @@ if ($opts{'write-fstab'}) {
 #-------------------------------------------------------------------#
 # build %p structure with information about partitions
 
+my $disk = 0;
 if (-f '/proc/partitions') {
 	open(PARTITIONS, '<', '/proc/partitions')
 	        or die "Cannot open /proc/partitions for reading: $!\n";
@@ -281,9 +280,19 @@ if (-f '/proc/partitions') {
 			next;
 		}
 
+		my $part = 0;
+		if ($name =~ /(\d+)$/) {
+			$part = $1;
+		}
+		else {
+			$disk++;
+		}
+
 		next unless $blocks > 1;
 
-		$p{"/dev/$name"} = vol_id("/dev/$name");
+		$p{"/dev/$name"}         = vol_id("/dev/$name");
+		$p{"/dev/$name"}{'disk'} = $disk;
+		$p{"/dev/$name"}{'part'} = $part;
 	}
 	close(PARTITIONS);
 
@@ -326,7 +335,7 @@ if (-f '/proc/mounts') {
 	while (<MOUNTS>) {
 		chomp;
 		dbg $_;
-		
+
 		my ($device, $mount, $fstype, $options, $dump, $pass) = split;
 		my ($comment, $desc, $name, $label, $uuid) = ();
 
@@ -413,7 +422,6 @@ if (-f '/proc/mounts') {
 #-------------------------------------------------------------------#
 # process all unseen non-removable partitions
 
-my $disk = 0;
 for my $device (sort keys %p) {
 	if ($p_seen{$device} or device_is_removeable($device)) {
 		dbg "Skipping $device";
@@ -423,8 +431,9 @@ for my $device (sort keys %p) {
 	dbg $device, $p{$device};
 
 	# $device info, take a slice of %p
-	my ($usage, $fstype, $label, $label_safe, $uuid, $desc) =
-	        @{ $p{$device} }{ 'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc', 'desc' };
+	my ($usage, $fstype, $label, $label_safe, $uuid, $desc, $disk, $part) =
+	        @{ $p{$device} }{ 'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc', 'desc',
+		'disk', 'part' };
 
 	# fallbacks, support older udev versions
 	$label ||= @{ $p{$device} }{'label'};
@@ -463,7 +472,7 @@ for my $device (sort keys %p) {
 			print STDERR "Duplicate UUID ($device): $uuid\n";
 			next;
 		}
-		
+
 		if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
 			$name = "UUID=$uuid";
 		}
@@ -473,7 +482,7 @@ for my $device (sort keys %p) {
 
 		# append device node name and label to comment
 		$comment .= ", $device";
-		
+
 		# append label only if we didn't use --labels
 		if ($label and not $opts{'labels'}) {
 			$comment .= ', LABEL=' . $label;
@@ -488,7 +497,7 @@ for my $device (sort keys %p) {
 			print STDERR "Duplicate LABEL ($device): $label\n";
 			next;
 		}
-		
+
 		if ($fstype =~ /^(swap|ext[234]|reiserfs|reiser4|jfs|xfs)$/) {
 			$name = "LABEL=$label";
 		}
@@ -508,9 +517,9 @@ for my $device (sort keys %p) {
 
 	# device name as default/fallback
 	$name ||= $device;
-	
+
 	# generic mount point name
-	$mount = "/media/disk" . $disk++;
+	$mount = '/media/disk' . $disk . '-part' . $part;
 
 	if ($fstype eq 'ntfs') {
 		$options .= ',ro,dmask=0022,fmask=0133';
@@ -551,7 +560,7 @@ for (</dev/cdrom*>) {
 	next unless -b;
 
 	my $desc = ata_id($_);
-	
+
 	s|^/dev/||;
 
 	push(@fstab, comment($desc));
@@ -566,7 +575,7 @@ for (</dev/cdrom*>) {
 
 for (</dev/fd*>) {
 	next unless -b;
-	
+
 	s|^/dev/||;
 
 	push(@fstab, comment);
