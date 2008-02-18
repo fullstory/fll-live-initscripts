@@ -4,7 +4,7 @@ fll-live-initscripts (2.0.88) UNRELEASED; urgency=low
     - name mountpoint by disk and partition number, eg: /media/disk1-part2
     - run through perltidy
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 17 Feb 2008 23:18:19 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 18 Feb 2008 16:59:59 +1000
 
 fll-live-initscripts (2.0.87) unstable; urgency=low
 

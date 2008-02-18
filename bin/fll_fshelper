@@ -519,7 +519,7 @@ for my $device (sort keys %p) {
 	$name ||= $device;
 
 	# generic mount point name
-	$mount = '/media/disk' . $disk . '-part' . $part;
+	$mount = '/media/disk' . $disk . 'part' . $part;
 
 	if ($fstype eq 'ntfs') {
 		$options .= ',ro,dmask=0022,fmask=0133';
