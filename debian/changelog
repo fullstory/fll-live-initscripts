@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.88) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.88) unstable; urgency=low
 
   * bin/fll_fshelper:
     - name mountpoint by disk and partition number, eg: /media/disk1-part2
