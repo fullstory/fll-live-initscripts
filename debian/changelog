@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.90) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 20 Feb 2008 22:21:24 +0100
+
 fll-live-initscripts (2.0.89) unstable; urgency=low
 
   * appease lintian and write (C) as © in debian/copyright.
