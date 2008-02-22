@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.90) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.90) unstable; urgency=low
 
   * Failure to lookup source package URI with fll_src_uri now returns an error
     to the caller.
