@@ -73,7 +73,7 @@ if ($sl and $ml) {
 			}
 		}
 
-		$done{$name} or warn "W: no source uri for $name\n";
+		$done{$name} or die "W: no source uri for $name\n";
 	}
 
 	# write src uri list to file
