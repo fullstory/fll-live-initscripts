@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.91) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 22 Feb 2008 13:58:49 +0100
+
 fll-live-initscripts (2.0.90) unstable; urgency=low
 
   * Failure to lookup source package URI with fll_src_uri now returns an error
