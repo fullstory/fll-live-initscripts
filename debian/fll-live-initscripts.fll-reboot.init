@@ -26,10 +26,6 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 NAME="fll-reboot"
 
-# calculate runlevel
-RUNLEVEL="$(runlevel)"
-RUNLEVEL="${RUNLEVEL#* }"
-
 ###
 # source distro-defaults, no-op unless in live mode
 ###
@@ -408,6 +404,10 @@ do_stop() {
 	# umount the live media and other mount points
 	do_umount
 
+	# calculate runlevel
+	RUNLEVEL="$(runlevel)"
+	RUNLEVEL="${RUNLEVEL#* }"
+	
 	case "${RUNLEVEL}" in
 		0)
 			message="${G}System halted.${N}"
