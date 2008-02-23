@@ -80,7 +80,7 @@ do_start() {
 		cat > /etc/vim/vimrc.local \
 <<EOF
 syntax on
-set background=dark
+set background=light
 set showmatch
 set pastetoggle=<F10>
 au FileType debchangelog normal z0
