@@ -1,8 +1,12 @@
 fll-live-initscripts (2.0.91) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 22 Feb 2008 13:58:49 +0100
+  [ Kel Modderman ]
+  * Drop fll_src_uri. It has been made redundant.
+
+ -- Kel Modderman <kel@otaku42.de>  Sat, 23 Feb 2008 13:20:17 +1000
 
 fll-live-initscripts (2.0.90) unstable; urgency=low
 
