@@ -1,48 +1,98 @@
 #!/usr/bin/make -f
 
-include /usr/share/cdbs/1/rules/debhelper.mk
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
 
-common-build-indep::
+build: build-indep build-arch
+
+build-indep: build-indep-stamp
+build-indep-stamp:
+	dh_testdir
+	
 	$(MAKE) -C man man
+	
+	touch $@
 
-build/fll-live-xorgconfig::
-	# RandR 1.2 device compat. lists
-	gawk -f contrib/ati.awk contrib/src/ati_pciids_gen.h \
-		> share/fll-live-xorgconfig/xrandr/ati
-	gawk -f contrib/nv.awk contrib/src/nv_driver.c \
-		> share/fll-live-xorgconfig/xrandr/nv
-	# fll_xserver_discover
+build-arch: build-arch-stamp
+build-arch-stamp:
+	dh_testdir
+	
 	$(MAKE) -C bin fll_xserver_discover
-
-install/fll-live-initscripts::
-	# fll-{reboot,halt} are the same script. duplicate it
-	cp debian/fll-live-initscripts.fll-reboot.init \
-		debian/fll-live-initscripts.fll-halt.init
 	
-	# install and configure runlevel seq. for our initscripts
-	dh_installinit --no-start --name=fll-init	-- start 00 S .
-	dh_installinit --no-start --name=fll-locales	-- start 04 S .
-	dh_installinit --no-start --name=fll-fstab	-- start 34 S .
-	dh_installinit --no-start --name=fll-resume	-- start 34 S .
-	dh_installinit --no-start --name=fll-network	-- start 34 S .
-	dh_installinit --no-start --name=fll-hwsetup	-- start 80 S .
-	dh_installinit --no-start --name=fll-shell	-- start 90 S .
-	dh_installinit --no-start --name=fll-adduser	-- start 90 S .
-	dh_installinit --no-start --name=fll-xdm	-- start 95 S .
-	dh_installinit --no-start --name=fll-desktop	-- start 95 S .
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
 	
-	# halt|reboot replacements
-	dh_installinit --no-start --name=fll-halt	-- start 90 0 .
-	dh_installinit --no-start --name=fll-reboot	-- start 90 6 .
-
-install/fll-live-xorgconfig::
-	dh_installinit --no-start --name=fll-xorgconfig	-- start 80 S .
-
-clean::
-	# clean up duplicated init script
-	rm -f debian/fll-live-initscripts.fll-halt.init
-	# clean up xrandr device id lists
-	rm -f share/fll-live-xorgconfig/xrandr/*
-	# cleanup fll_xserver_discover
 	$(MAKE) -C bin clean
 	$(MAKE) -C man clean
+	
+	dh_clean build-arch-stamp build-indep-stamp
+
+install: install-indep install-arch
+
+install-indep:
+	dh_testdir
+	dh_testroot
+	dh_clean -k -i
+	dh_installdirs -i
+	dh_install -i
+	
+	dh_installinit --no-start --name=fll-init    -- start 00 S .
+	dh_installinit --no-start --name=fll-locales -- start 04 S .
+	dh_installinit --no-start --name=fll-fstab   -- start 34 S .
+	dh_installinit --no-start --name=fll-resume  -- start 34 S .
+	dh_installinit --no-start --name=fll-network -- start 34 S .
+	dh_installinit --no-start --name=fll-hwsetup -- start 80 S .
+	dh_installinit --no-start --name=fll-shell   -- start 90 S .
+	dh_installinit --no-start --name=fll-adduser -- start 90 S .
+	dh_installinit --no-start --name=fll-xdm     -- start 95 S .
+	dh_installinit --no-start --name=fll-desktop -- start 95 S .
+	dh_installinit --no-start --name=fll-reboot  -- start 90 0 6 .
+
+install-arch:
+	dh_testdir
+	dh_testroot
+	dh_clean -k -s
+	dh_installdirs -s
+	dh_install -s
+	
+	dh_installinit --no-start --name=fll-xorgconfig	-- start 80 S .
+	
+	mkdir -p debian/fll-live-xorgconfig/usr/share/fll-live-xorgconfig/xrandr/
+	gawk -f contrib/ati.awk contrib/src/ati_pciids_gen.h \
+		> debian/fll-live-xorgconfig/usr/share/fll-live-xorgconfig/xrandr/ati
+	gawk -f contrib/nv.awk contrib/src/nv_driver.c \
+		> debian/fll-live-xorgconfig/usr/share/fll-live-xorgconfig/xrandr/nv
+	
+binary-indep: build-indep install-indep
+	dh_testdir -i
+	dh_testroot -i
+	dh_installman -i
+	dh_installdocs -i
+	dh_installchangelogs -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+binary-arch: build-arch install-arch
+	dh_testdir -s
+	dh_testroot -s
+	dh_installman -s
+	dh_installdocs -s
+	dh_installchangelogs -s
+	dh_strip -s 
+	dh_compress -s
+	dh_fixperms -s
+	dh_installdeb -s
+	dh_shlibdeps -s
+	dh_gencontrol -s
+	dh_md5sums -s
+	dh_builddeb -s
+
+binary: binary-indep binary-arch
+.PHONY: build build-indep build-arch clean install install-indep install-arch binary-indep binary-arch binary

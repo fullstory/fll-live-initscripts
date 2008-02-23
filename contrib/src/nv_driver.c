@@ -113,7 +113,7 @@ _X_EXPORT DriverRec NV = {
 #endif
 };
 
-/* Known cards as of 2007/07/24 */
+/* Known cards as of 2008/01/24 */
 
 static SymTabRec NVKnownChipsets[] =
 {
@@ -383,6 +383,8 @@ static SymTabRec NVKnownChipsets[] =
   { 0x10DE042B, "Quadro NVS 135M" },
   { 0x10DE042D, "Quadro FX 360M" },
   { 0x10DE042F, "Quadro NVS 290" },
+  { 0x10DE0611, "GeForce 8800 GT" },
+  { 0x10DE061A, "Quadro FX 3700" },
 
   {-1, NULL}
 };
@@ -748,6 +750,10 @@ NVIsG80(int chipType)
         case 0x0190:
         case 0x0400:
         case 0x0420:
+        case 0x0610:
+        case 0x0620:
+        case 0x0630:
+        case 0x0640:
             return TRUE;
     }
 
@@ -2132,8 +2138,10 @@ NVRestore(ScrnInfoPtr pScrn)
     NVPtr pNv = NVPTR(pScrn);
     NVRegPtr nvReg = &pNv->SavedReg;
 
-    if(pNv->HWCursor)
+    if(pNv->HWCursor) {
         NVShowHideCursor(pNv, 0);
+        sleep(1);
+    }
     NVLockUnlock(pNv, 0);
 
     if(pNv->twoHeads) {
@@ -2176,8 +2184,17 @@ static void NVBacklightEnable(NVPtr pNv,  Bool on)
 #endif
     
     if(pNv->LVDS) {
-       if(pNv->twoHeads && ((pNv->Chipset & 0x0ff0) != 0x0110)) {
-           pNv->PMC[0x130C/4] = on ? 3 : 7; 
+       if(pNv->twoHeads) {
+           if((pNv->Chipset & 0x0ff0) != 0x0110) {
+               pNv->PMC[0x130C/4] = on ? 3 : 7;
+           } else if(SUBVENDOR_ID(pNv->PciInfo) == 0x1028 &&
+                     SUBDEVICE_ID(pNv->PciInfo) == 0xd4) {
+               // Dell Inspiron 8200, GeForce2 Go
+               CARD32 tmp_pcrt = pNv->PCRTC0[0x081C/4] & 0xFFFFFFFC;
+               if(on)
+                   tmp_pcrt |= 0x1;
+               pNv->PCRTC0[0x081C/4] = tmp_pcrt;
+           }
        }
     } else {
        CARD32 fpcontrol;

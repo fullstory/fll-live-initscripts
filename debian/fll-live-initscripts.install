@@ -1,4 +1,4 @@
-bin/fll_analyze_initscripts	usr/bin
-bin/fll_fshelper		usr/sbin
-bin/fll_login			usr/bin
-lib/fll-init-cols		lib/fll
+bin/fll_analyze_initscripts usr/bin
+bin/fll_fshelper            usr/sbin
+bin/fll_login               usr/bin
+lib/fll-init-cols           lib/fll

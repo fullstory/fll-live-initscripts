@@ -1,12 +1,18 @@
 fll-live-initscripts (2.0.91) UNRELEASED; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * Drop fll_src_uri. It has been made redundant.
+  * fll-reboot:
+    - detect runlevel with /bin/runlevel rather than checking $O
+    - no need to copy this script now, just register it for runlevels 0 and 6
+  * contrib/src/*
+    - update pciids sources for ati and nv
+  * contrib/ati.awk:
+    - update regexp to allow new R500 and R600 pciids to be in our lists
+  * debian/control, /debian/rules:
+    - change section to misc
+    - drop build-dep of cdbs, rules file is now debhelper-centric
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 23 Feb 2008 13:20:17 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 23 Feb 2008 15:10:34 +1000
 
 fll-live-initscripts (2.0.90) unstable; urgency=low
 
