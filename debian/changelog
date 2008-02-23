@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.93) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 23 Feb 2008 22:45:47 +0100
+
 fll-live-initscripts (2.0.92) unstable; urgency=low
 
   * dark backgrounds interfere with "konsole --type su", tel vim about light
