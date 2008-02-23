@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.91) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.91) unstable; urgency=low
 
   * Drop fll_src_uri. It has been made redundant.
   * fll-reboot:
