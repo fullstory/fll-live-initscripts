@@ -397,18 +397,18 @@ pop_live_cd()
 }
 
 do_stop() {
-	local command message options
+	local command message options runlevel
+
+	# calculate runlevel
+	runlevel="$(runlevel)"
+	runlevel="${runlevel#* }"
 
 	# prepare binaries for post-umount of live media
 	live_hack
 	# umount the live media and other mount points
 	do_umount
-
-	# calculate runlevel
-	RUNLEVEL="$(runlevel)"
-	RUNLEVEL="${RUNLEVEL#* }"
 	
-	case "${RUNLEVEL}" in
+	case "${runlevel}" in
 		0)
 			message="${G}System halted.${N}"
 			command="halt"
