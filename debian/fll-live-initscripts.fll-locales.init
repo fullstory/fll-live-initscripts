@@ -742,6 +742,32 @@ localize_sources_list() {
 			/etc/apt/sources.list \
 			/etc/apt/sources.list.d/debian.list
 	fi
+
+	# deploy load balancing for first generation sidux push mirrors
+	if [ -w /etc/apt/sources.list.d/sidux.list ]; then
+		case "$(mawk 'BEGIN{print int(7 * rand())}')" in
+			0|1)
+				# sidux.com
+				SIDUX_MIRROR="http://sidux.com/debian/"
+				;;
+			2)
+				# sidux.net
+				SIDUX_MIRROR="http://sidux.net/debian/"
+				;;
+			3|4)
+				# debian.tu-bs.de
+				SIDUX_MIRROR="http://debian.tu-bs.de/project/sidux/debian/"
+				;;
+			*)
+				# spline.de
+				SIDUX_MIRROR="http://ftp.spline.de/pub/sidux/debian/"
+				;;
+		esac
+
+		sed -i "s|\(deb.*[ \t]\)http://sidux.com/debian/|\1 ${SIDUX_MIRROR}|" \
+			/etc/apt/sources.list \
+			/etc/apt/sources.list.d/sidux.list
+	fi
 }
 
 save_locale_variables() {

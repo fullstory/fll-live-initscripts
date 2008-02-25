@@ -1,8 +1,10 @@
-fll-live-initscripts (2.0.93) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.93) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * RFC: introduce primitive load balancing for sidux repositories,
+    a similar solution needs to be implemented for
+    http://sidux.com/files/misc/sources.list.d/sidux.list
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 23 Feb 2008 22:45:47 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 25 Feb 2008 19:01:52 +0100
 
 fll-live-initscripts (2.0.92) unstable; urgency=low
 
