@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.94) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.94) unstable; urgency=low
 
   * Build-Depend on pciutils-dev (>= 1:2.2.10-1) for the .pc file that it now
     ships. Query required lib flags with pkg-config for fll_xserver_discover.
