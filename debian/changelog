@@ -1,3 +1,10 @@
+fll-live-initscripts (2.0.95) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+  * make lintian happy by just build-depending on pciutils-dev (>= 1:2.2.10).
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 26 Feb 2008 15:12:40 +0100
+
 fll-live-initscripts (2.0.94) unstable; urgency=low
 
   [ Kel Modderman ]
