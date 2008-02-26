@@ -74,6 +74,8 @@ fi
 add_live_user() {
 	adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
 	
+	egrep -q '^ADD_EXTRA_GROUPS=[^0]+' /etc/adduser.conf && return 0
+	
 	for group in ${FLL_LIVE_USER_GROUPS}; do
 		if getent group "${group}" >/dev/null; then
 			adduser "${FLL_LIVE_USER}" "${group}"
