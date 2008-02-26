@@ -1,9 +1,10 @@
 CFLAGS = -g -O2 -Wall
+LIBS = $(shell pkg-config --libs libpci)
 
 fll_xserver_discover:
-	gcc -o $@ $(CFLAGS) $@.c -lpci -lz
+	gcc -o $@ $@.c $(CFLAGS) $(LIBS)
 
 clean:
-	rm -f fll_xserver_discover
+	$(RM) fll_xserver_discover
 
 .PHONY: clean
