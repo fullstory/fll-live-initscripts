@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.96) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 27 Feb 2008 10:44:44 +0100
+
 fll-live-initscripts (2.0.95) unstable; urgency=low
 
   * make lintian happy by just build-depending on pciutils-dev (>= 1:2.2.10).
