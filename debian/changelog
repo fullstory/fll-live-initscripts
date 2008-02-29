@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.96) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.96) unstable; urgency=low
 
   * fll-init:
     - honour nocpufreq cheatcode now that fll-cpufreq is redundant.
