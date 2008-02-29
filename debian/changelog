@@ -1,9 +1,12 @@
 fll-live-initscripts (2.0.96) UNRELEASED; urgency=low
 
   * fll-init:
-    * honour nocpufreq cheatcode now that fll-cpufreq is redundant.
+    - honour nocpufreq cheatcode now that fll-cpufreq is redundant.
+  * fll-xorgconfig:
+    - no need to check package versions for various xserver-video drivers
+      anymore.
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 29 Feb 2008 12:38:26 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 29 Feb 2008 12:42:40 +1000
 
 fll-live-initscripts (2.0.95) unstable; urgency=low
 

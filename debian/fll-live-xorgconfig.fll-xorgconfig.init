@@ -141,50 +141,36 @@ xserver_has_xrandr() {
 	# device id of VGA hardware (lower case)
 	local DEVICE="${2}"
 	
-	# package version with randr1.2 support
-	local VERSION_HAS_RANDR
-
 	case "${DRIVER}" in
 		ati)
-			VERSION_HAS_RANDR="1:6.7.191-1"
 			# find ${DEVICE} in a list of r200/r300/r400 device ids
 			if [ -z "${DEVICE}" ] || ! grep -s -q "^${DEVICE}" \
 				"/usr/share/fll-live-xorgconfig/xrandr/${DRIVER}"; then
 				return 1
 			fi
+			return 0
 			;;
 		intel)
-			VERSION_HAS_RANDR="2:2.1.0-1"
+			return 0
 			;;
 		mga)
-			VERSION_HAS_RANDR="1:1.9.99.dfsg.1-1"
+			return 0
 			;;
 		nv)
-			VERSION_HAS_RANDR="1:2.0.96-1"
 			# find ${DEVICE} in a list of G8x device ids
 			if [ -z "${DEVICE}" ] || ! grep -s -q "^${DEVICE}" \
 				"/usr/share/fll-live-xorgconfig/xrandr/${DRIVER}"; then
 				return 1
 			fi
+			return 0
 			;;
 		radeonhd)
-			VERSION_HAS_RANDR="0.0.4~git20071124-1"
+			return 0
 			;;
 		*)
 			return 1
 			;;
 	esac
-
-	# get xserver-xorg-video-$driver package version
-	local VERSION=$(dpkg -l "xserver-xorg-video-${DRIVER}" | awk '/^ii/{ print $3 }')
-
-	# compare versions, return status
-	if [ "${VERSION}" ]; then
-		dpkg --compare-versions "${VERSION}" ge "${VERSION_HAS_RANDR}"
-		return "${?}"
-	fi
-	
-	return 1
 }
 
 x_res_probe() {
