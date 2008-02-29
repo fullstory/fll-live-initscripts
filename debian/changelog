@@ -5,8 +5,12 @@ fll-live-initscripts (2.0.96) UNRELEASED; urgency=low
   * fll-xorgconfig:
     - no need to check package versions for various xserver-video drivers
       anymore.
+  * fll_fshelper:
+    - rename $disk and $part to $d and $p to avoid variable scope problems
+    - add --simulate-live cli option for testing on an installed system, it
+      disables local mount detection
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 29 Feb 2008 12:42:40 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 29 Feb 2008 14:01:50 +1000
 
 fll-live-initscripts (2.0.95) unstable; urgency=low
 

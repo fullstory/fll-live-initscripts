@@ -85,6 +85,7 @@ By default fll_fshelper prints fstab to stdout, and does not create mountpoints
   -f|--fstab <file>         target file to write output to
   -a|--auto                 set auto mount option where applicable
   -q|--quiet                surpress output when writing to file
+  -s|--simulate-live        disable detection of local mounts
   -d|--debug                enable debug output
 
 fll_fshelper is intended for initial creation of /etc/fstab by "live" linux
@@ -117,8 +118,7 @@ sub vol_id {
 	return unless -b $v;
 
 	my %vol_id;
-	open(my $fh, '-|', "/lib/udev/vol_id $v 2>/dev/null")
-		or die "Cannot execute vol_id: $!\n";
+	open(my $fh, '-|', "/lib/udev/vol_id $v 2>/dev/null") or die "Cannot execute vol_id: $!\n";
 	while (<$fh>) {
 		chomp;
 		dbg $_;
@@ -223,10 +223,10 @@ sub add_mnt_pnt {
 # process cli arguments
 
 GetOptions(
-	\%opts,    'auto',        'debug|verbose', 'fstab=s',
-	'help',    'install-gui', 'labels',        'make-mountpoints',
-	'no-swap', 'quiet',       'uuids',         'wanted=s%',
-	'write-fstab'
+	\%opts,      'auto',        'debug|verbose', 'fstab=s',
+	'help',      'install-gui', 'labels',        'make-mountpoints',
+	'no-swap',   'quiet',       'uuids',         'simulate-live',
+	'wanted=s%', 'write-fstab'
 );
 
 if ($opts{'help'}) {
@@ -242,8 +242,7 @@ dbg '%opts', \%opts;
 if ($opts{'write-fstab'}) {
 
 	# tie array to file, lock it
-	$f = tie(@fstab, "Tie::File", $file)
-		or die "Cannot open $file for writing: $!\n";
+	$f = tie(@fstab, "Tie::File", $file) or die "Cannot open $file for writing: $!\n";
 
 	# flock it
 	$f->flock;
@@ -330,7 +329,7 @@ for my $id (</dev/disk/by-id/{ata,scsi,usb}-*>) {
 #-------------------------------------------------------------------#
 # process mounted volumes
 
-if (-f '/proc/mounts') {
+if (-f '/proc/mounts' and not $opts{'simulate-live'}) {
 	open(MOUNTS, '<', '/proc/mounts') or die "Cannot open /proc/mounts for reading: $!\n";
 	while (<MOUNTS>) {
 		chomp;
@@ -431,7 +430,7 @@ for my $device (sort keys %p) {
 	dbg $device, $p{$device};
 
 	# $device info, take a slice of %p
-	my ($usage, $fstype, $label, $label_safe, $uuid, $desc, $disk, $part) =
+	my ($usage, $fstype, $label, $label_safe, $uuid, $desc, $d, $p) =
 	        @{ $p{$device} }{ 'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc', 'desc',
 		'disk', 'part' };
 
@@ -519,7 +518,7 @@ for my $device (sort keys %p) {
 	$name ||= $device;
 
 	# generic mount point name
-	$mount = '/media/disk' . $disk . 'part' . $part;
+	$mount = '/media/disk' . $d . 'part' . $p;
 
 	if ($fstype eq 'ntfs') {
 		$options .= ',ro,dmask=0022,fmask=0133';

@@ -56,6 +56,9 @@ OPTIONS
 -q, --quiet::
 	Surpress output when writing to file.
 
+-s, --simulate-live
+	Disable detection of local mounts, simulating a live environment.
+
 -d, --debug::
 	Enable perl debug output.
 
