@@ -13,8 +13,11 @@ fll-live-initscripts (2.0.97) UNRELEASED; urgency=low
   * fll-xorgconfig:
     - don't declare stop runlevels in LSB header.
     - make sure we depend on the fll-locales service
+  * fll-xdm:
+    - if insserv is installed, adjust the LSB headers so ?dm is started in
+      runlevel 5 only
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 01 Mar 2008 20:34:06 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 01 Mar 2008 20:44:48 +1000
 
 fll-live-initscripts (2.0.96) unstable; urgency=low
 
