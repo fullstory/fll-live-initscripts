@@ -1,3 +1,9 @@
+fll-live-initscripts (2.0.98) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 01 Mar 2008 13:18:04 +0100
+
 fll-live-initscripts (2.0.97) unstable; urgency=low
 
   * Trim trailing whitespace from ./debian/* on lines containing content.
