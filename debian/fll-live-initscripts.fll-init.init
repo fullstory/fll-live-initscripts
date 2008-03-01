@@ -1,10 +1,10 @@
 #!/bin/dash
 
 ### BEGIN INIT INFO
-# Provides:          fll-init-top
+# Provides:          fll-init
 # Required-Start:
 # Required-Stop:
-# X-Start-Before:    hostname.sh
+# X-Start-Before:    hostname udev
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: read in fll live specific cheatcodes at top of init

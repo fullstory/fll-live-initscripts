@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-network
-# Required-Start:    udev
+# Required-Start:    mountdevsubfs
 # Required-Stop:
 # X-Start-Before:    networking
 # Default-Start:     S

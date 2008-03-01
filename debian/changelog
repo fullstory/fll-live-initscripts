@@ -1,8 +1,8 @@
 fll-live-initscripts (2.0.98) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Adjust all LSB headers for initial insserv support.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 01 Mar 2008 13:18:04 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 02 Mar 2008 00:41:17 +1000
 
 fll-live-initscripts (2.0.97) unstable; urgency=low
 

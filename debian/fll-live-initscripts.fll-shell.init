@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-shell
-# Required-Start:
+# Required-Start:    $local_fs
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:
