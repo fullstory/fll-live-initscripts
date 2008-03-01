@@ -72,8 +72,15 @@ if [ -f /proc/cmdline ]; then
 fi
 
 add_live_user() {
-	adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
+	if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
+		log_action_begin_msg " ${G}user '${Y}${FLL_LIVE_USER}${G}' exists${N}"
+		return 0
+	fi
 	
+	log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
+	adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}" >/dev/null
+	
+	# the builder may have preseeded adduser.conf
 	egrep -q '^ADD_EXTRA_GROUPS=[^0]+' /etc/adduser.conf && return 0
 	
 	for group in ${FLL_LIVE_USER_GROUPS}; do
@@ -84,8 +91,10 @@ add_live_user() {
 }
 
 hack_sudoers() {
-		# append suoders entry
-		cat >> /etc/sudoers \
+	grep -q -w "${FLL_LIVE_USER}" /etc/sudoers && return 0
+	
+	# append sudoers entry
+	cat >> /etc/sudoers \
 <<EOF
 
 # WARNING: This allows the unprivileged ${FLL_LIVE_USER} user to start commands as root
@@ -98,32 +107,20 @@ EOF
 
 hack_bashrc() {
 	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
-	if ! grep -s -q 'alias su' ${FLL_LIVE_USER_HOME}/.bashrc; then
-		printf "\nalias su='sudo su'\nalias sux='sudo sux'\n" \
-			>> ${FLL_LIVE_USER_HOME}/.bashrc
-	fi
+	grep -s -q 'alias su' ${FLL_LIVE_USER_HOME}/.bashrc && return 0
+	
+	printf "\nalias su='sudo su'\nalias sux='sudo sux'\n" \
+		>> ${FLL_LIVE_USER_HOME}/.bashrc
 }
 
 case "${1}" in
 	start)
 		log_daemon_msg "${B}${NAME}${N}"
-		if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
-			log_action_begin_msg " ${G}user '${Y}${FLL_LIVE_USER}${G}' exists${N}"
-		else
-			log_action_begin_msg " ${G}adding user '${Y}${FLL_LIVE_USER}${G}'${N}"
-			add_live_user >/dev/null
-		fi
 		
-		if ! grep -q -w "${FLL_LIVE_USER}" /etc/sudoers; then
-			hack_sudoers
-		fi
-
-		# disable lastlog for autologin on console
-		if [ -f /etc/pam.d/login ]; then
-			sed -i '/^[^#].*pam_lastlog\.so/s/^/# /' /etc/pam.d/login
-		fi
-		
+		add_live_user
+		hack_sudoers
 		hack_bashrc
+		
 		log_end_msg 0
 		;;
 	stop)
