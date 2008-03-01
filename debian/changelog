@@ -2,8 +2,11 @@ fll-live-initscripts (2.0.98) UNRELEASED; urgency=low
 
   * Adjust all LSB headers for initial insserv support. Cheat with fll-reboot,
     and use the special keyworkd $all in the Required-Stop declaration.
+  * fll-init:
+    - fix blacklisting of modules with blacklist= boot param, there was a
+      typo.
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 02 Mar 2008 00:59:31 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 02 Mar 2008 01:25:59 +1000
 
 fll-live-initscripts (2.0.97) unstable; urgency=low
 

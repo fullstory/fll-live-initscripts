@@ -68,7 +68,7 @@ if [ -f /proc/cmdline ]; then
 				BLACKLIST="${BLACKLIST} agp agpgart"
 				;;
 			blacklist=*)
-				BLACKLIST="${BLACKLIST} ${param#hostname=}"
+				BLACKLIST="${BLACKLIST} ${param#blacklist=}"
 				;;
 			hostname=*)
 				CUSTOM_HOSTNAME="${param#hostname=}"
