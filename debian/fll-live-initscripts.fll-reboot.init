@@ -3,7 +3,7 @@
 ### BEGIN INIT INFO
 # Provides:          fll-reboot
 # Required-Start:
-# Required-Stop:
+# Required-Stop:     $all
 # Default-Start:
 # Default-Stop:      0 6
 # Short-Description: shutdown and eject live media
