@@ -3,8 +3,10 @@ fll-live-initscripts (2.0.97) UNRELEASED; urgency=low
   * fll-adduser:
     - remove pam_lastlog hack, this will be done in the builder postinst
     - general cleanup, fix some typos
+  * fll-init:
+    - fix typo in /etc/default/fll-init
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 01 Mar 2008 19:32:33 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 01 Mar 2008 19:44:49 +1000
 
 fll-live-initscripts (2.0.96) unstable; urgency=low
 
