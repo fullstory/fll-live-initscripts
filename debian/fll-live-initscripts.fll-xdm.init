@@ -3,9 +3,9 @@
 ### BEGIN INIT INFO
 # Provides:          fll-xdm
 # Required-Start:    fll-adduser
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     S
-# Default-Stop:      
+# Default-Stop:
 # Short-Description: detect and setup X desktop manager
 # Description:       The purpose of this script is to detect and configure an
 #                    installed X desktop manager (i.e. kdm, gdm etc.).

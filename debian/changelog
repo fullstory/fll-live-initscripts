@@ -1,5 +1,6 @@
 fll-live-initscripts (2.0.97) UNRELEASED; urgency=low
 
+  * Trim trailing whitespace from ./debian/* on lines containing content.
   * fll-adduser:
     - remove pam_lastlog hack, this will be done in the builder postinst
     - general cleanup, fix some typos
@@ -8,7 +9,7 @@ fll-live-initscripts (2.0.97) UNRELEASED; urgency=low
   * fll-network:
     - remove kppp-noauth hack, do it in the builder
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 01 Mar 2008 19:54:32 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 01 Mar 2008 20:18:43 +1000
 
 fll-live-initscripts (2.0.96) unstable; urgency=low
 
@@ -159,7 +160,7 @@ fll-live-initscripts (2.0.79) unstable; urgency=low
 
 fll-live-initscripts (2.0.78) unstable; urgency=low
 
-  * Fluxbox Start fixed. 
+  * Fluxbox Start fixed.
 
  -- Andreas Weber <andreas@it-weber.com>  Mon, 31 Dec 2007 07:59:39 +0100
 
@@ -284,7 +285,7 @@ fll-live-initscripts (2.0.63) unstable; urgency=low
 
   * /etc/X11/default-display-manager requires a bogus path to start gdm
    - /etc/bin/gdm - see debian bug #452344
-  * add comment in code for the above 
+  * add comment in code for the above
 
  -- Bernard Gray <bernard.gray@gmail.com>  Fri, 23 Nov 2007 10:28:01 +1100
 

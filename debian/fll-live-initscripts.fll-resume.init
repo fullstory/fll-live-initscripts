@@ -3,9 +3,9 @@
 ### BEGIN INIT INFO
 # Provides:          fll-resume
 # Required-Start:    udev fll-fstab
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     S
-# Default-Stop:      
+# Default-Stop:
 # Short-Description: generates /etc/initramfs-tools/conf.d/resume
 # Description:       The purpose of fll-resume is to generate a configuration
 #                    file for initramfs-tools and resume

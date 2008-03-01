@@ -3,9 +3,9 @@
 ### BEGIN INIT INFO
 # Provides:          fll-hwsetup
 # Required-Start:    udev fll-locales
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     S
-# Default-Stop:      
+# Default-Stop:
 # Short-Description: fll hwsetup init service
 # Description:       The purpose of this script is to invoke hwsetup to
 #                    facilitate various hardware detection routines.

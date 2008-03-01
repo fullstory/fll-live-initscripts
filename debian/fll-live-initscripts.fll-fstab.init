@@ -3,12 +3,12 @@
 ### BEGIN INIT INFO
 # Provides:          fll-fstab
 # Required-Start:    udev
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     S
-# Default-Stop:      
+# Default-Stop:
 # Short-Description: generates /etc/fstab
 # Description:       The purpose of fll-fstab is to generate /etc.fstab via
-#                    fll_fshelper(8). It also handles mounting of detected 
+#                    fll_fshelper(8). It also handles mounting of detected
 #                    swap partitions
 ### END INIT INFO
 

@@ -2,10 +2,10 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-adduser
-# Required-Start:    
-# Required-Stop:     
+# Required-Start:
+# Required-Stop:
 # Default-Start:     S
-# Default-Stop:      
+# Default-Stop:
 # Short-Description: add user to live system
 # Description:       The purpose of fll-adduser is to add a user to the live
 #                    system and populate their /home.

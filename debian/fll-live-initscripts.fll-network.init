@@ -3,9 +3,9 @@
 ### BEGIN INIT INFO
 # Provides:          fll-network
 # Required-Start:    udev
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     S
-# Default-Stop:      
+# Default-Stop:
 # Short-Description: configure ifupdown for detected network devices
 # Description:       Probe cable status of detected network devices and
 #                    enable dhcp for those devices which return a positive

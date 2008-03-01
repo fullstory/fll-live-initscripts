@@ -3,9 +3,9 @@
 ### BEGIN INIT INFO
 # Provides:          fll-locales
 # Required-Start:    udev
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     S
-# Default-Stop:      
+# Default-Stop:
 # Short-Description: live media locale autoconifgurator
 # Description:       The purpose of fll-locales is to calculate required
 #                    strings to configure the locale settings of system
@@ -89,7 +89,7 @@ fi
 ###
 if [ "${FLL_LANG}" ]; then
 	LANGUAGE="${FLL_LANG}"
-fi	
+fi
 
 ###
 # lang cheatcode can optionally be made of two dash-separated parts ll-cc

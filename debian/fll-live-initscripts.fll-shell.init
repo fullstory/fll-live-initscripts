@@ -2,10 +2,10 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-shell
-# Required-Start:    
-# Required-Stop:     
+# Required-Start:
+# Required-Stop:
 # Default-Start:     S
-# Default-Stop:      
+# Default-Stop:
 # Short-Description: configure shell
 # Description:       Populate /root/.bash* for a more comfortable root shell
 #                    login. Preset some shell application settings.

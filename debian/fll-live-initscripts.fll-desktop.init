@@ -3,9 +3,9 @@
 ### BEGIN INIT INFO
 # Provides:          fll-desktop
 # Required-Start:    fll-adduser
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     S
-# Default-Stop:      
+# Default-Stop:
 # Short-Description: configure window manager to be used on live system
 # Description:       The purpose of this script is to configure a X window
 #                    manager.

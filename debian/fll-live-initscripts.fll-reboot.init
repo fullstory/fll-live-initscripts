@@ -2,9 +2,9 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-reboot
-# Required-Start:    
-# Required-Stop:     
-# Default-Start:     
+# Required-Start:
+# Required-Stop:
+# Default-Start:
 # Default-Stop:      0 6
 # Short-Description: shutdown and eject live media
 # Description:       This script provides the equivalent of umountfs,
