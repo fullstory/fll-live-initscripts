@@ -4,6 +4,7 @@
 # Provides:          fll-init-top
 # Required-Start:
 # Required-Stop:
+# X-Start-Before:    hostname.sh
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: read in fll live specific cheatcodes at top of init
