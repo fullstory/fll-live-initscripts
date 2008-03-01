@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.97) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.97) unstable; urgency=low
 
   * Trim trailing whitespace from ./debian/* on lines containing content.
   * fll-adduser:
