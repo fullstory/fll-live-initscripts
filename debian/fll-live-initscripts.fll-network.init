@@ -73,12 +73,6 @@ if [ -f /proc/cmdline ]; then
 	done
 fi
 
-fix_kppp_noauth() {
-	if [ -w /etc/ppp/peers/kppp-options ]; then
-		sed -i 's/^#noauth/noauth/' /etc/ppp/peers/kppp-options
-	fi
-}
-
 detect_netdevs() {
 	for netdev in /sys/class/net/*; do
 		if [ ! -L "${netdev}/device" ]; then
@@ -171,8 +165,6 @@ ifplug_dhcp() {
 }
 
 do_start() {
-	fix_kppp_noauth
-
 	write_skel_to_eni
 
 	if [ "${NODHCP}" = "yes" ] || [ -x /usr/sbin/NetworkManager ]; then
