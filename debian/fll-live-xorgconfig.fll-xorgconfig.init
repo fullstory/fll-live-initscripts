@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-xorgconfig
-# Required-Start:
+# Required-Start:    fll-locales
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:

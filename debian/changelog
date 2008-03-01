@@ -12,8 +12,9 @@ fll-live-initscripts (2.0.97) UNRELEASED; urgency=low
     - declare in LSB header x-start-before networking
   * fll-xorgconfig:
     - don't declare stop runlevels in LSB header.
+    - make sure we depend on the fll-locales service
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 01 Mar 2008 20:32:21 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 01 Mar 2008 20:34:06 +1000
 
 fll-live-initscripts (2.0.96) unstable; urgency=low
 
