@@ -1,8 +1,9 @@
 fll-live-initscripts (3.0.1) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-network:
+    - ensure we start between ifupdown and networking in dependency based boot
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 02 Mar 2008 13:33:18 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 02 Mar 2008 23:00:53 +1000
 
 fll-live-initscripts (3.0.0) unstable; urgency=low
 
