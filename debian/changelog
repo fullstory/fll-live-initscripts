@@ -1,4 +1,4 @@
-fll-live-initscripts (2.0.98) UNRELEASED; urgency=low
+fll-live-initscripts (2.0.98) unstable; urgency=low
 
   * Adjust all LSB headers for initial insserv support. Cheat with fll-reboot,
     and use the special keyworkd $all in the Required-Stop declaration.
