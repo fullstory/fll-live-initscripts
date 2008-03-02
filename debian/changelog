@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.0) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.0) unstable; urgency=low
 
   * Bump major release version number.
   * Assimilate the distro-defaults package. Handle the /etc/defaults/distro
