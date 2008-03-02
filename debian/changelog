@@ -9,8 +9,10 @@ fll-live-initscripts (3.0.0) UNRELEASED; urgency=low
     postinst and postrm scripts.
   * fll-locales:
     - simplify the addition of dynamic variables to /etc/default/fll-locales
+    - LANG is more interesting that LANGUAGE when dumping contents to
+      /etc/default/fll-locales
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 02 Mar 2008 19:13:36 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 02 Mar 2008 22:19:57 +1000
 
 fll-live-initscripts (2.0.98) unstable; urgency=low
 
