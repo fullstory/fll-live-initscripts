@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.1) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.1) unstable; urgency=low
 
   * Tweak the LSB dependencies of live initscripts.
   * Tweak static runlevel configuration of live initscripts.
