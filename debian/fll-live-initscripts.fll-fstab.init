@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-fstab
-# Required-Start:    mountdevsubfs
+# Required-Start:    udev mountdevsubfs
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:

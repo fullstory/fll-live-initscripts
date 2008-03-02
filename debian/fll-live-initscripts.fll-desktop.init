@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-desktop
-# Required-Start:    $local_fs fll-adduser
+# Required-Start:    $remote_fs fll-adduser
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:

@@ -2,8 +2,9 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-xorgconfig
-# Required-Start:    $local_fs fll-locales
+# Required-Start:    $remote_fs fll-locales
 # Required-Stop:
+# X-Start-Before:    x11-common
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: configure Xorg xserver

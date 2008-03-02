@@ -2,8 +2,9 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-locales
-# Required-Start:    udev
+# Required-Start:    udev mountdevsubfs
 # Required-Stop:
+# X-Start-Before:    keymap
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: live media locale autoconifgurator
