@@ -1,8 +1,16 @@
-fll-live-initscripts (2.0.99) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.0) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Bump major release version number.
+  * Assimilate the distro-defaults package. Handle the /etc/defaults/distro
+    conffile manually (with ucf) in the postinst and postrm scripts.
+  * Do the same conffile handling for fll-live-initscripts as for
+    distro-defaults, the files are dynamically generated, so just use ucf to
+    relate the package to the file, and manage its addition and removal in the
+    postinst and postrm scripts.
+  * fll-locales:
+    - simplify the addition of dynamic variables to /etc/default/fll-locales
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 02 Mar 2008 03:12:09 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 02 Mar 2008 19:13:36 +1000
 
 fll-live-initscripts (2.0.98) unstable; urgency=low
 

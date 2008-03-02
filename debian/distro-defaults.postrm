@@ -1,0 +1,56 @@
+#!/bin/sh -e
+# This script can be called in the following ways:
+#
+# After the package was removed:
+#       <postrm> remove
+#
+# After the package was purged:
+#       <postrm> purge
+#
+# After the package was upgraded:
+#       <old-postrm> upgrade <new-version>
+# if that fails:
+#       <new-postrm> failed-upgrade <old-version>
+#
+#
+# After all of the packages files have been replaced:
+#       <postrm> disappear <overwriting-package> <version>
+#
+#
+# If preinst fails during install:
+#       <new-postrm> abort-install
+#
+# If preinst fails during upgrade of removed package:
+#       <new-postrm> abort-install <old-version>
+#
+# If preinst fails during upgrade:
+#       <new-postrm> abort-upgrade <old-version>
+
+case "$1" in
+	remove)
+		;;
+	purge)
+		# emulate dpkg, remove backed up files
+		for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist
+		do
+			rm -f /etc/default/distro${ext}
+		done
+
+		rm -f /etc/default/distro
+
+		if which ucfr >/dev/null; then
+			ucfr --purge distro-defaults /etc/default/distro
+		fi
+		;;
+	upgrade|failed-upgrade|disappear)
+		;;
+	abort-install|abort-upgrade)
+		;;
+	*)
+		echo "$0 called with unknown argument \`$1'" 1>&2
+		exit 1
+		;;
+esac
+
+#DEBHELPER#
+exit 0

@@ -1,0 +1,44 @@
+#!/bin/sh -e
+# This script can be called in the following ways:
+#
+# After the package was installed:
+#       <postinst> configure <old-version>
+#
+#
+# If prerm fails during upgrade or fails on failed upgrade:
+#       <old-postinst> abort-upgrade <new-version>
+#
+# If prerm fails during deconfiguration of a package:
+#       <postinst> abort-deconfigure in-favour <new-package> <version>
+#                  removing <old-package> <version>
+#
+# If prerm fails during replacement due to conflict:
+#       <postinst> abort-remove in-favour <new-package> <version>
+
+case "$1" in
+	configure)
+		for filename in /etc/default/fll-init /etc/default/fll-locales
+		do
+			ucfr fll-live-initscripts "${filename}"
+
+			if [ ! -f "${filename}" ]; then
+				echo "Creating ${filename}..."
+					cat > "${filename}" \
+<<EOF
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#          DO NOT EDIT * AUTOMATICALLY GENERATED FILE * DO NOT EDIT           #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+EOF
+			fi
+		done
+		;;
+	abort-upgrade|abort-deconfigure|abort-remove)
+		;;
+	*)
+		echo "$0 called with unknown argument \`$1'" 1>&2
+		exit 1
+		;;
+esac
+
+#DEBHELPER#
+exit 0
