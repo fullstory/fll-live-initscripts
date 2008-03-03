@@ -1,8 +1,10 @@
 fll-live-initscripts (3.0.2) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xserver_discover:
+    - add debugging cli switch to print out informational messages during
+      detection
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 02 Mar 2008 17:37:36 +0100
+ -- Kel Modderman <kel@otaku42.de>  Tue, 04 Mar 2008 07:58:54 +1000
 
 fll-live-initscripts (3.0.1) unstable; urgency=low
 

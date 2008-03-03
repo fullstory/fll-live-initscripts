@@ -26,7 +26,8 @@ packages, and outputs the xserver driver that claims support for the hardware.
 
 OPTIONS
 -------
-'fll_xserver_discover' takes no options
+-d::
+	Print informational messages during detection.
 
 
 AUTHOR
