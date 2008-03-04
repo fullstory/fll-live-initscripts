@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.3) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.3) unstable; urgency=low
 
   * distro-defaults:
     - override kdm and gdm LSB default start and stop values, so that they
