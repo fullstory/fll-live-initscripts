@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.4) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.4) unstable; urgency=low
 
   * fll_analyze_initscripts:
     - add initial insserv boot system support
