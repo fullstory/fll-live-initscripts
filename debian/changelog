@@ -1,8 +1,19 @@
 fll-live-initscripts (3.0.3) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * distro-defaults:
+    - override kdm and gdm LSB default start and stop values, so that they
+      only start in runlevel 5, and stop in all other runlevels
+    - manage the override with ucf, regenerate it every postinst with some
+      careful sed
+  * fll-live-initscripts:
+    - reuse the function that distro-defaults uses to purge conffile from the
+      disk and ucf database
+    - update copyright year stamps in bin/fll_*
+  * fll_analyze_initscripts:
+    - remove the whitelist/blacklist input file cruft introduced with
+      fll-build.bash developments
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 04 Mar 2008 01:01:55 +0100
+ -- Kel Modderman <kel@otaku42.de>  Tue, 04 Mar 2008 23:20:48 +1000
 
 fll-live-initscripts (3.0.2) unstable; urgency=low
 

@@ -15,6 +15,21 @@
 # If prerm fails during replacement due to conflict:
 #       <postinst> abort-remove in-favour <new-package> <version>
 
+override_dm_lsb_defaults() {
+	dmstart='5'
+	dmstop='0 1 2 3 4 6'
+
+	# Dump the LSB header to insserv override file
+	sed -n '/^### BEGIN INIT INFO/,/^### END INIT INFO/p' ${1} > ${2}
+
+	# Override Default-Start and Default-Stop
+	sed -i -e 's/^\(# Default-Start:[[:space:]]\+\).*/\1'"${dmstart}"'/' \
+	       -e 's/^\(# Default-Stop:[[:space:]]\+\).*/\1'"${dmstop}"'/'   \
+		${2}
+
+	echo '# Managed by the distro-defaults package.' >> ${2}
+}
+
 case "$1" in
 	configure)
 		ucfr distro-defaults /etc/default/distro
@@ -28,6 +43,17 @@ case "$1" in
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 EOF
 		fi
+
+		for dm in gdm kdm
+		do			
+			ucfr distro-defaults /etc/insserv/overrides/${dm}
+
+			if [ -s /etc/init.d/${dm} ]; then
+				echo "Overriding LSB init defaults for ${dm}."
+				override_dm_lsb_defaults /etc/init.d/${dm} \
+					/etc/insserv/overrides/${dm}
+			fi
+		done
 		;;
 	abort-upgrade|abort-deconfigure|abort-remove)
 		;;

@@ -26,21 +26,29 @@
 # If preinst fails during upgrade:
 #       <new-postrm> abort-upgrade <old-version>
 
+purge_conffile() {
+	rm -f ${1}
+
+	for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist
+	do
+		rm -f ${1}${ext}
+	done
+
+	if which ucfr >/dev/null; then
+		ucfr --purge distro-defaults ${1}
+	fi
+}
+
 case "$1" in
 	remove)
 		;;
 	purge)
-		# emulate dpkg, remove backed up files
-		for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist
+		purge_conffile /etc/default/distro
+
+		for dm in gdm kdm
 		do
-			rm -f /etc/default/distro${ext}
+			purge_conffile /etc/insserv/overrides/${dm}
 		done
-
-		rm -f /etc/default/distro
-
-		if which ucfr >/dev/null; then
-			ucfr --purge distro-defaults /etc/default/distro
-		fi
 		;;
 	upgrade|failed-upgrade|disappear)
 		;;

@@ -1,43 +1,55 @@
 #!/usr/bin/perl
+#
+# Copyright (C) 2007 - 2008 Kel Modderman <kel@otaku42.de>
+#	    (C) 2007 Michiel de Boer <locsmif@kanotix.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this package; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+# On Debian GNU/Linux systems, the text of the GPL license can be
+# found in /usr/share/common-licenses/GPL.
+#
 
-# Warnings is much too loud, and i'm not the only one to
-# complain about that, seen tutorials online that advise
-# to only enable it when needed, for debugging. I agree.
-#use warnings;
+use warnings;
 use strict;
 
 #use Data::Dumper;
 use Getopt::Long qw(:config bundling no_auto_abbrev);
 
-# bundling is combining multiple short options together,
-# no_auto_abbrev makes sure the error messages never
-# abbreviate the parameter that was unknown.
-
-# Declare all variables used in main here for oversight,
-# except loop variables, because they don't persist.
-# Variables start with undefined values, which evaluates
-# to "" in scalar context.
-my (%init, @glob);
-my ($bl, $wl);
-my ($chroot, $found, $frc, $keep, $rem);
-my $urcd = "update-rc.d";
+my (%init, @glob, $chroot);
+my ($frc, $rem);
+my $urcd = 'update-rc.d';
+my $etc  = '/etc';
+my $found = 0;
 
 GetOptions(
-	"b|blacklist=s" => \$bl,
 	"c|chroot=s"    => \$chroot,
 	"f|force"       => \$frc,
-	"k|keep"        => \$keep,
 	"r|remove"      => \$rem,
-	"w|whitelist=s" => \$wl,
 );
 
--d $chroot . "/etc/rcS.d/" or die "invalid chroot '$chroot': $!";
-
-for my $svc (@ARGV) {
-	push(@glob, glob($chroot . "/etc/rc[0-6S].d/[KS][0-9][0-9]$svc"));
+if ($chroot) {
+	-d $chroot . '/etc/rcS.d/' or die "invalid chroot '$chroot': $!";
+	$etc = $chroot . $etc;
 }
 
-@glob = glob($chroot . "/etc/rc[0-6S].d/[KS]*") unless @ARGV;
+for my $svc (@ARGV) {
+	push(@glob, glob($etc . '/rc[0-6S].d/[KS][0-9][0-9]' . $svc));
+}
+
+@glob = glob($etc . '/rc[0-6S].d/[KS]*') unless @ARGV;
 
 for (@glob) {
 	next unless -L;
@@ -47,120 +59,33 @@ for (@glob) {
 
 #print Dumper \%init;
 
-if ($bl and $wl) {
-	-s $bl or die "Cannot read $bl: $!\n";
-	-s $wl or die "Cannot read $wl: $!\n";
+for my $svc (sort keys %init) {
+	my (@par, $prm);
 
-	my (%binit, %winit);
+	$frc and push(@par, '-f');
 
-	open(my $fh, '<', $bl) or die "Cannot open $bl: $!\n";
-	while (<$fh>) {
-		chomp;
-		/^#/ and next;
+	next if not -x $etc . '/init.d/' . $svc;
 
-		# script name
-		if (m|^/etc/init.d/|) {
-			for (glob) {
-				-x or next;
-				if (m|^/etc/init.d/(.+)$|) {
-					$binit{$1}++;
-				}
-			}
-			next;
-		}
+	my @s = keys %{ $init{$svc}{S} };
+	my @k = keys %{ $init{$svc}{K} };
 
-		# package name
-		open(my $dq, '-|', "dpkg-query -L $_ 2>/dev/null")
-			or die "Cannot execute dpkg-query: $!\n";
-		while (<$dq>) {
-			chomp;
-			if (-x and m|^/etc/init.d/(.+)$|) {
-				$binit{$1}++;
-			}
-		}
-		close($dq);
+	if ($rem) {
+		push(@par, $svc, 'remove');
 	}
-	close($fh);
-
-	#print Dumper \%binit;
-
-	open(my $fh, '<', $wl) or die "Cannot open $wl: $!\n";
-	while (<$fh>) {
-		chomp;
-		/^#/ and next;
-
-		# script name
-		if (m|^/etc/init.d/|) {
-			for (glob) {
-				-x or next;
-				if (m|^/etc/init.d/(.+)$|) {
-					$binit{$1} or $winit{$1}++;
-				}
-			}
-			next;
-		}
-
-		# package name
-		open(my $dq, '-|', "dpkg-query -L $_ 2>/dev/null")
-			or die "Cannot execute dpkg-query: $!\n";
-		while (<$dq>) {
-			chomp;
-			if (-x and m|^/etc/init.d/(.+)$|) {
-				# check for blacklisting
-				$binit{$1} or $winit{$1}++;
-			}
-		}
-		close($dq);
+	elsif ( "@s" eq '20' and "@k" eq '20'
+		and "@{ $init{$svc}{S}{20} }" eq '2 3 4 5'
+		and "@{ $init{$svc}{K}{20} }" eq '0 1 6') {
+		push(@par, $svc, 'defaults');
 	}
-	close($fh);
-
-	#print Dumper \%winit;
-
-	for my $svc (sort keys %init) {
-		my $out;
-
-		if ($keep) {
-			$winit{$svc} and $out = $svc;
-		}
-		elsif ($rem) {
-			$winit{$svc} or $out = $svc;
-		}
-		else {
-			$out = $winit{$svc} ? "W: $svc" : "B: $svc";
-		}
-
-		print "$out\n" if $out;
+	else {
+		$prm .= "start $_ @{ $init{$svc}{S}{$_} } . " for (@s);
+		$prm .= "stop $_ @{ $init{$svc}{K}{$_} } . "  for (@k);
+		push(@par, $svc, $prm) if $prm;
 	}
+
+	$found++;
+	print "$urcd @par\n";
 }
-else {
-	for my $svc (sort keys %init) {
-		my (@par, $prm);
 
-		$frc and push(@par, "-f");
-
-		next if not -x $chroot . "/etc/init.d/" . $svc;
-
-		my @s = keys %{ $init{$svc}{S} };
-		my @k = keys %{ $init{$svc}{K} };
-
-		if ($rem) {
-			push(@par, $svc, "remove");
-		}
-		elsif ( "@s" eq "20" and "@k" eq "20"
-			and "@{ $init{$svc}{S}{20} }" eq "2 3 4 5"
-			and "@{ $init{$svc}{K}{20} }" eq "0 1 6") {
-			push(@par, $svc, "defaults");
-		}
-		else {
-			$prm .= "start $_ @{ $init{$svc}{S}{$_} } . " for (@s);
-			$prm .= "stop $_ @{ $init{$svc}{K}{$_} } . "  for (@k);
-			push(@par, $svc, $prm) if $prm;
-		}
-
-		$found++;
-		print "$urcd @par\n";
-	}
-
-	my $eval = (@ARGV and $found != @ARGV) ? 1 : 0;
-	exit($eval);
-}
+my $eval = (@ARGV and $found != @ARGV) ? 1 : 0;
+exit($eval);

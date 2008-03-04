@@ -26,23 +26,26 @@
 # If preinst fails during upgrade:
 #       <new-postrm> abort-upgrade <old-version>
 
+purge_conffile() {
+	rm -f ${1}
+
+	for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist
+	do
+		rm -f ${1}${ext}
+	done
+
+	if which ucfr >/dev/null; then
+		ucfr --purge fll-live-initscripts ${1}
+	fi
+}
+
 case "$1" in
 	remove)
 		;;
 	purge)
 		for filename in /etc/default/fll-init /etc/default/fll-locales
 		do
-			# emulate dpkg, remove backed up files
-			for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist
-			do
-				rm -f "${filename}${ext}"
-			done
-
-			rm -f "${filename}"
-
-			if which ucfr >/dev/null; then
-				ucfr --purge fll-live-initscripts "${filename}"
-			fi
+			purge_conffile "${filename}"
 		done
 		;;
 	upgrade|failed-upgrade|disappear)

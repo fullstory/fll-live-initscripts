@@ -1,7 +1,7 @@
 /*
  *	fll_xserver_discover -- detect PCI VGA class hardware
  *
- *	Copyright (c) 2007 Kel Modderman <kel@otaku42.de>
+ *	Copyright (c) 2007 - 2008 Kel Modderman <kel@otaku42.de>
  *
  *	Can be freely distributed and used under the terms of the GNU GPLv2.
  */
