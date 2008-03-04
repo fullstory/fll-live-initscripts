@@ -26,18 +26,20 @@ use warnings;
 use strict;
 
 #use Data::Dumper;
+use Cwd qw(realpath);
 use Getopt::Long qw(:config bundling no_auto_abbrev);
 
 my (%init, @glob, $chroot);
-my ($frc, $rem);
-my $urcd = 'update-rc.d';
-my $etc  = '/etc';
+my ($def, $dry, $frc, $rem, $urcd);
+my $etc   = '/etc';
 my $found = 0;
 
 GetOptions(
-	"c|chroot=s"    => \$chroot,
-	"f|force"       => \$frc,
-	"r|remove"      => \$rem,
+	"c|chroot=s" => \$chroot,
+	"d|defaults" => \$def,
+	"f|force"    => \$frc,
+	"n|dryrun"    => \$dry,
+	"r|remove"   => \$rem,
 );
 
 if ($chroot) {
@@ -60,27 +62,43 @@ for (@glob) {
 #print Dumper \%init;
 
 for my $svc (sort keys %init) {
-	my (@par, $prm);
-
-	$frc and push(@par, '-f');
-
 	next if not -x $etc . '/init.d/' . $svc;
 
-	my @s = keys %{ $init{$svc}{S} };
-	my @k = keys %{ $init{$svc}{K} };
-
-	if ($rem) {
-		push(@par, $svc, 'remove');
-	}
-	elsif ( "@s" eq '20' and "@k" eq '20'
-		and "@{ $init{$svc}{S}{20} }" eq '2 3 4 5'
-		and "@{ $init{$svc}{K}{20} }" eq '0 1 6') {
-		push(@par, $svc, 'defaults');
+	my (@par, $prm);
+	if (-x '/sbin/insserv' &&
+	    realpath('/usr/sbin/update-rc.d') =~ /insserv$/) {
+		$urcd = 'insserv';
+		$frc and push(@par, '--force');
+		$dry and push(@par, '--dryrun');
+		if ($rem) {
+			push(@par, '--remove');
+		}
+		else {
+			$def and push(@par, '--default');
+		}
+		push(@par, $svc);
 	}
 	else {
-		$prm .= "start $_ @{ $init{$svc}{S}{$_} } . " for (@s);
-		$prm .= "stop $_ @{ $init{$svc}{K}{$_} } . "  for (@k);
-		push(@par, $svc, $prm) if $prm;
+		$urcd = 'update-rc.d';
+		$frc and push(@par, '-f');
+		$dry and push(@par, '-n');
+
+		my @s = keys %{ $init{$svc}{S} };
+		my @k = keys %{ $init{$svc}{K} };
+
+		if ($rem) {
+			push(@par, $svc, 'remove');
+		}
+		elsif ( "@s" eq '20' and "@k" eq '20'
+			and "@{ $init{$svc}{S}{20} }" eq '2 3 4 5'
+			and "@{ $init{$svc}{K}{20} }" eq '0 1 6') {
+			push(@par, $svc, 'defaults');
+		}
+		else {
+			$prm .= "start $_ @{ $init{$svc}{S}{$_} } . " for (@s);
+			$prm .= "stop $_ @{ $init{$svc}{K}{$_} } . "  for (@k);
+			push(@par, $svc, $prm) if $prm;
+		}
 	}
 
 	$found++;

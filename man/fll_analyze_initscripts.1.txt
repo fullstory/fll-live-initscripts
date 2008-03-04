@@ -22,10 +22,16 @@ commands required to replicate the runlevel configuration of each script.
 OPTIONS
 -------
 -r, --remove::
-	Print update-rc.d command that would remove the initscripts.
+	Print update-rc.d/insserv command that would remove the initscripts.
 
 -f, --force::
-	Print update-rc.d command using -f force option.
+	Print update-rc.d/insserv command using the -f (force) option.
+
+-d, --default::
+	Print insserv command using the --default option.
+
+-n, --dryrun::
+	Print update-rc.d/insserv command using the -n (dry-run) option.
 
 -c, --chroot '/path/to/chroot'::
 	Path to chroot which will provide the SysV init runlevel directory
