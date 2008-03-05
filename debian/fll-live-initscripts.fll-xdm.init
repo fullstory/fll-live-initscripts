@@ -94,12 +94,6 @@ get_init_seq_num() {
 		}'
 }
 
-adjust_lsb_defaults() {
-	sed -i  -e 's/^\(# Default-Start:[ \t]\+\).*/\15/' \
-		-e 's/^\(# Default-Stop:[ \t]\+\).*/\10 1 2 3 4 6/' \
-			"${1}"
-}
-
 setup_kdm() {
 	# wallpaper
 	echo "USEBACKGROUND=true"		>  /etc/default/kdm.d/wallpaper
@@ -117,7 +111,6 @@ setup_kdm() {
 	unset START STOP
 	eval "`get_init_seq_num kdm ${FLL_MOUNTPOINT}`"
 	if [ "${START}" ] && [ "${STOP}" ]; then
-		[ -x /sbin/insserv ] && adjust_lsb_defaults /etc/init.d/kdm
 		update-rc.d kdm start "${START}" 5 . stop "${STOP}" 0 1 2 3 4 6 . >/dev/null
 		return "${?}"
 	fi
@@ -140,7 +133,6 @@ setup_gdm() {
 	unset START STOP
 	eval "`get_init_seq_num gdm ${FLL_MOUNTPOINT}`"
 	if [ "${START}" ] && [ "${STOP}" ]; then
-		[ -x /sbin/insserv ] && adjust_lsb_defaults /etc/init.d/gdm
 		update-rc.d gdm start "${START}" 5 . stop "${STOP}" 0 1 2 3 4 6 . >/dev/null
 		return "${?}"
 	fi

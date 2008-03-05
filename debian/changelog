@@ -1,3 +1,11 @@
+fll-live-initscripts (3.0.5) unstable; urgency=low
+
+  * fll-xdm:
+    - don't touch the LSB init info of the dm initscripts, desktop-defaults is
+      providing more robust overrides
+
+ -- Kel Modderman <kel@otaku42.de>  Wed, 05 Mar 2008 11:29:32 +1000
+
 fll-live-initscripts (3.0.4) unstable; urgency=low
 
   * fll_analyze_initscripts:
