@@ -3,8 +3,11 @@ fll-live-initscripts (3.0.5) unstable; urgency=low
   * fll-xdm:
     - don't touch the LSB init info of the dm initscripts, desktop-defaults is
       providing more robust overrides
+  * fll-shell:
+    - disable pam_lastlog during live init, so that the squashfs chroot
+      contains always a pristine configuration.
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 05 Mar 2008 11:29:32 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 06 Mar 2008 16:04:49 +1000
 
 fll-live-initscripts (3.0.4) unstable; urgency=low
 

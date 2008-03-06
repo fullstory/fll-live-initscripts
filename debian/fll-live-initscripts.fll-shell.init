@@ -76,6 +76,10 @@ do_start() {
 
 	:> /root/.hushlogin
 
+	if [ -w /etc/pam.d/login ]; then
+		sed -i '/^[^#].*pam_lastlog\.so/s/^/# /' /etc/pam.d/login
+	fi
+
 	if [ -x /usr/bin/vim ]; then
 		cat > /etc/vim/vimrc.local \
 <<EOF
