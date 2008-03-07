@@ -1,9 +1,5 @@
-fll-live-initscripts (3.0.6) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.6) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Bernard Gray ]
   * relax fll-hwsetup rc start index 
 
  -- Bernard Gray <bernard.gray@gmail.com>  Fri, 07 Mar 2008 15:46:18 +1100
