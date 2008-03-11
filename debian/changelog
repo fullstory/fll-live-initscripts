@@ -3,8 +3,17 @@ fll-live-initscripts (3.0.7) UNRELEASED; urgency=low
   * fll-adduser:
     - redirect stdout when using fallback method of adding live user to
       various groups
+  * fll-live-initscripts:
+    - ship a live inittab conffile in /usr/share/fll-live-initscripts/
+  * distro-defaults:
+    - add chrooted() function to postinst maintainer script
+    - only attempt to create /etc/default/distro if in a chroot
+    - if in a chroot, and insserv is in path, set desktop manager initscript
+      to default runlevel configuration after creating overrides
+    - create a default /etc/apt/sources.list template it in a chroot, and the
+      file doesn't exist yet
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 11 Mar 2008 13:30:57 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 11 Mar 2008 17:46:59 +1000
 
 fll-live-initscripts (3.0.6) unstable; urgency=low
 

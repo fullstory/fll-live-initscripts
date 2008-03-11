@@ -15,6 +15,17 @@
 # If prerm fails during replacement due to conflict:
 #       <postinst> abort-remove in-favour <new-package> <version>
 
+chrooted() {
+	# borrowed from udev's postinst
+	if [ "$(stat -c %d/%i /)" = "$(stat -Lc %d/%i /proc/1/root 2>/dev/null)" ]; then
+		# the device number/inode pair of / is the same as that of
+		# /sbin/init's root, so we're *not* in a chroot and hence
+		# return false.
+		return 1
+	fi
+	return 0
+}
+
 override_dm_lsb_defaults() {
 	dmstart='5'
 	dmstop='0 1 2 3 4 6'
@@ -34,7 +45,7 @@ case "$1" in
 	configure)
 		ucfr distro-defaults /etc/default/distro
 
-		if [ ! -f /etc/default/distro ]; then
+		if [ ! -f /etc/default/distro ] && chrooted; then
 			echo 'Creating /etc/default/distro...'
 			cat > /etc/default/distro \
 <<EOF
@@ -52,8 +63,30 @@ EOF
 				echo "Overriding LSB init defaults for ${dm}."
 				override_dm_lsb_defaults /etc/init.d/${dm} \
 					/etc/insserv/overrides/${dm}
+
+				if which insserv >/dev/null && chrooted; then
+					insserv --default ${dm}
+				fi
 			fi
 		done
+
+		# We don't register this conffile with ucf, or purge it in postrm
+		if [ ! -f /etc/apt/sources.list ] && chrooted; then
+			echo 'Creating /etc/apt/sources.list...'
+			cat > /etc/apt/sources.list \
+<<EOF
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# See sources.list(5) for more information, especialy remember that you can   #
+# only use http, ftp or file URIs, CDROMs are managed through apt-cdrom.      #
+#                                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Please use /etc/apt/sources.list.d/ instead of this file and create a       #
+# separate *.list configuration file for each repository, containing the      #
+# actual deb/deb-src desired suites and components for that repository.       #
+#                                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+EOF
+		fi
 		;;
 	abort-upgrade|abort-deconfigure|abort-remove)
 		;;
