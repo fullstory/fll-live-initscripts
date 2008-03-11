@@ -1,8 +1,10 @@
 fll-live-initscripts (3.0.7) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-adduser:
+    - redirect stdout when using fallback method of adding live user to
+      various groups
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 07 Mar 2008 17:05:24 +0100
+ -- Kel Modderman <kel@otaku42.de>  Tue, 11 Mar 2008 13:30:57 +1000
 
 fll-live-initscripts (3.0.6) unstable; urgency=low
 

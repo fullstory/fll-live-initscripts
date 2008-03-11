@@ -85,7 +85,7 @@ add_live_user() {
 	
 	for group in ${FLL_LIVE_USER_GROUPS}; do
 		if getent group "${group}" >/dev/null; then
-			adduser "${FLL_LIVE_USER}" "${group}"
+			adduser "${FLL_LIVE_USER}" "${group}" >/dev/null
 		fi
 	done
 }
