@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.9) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.9) unstable; urgency=low
 
   * fll_xserver_discover:
     - return an empty XMODULE string when no driver was detected in ids lists
