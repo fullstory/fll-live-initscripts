@@ -249,9 +249,10 @@ do_start() {
 	# nv_driver.c, but most are supported by nv
 	if [ "${XVENDOR}" = "10de" ] && [ "${XMODULE}" != "nv" ]; then
 		case "${XDEVICE}" in
-			053a|053b)
+			053a|053b|053e)
 				# blacklist
 				# 053a,053b - GeForce 7050 PV / nForce 630a
+				# 053e - GeForce 7025 / NVIDIA nForce 630a
 				;;
 			0008|0009|0010)
 				# very old
