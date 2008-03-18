@@ -199,6 +199,20 @@ x_res_probe() {
 		}'
 }
 
+nv_overridable() {
+	[ "${1}" ] || return 1
+
+	# Gerforce{2,3,4}, Quadro family, GeForce 4XXX|5XXX|6XXX|7XXX|8XXX
+	# - yields coverage of ~300 boards described in pci.ids (20080319)
+	if echo "${1}" | egrep -q -i 'geforce[2-4]\>' || \
+	   echo "${1}" | egrep -q -i 'geforce\>.*\<[4-8][0-9]{3}' || \
+	   echo "${1}" | egrep -q -i 'quadro[24]?\>'; then
+		return 0
+	fi
+
+	return 1
+}
+
 do_start() {
 	log_daemon_msg "${B}${NAME}${N}"
 	log_action_begin_msg " ${G}detecting ${Y}video${G} hardware${N}"
@@ -231,13 +245,26 @@ do_start() {
 	#     XMODULE XBOARDNAME XBUSID XVENDOR XDEVICE
 	eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
 
-	# nv driver override logic - not all 4xxx, 5xxx, 6xxx and 7xxx device
-	# ids are listed in nv_driver.c, these are well supported by nv
-	if [ "${XVENDOR}" = "10de" ] && [ "${XMODULE}" = "vesa" ]; then
-		if echo "${XBOARDNAME}" | egrep -q -i 'nvidia\>.*\<[4-7][0-9]{3}'; then
-			XMODULE="nv"
-			XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
-		fi
+	# nv driver override logic - not all device ids are listed in
+	# nv_driver.c, but most are supported by nv
+	if [ "${XVENDOR}" = "10de" ] && [ "${XMODULE}" != "nv" ]; then
+		case "${XDEVICE}" in
+			053a|053b)
+				# blacklist
+				# 053a,053b - GeForce 7050 PV / nForce 630a
+				;;
+			0008|0009|0010)
+				# very old
+				;;
+			*)
+				# Do some check on the board description to decide
+				# whether or not to force nv as driver
+				if nv_overridable "${XBOARDNAME}"; then
+					XMODULE="nv"
+					XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
+				fi
+				;;
+		esac
 	fi
 
 	# detected virtualbox emulated VGA hardware

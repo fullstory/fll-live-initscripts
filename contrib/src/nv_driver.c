@@ -113,7 +113,7 @@ _X_EXPORT DriverRec NV = {
 #endif
 };
 
-/* Known cards as of 2008/01/24 */
+/* Known cards as of 2008/03/06 */
 
 static SymTabRec NVKnownChipsets[] =
 {
@@ -361,6 +361,7 @@ static SymTabRec NVKnownChipsets[] =
   { 0x10DE019D, "Quadro FX 5600" },
   { 0x10DE019E, "Quadro FX 4600" },
   { 0x10DE0400, "GeForce 8600 GTS" },
+  { 0x10DE0401, "GeForce 8600 GT" },
   { 0x10DE0402, "GeForce 8600 GT" },
   { 0x10DE0404, "GeForce 8400 GS" },
   { 0x10DE0407, "GeForce 8600M GT" },
@@ -374,6 +375,7 @@ static SymTabRec NVKnownChipsets[] =
   { 0x10DE0421, "GeForce 8500 GT" },
   { 0x10DE0422, "GeForce 8400 GS" },
   { 0x10DE0423, "GeForce 8300 GS" },
+  { 0x10DE0424, "GeForce 8400 GS" },
   { 0x10DE0425, "GeForce 8600M GS" },
   { 0x10DE0426, "GeForce 8400M GT" },
   { 0x10DE0427, "GeForce 8400M GS" },
@@ -383,8 +385,13 @@ static SymTabRec NVKnownChipsets[] =
   { 0x10DE042B, "Quadro NVS 135M" },
   { 0x10DE042D, "Quadro FX 360M" },
   { 0x10DE042F, "Quadro NVS 290" },
+  { 0x10DE0602, "GeForce 8800 GT" },
+  { 0x10DE0606, "GeForce 8800 GS" },
+  { 0x10DE060D, "GeForce 8800 GS" },
   { 0x10DE0611, "GeForce 8800 GT" },
   { 0x10DE061A, "Quadro FX 3700" },
+  { 0x10DE0622, "GeForce 9600 GT" },
+  { 0x10DE06E4, "GeForce 8400 GS" },
 
   {-1, NULL}
 };
@@ -750,10 +757,13 @@ NVIsG80(int chipType)
         case 0x0190:
         case 0x0400:
         case 0x0420:
+        case 0x05e0:
+        case 0x0600:
         case 0x0610:
         case 0x0620:
         case 0x0630:
         case 0x0640:
+        case 0x06e0:
             return TRUE;
     }
 
@@ -942,7 +952,7 @@ NVSwitchMode(int scrnIndex, DisplayModePtr mode, int flags)
     return NVModeInit(pScrn, mode);
 }
 
-Bool
+static Bool
 NVSwitchModeVBE(int scrnIndex, DisplayModePtr mode, int flags)
 {
     ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
@@ -1222,7 +1232,7 @@ NVModesAdd(DisplayModePtr Modes, DisplayModePtr Additions)
 }
 
 /* Mandatory */
-Bool
+static Bool
 NVPreInit(ScrnInfoPtr pScrn, int flags)
 {
     NVPtr pNv;
@@ -2006,7 +2016,7 @@ NVMapMem(ScrnInfoPtr pScrn)
     return TRUE;
 }
 
-Bool
+static Bool
 NVMapMemFBDev(ScrnInfoPtr pScrn)
 {
     NVPtr pNv;

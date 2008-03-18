@@ -15,8 +15,11 @@ fll-live-initscripts (3.0.9) UNRELEASED; urgency=low
       dynamic detection at X startup
     - no longer create a default 'Device' section if no driver, busid or
       boardname were specified as program arguments
+    - overhaul nv override logic, add nv_overridable() function to determine
+      if we should force nv based on board description + regular expression
+    - update contrib/src/nv_driver.c for new G80 pci ids
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 18 Mar 2008 22:39:28 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 19 Mar 2008 00:31:30 +1000
 
 fll-live-initscripts (3.0.8) unstable; urgency=low
 
