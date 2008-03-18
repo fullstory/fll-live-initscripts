@@ -29,7 +29,7 @@ int ids_file(const struct dirent *entry)
 
 	ptr = rindex(entry->d_name, '.');
 	if (ptr && strcmp(ptr, ".ids") == 0)
-		return 1;		
+		return 1;
 
 	return 0;
 }
