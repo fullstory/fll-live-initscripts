@@ -73,12 +73,15 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 			}
 		}
 		fclose(file);
+
+		if (strncasecmp("vesa", driver, strlen(driver)) && !debug)
+			break;
 	}
 
 	return driver;
 }
 
-int xdisplay(struct pci_dev *dev, int debug) {
+void xdisplay(struct pci_dev *dev, int debug) {
 	char devbuf[128];
 	char str[9];
 
@@ -111,11 +114,7 @@ int xdisplay(struct pci_dev *dev, int debug) {
 
 		/* search for string in xserver pciids lists */
 		printf("XMODULE='%s'\n", lookup_xorg_dvr_for(str, debug));
-
-		return 1;
 	}
-
-	return 0;
 }
 
 /*
@@ -143,10 +142,8 @@ int main(int argc, char *argv[])
 	pci_init(pacc);
 	pci_scan_bus(pacc);
 
-	for (p = pacc->devices; p; p = p->next) {
-		if (xdisplay(p, debug) && !debug)
-			break;
-	}
+	for (p = pacc->devices; p; p = p->next)
+		xdisplay(p, debug);
 
 	pci_cleanup(pacc);
 
