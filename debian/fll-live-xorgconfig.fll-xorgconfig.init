@@ -328,15 +328,12 @@ do_start() {
 	log_action_begin_msg " ${G}detecting ${Y}monitor${G} settings${N}"
 	log_end_msg 0
 
-	log_daemon_msg "${B}${NAME}${N}"
-
 	if [ -z "${XMODULE}" ] || xserver_has_xrandr "${XMODULE}" "${XDEVICE}"; then
 		# failed to identify driver or driver is randr1.2 aware
 		# let the xserver try its best to do the right thing
 		XCFG_OPTS="${XCFG_OPTS} --xrandr"
 		
 		if [ "${XMODES}" ]; then
-			log_progress_msg "${Y}${XMODES}${N}"
 			XCFG_OPTS="${XCFG_OPTS} --mode '${XMODES}'"
 		fi
 
@@ -346,11 +343,8 @@ do_start() {
 		fi
 
 		if [ "${XRATE}" ]; then
-			log_progress_msg "${G}@${Y}${XRATE} Hz${N}"
 			XCFG_OPTS="${XCFG_OPTS} --rate '${XRATE}'"
 		fi
-
-		log_end_msg 0
 	else
 		log_progress_msg "${G}xresprobe ${Y}${XMODULE}${G}:${N}"
 		# legacy style config, we need to probe for optimal X settings
