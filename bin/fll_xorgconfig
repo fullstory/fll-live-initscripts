@@ -451,7 +451,6 @@ GetOptions(
 	'boardname=s',
 	'busid=s',
 	'driver=s',
-	'vendorname=s',
 
 	# monitor
 	'colordepth=i',
@@ -529,7 +528,7 @@ my @serverflags  = get_template('serverflags');
 my @keyboard     = get_template('inputdevice_keyboard');
 my @input;       # template(s) handled below
 my @monitor      = get_template('monitor');
-my @device       = get_template('device');
+my @device       = ($x{'driver'} or $x{'busid'} or $x{'boardname'}) ? get_template('device') : undef;
 my @screen       = get_template('screen');
 my @extensions   = get_template('extensions');
 

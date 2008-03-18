@@ -13,8 +13,10 @@ fll-live-initscripts (3.0.9) UNRELEASED; urgency=low
       section (except for vboxvideo, cheatcode or nv override). Allow the
       xserver to use the same data we hijacked for early detection, to do
       dynamic detection at X startup
+    - no longer create a default 'Device' section if no driver, busid or
+      boardname were specified as program arguments
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 18 Mar 2008 22:31:15 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 18 Mar 2008 22:39:28 +1000
 
 fll-live-initscripts (3.0.8) unstable; urgency=low
 
