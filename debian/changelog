@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.8) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.8) unstable; urgency=low
 
   * fll_xserver_discover:
     - put the printing of device variables into the xdisplay() function
