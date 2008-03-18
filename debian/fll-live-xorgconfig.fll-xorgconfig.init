@@ -168,11 +168,6 @@ xserver_has_xrandr() {
 		radeonhd)
 			return 0
 			;;
-		vboxvideo)
-			# not really xrandr supported, but lets allow the guest extensions
-			# to operate freely without inhibition of explicit modes/modelines
-			return 0
-			;;
 		*)
 			return 1
 			;;
@@ -277,6 +272,10 @@ do_start() {
 			XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
 			# ...and mouse
 			XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
+			# disable monitor probe
+			XNOXRESPROBE="1"
+			# disable modelines
+			XNOMODELINES="1"
 		fi
 	fi
 
@@ -324,10 +323,6 @@ do_start() {
 		#XCFG_OPTS="${XCFG_OPTS} --boardname '${XBOARDNAME}'"
 	fi
 	
-	log_daemon_msg "${B}${NAME}${N}"
-	log_action_begin_msg " ${G}detecting ${Y}monitor${G} settings${N}"
-	log_end_msg 0
-
 	if [ -z "${XMODULE}" ] || xserver_has_xrandr "${XMODULE}" "${XDEVICE}"; then
 		# failed to identify driver or driver is randr1.2 aware
 		# let the xserver try its best to do the right thing
@@ -346,14 +341,16 @@ do_start() {
 			XCFG_OPTS="${XCFG_OPTS} --rate '${XRATE}'"
 		fi
 	else
-		log_progress_msg "${G}xresprobe ${Y}${XMODULE}${G}:${N}"
+		log_daemon_msg "${B}${NAME}${N}"
+		if [ "${XNOXRESPROBE}" ]; then
+			log_action_begin_msg " ${G}default ${Y}monitor${G} settings${N}"
+		else
+			log_action_begin_msg " ${G}detecting ${Y}monitor${G} settings${N}"
+		fi
+		
 		# legacy style config, we need to probe for optimal X settings
 		#     XID XRES XHFREQ XVFREQ XDISPTYPE
 		eval $(x_res_probe ${XMODULE})
-
-		if [ "${XNOXRESPROBE}" ]; then
-			log_progress_msg "${G}skipping probe${N}"
-		fi
 
 		# probed
 		if [ "${XID}" ]; then

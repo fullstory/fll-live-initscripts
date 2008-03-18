@@ -7,8 +7,6 @@ fll-live-initscripts (3.0.9) UNRELEASED; urgency=low
       include the device section in xorg.conf, let the server do the work. In
       this case, also do not include Modelines, Modes or frequencies (randr1.2
       like)
-    - handle vboxvideo as though it supports randr1.2, don't inhibit the guest
-      addition with Modes, Modelines or frequencies
     - do not write the driver, busid or boardname to the default device
       section (except for vboxvideo, cheatcode or nv override). Allow the
       xserver to use the same data we hijacked for early detection, to do
@@ -18,8 +16,9 @@ fll-live-initscripts (3.0.9) UNRELEASED; urgency=low
     - overhaul nv override logic, add nv_overridable() function to determine
       if we should force nv based on board description + regular expression
     - update contrib/src/nv_driver.c for new G80 pci ids
+    - cleanup output when detection monitor settings via probe
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 19 Mar 2008 00:31:30 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 19 Mar 2008 02:09:11 +1000
 
 fll-live-initscripts (3.0.8) unstable; urgency=low
 
