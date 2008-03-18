@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.9~kelmo3) unstable; urgency=low
+fll-live-initscripts (3.0.9) UNRELEASED; urgency=low
 
   * fll_xserver_discover:
     - return an empty XMODULE string when no driver was detected in ids lists
@@ -21,7 +21,7 @@ fll-live-initscripts (3.0.9~kelmo3) unstable; urgency=low
     - update contrib/src/nv_driver.c for new G80 pci ids
     - cleanup output when detection monitor settings via probe
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 19 Mar 2008 03:09:19 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 19 Mar 2008 03:18:10 +1000
 
 fll-live-initscripts (3.0.8) unstable; urgency=low
 
