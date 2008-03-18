@@ -236,6 +236,7 @@ do_start() {
 	if [ "${XVENDOR}" = "10de" ] && [ "${XMODULE}" = "vesa" ]; then
 		if echo "${XBOARDNAME}" | egrep -q -i 'nvidia\>.*\<[4-7][0-9]{3}'; then
 			XMODULE="nv"
+			XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
 		fi
 	fi
 
@@ -243,8 +244,10 @@ do_start() {
 	if [ "${XVENDOR}" = "80ee" ] && [ "${XDEVICE}" = "beef" ]; then
 		# check for virtualbox kernel support
 		if [ -d /sys/module/vboxadd ]; then
+			# override video
 			XMODULE="vboxvideo"
-			# override mouse detction
+			XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
+			# ...and mouse
 			XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 		fi
 	fi
@@ -265,7 +268,7 @@ do_start() {
 		XMODULE="${XNEWMODULE}"
 	elif [ "${XMODULE}" ]; then
 		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
-		XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
+		#XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
 
 		# turn composite on for modules that support it well
 		case "${XMODULE}" in
@@ -281,7 +284,7 @@ do_start() {
 
 	if [ "${XBUSID}" ]; then
 		log_progress_msg "${G}busid: ${Y}${XBUSID}${N}"
-		XCFG_OPTS="${XCFG_OPTS} --busid '${XBUSID}'"
+		#XCFG_OPTS="${XCFG_OPTS} --busid '${XBUSID}'"
 	fi
 
 	log_end_msg 0
@@ -290,7 +293,7 @@ do_start() {
 		log_daemon_msg "${B}${NAME}${N}"
 		log_progress_msg "${G}device: ${Y}${XBOARDNAME}${N}"
 		log_end_msg 0
-		XCFG_OPTS="${XCFG_OPTS} --boardname '${XBOARDNAME}'"
+		#XCFG_OPTS="${XCFG_OPTS} --boardname '${XBOARDNAME}'"
 	fi
 	
 	log_daemon_msg "${B}${NAME}${N}"

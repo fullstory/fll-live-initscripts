@@ -529,7 +529,7 @@ my @serverflags  = get_template('serverflags');
 my @keyboard     = get_template('inputdevice_keyboard');
 my @input;       # template(s) handled below
 my @monitor      = get_template('monitor');
-my @device       = $x{'driver'} ? get_template('device') : undef;
+my @device       = get_template('device');
 my @screen       = get_template('screen');
 my @extensions   = get_template('extensions');
 
