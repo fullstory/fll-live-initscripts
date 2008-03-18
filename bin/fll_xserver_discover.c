@@ -20,6 +20,20 @@
 
 struct pci_access *pacc;
 
+int ids_file(const struct dirent *entry)
+{
+	char *ptr;
+
+	if (entry->d_name[0] == '.')
+		return 0;
+
+	ptr = rindex(entry->d_name, '.');
+	if (ptr && strcmp(ptr, ".ids") == 0)
+		return 1;		
+
+	return 0;
+}
+
 /*
  * These device id textual lists will be exported for a limited time only.
  * Eventually the Xorg drivers will export symbols correlating to supported
@@ -27,26 +41,24 @@ struct pci_access *pacc;
  */
 char *lookup_xorg_dvr_for(const char *string, int debug)
 {
+	struct dirent **ids;
+	int num, n;
+
 	char *driver = "";
 	char *ptr;
-	struct dirent *entry;
 
-	/* open dir containing pciids */
-	DIR *dir;
-	dir = opendir(XSERVER_PCIIDS_DIR);
-	if (!dir)
+	num = scandir(XSERVER_PCIIDS_DIR, &ids, ids_file, alphasort);
+	if (num <= 0)
 		return driver;
 
 	/* read each pciid list */
-	while ((entry = readdir(dir))) {
-		if (entry->d_name[0] == '.')
-			continue;
-
+	for (n = 0; n < num; n++) {
 		char filename[256];
 		char line[10];
 
 		snprintf(filename, sizeof(filename),
-		         "%s%s", XSERVER_PCIIDS_DIR, entry->d_name);
+		         "%s%s", XSERVER_PCIIDS_DIR, ids[n]->d_name);
+
 		if (debug)
 			printf("I: looking for %s in %s\n", string, filename);
 
@@ -59,7 +71,7 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 				printf("%s: %s", filename, line);
 			if (strncasecmp(line, string, strlen(string)) == 0) {
 				/* found string in $driver.ids */
-				driver = entry->d_name;
+				driver = ids[n]->d_name;
 				if(debug)
 					printf("I: found %s in %s\n", string, driver);
 
@@ -72,17 +84,20 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 			}
 		}
 		fclose(file);
+		free(ids[n]);
 
 		if (strlen(driver) > 0 && !debug)
 			break;
 	}
 
+	free(ids);
 	return driver;
 }
 
-void xdisplay(struct pci_dev *dev, int debug) {
+void xdisplay(struct pci_dev *dev, int debug)
+{
 	char devbuf[128];
-	char str[9];
+	char str[10];
 
 	if (debug)
 		printf("%02x:%02x.%d vendor=%04x device=%04x class=%04x %s\n",

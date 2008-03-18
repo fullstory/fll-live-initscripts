@@ -1,7 +1,10 @@
-fll-live-initscripts (3.0.9) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.9~kelmo3) unstable; urgency=low
 
   * fll_xserver_discover:
     - return an empty XMODULE string when no driver was detected in ids lists
+    - use the GNU extension, scandir(3), when searching
+      /usr/share/xserver-xorg/pci/ ids lists, it provides convenience
+      functions that are very useful
   * fll_xorgconfig:
     - no longer default to 'vesa' driver, if no driver is given, simply do not
       include the device section in xorg.conf, let the server do the work. In
@@ -18,7 +21,7 @@ fll-live-initscripts (3.0.9) UNRELEASED; urgency=low
     - update contrib/src/nv_driver.c for new G80 pci ids
     - cleanup output when detection monitor settings via probe
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 19 Mar 2008 02:09:11 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 19 Mar 2008 03:09:19 +1000
 
 fll-live-initscripts (3.0.8) unstable; urgency=low
 
