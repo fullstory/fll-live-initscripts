@@ -168,6 +168,11 @@ xserver_has_xrandr() {
 		radeonhd)
 			return 0
 			;;
+		vboxvideo)
+			# not really xrandr supported, but lets allow the guest extensions
+			# to operate freely without inhibition of explicit modes/modelines
+			return 0
+			;;
 		*)
 			return 1
 			;;
@@ -242,10 +247,6 @@ do_start() {
 			# override mouse detction
 			XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 		fi
-		# omit modeline library
-		XCFG_OPTS="${XCFG_OPTS} --no-modelines"
-		# disable x_res_probe()
-		XNOXRESPROBE="1"
 	fi
 
 	# disable guest extensions support initscript
@@ -298,9 +299,9 @@ do_start() {
 
 	log_daemon_msg "${B}${NAME}${N}"
 
-	if xserver_has_xrandr "${XMODULE}" "${XDEVICE}"; then
-		log_progress_msg "${G}driver has ${Y}RandR 1.2${G} support${N}"
-		# xrandr aware, we don't have to probe monitor settings :)
+	if [ -z "${XMODULE}" ] || xserver_has_xrandr "${XMODULE}" "${XDEVICE}"; then
+		# failed to identify driver or driver is randr1.2 aware
+		# let the xserver try its best to do the right thing
 		XCFG_OPTS="${XCFG_OPTS} --xrandr"
 		
 		if [ "${XMODES}" ]; then

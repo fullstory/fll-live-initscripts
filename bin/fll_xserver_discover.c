@@ -28,7 +28,7 @@ struct pci_access *pacc;
 char *lookup_xorg_dvr_for(const char *string, int debug)
 {
 	/* vesa is default driver */
-	char *driver = "vesa";
+	char *driver = "";
 	char *ptr;
 	struct dirent *entry;
 
@@ -36,7 +36,7 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 	DIR *dir;
 	dir = opendir(XSERVER_PCIIDS_DIR);
 	if (!dir)
-		return 0;
+		return driver;
 
 	/* read each pciid list */
 	while ((entry = readdir(dir))) {
@@ -74,7 +74,7 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 		}
 		fclose(file);
 
-		if (strncasecmp("vesa", driver, strlen(driver)) && !debug)
+		if (strlen(driver) > 0 && !debug)
 			break;
 	}
 
@@ -118,8 +118,8 @@ void xdisplay(struct pci_dev *dev, int debug) {
 }
 
 /*
- * Simple adaptation of example.c from pciutils. Find first VGA class device
- * and export some information about the device that a shell script can source.
+ * Simple adaptation of example.c from pciutils. Find all VGA class devices
+ * and export some information about each device that a shell script can source.
  */
 int main(int argc, char *argv[])
 {

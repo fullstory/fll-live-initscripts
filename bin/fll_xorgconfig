@@ -57,16 +57,15 @@ my %x = (
 	'templates' => \$xorg_tmpl,
 	'verbose'   => \$verbosity,
 
-	# xorg driver
-	'driver'     => 'vesa',
+	# screen
 	'colordepth' => '24',
 
 	# monitor
 	'modes'       => '1024x768 800x600 640x480',
 	'modelines'   => 1,
 	'modelname'   => 'Default Monitor',
-	'horizsync'   => '28.0 - 96.0',
-	'vertrefresh' => '50.0 - 75.0',
+	'horizsync'   => '28-96',
+	'vertrefresh' => '50-75',
 
 	# keyboard
 	'xkblayout'  => 'us',
@@ -530,7 +529,7 @@ my @serverflags  = get_template('serverflags');
 my @keyboard     = get_template('inputdevice_keyboard');
 my @input;       # template(s) handled below
 my @monitor      = get_template('monitor');
-my @device       = get_template('device');
+my @device       = $x{'driver'} ? get_template('device') : undef;
 my @screen       = get_template('screen');
 my @extensions   = get_template('extensions');
 
@@ -655,7 +654,7 @@ $x_o->flock;
 ###########################################################
 # post-process xorg.conf, substitute markers
 $n = 0;
-XCONF: while ($x[$n]) {
+XCONF: while (defined $x[$n]) {
 	my $line = \$x[$n];
 	dbg "$n: " . ${ $line };
 

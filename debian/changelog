@@ -1,8 +1,16 @@
 fll-live-initscripts (3.0.9) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xserver_discover:
+    - return an empty XMODULE string when no driver was detected in ids lists
+  * fll_xorgconfig:
+    - no longer default to 'vesa' driver, if no driver is given, simply do not
+      include the device section in xorg.conf, let the server do the work. In
+      this case, also do not include Modelines, Modes or frequencies (randr1.2
+      like)
+    - handle vboxvideo as though it supports randr1.2, don't inhibit the guest
+      addition with Modes, Modelines or frequencies
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 18 Mar 2008 04:10:28 +0100
+ -- Kel Modderman <kel@otaku42.de>  Tue, 18 Mar 2008 16:25:19 +1000
 
 fll-live-initscripts (3.0.8) unstable; urgency=low
 
