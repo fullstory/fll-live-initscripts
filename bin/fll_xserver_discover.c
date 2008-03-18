@@ -27,7 +27,6 @@ struct pci_access *pacc;
  */
 char *lookup_xorg_dvr_for(const char *string, int debug)
 {
-	/* vesa is default driver */
 	char *driver = "";
 	char *ptr;
 	struct dirent *entry;
