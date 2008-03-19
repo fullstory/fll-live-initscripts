@@ -1,8 +1,13 @@
 fll-live-initscripts (3.0.10) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - write a Device section to xorg.conf containing driver, busid, boardname
+      again. Omitting it seems to work fine, but for an upcoming release we
+      should try to avoid collateral userspace damage
+  * fll_xserver_discover:
+    - tiny debug usage cleanup
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 19 Mar 2008 00:47:05 +0100
+ -- Kel Modderman <kel@otaku42.de>  Wed, 19 Mar 2008 13:53:22 +1000
 
 fll-live-initscripts (3.0.9) unstable; urgency=low
 

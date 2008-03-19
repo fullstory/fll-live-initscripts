@@ -257,7 +257,7 @@ do_start() {
 				# whether or not to force nv as driver
 				if nv_overridable "${XBOARDNAME}"; then
 					XMODULE="nv"
-					XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
+					#XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
 				fi
 				;;
 		esac
@@ -269,7 +269,7 @@ do_start() {
 		if [ -d /sys/module/vboxadd ]; then
 			# override video
 			XMODULE="vboxvideo"
-			XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
+			#XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
 			# ...and mouse
 			XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 			# disable monitor probe
@@ -295,7 +295,7 @@ do_start() {
 		XMODULE="${XNEWMODULE}"
 	elif [ "${XMODULE}" ]; then
 		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
-		#XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
+		XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
 
 		# turn composite on for modules that support it well
 		case "${XMODULE}" in
@@ -311,7 +311,7 @@ do_start() {
 
 	if [ "${XBUSID}" ]; then
 		log_progress_msg "${G}busid: ${Y}${XBUSID}${N}"
-		#XCFG_OPTS="${XCFG_OPTS} --busid '${XBUSID}'"
+		XCFG_OPTS="${XCFG_OPTS} --busid '${XBUSID}'"
 	fi
 
 	log_end_msg 0
@@ -320,7 +320,7 @@ do_start() {
 		log_daemon_msg "${B}${NAME}${N}"
 		log_progress_msg "${G}device: ${Y}${XBOARDNAME}${N}"
 		log_end_msg 0
-		#XCFG_OPTS="${XCFG_OPTS} --boardname '${XBOARDNAME}'"
+		XCFG_OPTS="${XCFG_OPTS} --boardname '${XBOARDNAME}'"
 	fi
 	
 	if [ -z "${XMODULE}" ] || xserver_has_xrandr "${XMODULE}" "${XDEVICE}"; then

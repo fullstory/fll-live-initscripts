@@ -67,7 +67,7 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 		if (!file)
 			continue;
 		while (fgets(line, sizeof(line), file) != NULL) {
-			if (debug && debug > 1)
+			if (debug > 1)
 				printf("%s: %s", filename, line);
 			if (strncasecmp(line, string, strlen(string)) == 0) {
 				/* found string in $driver.ids */
