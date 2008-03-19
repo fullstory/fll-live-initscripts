@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.10) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.10) unstable; urgency=low
 
   * fll-xorgconfig:
     - write a Device section to xorg.conf containing driver, busid, boardname
