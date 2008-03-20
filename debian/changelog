@@ -10,8 +10,10 @@ fll-live-initscripts (3.0.11) UNRELEASED; urgency=low
       removal command with fll_analyze_initscripts
   * fll-xdm:
     - tiny cleanup of bits using eval on a subshell output
+    - add insert_initscript() as fallback function for when start and stop
+      sequence numbers are not returned by fll_analyze_initscripts
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 20 Mar 2008 19:32:50 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 20 Mar 2008 19:38:09 +1000
 
 fll-live-initscripts (3.0.10) unstable; urgency=low
 
