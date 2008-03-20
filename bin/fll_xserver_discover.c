@@ -44,17 +44,19 @@ int ids_file(const struct dirent *entry)
  * fashion, giving or taking priority away from select drivers, falling back
  * to versionsort(A, B).
  *
- * Use RadeonHD as a last resort, giving priority to the radeon driver.
+ * Use the ati driver as a last resort, allow devices to be claimed by
+ * radeonhd (R500+), r128 and mach64 drivers first.
  * http://www.phoronix.com/scan.php?page=article&item=radeon_vs_radeonhd&num=1
+ * http://bgoglin.livejournal.com/15162.html
  */
 int driver_prio(const void *A, const void *B)
 {
 	const char *a = (*(const struct dirent **)A)->d_name;
 	const char *b = (*(const struct dirent **)B)->d_name;
 
-	if (strncmp("radeonhd", a, 7) == 0)
+	if (strncmp("ati", a, 3) == 0)
 		return 1;
-	if (strncmp("radeonhd", b, 7) == 0)
+	if (strncmp("ati", b, 3) == 0)
 		return -1;
 
 	return versionsort(A, B);

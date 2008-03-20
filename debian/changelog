@@ -3,6 +3,10 @@ fll-live-initscripts (3.0.11) UNRELEASED; urgency=low
   * fll_xserver_discover:
     - add driver_prio() as compar() function for scanning of pci.ids dir, give
       radeonhd last preference, otherwise returning versionsort()
+    - give ati driver/wrapper last priority when searching pciids for device
+      string, this kills 2 birds in one stone. Firstly it allows radeonhd to
+      take preference for R500+ drivers, and ensures r128 and mach64 claim
+      devices that they support
   * fll-xorgconfig:
     - add AMD Geode GX/LX display driver fallback detection, this driver
       doesn't install a pciids list, and probably will not do so in future
@@ -13,7 +17,7 @@ fll-live-initscripts (3.0.11) UNRELEASED; urgency=low
     - add insert_initscript() as fallback function for when start and stop
       sequence numbers are not returned by fll_analyze_initscripts
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 20 Mar 2008 19:38:09 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 20 Mar 2008 23:16:30 +1000
 
 fll-live-initscripts (3.0.10) unstable; urgency=low
 
