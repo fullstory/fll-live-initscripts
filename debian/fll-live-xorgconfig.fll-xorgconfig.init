@@ -279,6 +279,30 @@ do_start() {
 		fi
 	fi
 
+	# AMD Geode GX/LX display driver
+	if [ -z "${XMODULE}" ] && [ -f /usr/lib/xorg/modules/drivers/amd_drv.so ]; then
+		case "${XVENDOR}" in
+			1078)	# Cyrix Corporation - 5530 Video [Kahlua]
+				if [ "${XDEVICE}" = "0104" ]; then
+					XMODULE="amd"
+				fi
+				;;
+			100b)	# National Semiconductor Corporation - Geode GX2 Graphics Processor
+				# National Semiconductor Corporation - SCx200 | SCx400
+				case "${XDEVICE}" in
+					0030|0504|0104)
+						XMODULE="amd"
+						;;
+				esac
+				;;
+			1022)	# Advanced Micro Devices [AMD] - Geode LX Video
+				if [ "${XDEVICE}" = "2081" ]; then
+					XMODULE="amd"
+				fi
+				;;
+		esac
+	fi
+
 	# disable guest extensions support initscript
 	if [ "${XMODULE}" != "vboxvideo" ] && [ -x /etc/init.d/virtualbox-ose-guest-utils ]; then
 		update-rc.d -f virtualbox-ose-guest-utils remove >/dev/null

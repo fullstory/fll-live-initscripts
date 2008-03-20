@@ -3,8 +3,11 @@ fll-live-initscripts (3.0.11) UNRELEASED; urgency=low
   * fll_xserver_discover:
     - add driver_prio() as compar() function for scanning of pci.ids dir, give
       radeonhd last preference, otherwise retruning versionsort()
+  * fll-xorgconfig:
+    - add AMD Geode GX/LX display driver fallback detection, this driver
+      doesn't install a pciids list, and probably will not do so in future
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 20 Mar 2008 17:24:54 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 20 Mar 2008 19:17:39 +1000
 
 fll-live-initscripts (3.0.10) unstable; urgency=low
 
