@@ -40,7 +40,7 @@ int ids_file(const struct dirent *entry)
 
 
 /*
- * Prioritize the order in which we choose a matching driver in a predicatble
+ * Prioritize the order in which we choose a matching driver in a predictable
  * fashion, giving or taking priority away from select drivers, falling back
  * to versionsort(A, B).
  *
@@ -121,6 +121,7 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 	return driver;
 }
 
+
 void xdisplay(struct pci_dev *dev, int debug)
 {
 	char devbuf[128];
@@ -160,7 +161,7 @@ void xdisplay(struct pci_dev *dev, int debug)
 
 /*
  * Simple adaptation of example.c from pciutils. Find all VGA class devices
- * and export some information about each device that a shell script can source.
+ * and export some information about each device that a shell script can use.
  */
 int main(int argc, char *argv[])
 {
