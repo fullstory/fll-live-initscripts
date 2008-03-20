@@ -263,22 +263,6 @@ do_start() {
 		esac
 	fi
 
-	# detected virtualbox emulated VGA hardware
-	if [ "${XVENDOR}" = "80ee" ] && [ "${XDEVICE}" = "beef" ]; then
-		# check for virtualbox kernel support
-		if [ -d /sys/module/vboxadd ]; then
-			# override video
-			XMODULE="vboxvideo"
-			#XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
-			# ...and mouse
-			XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
-			# disable monitor probe
-			XNOXRESPROBE="1"
-			# disable modelines
-			XNOMODELINES="1"
-		fi
-	fi
-
 	# AMD Geode GX/LX display driver
 	if [ -z "${XMODULE}" ] && [ -f /usr/lib/xorg/modules/drivers/amd_drv.so ]; then
 		case "${XVENDOR}" in
@@ -303,9 +287,26 @@ do_start() {
 		esac
 	fi
 
+	# detected virtualbox emulated VGA hardware
+	if [ "${XVENDOR}" = "80ee" ] && [ "${XDEVICE}" = "beef" ]; then
+		# check for virtualbox kernel support
+		if [ -d /sys/module/vboxadd ]; then
+			# override video
+			XMODULE="vboxvideo"
+			#XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
+			# ...and mouse
+			XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
+			# disable monitor probe
+			XNOXRESPROBE="1"
+			# disable modelines
+			XNOMODELINES="1"
+		fi
+	fi
+
 	# disable guest extensions support initscript
-	if [ "${XMODULE}" != "vboxvideo" ] && [ -x /etc/init.d/virtualbox-ose-guest-utils ]; then
-		update-rc.d -f virtualbox-ose-guest-utils remove >/dev/null
+	CMD=$(/usr/bin/fll_analyze_initscripts -f -r virtualbox-ose-guest-utils)
+	if [ "${XMODULE}" != "vboxvideo" ] && [ "${CMD}" ]; then
+		${CMD} >/dev/null
 	fi
 
 	log_end_msg 0

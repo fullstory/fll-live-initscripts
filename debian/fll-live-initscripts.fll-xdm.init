@@ -109,7 +109,7 @@ setup_kdm() {
 	fi
 	
 	unset START STOP
-	eval "`get_init_seq_num kdm ${FLL_MOUNTPOINT}`"
+	eval $(get_init_seq_num kdm ${FLL_MOUNTPOINT} 2>/dev/null)
 	if [ "${START}" ] && [ "${STOP}" ]; then
 		update-rc.d kdm start "${START}" 5 . stop "${STOP}" 0 1 2 3 4 6 . >/dev/null
 		return "${?}"
@@ -131,7 +131,7 @@ setup_gdm() {
 	fi
 	
 	unset START STOP
-	eval "`get_init_seq_num gdm ${FLL_MOUNTPOINT}`"
+	eval $(get_init_seq_num gdm ${FLL_MOUNTPOINT} 2>/dev/null)
 	if [ "${START}" ] && [ "${STOP}" ]; then
 		update-rc.d gdm start "${START}" 5 . stop "${STOP}" 0 1 2 3 4 6 . >/dev/null
 		return "${?}"
