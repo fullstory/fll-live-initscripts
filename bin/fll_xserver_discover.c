@@ -24,6 +24,10 @@
 
 struct pci_access *pacc;
 
+
+/*
+ * Only read files with suffix of '.ids'.
+ */
 int ids_file(const struct dirent *entry)
 {
 	char *ptr;
@@ -64,7 +68,9 @@ int driver_prio(const void *A, const void *B)
 
 
 /*
- * These device id textual lists will be exported for a limited time only.
+ * These device id plaintext lists will be exported for a limited time only
+ * by the debian xserver-xorg-driver packages.
+ *
  * Eventually the Xorg drivers will export symbols correlating to supported
  * devices for automatic configuration.
  */
@@ -124,6 +130,10 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 }
 
 
+/*
+ * Print out busid, vendor_id, device_id, board description and a driver
+ * for each device of VGA class.
+ */
 void xdisplay(struct pci_dev *dev, int debug)
 {
 	char devbuf[128];
