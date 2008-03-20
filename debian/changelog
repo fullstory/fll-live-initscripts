@@ -12,12 +12,13 @@ fll-live-initscripts (3.0.11) UNRELEASED; urgency=low
       doesn't install a pciids list, and probably will not do so in future
     - when removing virtualbox-ose-guest-utils service, look up initscript
       removal command with fll_analyze_initscripts
+    - default to vesa, remove this default in near future
   * fll-xdm:
     - tiny cleanup of bits using eval on a subshell output
     - add insert_initscript() as fallback function for when start and stop
       sequence numbers are not returned by fll_analyze_initscripts
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 20 Mar 2008 23:16:30 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 20 Mar 2008 23:57:31 +1000
 
 fll-live-initscripts (3.0.10) unstable; urgency=low
 
