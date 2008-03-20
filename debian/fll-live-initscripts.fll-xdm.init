@@ -132,8 +132,6 @@ setup_kdm() {
 		insert_initscript kdm "${FLL_MOUNTPOINT}"
 		return "${?}"
 	fi
-
-	return 1
 }
 
 setup_gdm() {
@@ -157,8 +155,6 @@ setup_gdm() {
 		insert_initscript gdm "${FLL_MOUNTPOINT}"
 		return "${?}"
 	fi
-
-	return 1
 }
 
 setup_x_cursor_theme() {
