@@ -6,6 +6,10 @@
  *	Can be freely distributed and used under the terms of the GNU GPLv2.
  */
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,6 +38,29 @@ int ids_file(const struct dirent *entry)
 	return 0;
 }
 
+
+/*
+ * Prioritize the order in which we choose a matching driver in a predicatble
+ * fashion, giving or taking priority away from select drivers, falling back
+ * to versionsort(A, B).
+ *
+ * Use RadeonHD as a last resort, giving priority to the radeon driver.
+ * http://www.phoronix.com/scan.php?page=article&item=radeon_vs_radeonhd&num=1
+ */
+int driver_prio(const void *A, const void *B)
+{
+	const char *a = (*(const struct dirent **)A)->d_name;
+	const char *b = (*(const struct dirent **)B)->d_name;
+
+	if (strncmp("radeonhd", a, 7) == 0)
+		return 1;
+	if (strncmp("radeonhd", b, 7) == 0)
+		return -1;
+
+	return versionsort(A, B);
+}
+
+
 /*
  * These device id textual lists will be exported for a limited time only.
  * Eventually the Xorg drivers will export symbols correlating to supported
@@ -47,7 +74,7 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 	char *driver = "";
 	char *ptr;
 
-	num = scandir(XSERVER_PCIIDS_DIR, &ids, ids_file, alphasort);
+	num = scandir(XSERVER_PCIIDS_DIR, &ids, ids_file, driver_prio);
 	if (num <= 0)
 		return driver;
 
