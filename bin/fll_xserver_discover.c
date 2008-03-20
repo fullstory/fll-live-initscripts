@@ -101,6 +101,7 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 		file = fopen(filename, "r");
 		if (!file)
 			continue;
+
 		while (fgets(line, sizeof(line), file) != NULL) {
 			if (debug > 1)
 				printf("%s: %s", filename, line);
@@ -115,9 +116,11 @@ char *lookup_xorg_dvr_for(const char *string, int debug)
 				*ptr = '\0';
 				ptr++;
 
-				break;
+				if (!debug)
+					break;
 			}
 		}
+
 		fclose(file);
 		free(ids[n]);
 
