@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.12) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.12) unstable; urgency=low
 
   * Update copyright statements in the initscripts, remove the copyright
     holder of the fullstory project, that entity doesn't exist in any formal
