@@ -1,3 +1,9 @@
+fll-live-initscripts (3.0.13) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 21 Mar 2008 14:47:09 +0100
+
 fll-live-initscripts (3.0.12) unstable; urgency=low
 
   * Update copyright statements in the initscripts, remove the copyright
