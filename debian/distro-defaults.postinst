@@ -65,7 +65,8 @@ EOF
 		do			
 			ucfr distro-defaults /etc/insserv/overrides/${dm}
 
-			if [ -s /etc/init.d/${dm} ] && [ "$(default_runlevel)" -eq 5 ]; then
+			runlevel=$(default_runlevel)
+			if [ -s /etc/init.d/${dm} ] && [ "${runlevel:-0}" -eq 5 ]; then
 				echo "Overriding LSB init defaults for ${dm}."
 				override_dm_lsb_defaults /etc/init.d/${dm} \
 					/etc/insserv/overrides/${dm}
