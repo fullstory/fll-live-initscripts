@@ -41,6 +41,12 @@ override_dm_lsb_defaults() {
 	echo '# Managed by the distro-defaults package.' >> ${2}
 }
 
+default_runlevel() {
+	if [ -r /etc/inittab ]; then
+		sed -n 's/^id:\([2-5]\):initdefault:.*/\1/p' /etc/inittab
+	fi
+}
+
 case "$1" in
 	configure)
 		ucfr distro-defaults /etc/default/distro
@@ -59,7 +65,7 @@ EOF
 		do			
 			ucfr distro-defaults /etc/insserv/overrides/${dm}
 
-			if [ -s /etc/init.d/${dm} ]; then
+			if [ -s /etc/init.d/${dm} ] && [ "$(default_runlevel)" -eq 5 ]; then
 				echo "Overriding LSB init defaults for ${dm}."
 				override_dm_lsb_defaults /etc/init.d/${dm} \
 					/etc/insserv/overrides/${dm}

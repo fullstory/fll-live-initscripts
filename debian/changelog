@@ -1,8 +1,9 @@
 fll-live-initscripts (3.0.12) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * distro-defaults:
+    - only override LSB defaults of kdm/gdm if inittab default runlevel is 5
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 21 Mar 2008 09:42:11 +0100
+ -- Kel Modderman <kel@otaku42.de>  Fri, 21 Mar 2008 22:21:35 +1000
 
 fll-live-initscripts (3.0.11) unstable; urgency=low
 
