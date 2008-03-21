@@ -1,9 +1,12 @@
 fll-live-initscripts (3.0.12) UNRELEASED; urgency=low
 
+  * Update copyright statements in the initscripts, remove the copyright
+    holder of the fullstory project, that entity doesn't exist in any formal
+    capacity.
   * distro-defaults:
     - only override LSB defaults of kdm/gdm if inittab default runlevel is 5
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 21 Mar 2008 22:21:35 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 21 Mar 2008 22:37:54 +1000
 
 fll-live-initscripts (3.0.11) unstable; urgency=low
 
