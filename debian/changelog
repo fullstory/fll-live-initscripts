@@ -1,8 +1,8 @@
 fll-live-initscripts (3.0.13) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Do not suggest hotkey-setup.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 21 Mar 2008 14:47:09 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 23 Mar 2008 23:19:07 +1000
 
 fll-live-initscripts (3.0.12) unstable; urgency=low
 
