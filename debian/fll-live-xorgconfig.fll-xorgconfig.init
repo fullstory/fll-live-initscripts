@@ -267,20 +267,20 @@ do_start() {
 		case "${XVENDOR}" in
 			1078)	# Cyrix Corporation - 5530 Video [Kahlua]
 				if [ "${XDEVICE}" = "0104" ]; then
-					XMODULE="amd"
+					XMODULE="geode"
 				fi
 				;;
 			100b)	# National Semiconductor Corporation - Geode GX2 Graphics Processor
 				# National Semiconductor Corporation - SCx200 | SCx400
 				case "${XDEVICE}" in
 					0030|0504|0104)
-						XMODULE="amd"
+						XMODULE="geode"
 						;;
 				esac
 				;;
 			1022)	# Advanced Micro Devices [AMD] - Geode LX Video
 				if [ "${XDEVICE}" = "2081" ]; then
-					XMODULE="amd"
+					XMODULE="geode"
 				fi
 				;;
 		esac

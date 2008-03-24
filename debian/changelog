@@ -1,8 +1,10 @@
 fll-live-initscripts (3.0.13) UNRELEASED; urgency=low
 
   * Do not suggest hotkey-setup.
+  * fll-xorgconfig:
+    - xf86-video-amd is transitioning its driver name to geode, adopt it early
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 23 Mar 2008 23:19:07 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 25 Mar 2008 08:31:14 +1000
 
 fll-live-initscripts (3.0.12) unstable; urgency=low
 
