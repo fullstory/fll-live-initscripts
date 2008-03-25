@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.13) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.13) unstable; urgency=low
 
   * Do not suggest hotkey-setup.
   * fll-xorgconfig:
