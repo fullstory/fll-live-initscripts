@@ -1,8 +1,9 @@
 fll-live-initscripts (3.0.14) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - accept vesa cheatcode to set xmodule to vesa
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 25 Mar 2008 01:32:55 +0100
+ -- Kel Modderman <kel@otaku42.de>  Wed, 26 Mar 2008 03:13:16 +1000
 
 fll-live-initscripts (3.0.13) unstable; urgency=low
 

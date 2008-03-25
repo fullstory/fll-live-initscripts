@@ -114,6 +114,9 @@ if [ -f /proc/cmdline ]; then
 			xvrefresh=*|vsync=*)
 				XVERTREFRESH="${param#*=}"
 				;;
+			vesa)
+				XNEWMODULE="vesa"
+				;;
 		esac
 	done
 fi
