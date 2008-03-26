@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.14) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.14) unstable; urgency=low
 
   * fll-xorgconfig:
     - accept vesa cheatcode to set xmodule to vesa
