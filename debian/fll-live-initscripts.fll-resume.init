@@ -48,11 +48,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-. /lib/fll/fll-init-cols
-
-###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then
@@ -69,7 +64,7 @@ if [ -f /proc/cmdline ]; then
 fi
 
 do_start() {
-	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}detecting ${Y}resume${G} partition${N}"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " detecting resume partition"
 	
 	local RESUME SWAPUUID
 
@@ -107,7 +102,7 @@ do_start() {
 
 	if echo "${SWAPUUID}" | egrep -q '^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$'; then
 		echo "RESUME=UUID=${SWAPUUID}" > /etc/initramfs-tools/conf.d/resume
-		log_action_end_msg 0 "${Y}$(findfs UUID=${SWAPUUID} | sed 's%^/dev/%%')${N}"
+		log_action_end_msg 0 "$(findfs UUID=${SWAPUUID} | sed 's%^/dev/%%')"
 	else
 		log_action_end_msg 0 none
 	fi

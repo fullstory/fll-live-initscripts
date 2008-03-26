@@ -48,11 +48,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-. /lib/fll/fll-init-cols
-
-###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then
@@ -83,7 +78,7 @@ do_start() {
 	FLL_LIVE_USER_GROUP=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 4)
 	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
 
-	log_daemon_msg "${B}${NAME}${N}"
+	log_daemon_msg "${NAME}"
 
 	case "${DESKTOP}" in 
 		kde)
@@ -102,7 +97,7 @@ do_start() {
 			WM="/usr/bin/icewm"
 			;;
 		*)
-			log_action_msg " ${R}desktop '${Y}${DESKTOP}${G}' is not available${N}"
+			log_action_msg " desktop '${DESKTOP}' is not available"
 			log_end_msg 0
 			return 1
 			;;
@@ -127,7 +122,7 @@ do_start() {
 				;;
 		esac
 	
-		log_action_begin_msg " ${G}setting up window manager '${Y}${WM}${G}'${N}"
+		log_action_begin_msg " setting up window manager '${WM}'"
 		echo "[Desktop]"		>  ${FLL_LIVE_USER_HOME}/.dmrc
 		echo "Session=${XSESSION}"	>> ${FLL_LIVE_USER_HOME}/.dmrc
 		chown "${FLL_LIVE_USER}:${FLL_LIVE_USER_GROUP}" "${FLL_LIVE_USER_HOME}/.dmrc"
@@ -136,7 +131,7 @@ do_start() {
 		log_end_msg "${?}"
 		return 0
 	else
-		log_action_msg " ${R}desktop '${Y}${DESKTOP}${G}' is not available${N}"
+		log_action_msg " desktop '${DESKTOP}' is not available"
 		log_end_msg 0
 		return 1
 	fi

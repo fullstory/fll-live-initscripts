@@ -55,11 +55,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-. /lib/fll/fll-init-cols
-
-###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then
@@ -684,7 +679,7 @@ set_timezone()
 	# configure timezone, fallback to UTC
 	###
 	[ -f "/usr/share/zoneinfo/${TZ}" ] || TZ="Etc/UTC"
-	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring timezone data for '${Y}${TZ}${G}'${N}"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring timezone data for '${TZ}'"
 	echo "${TZ}" > /etc/timezone
 	rm -f /etc/localtime && cp -f "/usr/share/zoneinfo/${TZ}" /etc/localtime
 	log_end_msg "${?}"
@@ -711,7 +706,7 @@ set_locale()
 	###
 	# generate /etc/default/locale
 	###
-	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring locales for '${Y}${LANG}${G}'${N}"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring locales for '${LANG}'"
 	echo "locales locales/default_environment_locale select ${LANG}" | /usr/bin/debconf-set-selections
 	update-locale "LANG=${LANG}"
 	log_end_msg "${?}"
@@ -719,7 +714,7 @@ set_locale()
 	###
 	# select default locale and configure console-data via debconf
 	###
-	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring console data for '${Y}${CD_FULL}${G}'${N}"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring console data for '${CD_FULL}'"
 	for msg in	"console-data console-data/keymap/policy select Select keymap from arch list" \
 			"console-data console-data/keymap/family select ${CD_FAMILY}" \
 			"console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX}" \

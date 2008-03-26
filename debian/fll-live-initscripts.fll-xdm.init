@@ -48,11 +48,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-. /lib/fll/fll-init-cols
-
-###
 # debian's default-display-manager control file
 ###
 DEFAULT_DISPLAY_MANAGER_FILE=/etc/X11/default-display-manager
@@ -166,14 +161,14 @@ case "${1}" in
 	start)
 		# the desktop manager processed _last_ will trump all (default: kdm)
 		if [ -x /usr/sbin/gdm ]; then
-			log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring ${Y}gdm${N}"
+			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm"
 			# /usr/bin/gdm is a bogus path required by /etc/init.d/gdm, see debian bug #452344
 			setup_gdm && echo /usr/bin/gdm > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
 
 		if [ -x /usr/bin/kdm ]; then
-			log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}configuring ${Y}kdm${N}"
+			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring kdm"
 			setup_kdm && echo /usr/bin/kdm > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi

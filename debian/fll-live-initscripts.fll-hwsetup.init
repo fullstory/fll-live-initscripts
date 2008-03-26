@@ -48,11 +48,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-. /lib/fll/fll-init-cols
-
-###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then
@@ -84,7 +79,7 @@ do_start() {
 	###
 	BLUETOOTH=$(hwinfo --bluetooth --short | sed -n '/^[a-z]\+:/!s/[ \t]\+//p' | head -n1)
 	if [ "${BLUETOOTH}" ]; then
-		log_daemon_msg "${B}${NAME}${N}" "${G}detected ${Y}bluetooth${N}"
+		log_daemon_msg "${NAME}" "detected bluetooth"
 		log_end_msg 0
 	else
 		update-rc.d -f bluetooth remove >/dev/null 2>&1
@@ -95,7 +90,7 @@ do_start() {
 	###
 	PRINTER=$(hwinfo --printer --short | sed -n '/^[a-z]\+:/!s/[ \t]\+//p' | head -n1)
 	if [ "${PRINTER}" ]; then
-		log_daemon_msg "${B}${NAME}${N}" "${G}printer is '${Y}${PRINTER}${G}'${N}"
+		log_daemon_msg "${NAME}" "printer is '${PRINTER}'"
 		log_end_msg 0
 	else
 		update-rc.d -f cupsys remove >/dev/null 2>&1

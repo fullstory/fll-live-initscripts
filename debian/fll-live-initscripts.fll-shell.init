@@ -49,11 +49,6 @@ fi
 #. /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-#. /lib/fll/fll-init-cols
-
-###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then

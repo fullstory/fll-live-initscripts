@@ -53,11 +53,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-. /lib/fll/fll-init-cols
-
-###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then
@@ -211,8 +206,8 @@ nv_overridable() {
 }
 
 do_start() {
-	log_daemon_msg "${B}${NAME}${N}"
-	log_action_begin_msg " ${G}detecting ${Y}video${G} hardware${N}"
+	log_daemon_msg "${NAME}"
+	log_action_begin_msg " detecting video hardware"
 	
 	# fll_xorgconfig option array
 	local XCFG_OPTS
@@ -313,15 +308,15 @@ do_start() {
 
 	log_end_msg 0
 	
-	log_daemon_msg "${B}${NAME}${N}"
+	log_daemon_msg "${NAME}"
 
 	if [ "${XNEWMODULE}" ]; then
 		# user override
-		log_progress_msg "${G}driver(*): ${Y}${XNEWMODULE}${N}"
+		log_progress_msg "driver(*): ${XNEWMODULE}"
 		XCFG_OPTS="${XCFG_OPTS} --driver '${XNEWMODULE}'"
 		XMODULE="${XNEWMODULE}"
 	elif [ "${XMODULE}" ]; then
-		log_progress_msg "${G}driver: ${Y}${XMODULE}${N}"
+		log_progress_msg "driver: ${XMODULE}"
 		XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
 
 		# turn composite on for modules that support it well
@@ -333,19 +328,19 @@ do_start() {
 	fi
 
 	if [ "${XVENDOR}" ] && [ "${XDEVICE}" ]; then
-		log_progress_msg "${G}pciid: ${Y}${XVENDOR}:${XDEVICE}${N}"
+		log_progress_msg "pciid: ${XVENDOR}:${XDEVICE}"
 	fi
 
 	if [ "${XBUSID}" ]; then
-		log_progress_msg "${G}busid: ${Y}${XBUSID}${N}"
+		log_progress_msg "busid: ${XBUSID}"
 		XCFG_OPTS="${XCFG_OPTS} --busid '${XBUSID}'"
 	fi
 
 	log_end_msg 0
 	
 	if [ "${XBOARDNAME}" ]; then
-		log_daemon_msg "${B}${NAME}${N}"
-		log_progress_msg "${G}device: ${Y}${XBOARDNAME}${N}"
+		log_daemon_msg "${NAME}"
+		log_progress_msg "device: ${XBOARDNAME}"
 		log_end_msg 0
 		XCFG_OPTS="${XCFG_OPTS} --boardname '${XBOARDNAME}'"
 	fi
@@ -368,11 +363,11 @@ do_start() {
 			XCFG_OPTS="${XCFG_OPTS} --rate '${XRATE}'"
 		fi
 	else
-		log_daemon_msg "${B}${NAME}${N}"
+		log_daemon_msg "${NAME}"
 		if [ "${XNOXRESPROBE}" ]; then
-			log_action_begin_msg " ${G}default ${Y}monitor${G} settings${N}"
+			log_action_begin_msg " default monitor settings"
 		else
-			log_action_begin_msg " ${G}detecting ${Y}monitor${G} settings${N}"
+			log_action_begin_msg " detecting monitor settings"
 		fi
 		
 		# legacy style config, we need to probe for optimal X settings
@@ -381,17 +376,17 @@ do_start() {
 
 		# probed
 		if [ "${XID}" ]; then
-			# too long: log_progress_msg "${G}id: ${Y}${XID}${N}"
+			# too long: log_progress_msg "id: ${XID}"
 			XCFG_OPTS="${XCFG_OPTS} --modelname '${XID}'"
 		fi
 		
 		if [ "${XMODES}" ]; then
 			# cheatcode
-			log_progress_msg "${G}res(*): ${Y}${XMODES}${N}"
+			log_progress_msg "res(*): ${XMODES}"
 			XCFG_OPTS="${XCFG_OPTS} --modes '${XMODES}'"
 		elif [ "${XRES}" ]; then
 			# just announce the highest res detected
-			log_progress_msg "${G}res: ${Y}${XRES%%\ *}${N}"
+			log_progress_msg "res: ${XRES%%\ *}"
 			# probed
 			XCFG_OPTS="${XCFG_OPTS} --modes '${XRES}'"
 		fi
@@ -405,10 +400,10 @@ do_start() {
 				XHORIZSYNC_MIN="28"
 			fi
 
-			log_progress_msg "${G}hfreq(*): ${Y}${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX} kHz${N}"
+			log_progress_msg "hfreq(*): ${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX} kHz"
 			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX}'"
 		elif [ "${XHFREQ}" ]; then
-			log_progress_msg "${G}hfreq: ${Y}${XHFREQ} kHz${N}"
+			log_progress_msg "hfreq: ${XHFREQ} kHz"
 			# probed
 			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHFREQ}'"
 		fi
@@ -427,7 +422,7 @@ do_start() {
 				XVERTREFRESH_MIN="50"
 			fi
 
-			log_progress_msg "${G}vfreq(*): ${Y}${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz${N}"
+			log_progress_msg "vfreq(*): ${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz"
 			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'"
 		elif [ "${XVFREQ}" ]; then
 			# probed
@@ -437,9 +432,9 @@ do_start() {
 			if [ "${XVERTREFRESH_MAX}" -ge "85" ]; then
 				# raise minimum vertical refresh threshold
 				XVERTREFRESH_MIN="73"
-				log_progress_msg "${G}vfreq(+): ${Y}${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz${N}"
+				log_progress_msg "vfreq(+): ${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz"
 			else
-				log_progress_msg "${G}vfreq: ${Y}${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz${N}"
+				log_progress_msg "vfreq: ${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz"
 			fi
 
 			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'"

@@ -1,8 +1,9 @@
 fll-live-initscripts (3.0.15) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * No more coloured output by the startup fll initscripts. Remove
+    lib/fll-init-cols.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 26 Mar 2008 01:27:03 +0100
+ -- Kel Modderman <kel@otaku42.de>  Wed, 26 Mar 2008 17:02:42 +1000
 
 fll-live-initscripts (3.0.14) unstable; urgency=low
 

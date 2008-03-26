@@ -50,11 +50,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-. /lib/fll/fll-init-cols
-
-###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then
@@ -84,7 +79,7 @@ do_start() {
 	# custom hostname given on cmdline
 	###
 	if [ "${CUSTOM_HOSTNAME}" ]; then
-		log_daemon_msg "${B}${NAME}${N}" "${G}setting hostame of '${Y}${CUSTOM_HOSTNAME}${G}'${N}"
+		log_daemon_msg "${NAME}" "setting hostame of '${CUSTOM_HOSTNAME}'"
 		echo "${CUSTOM_HOSTNAME}" > /etc/hostname
 		echo "${CUSTOM_HOSTNAME}" > /etc/mailname
 		# update /etc/hosts
@@ -97,7 +92,7 @@ do_start() {
 	# honour blacklist= cheatcode to disable naughty modules before udev
 	###
 	if [ "${BLACKLIST}" ]; then
-		log_daemon_msg "${B}${NAME}${N}" "${G}blacklisting modules${N}"
+		log_daemon_msg "${NAME}" "blacklisting modules"
 		for module in ${BLACKLIST}; do
 			log_progress_msg "${module}"
 			if ! grep -s -q "^blacklist ${module}" /etc/modprobe.d/blacklist; then

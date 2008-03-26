@@ -50,11 +50,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-. /lib/fll/fll-init-cols
-
-###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then
@@ -153,7 +148,7 @@ ifplug_dhcp() {
 			
 		if [ "${?}" -eq 2 ]; then
 			# link beat detected
-			log_progress_msg "${Y}${1}${N}"
+			log_progress_msg "${1}"
 			write_dhcp_to_eni allow-hotplug "${1}"
 		else
 			# link beat not detected
@@ -178,8 +173,8 @@ do_start() {
 		return 0
 	fi
 	
-	log_daemon_msg "${B}${NAME}${N}"
-	log_action_begin_msg " ${G}probing for an ${Y}ethernet${G} link${N}"
+	log_daemon_msg "${NAME}"
+	log_action_begin_msg " probing for an ethernet link"
 	
 	for netdev in ${NETDEVICES}; do
 		# fork child process to do cable link test

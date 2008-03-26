@@ -53,11 +53,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences (N, R, G, Y, B, M, C, W)
-###
-. /lib/fll/fll-init-cols
-
-###
 # ensure this is clean variable
 ###
 NOSWAP=""
@@ -82,7 +77,7 @@ if [ -f /proc/cmdline ]; then
 fi
 
 do_start() {
-	log_daemon_msg "${B}${NAME}${N}"; log_action_begin_msg " ${G}generating ${Y}/etc/fstab${N}"
+	log_daemon_msg "${NAME}"; log_action_begin_msg " generating /etc/fstab"
 	/usr/sbin/fll_fshelper --quiet --write-fstab --make-mountpoints ${NOSWAP}
 	log_end_msg "${?}"
 }
