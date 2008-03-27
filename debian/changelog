@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.16) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.16) unstable; urgency=low
 
   * fll_xserver_discover:
     - constify the return of string containing driver name
