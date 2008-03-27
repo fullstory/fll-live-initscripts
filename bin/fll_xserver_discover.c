@@ -74,7 +74,7 @@ int driver_prio(const void *A, const void *B)
  * Eventually the Xorg drivers will export symbols correlating to supported
  * devices for automatic configuration.
  */
-char *lookup_xorg_dvr_for(const char *string, int debug)
+const char *lookup_xorg_dvr_for(const char *string, int debug)
 {
 	struct dirent **ids;
 	int num, n;
