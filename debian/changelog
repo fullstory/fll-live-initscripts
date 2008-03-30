@@ -1,3 +1,9 @@
+fll-live-initscripts (3.0.18) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 30 Mar 2008 01:24:13 +0100
+
 fll-live-initscripts (3.0.17) unstable; urgency=low
 
   * fll-reboot:
