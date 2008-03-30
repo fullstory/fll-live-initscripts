@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.17) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.17) unstable; urgency=low
 
   * fll-reboot:
     - copy the pop_livecd() function into do_stop()
