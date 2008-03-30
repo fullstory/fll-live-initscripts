@@ -704,28 +704,26 @@ set_timezone()
 set_locale()
 {
 	###
-	# generate /etc/default/locale
-	###
-	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring locales for '${LANG}'"
-	echo "locales locales/default_environment_locale select ${LANG}" | /usr/bin/debconf-set-selections
-	update-locale "LANG=${LANG}"
-	log_end_msg "${?}"
-
-	###
 	# select default locale and configure console-data via debconf
 	###
-	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring console data for '${CD_FULL}'"
-	for msg in	"console-data console-data/keymap/policy select Select keymap from arch list" \
-			"console-data console-data/keymap/family select ${CD_FAMILY}" \
-			"console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX}" \
-			"console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/variant select ${CD_VARIANT}" \
-			"console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/${CD_VARIANT_PATH}/keymap select ${CD_KEYMAP}" \
-			"console-data console-data/keymap/full select ${CD_FULL}"; do
-		echo "${msg}" | /usr/bin/debconf-set-selections
+	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring locales for '${LANG}'"
+
+	TMPSELECTIONS=$(mktemp -p /tmp fll-locales.XXXXX)
+	for msg in "locales locales/default_environment_locale select ${LANG}" \
+		   "console-data console-data/keymap/policy select Select keymap from arch list" \
+		   "console-data console-data/keymap/family select ${CD_FAMILY}" \
+		   "console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX}" \
+		   "console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/variant select ${CD_VARIANT}" \
+		   "console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/${CD_VARIANT_PATH}/keymap select ${CD_KEYMAP}" \
+		   "console-data console-data/keymap/full select ${CD_FULL}"; do
+		echo "${msg}" >> "${TMPSELECTIONS}"
 	done
+	debconf-set-selections < "${TMPSELECTIONS}"
+	rm -f "${TMPSELECTIONS}"
+
+	update-locale "LANG=${LANG}"
 	dpkg-reconfigure -fnoninteractive -pcritical --no-reload console-data >/dev/null 2>&1
 	log_end_msg "${?}"
-
 }
 
 localize_sources_list() {

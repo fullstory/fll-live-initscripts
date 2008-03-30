@@ -1,8 +1,10 @@
 fll-live-initscripts (3.0.18) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-locales:
+    - invoke debconf-set-selections only once, not 8 times, reading values
+      that are written to a temp file
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 30 Mar 2008 01:24:13 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 30 Mar 2008 10:32:22 +1000
 
 fll-live-initscripts (3.0.17) unstable; urgency=low
 
