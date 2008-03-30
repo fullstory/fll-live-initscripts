@@ -1,8 +1,12 @@
 fll-live-initscripts (3.0.17) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-reboot:
+    - copy the pop_livecd() function into do_stop()
+    - use stty to set sane defaults for /dev/console before prompting for
+      keyboard input
+    - don't bother to re-enable kernel printk's after ejecting media
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 27 Mar 2008 13:43:39 +0100
+ -- Kel Modderman <kel@otaku42.de>  Sun, 30 Mar 2008 10:04:53 +1000
 
 fll-live-initscripts (3.0.16) unstable; urgency=low
 

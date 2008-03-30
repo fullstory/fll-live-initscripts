@@ -355,10 +355,11 @@ copy_exec() {
 
 live_hack() {
 	mkdir -p ${DESTDIR}/bin
-	copy_exec /bin/umount		/bin
-	copy_exec /sbin/halt		/bin
-	copy_exec /sbin/reboot		/bin
-	copy_exec /usr/bin/eject	/bin
+	
+	# cache utilities required for the final stages of shutdown
+	for path in $(which umount) $(which halt) $(which reboot) $(which eject); do
+		copy_exec "${path}" /bin
+	done
 	
 	LD_LIBRARY_PATH="${DESTDIR}/lib"
 	if [ -e "${DESTDIR}/lib64" ]; then
@@ -379,29 +380,6 @@ live_hack() {
 	export BINDIR
 }
 
-pop_live_cd()
-{
-	if [ -z "${LIVE_CDROM}" ] || [ "${NOEJECT}" ]; then
-		return 0
-	fi
-
-	#
-	# disable kernel messages while ejecting cdrom (libata noise)
-	#
-	echo "0" > /proc/sys/kernel/printk
-	
-	if [ -b "${LIVE_CDROM}" ]; then
-		${BINDIR}eject -m -p ${LIVE_CDROM}
-	fi
-
-	echo "6" > /proc/sys/kernel/printk
-
-	if [ -z "${NOPROMPT}" ]; then
-		echo "${Y}Please remove CD, close cdrom drive and hit return.${N}" > /dev/console
-		read
-	fi
-}
-
 do_stop() {
 	local command message options runlevel
 
@@ -409,32 +387,45 @@ do_stop() {
 	runlevel="$(runlevel)"
 	runlevel="${runlevel#* }"
 
+	# set sane defaults for /dev/console
+	stty sane < /dev/console
+
 	# prepare binaries for post-umount of live media
 	live_hack
+
 	# umount the live media and other mount points
 	do_umount
-	
+
 	case "${runlevel}" in
 		0)
-			message="${G}System halted.${N}"
+			echo "${G}System halted.${N}" > /dev/console
 			command="halt"
 			options="-h -n -p -i -f"
 			;;
 		6)
-			message="${G}Preparing for reboot...${N}"
+			echo "${G}Preparing for reboot...${N}" > /dev/console
 			command="reboot"
 			options="-n -i -f"
 			;;
 		*)
-			echo "${0}: call this script as \"halt\" or \"reboot\" please!"
+			echo "${NAME}: attempted execution in invalid runlevel!"
 			exit 1
 			;;
 	esac
 
-	echo "${message}" > /dev/console
+	if [ -b "${LIVE_CDROM}" ] && [ -z "${NOEJECT}" ]; then
+		# disable kernel messages while ejecting cdrom (libata noise)
+		echo "0" > /proc/sys/kernel/printk
 
-	pop_live_cd
-	
+		${BINDIR}eject -m -p ${LIVE_CDROM}
+
+		if [ -z "${NOPROMPT}" ]; then
+			echo "${Y}Please remove CD, close cdrom drive then press enter.${N}" > /dev/console
+			read x < /dev/console
+		fi
+	fi
+
+	# shutdown/reboot	
 	exec ${BINDIR}${command} ${options} > /dev/console 2>&1 < /dev/console
 }
 
