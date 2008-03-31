@@ -1,8 +1,9 @@
 fll-live-initscripts (3.0.19) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-locales:
+    - use ftp.pt.debian.org mirror when lang=pt is selected
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 30 Mar 2008 01:54:59 +0100
+ -- Kel Modderman <kel@otaku42.de>  Mon, 31 Mar 2008 11:03:37 +1000
 
 fll-live-initscripts (3.0.18) unstable; urgency=low
 

@@ -318,7 +318,7 @@ case "${DEMO_CODE}" in
 		XKBLAYOUT="pt,us"
 		TZ="Europe/Lisbon"
 		CD_COUNTRY="Portugese"
-		MIRROR="ftp.es.debian.org"
+		MIRROR="ftp.pt.debian.org"
 		;;
 	ru)	### RU Russia kb:ru ###
 		KEYTABLE="ru"
