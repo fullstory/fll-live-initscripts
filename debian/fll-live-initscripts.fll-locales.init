@@ -106,36 +106,95 @@ fi
 # (good reference: http://www.debian.org/mirror/list)
 ###
 case "${LANG_CODE}" in
+#	ar)	LANG="es_AR.UTF-8" ;; # locale not generated
 	au)	LANG="en_AU.UTF-8" ;;
+	be)	LANG="be_BY.UTF-8" ;;
 	bg)	LANG="bg_BG.UTF-8" ;;
-	br)	LANG="pt_BR.UTF-8" ;;
+	br)
+		case "${DEMO_CODE}" in
+#			fr)	LANG="br_FR.UTF-8" ;; # locale not generated
+			*)	LANG="pt_BR.UTF-8" ;;
+		esac
+		;;
+#	ca)	LANG="en_CA.UTF-8" ;; # locale not generated
 	ch)	LANG="de_CH.UTF-8" ;;
+#	cl)	LANG="es_CL.UTF-8" ;; # locale not generated
 	cn)	LANG="zh_CN.UTF-8" ;;
+#	cy)	LANG="cy_GB.UTF-8" ;; # locale not generated
 	cz|cs)	LANG="cs_CZ.UTF-8" ;;
-	de)	LANG="de_DE.UTF-8" ;;
+	de)
+		case "${DEMO_CODE}" in
+			ch)	LANG="de_CH.UTF-8" ;;
+			*)	LANG="de_DE.UTF-8" ;;
+		esac
+		;;
 	dk|da)	LANG="da_DK.UTF-8" ;;
-	es)	LANG="es_ES.UTF-8" ;;
+	en)
+		case "${DEMO_CODE}" in
+			au)	LANG="en_AU.UTF-8" ;;
+#			ca)	LANG="en_CA.UTF-8" ;; # locale not generated
+			gb|uk)	LANG="en_GB.UTF-8" ;;
+			ie)	LANG="en_IE.UTF-8" ;;
+			*)	LANG="en_US.UTF-8" ;;
+		esac
+		;;
+	es)
+		case "${DEMO_CODE}" in
+#			ar)	LANG="es_AR.UTF-8" ;; # locale not generated
+#			cl)	LANG="es_CL.UTF-8" ;; # locale not generated
+			*)	LANG="es_ES.UTF-8" ;;
+		esac
+		;;
 	fi)	LANG="fi_FI.UTF-8" ;;
-	fr)	LANG="fr_FR.UTF-8" ;;
+	fr)
+		case "${DEMO_CODE}" in
+#			ca)	LANG="fr_CA.UTF-8" ;; # locale not generated
+			be)	LANG="fr_BE.UTF-8" ;;
+			*)	LANG="fr_FR.UTF-8" ;;
+		esac
+		;;
 	gr|el)	LANG="el_GR.UTF-8" ;;
 	gb|uk)	LANG="en_GB.UTF-8" ;;
 	il|he)	LANG="he_IL.UTF-8" ;;
 	hr) 	LANG="hr_HR.UTF-8" ;;
 	ie)	LANG="en_IE.UTF-8" ;;
 	ga)	LANG="ga_IE.UTF-8" ;;
+#	gd)	LANG="gd_GB.UTF-8" ;; # locale not generated
+#	gv)	LANG="gv_GB.UTF-8" ;; # locale not generated
+	hu)	LANG="hu_HU.UTF-8" ;;
 	it)	LANG="it_IT.UTF-8" ;;
 	jp|ja)	LANG="ja_JP.UTF-8" ;;
 	ko|kr)	LANG="ko_KR.UTF-8" ;;
-	nl)	LANG="nl_NL.UTF-8" ;;
+#	kw)	LANG="kw_GB.UTF-8" ;; # locale not generated
+	nb)	LANG="nb_NO.UTF-8" ;;
+	nl)
+		case "${DEMO_CODE}" in
+			be)	LANG="nl_BE.UTF-8" ;;
+			*)	LANG="nl_NL.UTF-8" ;;
+		esac
+		;;
+	no)	LANG="nn_NO.UTF-8" ;;
 	no)	LANG="no_NO.UTF-8" ;;
 	pl)	LANG="pl_PL.UTF-8" ;;
-	pt)	LANG="pt_PT.UTF-8" ;;
+	pt)
+		case "${DEMO_CODE}" in
+			br)	LANG="pt_BR.UTF-8" ;;
+			*)	LANG="pt_PT.UTF-8" ;;
+		esac
+		;;
+	ro)	LANG="ro_RO.UTF-8" ;;
 	ru)	LANG="ru_RU.UTF-8" ;;
 	si|sl)	LANG="sl_SI.UTF-8" ;;
 	sk)	LANG="sk_SK.UTF-8" ;;
 	tr)	LANG="tr_TR.UTF-8" ;;
 	tw)	LANG="zh_TW.UTF-8" ;;
 	us)	LANG="en_US.UTF-8" ;;
+	zh)
+		case "${DEMO_CODE}" in
+			tw)	LANG="zh_TW.UTF-8" ;;
+			*)	LANG="zh_CN.UTF-8" ;;
+		esac
+		;;
 	*)	LANG="en_US.UTF-8" ;;
 esac
 

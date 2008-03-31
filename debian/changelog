@@ -1,8 +1,14 @@
 fll-live-initscripts (3.0.20) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 31 Mar 2008 03:25:14 +0200
+  [ Niall Walsh ]
+  * Add LANG_CODE handlers for missing sidux generated locales
+  * Start full split handling of lang=xx_YY so e.g. lang=en_IE will work
+  * Adding commented sections for some extra locales
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Mon, 31 Mar 2008 06:19:55 +0100
 
 fll-live-initscripts (3.0.19) unstable; urgency=low
 
