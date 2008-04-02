@@ -300,6 +300,18 @@ do_start() {
 		fi
 	fi
 
+	# vmware
+	if [ "${XVENDOR}" = "15ad" ]; then
+		case "${XDEVICE}" in
+			0405|0710)
+				# override video
+				XMODULE="vmware"
+				# ...and mouse
+				XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
+				;;
+		esac
+	fi
+
 	# disable guest extensions support initscript
 	CMD=$(/usr/bin/fll_analyze_initscripts -f -r virtualbox-ose-guest-utils)
 	if [ "${XMODULE}" != "vboxvideo" ] && [ "${CMD}" ]; then

@@ -1,8 +1,13 @@
 fll-live-initscripts (3.0.21) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 31 Mar 2008 14:28:51 +0200
+  [ Kel Modderman ]
+  * fll-xorgconfig:
+    - provide vmware detection/overrides
+
+ -- Kel Modderman <kel@otaku42.de>  Wed, 02 Apr 2008 22:37:32 +1000
 
 fll-live-initscripts (3.0.20) unstable; urgency=low
 
