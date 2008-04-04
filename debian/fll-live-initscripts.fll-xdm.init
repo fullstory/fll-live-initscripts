@@ -61,6 +61,9 @@ if [ -f /proc/cmdline ]; then
 			flldebug=*)
 				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
+			desktop=*)
+				DESKTOP="${param#desktop=}"
+				;;
 			dpi=*)
 				CUSTOM_DPI="${param#dpi=}"
 				case "${CUSTOM_DPI}" in
@@ -157,22 +160,30 @@ setup_x_cursor_theme() {
 	fi
 }
 
+
+
 case "${1}" in
 	start)
-		# the desktop manager processed _last_ will trump all (default: kdm)
-		if [ -x /usr/sbin/gdm ]; then
+		case "${DESKTOP}" in
+			gnome|xfce*)
+				[ -x /usr/bin/gdm ] && dm=/usr/bin/gdm || [ -x /usr/bin/kdm ] && dm=/usr/bin/kdm
+				;;
+			*) [ -x /usr/bin/kdm ] && dm=/usr/bin/kdm ||	[ -x /usr/bin/gdm ] && dm=/usr/bin/gdm 
+				;;
+		esac
+
+	 	if [ ${dm} == "/usr/bin/gdm" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm"
 			# /usr/bin/gdm is a bogus path required by /etc/init.d/gdm, see debian bug #452344
-			setup_gdm && echo /usr/bin/gdm > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+			setup_gdm && echo ${dm] > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
-
-		if [ -x /usr/bin/kdm ]; then
+		if [ "${dm}" == "/usr/bin/kdm" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring kdm"
-			setup_kdm && echo /usr/bin/kdm > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+			setup_kdm && echo ${dm] > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
-
+		
 		setup_x_cursor_theme
 		;;
 	stop)
