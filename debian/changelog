@@ -1,9 +1,5 @@
-fll-live-initscripts (3.0.22) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.22) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Joaquim Boura ]
   * When cheatcode desktop is used set gdm/kdm as default dm depending on
     that.
 
