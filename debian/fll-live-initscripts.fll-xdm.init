@@ -171,6 +171,8 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
+		# Handle kdm last, making it the default display manager
+		# ...unless overriden below
 		KDM=$(which kdm 2>/dev/null)
 		if [ "${KDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring kdm"
@@ -178,8 +180,9 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
+		# Two desktop-managers installed, override default display manager
+		# based on desktop choice cheatcode
 		if [ "${KDM}" && "${GDM}" ]; then
-			# Override default display manager based on desktop choice
 			case "${DESKTOP}" in
 				gnome|xfce*)
 					echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
