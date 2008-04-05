@@ -164,7 +164,7 @@ setup_x_cursor_theme() {
 
 case "${1}" in
 	start)
-		GDM=$(which gdm 2>/dev/null)
+		GDM="$(which gdm 2>/dev/null)"
 		if [ "${GDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm"
 			setup_gdm && echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
@@ -173,7 +173,7 @@ case "${1}" in
 
 		# Handle kdm last, making it the default display manager
 		# ...unless overriden below
-		KDM=$(which kdm 2>/dev/null)
+		KDM="$(which kdm 2>/dev/null)"
 		if [ "${KDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring kdm"
 			setup_kdm && echo "${KDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
@@ -182,7 +182,7 @@ case "${1}" in
 
 		# Two desktop-managers installed, override default display manager
 		# based on desktop choice cheatcode
-		if [ "${KDM}" && "${GDM}" ]; then
+		if [ -n "${KDM}" ] && [ -n "${GDM}" ]; then
 			case "${DESKTOP}" in
 				gnome|xfce*)
 					echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
