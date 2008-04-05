@@ -9,11 +9,11 @@ checksyntax:
 		echo "Checking $${init##*/} ..." ; \
 		case "`head -n1 $$init`" in \
 			*/bin/dash|*/bin/sh) \
-				checkbashisms $$init ; \
-				dash -n $$init ; \
+				checkbashisms $$init || exit ; \
+				dash -n $$init || exit ; \
 				;; \
 			*) \
-				bash -n $$init ; \
+				bash -n $$init || exit ; \
 				;; \
 		esac ; \
 	done

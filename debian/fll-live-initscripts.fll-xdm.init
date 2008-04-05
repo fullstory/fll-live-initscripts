@@ -164,27 +164,29 @@ setup_x_cursor_theme() {
 
 case "${1}" in
 	start)
-		case "${DESKTOP}" in
-			gnome|xfce*)
-				[ -x /usr/bin/gdm ] && dm=/usr/bin/gdm || [ -x /usr/bin/kdm ] && dm=/usr/bin/kdm
-				;;
-			*) [ -x /usr/bin/kdm ] && dm=/usr/bin/kdm ||	[ -x /usr/bin/gdm ] && dm=/usr/bin/gdm 
-				;;
-		esac
-
-	 	if [ ${dm} = "/usr/bin/gdm" ]; then
+		GDM=$(which gdm 2>/dev/null)
+		if [ "${GDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm"
-			# /usr/bin/gdm is a bogus path required by /etc/init.d/gdm, see debian bug #452344
-			setup_gdm && echo ${dm} > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+			setup_gdm && echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
 
-		if [ "${dm}" = "/usr/bin/kdm" ]; then
+		KDM=$(which kdm 2>/dev/null)
+		if [ "${KDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring kdm"
-			setup_kdm && echo ${dm} > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+			setup_kdm && echo "${KDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
-		
+
+		if [ "${KDM}" && "${GDM}" ]; then
+			# Override default display manager based on desktop choice
+			case "${DESKTOP}" in
+				gnome|xfce*)
+					echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+					;;
+			esac
+		fi
+
 		setup_x_cursor_theme
 		;;
 	stop)

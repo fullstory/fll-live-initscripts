@@ -1,14 +1,15 @@
 fll-live-initscripts (3.0.23) UNRELEASED; urgency=low
 
-  * Impliment script syntax/bashish sanity check at package build time,
-    build-depend on devscripts and dash.
+  * Impliment script syntax/bashism sanity check at package build time,
+    build-depend on devscripts and dash. Make failure to pass check fatal.
   * fll-xdm:
     - fix second syntax error from r17094, == was used, it is a bashism and
       fll-xdm is a dash script
+    - overhaul logic behind setting default desktop display manager
   * fll-xorgconfig:
     - remove possible bashisms from script, making checkbashisms happy
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 05 Apr 2008 12:05:57 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 05 Apr 2008 12:40:52 +1000
 
 fll-live-initscripts (3.0.22) unstable; urgency=low
 
