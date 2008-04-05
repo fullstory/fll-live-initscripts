@@ -8,7 +8,7 @@ checksyntax:
 	@for init in debian/*.init; do \
 		echo "Checking $${init##*/} ..." ; \
 		case "`head -n1 $$init`" in \
-			*/bin/dash|*/bin/sh) \
+			*/bin/dash*|*/bin/sh*) \
 				checkbashisms $$init || exit ; \
 				dash -n $$init || exit ; \
 				;; \
