@@ -172,13 +172,14 @@ case "${1}" in
 				;;
 		esac
 
-	 	if [ ${dm} == "/usr/bin/gdm" ]; then
+	 	if [ ${dm} = "/usr/bin/gdm" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm"
 			# /usr/bin/gdm is a bogus path required by /etc/init.d/gdm, see debian bug #452344
 			setup_gdm && echo ${dm} > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
-		if [ "${dm}" == "/usr/bin/kdm" ]; then
+
+		if [ "${dm}" = "/usr/bin/kdm" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring kdm"
 			setup_kdm && echo ${dm} > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
