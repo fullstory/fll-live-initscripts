@@ -4,7 +4,7 @@
 #export DH_VERBOSE=1
 
 checksyntax:
-	@echo "Checking initscripts for bashisms and syntax errors ..."
+	@echo "Checking initscripts for errors ..."
 	@for init in debian/*.init; do \
 		echo "Checking $${init##*/} ..." ; \
 		case "`head -n1 $$init`" in \
