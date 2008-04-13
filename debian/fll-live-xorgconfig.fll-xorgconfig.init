@@ -308,6 +308,10 @@ do_start() {
 				XMODULE="vmware"
 				# ...and mouse
 				XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
+				# disable monitor probe
+				XNOXRESPROBE="1"
+				# disable modelines
+				XNOMODELINES="1"
 				;;
 		esac
 	fi

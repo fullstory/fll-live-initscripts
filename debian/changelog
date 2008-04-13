@@ -1,8 +1,10 @@
 fll-live-initscripts (3.0.25) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - add missing vmmoude input device template
+    - disable xresprobe and modelines for vmware xorg.conf
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 05 Apr 2008 14:46:52 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 14 Apr 2008 19:17:06 +1000
 
 fll-live-initscripts (3.0.24) unstable; urgency=low
 

@@ -1,0 +1,7 @@
+Section "InputDevice"
+	Identifier	"@@NAME@@"
+	Driver		"vmmouse"
+	Option		"Device"		"@@DEVICE@@"
+	Option		"Protocol"		"@@PROTOCOL@@"
+	Option		"@@COREPOINTER@@"
+EndSection 
