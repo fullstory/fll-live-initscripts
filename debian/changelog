@@ -3,8 +3,11 @@ fll-live-initscripts (3.0.25) UNRELEASED; urgency=low
   * fll-xorgconfig:
     - add missing vmmoude input device template
     - disable xresprobe and modelines for vmware xorg.conf
+  * fll-shell:
+    - preseeding of vimrc.local and pager alternative now done at build time
+      so removed from the initscript
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 14 Apr 2008 19:17:06 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 14 Apr 2008 19:25:44 +1000
 
 fll-live-initscripts (3.0.24) unstable; urgency=low
 

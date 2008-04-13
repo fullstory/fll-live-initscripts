@@ -73,21 +73,6 @@ do_start() {
 	if [ -w /etc/pam.d/login ]; then
 		sed -i '/^[^#].*pam_lastlog\.so/s/^/# /' /etc/pam.d/login
 	fi
-
-	if [ -x /usr/bin/vim ]; then
-		cat > /etc/vim/vimrc.local \
-<<EOF
-syntax on
-set background=light
-set showmatch
-set pastetoggle=<F10>
-au FileType debchangelog normal z0
-EOF
-	fi
-
-	if [ -x /usr/bin/most ]; then
-		update-alternatives --set pager /usr/bin/most >/dev/null
-	fi
 }
 
 case "${1}" in
