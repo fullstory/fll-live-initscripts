@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.25) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.25) unstable; urgency=low
 
   * fll-xorgconfig:
     - add missing vmmoude input device template
