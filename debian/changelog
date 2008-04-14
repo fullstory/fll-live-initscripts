@@ -1,13 +1,22 @@
 fll-live-initscripts (3.0.26) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Fix typo in previous changelog entry.
+  * fll_fshelper:
+    - ensure duplicate mount point names are never used, warn and skip any
+      device who has been given a mount point name the same as a device before
+      it
+    - special case device mapper virtual block device mount point names, use
+      dm-X as is used in /proc/partitions (we should switch to /sys/block)
+    - count disks by comparing the "basename" of each block device sans and
+      partition or minor number. Each time in changes, incriment the disk
+      number count
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 15 Apr 2008 02:00:43 +0200
+ -- Kel Modderman <kel@otaku42.de>  Tue, 15 Apr 2008 17:04:51 +1000
 
 fll-live-initscripts (3.0.25) unstable; urgency=low
 
   * fll-xorgconfig:
-    - add missing vmmoude input device template
+    - add missing vmmouse input device template
     - disable xresprobe and modelines for vmware xorg.conf
   * fll-shell:
     - preseeding of vimrc.local and pager alternative now done at build time

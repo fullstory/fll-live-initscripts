@@ -47,7 +47,8 @@ die "udev utility 'vol_id' is required!\n" unless -x '/lib/udev/vol_id';
 #   %l_seen	- labels seen so far
 #   %p_seen	- partitions seen so far
 #   %u_seen	- uuids seen so far
-my (%p, %l_seen, %p_seen, %u_seen);
+#   %m_seen     - mount points seen so far
+my (%p, %l_seen, %p_seen, %u_seen, %m_seen);
 
 # fstab file location
 my $file = '/etc/fstab';
@@ -266,6 +267,7 @@ if ($opts{'write-fstab'}) {
 #-------------------------------------------------------------------#
 # build %p structure with information about partitions
 
+my $basename;
 my $disk = 0;
 if (-f '/proc/partitions') {
 	open(PARTITIONS, '<', '/proc/partitions')
@@ -280,18 +282,33 @@ if (-f '/proc/partitions') {
 		}
 
 		my $part = 0;
-		if ($name =~ /(\d+)$/) {
-			$part = $1;
+		if ($name =~ /(.*)(\d+)$/) {
+			$part       = $2;
+			$basename ||= $1;
+			if ($basename ne $1) {
+				$basename = $1;
+				$disk++;
+			}
 		}
 		else {
-			$disk++;
+			$basename ||= $name;
+			if ($basename ne $name) {
+				$basename = $1;
+				$disk++;
+			}
 		}
 
 		next unless $blocks > 1;
 
-		$p{"/dev/$name"}         = vol_id("/dev/$name");
-		$p{"/dev/$name"}{'disk'} = $disk;
-		$p{"/dev/$name"}{'part'} = $part;
+		$p{"/dev/$name"} = vol_id("/dev/$name");
+
+		if ($name =~ /^dm-\d+$/) {
+			# device mapper virtual block device
+			$p{"/dev/$name"}{'mntpnt'} = $name;
+		}
+		else {
+			$p{"/dev/$name"}{'mntpnt'} = 'disk' . $disk . 'part' . $part;
+		}
 	}
 	close(PARTITIONS);
 
@@ -351,6 +368,8 @@ if (-f '/proc/mounts' and not $opts{'simulate-live'}) {
 
 		# device is valid, seen it
 		$p_seen{$device}++;
+		# remember mount point too
+		$m_seen{$mount}++;
 
 		# take a slice of %p
 		($fstype, $label, $uuid, $desc) =
@@ -430,9 +449,9 @@ for my $device (sort keys %p) {
 	dbg $device, $p{$device};
 
 	# $device info, take a slice of %p
-	my ($usage, $fstype, $label, $label_safe, $uuid, $desc, $d, $p) =
+	my ($usage, $fstype, $label, $label_safe, $uuid, $desc, $mntpnt) =
 	        @{ $p{$device} }{ 'usage', 'type', 'label_enc', 'label_safe', 'uuid_enc', 'desc',
-		'disk', 'part' };
+		                  'mntpnt' };
 
 	# fallbacks, support older udev versions
 	$label ||= @{ $p{$device} }{'label'};
@@ -518,7 +537,13 @@ for my $device (sort keys %p) {
 	$name ||= $device;
 
 	# generic mount point name
-	$mount = '/media/disk' . $d . 'part' . $p;
+	$mount = '/media/' . $mntpnt;
+
+	if ($m_seen{$mount}) {
+		print STDERR "Duplicate MOUNT ($device): $mount\n";
+		next;
+	}
+	$m_seen{$mount}++;
 
 	if ($fstype eq 'ntfs') {
 		$options .= ',ro,dmask=0022,fmask=0133';
