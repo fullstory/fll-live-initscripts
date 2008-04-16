@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.26) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.26) unstable; urgency=low
 
   * Fix typo in previous changelog entry.
   * fll_fshelper:
