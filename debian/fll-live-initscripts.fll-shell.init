@@ -62,9 +62,9 @@ if [ -f /proc/cmdline ]; then
 fi
 
 do_start() {
-	for file in '.bash_logout' '.bash_profile' '.bashrc'; do
+	for file in '.bash_logout' '.bash_profile' '.bashrc' '.profile'; do
 		if [ -f /etc/skel/${file} ] && [ ! -f /root/${file} ]; then
-			cat /etc/skel/${file} > /root/${file}
+			cp /etc/skel/${file} /root/${file}
 		fi
 	done
 
