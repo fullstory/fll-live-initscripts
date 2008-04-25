@@ -1,12 +1,16 @@
-fll-live-initscripts (3.0.28) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.28) unstable; urgency=low
 
+  [ Kel Modderman ]
   * fll_xserver_discover:
     - use libpciaccess and not pciutils for PCI device probing library
     - mark functions static
     - build depend on libpciaccess-dev, drop build deps of pciutils-dev and
       zlib1g-dev
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 25 Apr 2008 23:41:47 +1000
+  [ Stefan Lippers-Hollmann ]
+  * bump compat level to 7 and depend on debhelper 7.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 25 Apr 2008 15:53:52 +0200
 
 fll-live-initscripts (3.0.27) unstable; urgency=low
 
