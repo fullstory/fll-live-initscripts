@@ -17,9 +17,8 @@
 #include <dirent.h>
 #include <unistd.h>
 
-#include "pci/pci.h"
+#include <pciaccess.h>
 
-#define VGA_CLASS 0x0300
 #define XSERVER_PCIIDS_DIR "/usr/share/xserver-xorg/pci/"
 
 struct pci_access *pacc;
@@ -28,7 +27,7 @@ struct pci_access *pacc;
 /*
  * Only read files with suffix of '.ids'.
  */
-int ids_file(const struct dirent *entry)
+static int ids_file(const struct dirent *entry)
 {
 	char *ptr;
 
@@ -53,7 +52,7 @@ int ids_file(const struct dirent *entry)
  * http://www.phoronix.com/scan.php?page=article&item=radeon_vs_radeonhd&num=1
  * http://bgoglin.livejournal.com/15162.html
  */
-int driver_prio(const void *A, const void *B)
+static int driver_prio(const void *A, const void *B)
 {
 	const char *a = (*(const struct dirent **)A)->d_name;
 	const char *b = (*(const struct dirent **)B)->d_name;
@@ -74,28 +73,34 @@ int driver_prio(const void *A, const void *B)
  * Eventually the Xorg drivers will export symbols correlating to supported
  * devices for automatic configuration.
  */
-const char *lookup_xorg_dvr_for(const char *string, int debug)
+static const char *fll_get_x_driver(uint16_t v_id, uint16_t d_id, int debug)
 {
 	struct dirent **ids;
-	int num, n;
-
-	char *driver = "";
+	int n;
+	int dirnum;
 	char *ptr;
+	char *driver = "vesa";
+	char string[10];
 
-	num = scandir(XSERVER_PCIIDS_DIR, &ids, ids_file, driver_prio);
-	if (num <= 0)
+	snprintf(string, sizeof(string), "%04x%04x", v_id, d_id);
+
+	dirnum = scandir(XSERVER_PCIIDS_DIR, &ids, ids_file, driver_prio);
+	if (dirnum <= 0)
 		return driver;
 
 	/* read each pciid list */
-	for (n = 0; n < num; n++) {
+	for (n = 0; n < dirnum; n++) {
 		char filename[256];
 		char line[10];
 
 		snprintf(filename, sizeof(filename),
 		         "%s%s", XSERVER_PCIIDS_DIR, ids[n]->d_name);
 
-		if (debug)
-			printf("I: looking for %s in %s\n", string, filename);
+		if (debug) {
+			printf("D: looking for %s in %s\n",
+			       string,
+			       filename);
+		}
 
 		FILE *file;
 		file = fopen(filename, "r");
@@ -108,13 +113,16 @@ const char *lookup_xorg_dvr_for(const char *string, int debug)
 			if (strncasecmp(line, string, strlen(string)) == 0) {
 				/* found string in $driver.ids */
 				driver = ids[n]->d_name;
-				if(debug)
-					printf("I: found %s in %s\n", string, driver);
+
+				if (debug) {
+					printf("D: found %s in %s\n",
+					       string,
+					       driver);
+				}
 
 				/* strip .ids extenstion */
 				ptr = strrchr(driver, '.');
 				*ptr = '\0';
-				ptr++;
 
 				if (!debug)
 					break;
@@ -124,11 +132,12 @@ const char *lookup_xorg_dvr_for(const char *string, int debug)
 		fclose(file);
 		free(ids[n]);
 
-		if (strlen(driver) > 0 && !debug)
+		if (strncmp(driver, "vesa", 4) != 0 && !debug)
 			break;
 	}
 
 	free(ids);
+
 	return driver;
 }
 
@@ -137,41 +146,49 @@ const char *lookup_xorg_dvr_for(const char *string, int debug)
  * Print out busid, vendor_id, device_id, board description and a driver
  * for each device of VGA class.
  */
-void xdisplay(struct pci_dev *dev, int debug)
+static int fll_get_vga_device(struct pci_device *dev, int debug)
 {
-	char devbuf[128];
-	char str[10];
+	const char *ven_name;
+	const char *dev_name;
+	const char *x_driver;
+
+	ven_name = pci_device_get_vendor_name(dev);
+	if (ven_name == NULL)
+		ven_name = "Unknown vendor";
+
+	dev_name = pci_device_get_device_name(dev);
+	if (ven_name == NULL)
+		ven_name = "Unknown device";
 
 	if (debug)
-		printf("%02x:%02x.%d vendor=%04x device=%04x class=%04x %s\n",
-		       dev->bus, dev->dev, dev->func, dev->vendor_id,
-		       dev->device_id, dev->device_class,
-		       pci_lookup_name(pacc, devbuf, sizeof(devbuf),
-				       PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE,
-				       dev->vendor_id, dev->device_id));
+		printf("D: %s %s\n", ven_name, dev_name);
+	
+	if (((dev->device_class >> 16) & 0x0ff) == 0x03 &&
+	    ((dev->device_class >>  8) & 0x0ff) == 0x00 &&
+	    ((dev->device_class >>  0) & 0x0ff) == 0x00) {
+	    	printf("XVENDOR='%04x'\nXDEVICE='%04x'\n",
+		       dev->vendor_id,
+		       dev->device_id);
 
-	if (dev->device_class == VGA_CLASS) {
-		/* convert bus:dev.func into BusID */
 		printf("XBUSID='PCI:%d:%d:%d'\n",
-		       dev->bus, dev->dev, dev->func);
+		       dev->bus,
+		       dev->dev,
+		       dev->func);
 
-		/*  print vendor + device ids */
-		printf("XVENDOR='%04x'\nXDEVICE='%04x'\n",
-		       dev->vendor_id, dev->device_id);
+		printf("XBOARDNAME='%s %s'\n",
+		       ven_name,
+		       dev_name);
 
-		/* look up board description */
-		printf("XBOARDNAME='%s'\n",
-		       pci_lookup_name(pacc, devbuf, sizeof(devbuf),
-				       PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE,
-				       dev->vendor_id, dev->device_id));
+		x_driver = fll_get_x_driver(dev->vendor_id,
+					    dev->device_id,
+					    debug);
 
-		/* concatenate vendor:device into string */
-		snprintf(str, sizeof(str), "%04x%04x",
-			 dev->vendor_id, dev->device_id);
+		printf("XMODULE='%s'\n", x_driver);
 
-		/* search for string in xserver pciids lists */
-		printf("XMODULE='%s'\n", lookup_xorg_dvr_for(str, debug));
+		return 1;
 	}
+
+	return 0;
 }
 
 /*
@@ -180,8 +197,9 @@ void xdisplay(struct pci_dev *dev, int debug)
  */
 int main(int argc, char *argv[])
 {
-	struct pci_dev *p;
-
+	struct pci_device_iterator *iter;
+	struct pci_device *dev;
+	int ret;
 	int opt;
 	int debug = 0;
 
@@ -195,14 +213,20 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	pacc = pci_alloc();
-	pci_init(pacc);
-	pci_scan_bus(pacc);
+	ret = pci_system_init();
+	if (ret != 0) {
+		printf("Couldn't initialize PCI system\n");
+		exit(1);
+	}
 
-	for (p = pacc->devices; p; p = p->next)
-		xdisplay(p, debug);
+	iter = pci_slot_match_iterator_create(NULL);
 
-	pci_cleanup(pacc);
+	while ((dev = pci_device_next(iter)) != NULL) {
+		if (fll_get_vga_device(dev, debug) && !debug)
+			break;
+	}
+
+	pci_system_cleanup();
 
 	return 0;
 }
