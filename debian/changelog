@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.29) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.29) unstable; urgency=low
 
   * fll_xorgconfig:
     - don't hardcode driver as vesa here, fll_xserver_discover defaults to
