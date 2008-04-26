@@ -26,9 +26,38 @@
 
 #include <libvolume_id.h>
 
-#define SYS_BLK "/sys/class/block/"
-#define DEV_DIR "/dev/"
+#define SYS_BLK		"/sys/block"
+#define DEV_DIR		"/dev"
 
+#define DEV_PATH_MAX	VOLUME_ID_PATH_MAX
+#define SYS_PATH_MAX	VOLUME_ID_PATH_MAX
+
+
+static int disk_filter(const struct dirent *d)
+{
+	if (d->d_name[0] == 'h' && d->d_name[1] == 'd')
+		return 1;
+	if (d->d_name[0] == 's' && d->d_name[1] == 'd')
+		return 1;
+
+	return 0;
+}
+
+static int cdrom_filter(const struct dirent *d)
+{
+	if (strncmp(d->d_name, "cdrom", 5) == 0)
+		return 1;
+
+	return 0;
+}
+
+static int floppy_filter(const struct dirent *d)
+{
+	if (strncmp(d->d_name, "fd", 2) == 0 && strlen(d->d_name) >= 3)
+		return 1;
+
+	return 0;
+}
 
 static void set_str(char *to, const char *from, size_t count)
 {
@@ -62,64 +91,84 @@ static void set_str(char *to, const char *from, size_t count)
 	to[j] = '\0';
 }
 
-static void ata_id(const char* node, int debug)
+static int ata_id(char *buf, int bufsiz, const char* node)
 {
 	struct hd_driveid id;
-	char model[41];
 	int fd;
 
 	fd = open(node, O_RDONLY|O_NONBLOCK);
 	if (fd) {
-		if (!ioctl(fd, HDIO_GET_IDENTITY, &id)) {
-			set_str(model, (char *) id.model, 40);
-			if (debug)
-				fprintf(stdout, "\tmodel ---> %s\n",
-					model);
-		}
+		if (!ioctl(fd, HDIO_GET_IDENTITY, &id))
+			set_str(buf, (char *) id.model, 40);
+
 		close(fd);
+		return 1;
 	}
+
+	return 0;
+}
+
+static void disk_entry(const char* disk, int debug)
+{
+	struct dirent **diskdir;
+	int dirnum;
+	int n;
+	char sysd[SYS_PATH_MAX];
+	char node[DEV_PATH_MAX];
+	char model[41];
+	int bufsiz = sizeof(model) -1;
+	int disklen = strlen(disk);
+
+	snprintf(node, sizeof(node), "%s/%s", DEV_DIR, disk);
+	snprintf(sysd, sizeof(sysd), "%s/%s", SYS_BLK, disk);
+
+	ata_id(model, bufsiz, node);
+
+	dirnum = scandir(sysd,
+			 &diskdir,
+			 disk_filter,
+			 versionsort);
+
+	if (dirnum > 0) {
+		for (n = 0; n < dirnum; n++) {
+			if (strncmp(diskdir[n]->d_name, disk, disklen) != 0)
+				continue;
+
+			if (debug)
+				fprintf(stderr, "---> %s (partition)\n",
+					diskdir[n]->d_name);
+
+			//partition_entry(diskdir[n]->d_name, debug);
+		}
+	}
+
 }
 
 static void cdrom_entry(const char* cdrom, int debug)
 {
-	char node[32];
+	char node[DEV_PATH_MAX];
+	char model[41];
+	int bufsiz = sizeof(model) -1;
 
-	snprintf(node, sizeof(node), "%s%s", DEV_DIR, cdrom);
+	snprintf(node, sizeof(node), "%s/%s", DEV_DIR, cdrom);
 
-	ata_id(node, debug);
+	if (ata_id(model, bufsiz, node))
+		fprintf(stdout, "\n# %s\n", model);
+	else
+		fprintf(stdout, "\n");
+	
+	fprintf(stdout, "%s\t/media/%s\tudf,iso9660\tuser,noauto\t0\t0\n",
+		node, cdrom);
 }
 
 static void floppy_entry(const char* floppy, int debug)
 {
-	char node[32];
+	char node[DEV_PATH_MAX];
 
-	snprintf(node, sizeof(node), "%s%s", DEV_DIR, floppy);
-}
+	snprintf(node, sizeof(node), "%s/%s", DEV_DIR, floppy);
 
-static int hdd_filter(const struct dirent *d)
-{
-	if (d->d_name[0] == 'h' && d->d_name[1] == 'd')
-		return 1;
-	if (d->d_name[0] == 's' && d->d_name[1] == 'd')
-		return 1;
-
-	return 0;
-}
-
-static int cdrom_filter(const struct dirent *d)
-{
-	if (strncmp(d->d_name, "cdrom", 5) == 0)
-		return 1;
-
-	return 0;
-}
-
-static int floppy_filter(const struct dirent *d)
-{
-	if (strncmp(d->d_name, "fd", 2) == 0 && strlen(d->d_name) >= 3)
-		return 1;
-
-	return 0;
+	fprintf(stdout, "\n%s\t/media/%s\tauto\trw,user,noauto\t0\t0\n",
+		node, floppy);
 }
 
 int main(int argc, char *argv[])
@@ -130,7 +179,7 @@ int main(int argc, char *argv[])
 
 	int opt;
 	int autom = 0;
-	int debug = 0;
+	int debug = 1;
 	int mkmnt = 0;
 	int noswp = 0;
 	int simul = 0;
@@ -168,14 +217,16 @@ int main(int argc, char *argv[])
 	/* scan for hard disk devices in sysfs dirheir */
 	dirnum = scandir(SYS_BLK,
 			 &blkdir,
-			 hdd_filter,
+			 disk_filter,
 			 versionsort);
 
 	if (dirnum > 0) {
 		for (n = 0; n < dirnum; n++) {
 			if (debug)
-				fprintf(stdout, "---> hdd: %s\n",
+				fprintf(stderr, "---> %s (disk)\n",
 					blkdir[n]->d_name);
+
+			disk_entry(blkdir[n]->d_name, debug);
 		}
 	}
 
@@ -188,7 +239,7 @@ int main(int argc, char *argv[])
 	if (dirnum > 0) {
 		for (n = 0; n < dirnum; n++) {
 			if (debug)
-				fprintf(stdout, "---> cdrom: %s\n",
+				fprintf(stderr, "---> %s (cdrom)\n",
 					blkdir[n]->d_name);
 
 			cdrom_entry(blkdir[n]->d_name, debug);
@@ -204,7 +255,7 @@ int main(int argc, char *argv[])
 	if (dirnum > 0) {
 		for (n = 0; n < dirnum; n++) {
 			if (debug)
-				fprintf(stdout, "---> floppy: %s\n",
+				fprintf(stderr, "---> %s (floppy)\n",
 					blkdir[n]->d_name);
 
 			floppy_entry(blkdir[n]->d_name, debug);
