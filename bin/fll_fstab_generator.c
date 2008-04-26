@@ -24,7 +24,6 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <sys/ioctl.h>
-#include <linux/hdreg.h>
 
 #include <libvolume_id.h>
 
