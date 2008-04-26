@@ -36,6 +36,12 @@
 #define SYS_PATH_MAX	VOLUME_ID_PATH_MAX
 
 
+static int opt_automnt = 0;
+static int opt_debug = 1;
+static int opt_mkmntpt = 0;
+static int opt_noswap = 0;
+static int opt_uuids = 0;
+
 static int disk_filter(const struct dirent *d)
 {
 	if (d->d_name[0] == 'h' && d->d_name[1] == 'd')
@@ -125,14 +131,14 @@ static int vol_id(struct volume_id *vid, uint64_t size, const char *node)
 	return 0;
 }
 
-static void fs_entry(const char* node, int debug, int autom, int noswp, int uuids)
+static void fs_entry(const char* node)
 {
-	struct volume_id *vid = NULL;
+	struct volume_id *vid;
 	int fd, ret;
 	uint64_t size;
 	char label_enc[256];
 	char uuid_enc[256];
-	const char *label, *uuid, *type, *type_version, *usage;
+	const char *label, *uuid, *type, *usage;
 	
 	fd = open(node, O_RDONLY);
 	if (fd < 0) {
@@ -158,7 +164,6 @@ static void fs_entry(const char* node, int debug, int autom, int noswp, int uuid
 	if (!volume_id_get_label(vid, &label) ||
 	    !volume_id_get_usage(vid, &usage) ||
 	    !volume_id_get_type(vid, &type) ||
-	    !volume_id_get_type_version(vid, &type_version) ||
 	    !volume_id_get_uuid(vid, &uuid)) {
 		fprintf(stderr, "E: volume_id_get_* failed\n");
 		goto end;
@@ -167,13 +172,13 @@ static void fs_entry(const char* node, int debug, int autom, int noswp, int uuid
 	volume_id_encode_string(label, label_enc, sizeof(label_enc));
 	volume_id_encode_string(uuid, uuid_enc, sizeof(uuid_enc));
 
-	if (debug && strlen(label_enc) > 0)
+	if (opt_debug && strlen(label_enc) > 0)
 		fprintf(stderr, "\t\t* %s\n", label_enc);
-	if (debug && strlen(uuid_enc) > 0)
+	if (opt_debug && strlen(uuid_enc) > 0)
 		fprintf(stderr, "\t\t* %s\n", uuid_enc);
-	if (debug && strlen(type) > 0)
+	if (opt_debug && strlen(type) > 0)
 		fprintf(stderr, "\t\t* %s\n", type);
-	if (debug && strlen(usage) > 0)
+	if (opt_debug && strlen(usage) > 0)
 		fprintf(stderr, "\t\t* %s\n", usage);
 
 end:
@@ -183,7 +188,7 @@ end:
 	close(fd);
 }
 
-static void process_disk(const char* disk, int debug, int autom, int noswp, int uuids)
+static void process_disk(const char* disk)
 {
 	struct dirent **dir;
 	int dirnum;
@@ -201,18 +206,14 @@ static void process_disk(const char* disk, int debug, int autom, int noswp, int 
 		char node[DEV_PATH_MAX];
 		snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir[n]->d_name);
 
-		if (debug)
+		if (opt_debug)
 			fprintf(stderr, "\t* %s\n", node);
 
-		fs_entry(node,
-			 debug,
-			 autom,
-			 noswp,
-			 uuids);
+		fs_entry(node);
 	}
 }
 
-static void cdrom_entry(const char* cdrom, int debug)
+static void cdrom_entry(const char* cdrom)
 {
 	char node[DEV_PATH_MAX];
 
@@ -222,7 +223,7 @@ static void cdrom_entry(const char* cdrom, int debug)
 		node, cdrom);
 }
 
-static void floppy_entry(const char* floppy, int debug)
+static void floppy_entry(const char* floppy)
 {
 	char node[DEV_PATH_MAX];
 
@@ -237,30 +238,24 @@ int main(int argc, char *argv[])
 	struct dirent **dir;
 	int dirnum;
 	int n = 0;
-
 	int opt;
-	int autom = 0;
-	int debug = 1;
-	int mkmnt = 0;
-	int noswp = 0;
-	int uuids = 0;
-
+	
 	while ((opt = getopt(argc, argv, "admnu")) != -1) {
 		switch(opt) {
 		case 'a':
-			autom++;
+			opt_automnt++;
 			break;
 		case 'd':
-			debug++;
+			opt_debug++;
 			break;
 		case 'm':
-			mkmnt++;
+			opt_mkmntpt++;
 			break;
 		case 'n':
-			noswp++;
+			opt_noswap++;
 			break;
 		case 'u':
-			uuids++;
+			opt_uuids++;
 			break;
 		default:
 			break;
@@ -273,18 +268,11 @@ int main(int argc, char *argv[])
 			 disk_filter,
 			 versionsort);
 
-	if (dirnum > 0) {
-		for (n = 0; n < dirnum; n++) {
-			if (debug)
-				fprintf(stderr, "---> %s (disk)\n",
-					dir[n]->d_name);
+	for (n = 0; n < dirnum; n++) {
+		if (opt_debug)
+			fprintf(stderr, "---> %s (disk)\n", dir[n]->d_name);
 
-			process_disk(dir[n]->d_name,
-				     debug,
-				     autom,
-				     noswp,
-				     uuids);
-		}
+		process_disk(dir[n]->d_name);
 	}
 
 	/* scan for cdrom device node symlinks */
@@ -293,15 +281,11 @@ int main(int argc, char *argv[])
 			 cdrom_filter,
 			 versionsort);
 	
-	if (dirnum > 0) {
-		for (n = 0; n < dirnum; n++) {
-			if (debug)
-				fprintf(stderr, "---> %s (cdrom)\n",
-					dir[n]->d_name);
+	for (n = 0; n < dirnum; n++) {
+		if (opt_debug)
+			fprintf(stderr, "---> %s (cdrom)\n", dir[n]->d_name);
 
-			cdrom_entry(dir[n]->d_name,
-				    debug);
-		}
+		cdrom_entry(dir[n]->d_name);
 	}
 
 	/* scan for floppy device nodes */
@@ -310,15 +294,11 @@ int main(int argc, char *argv[])
 			 floppy_filter,
 			 versionsort);
 	
-	if (dirnum > 0) {
-		for (n = 0; n < dirnum; n++) {
-			if (debug)
-				fprintf(stderr, "---> %s (floppy)\n",
-					dir[n]->d_name);
+	for (n = 0; n < dirnum; n++) {
+		if (opt_debug)
+			fprintf(stderr, "---> %s (floppy)\n", dir[n]->d_name);
 
-			floppy_entry(dir[n]->d_name,
-				     debug);
-		}
+		floppy_entry(dir[n]->d_name);
 	}
 
 	return 0;
