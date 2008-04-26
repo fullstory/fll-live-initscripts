@@ -1,8 +1,12 @@
 fll-live-initscripts (3.0.29) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xorgconfig:
+    - don't hardcode driver as vesa here, fll_xserver_discover defaults to
+      vesa when detection fails, and we may choose to allow the xserver to
+      have a go in the future by nullifying the vesa fallback in
+      fll-xorgconfig.init
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 25 Apr 2008 15:55:36 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sat, 26 Apr 2008 10:42:46 +1000
 
 fll-live-initscripts (3.0.28) unstable; urgency=low
 

@@ -57,9 +57,6 @@ my %x = (
 	'templates' => \$xorg_tmpl,
 	'verbose'   => \$verbosity,
 
-	# driver - remove this ASAP
-	'driver' => 'vesa',
-
 	# screen
 	'colordepth' => '24',
 
