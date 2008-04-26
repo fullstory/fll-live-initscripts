@@ -5,8 +5,14 @@ fll-live-initscripts (3.0.29) UNRELEASED; urgency=low
       vesa when detection fails, and we may choose to allow the xserver to
       have a go in the future by nullifying the vesa fallback in
       fll-xorgconfig.init
+  * fll_xserver_discover:
+    - remove remnants of pciutils based code; struct pciaccess was still
+      declared
+    - cleanup the copyright/license errata in source file header
+  * fll_fstab_generator:
+    - initial import, not yet included in package
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 26 Apr 2008 10:42:46 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 26 Apr 2008 12:50:19 +1000
 
 fll-live-initscripts (3.0.28) unstable; urgency=low
 

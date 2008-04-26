@@ -1,9 +1,12 @@
 /*
- *	fll_xserver_discover -- detect PCI VGA class hardware
+ * fll_xserver_discover
+ * --------------------
+ * Detect PCI VGA class hardware and output information a shell script can use
+ * to generate an xorg.conf configuration file.
  *
- *	Copyright (c) 2007 - 2008 Kel Modderman <kel@otaku42.de>
+ * Copyright: (c) 2007 - 2008 Kel Modderman <kel@otaku42.de>
+ * License: GPLv2.
  *
- *	Can be freely distributed and used under the terms of the GNU GPLv2.
  */
 
 #ifndef _GNU_SOURCE
@@ -20,8 +23,6 @@
 #include <pciaccess.h>
 
 #define XSERVER_PCIIDS_DIR "/usr/share/xserver-xorg/pci/"
-
-struct pci_access *pacc;
 
 
 /*
