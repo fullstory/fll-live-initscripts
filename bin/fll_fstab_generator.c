@@ -27,21 +27,39 @@
 
 #include <libvolume_id.h>
 
-#define BLKGETSIZE64	_IOR(0x12,114,size_t)
+#define BLKGETSIZE64    _IOR(0x12, 114, size_t)
 
-#define SYS_BLK		"/sys/block"
-#define DEV_DIR		"/dev"
+#define SYS_BLK         "/sys/block"
+#define DEV_DIR         "/dev"
 
-#define DEV_PATH_MAX	VOLUME_ID_PATH_MAX
-#define SYS_PATH_MAX	VOLUME_ID_PATH_MAX
+#define DEV_PATH_MAX    VOLUME_ID_PATH_MAX
+#define SYS_PATH_MAX    VOLUME_ID_PATH_MAX
 
-
+/* ------------------------------------------------------------------------- *
+ *
+ * ------------------------------------------------------------------------- */
 static int opt_automnt = 0;
 static int opt_debug = 1;
 static int opt_mkmntpt = 0;
 static int opt_noswap = 0;
 static int opt_uuids = 0;
 
+
+/* ------------------------------------------------------------------------- *
+ *
+ * ------------------------------------------------------------------------- */
+struct filesystem {
+	const char *node;
+	const char *label;
+	const char *type;
+	const char *usage;
+	const char *uuid;
+};
+
+
+/* ------------------------------------------------------------------------- *
+ *
+ * ------------------------------------------------------------------------- */
 static int disk_filter(const struct dirent *d)
 {
 	if (d->d_name[0] == 'h' && d->d_name[1] == 'd')
@@ -68,6 +86,10 @@ static int floppy_filter(const struct dirent *d)
 	return 0;
 }
 
+
+/* ------------------------------------------------------------------------- *
+ *
+ * ------------------------------------------------------------------------- */
 static int vol_id(struct volume_id *vid, uint64_t size, const char *node)
 {
 	int ret, gid, uid, grn;
@@ -78,7 +100,7 @@ static int vol_id(struct volume_id *vid, uint64_t size, const char *node)
 	uid = geteuid();
 	gid = getegid();
 	grn = getgroups(ngroups_max, groups);
-	
+
 	if (grn < 0) {
 		fprintf(stderr, "E: getgroups failed\n");
 		return -1;
@@ -131,15 +153,15 @@ static int vol_id(struct volume_id *vid, uint64_t size, const char *node)
 	return 0;
 }
 
-static void fs_entry(const char* node)
+static void fs_entry(struct filesystem *fs, const char* node)
 {
 	struct volume_id *vid;
 	int fd, ret;
 	uint64_t size;
-	char label_enc[256];
-	char uuid_enc[256];
+	char label_enc[VOLUME_ID_PATH_MAX];
+	char uuid_enc[VOLUME_ID_PATH_MAX];
 	const char *label, *uuid, *type, *usage;
-	
+
 	fd = open(node, O_RDONLY);
 	if (fd < 0) {
 		fprintf(stderr, "E: failed to get file descriptor for %s\n",
@@ -173,44 +195,21 @@ static void fs_entry(const char* node)
 	volume_id_encode_string(uuid, uuid_enc, sizeof(uuid_enc));
 
 	if (opt_debug && strlen(label_enc) > 0)
-		fprintf(stderr, "\t\t* %s\n", label_enc);
+		fprintf(stderr, "\t\t* %s\n", label);
 	if (opt_debug && strlen(uuid_enc) > 0)
-		fprintf(stderr, "\t\t* %s\n", uuid_enc);
+		fprintf(stderr, "\t\t* %s\n", uuid);
 	if (opt_debug && strlen(type) > 0)
 		fprintf(stderr, "\t\t* %s\n", type);
 	if (opt_debug && strlen(usage) > 0)
 		fprintf(stderr, "\t\t* %s\n", usage);
+	
+	fs->node = node;
 
-end:
+ end:
 	if (vid != NULL)
 		volume_id_close(vid);
 
 	close(fd);
-}
-
-static void process_disk(const char* disk)
-{
-	struct dirent **dir;
-	int dirnum;
-	int n = 0;
-
-	dirnum = scandir(DEV_DIR,
-			 &dir,
-			 disk_filter,
-			 versionsort);
-
-	for (n = 0; n < dirnum; n++) {
-		if (strncmp(dir[n]->d_name, disk, strlen(disk)) != 0)
-			continue;
-
-		char node[DEV_PATH_MAX];
-		snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir[n]->d_name);
-
-		if (opt_debug)
-			fprintf(stderr, "\t* %s\n", node);
-
-		fs_entry(node);
-	}
 }
 
 static void cdrom_entry(const char* cdrom)
@@ -233,15 +232,19 @@ static void floppy_entry(const char* floppy)
 		node, floppy);
 }
 
+
+/* ------------------------------------------------------------------------- *
+ *
+ * ------------------------------------------------------------------------- */
 int main(int argc, char *argv[])
 {
 	struct dirent **dir;
 	int dirnum;
-	int n = 0;
+	int n;
 	int opt;
-	
+
 	while ((opt = getopt(argc, argv, "admnu")) != -1) {
-		switch(opt) {
+		switch (opt) {
 		case 'a':
 			opt_automnt++;
 			break;
@@ -262,25 +265,57 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	/* scan for hard disk devices in sysfs dirheir */
+	/*
+	 * scan for hard disk devices in sysfs dirheir
+	 */
 	dirnum = scandir(SYS_BLK,
 			 &dir,
 			 disk_filter,
 			 versionsort);
 
 	for (n = 0; n < dirnum; n++) {
-		if (opt_debug)
-			fprintf(stderr, "---> %s (disk)\n", dir[n]->d_name);
+		struct dirent **dir2;
+		int dirnum2;
+		int m;
+		char *disk = dir[n]->d_name;
 
-		process_disk(dir[n]->d_name);
+		if (opt_debug)
+			fprintf(stderr, "---> %s (disk)\n", disk);
+
+		/*
+		 * scan for partition device node symlinks
+		 */
+		dirnum2 = scandir(DEV_DIR,
+				  &dir2,
+				  disk_filter,
+				  versionsort);
+		
+		for (m = 0; m < dirnum2; m++) {
+			if (strncmp(dir2[m]->d_name, disk, strlen(disk)) != 0)
+				continue;
+
+			struct filesystem *fs = NULL;
+			char node[DEV_PATH_MAX];
+			snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir2[m]->d_name);
+
+			if (opt_debug)
+				fprintf(stderr, "\t* %s\n", node);
+
+			fs_entry(fs, node);
+
+			if (opt_debug)
+				fprintf(stderr, "\t* %s\n", fs->node);
+		}
 	}
 
-	/* scan for cdrom device node symlinks */
+	/*
+	 * scan for cdrom device node symlinks
+	 */
 	dirnum = scandir(DEV_DIR,
 			 &dir,
 			 cdrom_filter,
 			 versionsort);
-	
+
 	for (n = 0; n < dirnum; n++) {
 		if (opt_debug)
 			fprintf(stderr, "---> %s (cdrom)\n", dir[n]->d_name);
@@ -288,12 +323,14 @@ int main(int argc, char *argv[])
 		cdrom_entry(dir[n]->d_name);
 	}
 
-	/* scan for floppy device nodes */
+	/*
+	 * scan for floppy device nodes
+	 */
 	dirnum = scandir(DEV_DIR,
 			 &dir,
 			 floppy_filter,
 			 versionsort);
-	
+
 	for (n = 0; n < dirnum; n++) {
 		if (opt_debug)
 			fprintf(stderr, "---> %s (floppy)\n", dir[n]->d_name);
