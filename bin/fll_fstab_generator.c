@@ -48,18 +48,6 @@ static int opt_uuids = 0;
 /* ------------------------------------------------------------------------- *
  *
  * ------------------------------------------------------------------------- */
-struct filesystem {
-	const char *node;
-	const char *label;
-	const char *type;
-	const char *usage;
-	const char *uuid;
-};
-
-
-/* ------------------------------------------------------------------------- *
- *
- * ------------------------------------------------------------------------- */
 static int disk_filter(const struct dirent *d)
 {
 	if (d->d_name[0] == 'h' && d->d_name[1] == 'd')
@@ -153,7 +141,7 @@ static int vol_id(struct volume_id *vid, uint64_t size, const char *node)
 	return 0;
 }
 
-static void fs_entry(struct filesystem *fs, const char* node)
+static void fs_entry(const char* node)
 {
 	struct volume_id *vid;
 	int fd, ret;
@@ -203,8 +191,6 @@ static void fs_entry(struct filesystem *fs, const char* node)
 	if (opt_debug && strlen(usage) > 0)
 		fprintf(stderr, "\t\t* %s\n", usage);
 	
-	fs->node = node;
-
  end:
 	if (vid != NULL)
 		volume_id_close(vid);
@@ -294,17 +280,13 @@ int main(int argc, char *argv[])
 			if (strncmp(dir2[m]->d_name, disk, strlen(disk)) != 0)
 				continue;
 
-			struct filesystem *fs = NULL;
 			char node[DEV_PATH_MAX];
 			snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir2[m]->d_name);
 
 			if (opt_debug)
 				fprintf(stderr, "\t* %s\n", node);
 
-			fs_entry(fs, node);
-
-			if (opt_debug)
-				fprintf(stderr, "\t* %s\n", fs->node);
+			fs_entry(node);
 		}
 	}
 
