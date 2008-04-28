@@ -91,15 +91,16 @@ static int disk_filter(const struct dirent *d)
 
 	fp = fopen(sysfs_path, "r");
 	if (fp) {
-		if (fgets(rem, sizeof(rem), fp) != NULL)
-			ret = atoi(rem);
-
+		fgets(rem, sizeof(rem), fp);
 		fclose(fp);
 
-		if (opt_debug)
-			fprintf(stderr, "%s = %d\n", sysfs_path, ret);
+		if (rem == NULL)
+			return 0;
 
-		if (ret == 0)
+		if (opt_debug)
+			fprintf(stderr, "%s = %s\n", sysfs_path, rem);
+
+		if (strncmp(rem, "0", 1) == 0)
 			return 1;
 	}
 
