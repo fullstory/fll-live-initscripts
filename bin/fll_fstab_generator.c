@@ -296,6 +296,57 @@ static void vol_id(struct filesystem *fs, const char* node)
 }
 
 /* ------------------------------------------------------------------------- *
+ * scandisk
+ * --------
+ * Given the base disk device name, scan /dev/ for partitions
+ * ------------------------------------------------------------------------- */
+static void scandisk(const char *disk)
+{
+	struct dirent **dir;
+	int dirnum;
+	int n;
+	int disklen = strlen(disk);
+
+	/*
+	 * scan for partition device node symlinks
+	 */
+	dirnum = scandir(DEV_DIR,
+			 &dir,
+			 part_filter,
+			 versionsort);
+	
+	for (n = 0; n < dirnum; n++) {
+		if (strncmp(dir[n]->d_name, disk, disklen) != 0)
+			continue;
+
+		struct filesystem f, *fs;
+		char node[DEV_PATH_MAX];
+		snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir[n]->d_name);
+
+		f.node  = node;
+		f.label = NULL;
+		f.type  = NULL;
+		f.usage = NULL;
+		f.uuid  = NULL;
+		
+		fs = &f;
+		vol_id(fs, node);
+
+		if (opt_debug) {
+			fprintf(stderr, "\t* vol_id(%s)\n", fs->node);
+			if (fs->label)
+				fprintf(stderr, "\t\t* label: %s\n", fs->label);
+			if (fs->type)
+				fprintf(stderr, "\t\t* type:  %s\n", fs->type);
+			if (fs->usage)
+				fprintf(stderr, "\t\t* usage: %s\n", fs->usage);
+			if (fs->uuid)
+				fprintf(stderr, "\t\t* uuid:  %s\n", fs->uuid);
+		}
+	}
+}
+
+/* ------------------------------------------------------------------------- *
  * main
  * ----
  * Detect block devices and output a fstab configuration.
@@ -338,51 +389,10 @@ int main(int argc, char *argv[])
 			 versionsort);
 
 	for (n = 0; n < dirnum; n++) {
-		struct dirent **dir2;
-		int dirnum2;
-		int m;
-		char *disk = dir[n]->d_name;
-
 		if (opt_debug)
-			fprintf(stderr, "---> %s\n", disk);
+			fprintf(stderr, "---> %s\n", dir[n]->d_name);
 
-		/*
-		 * scan for partition device node symlinks
-		 */
-		dirnum2 = scandir(DEV_DIR,
-				  &dir2,
-				  part_filter,
-				  versionsort);
-		
-		for (m = 0; m < dirnum2; m++) {
-			if (strncmp(dir2[m]->d_name, disk, strlen(disk)) != 0)
-				continue;
-
-			struct filesystem f, *fs;
-			char node[DEV_PATH_MAX];
-			snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir2[m]->d_name);
-
-			f.node  = node;
-			f.label = NULL;
-			f.type  = NULL;
-			f.usage = NULL;
-			f.uuid  = NULL;
-			
-			fs = &f;
-			vol_id(fs, node);
-
-			if (opt_debug) {
-				fprintf(stderr, "\t* vol_id(%s)\n", fs->node);
-				if (fs->label)
-					fprintf(stderr, "\t\t* label: %s\n", fs->label);
-				if (fs->type)
-					fprintf(stderr, "\t\t* type:  %s\n", fs->type);
-				if (fs->usage)
-					fprintf(stderr, "\t\t* usage: %s\n", fs->usage);
-				if (fs->uuid)
-					fprintf(stderr, "\t\t* uuid:  %s\n", fs->uuid);
-			}
-		}
+		scandisk(dir[n]->d_name);
 	}
 
 	/*
