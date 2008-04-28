@@ -88,7 +88,7 @@ static int disk_filter(const struct dirent *d)
 		       "%s/%s/removable", SYS_BLK, d->d_name);
 	if (ret < 0)
 		return 0;
-	
+
 	fp = fopen(sysfs_path, "r");
 	if (fp) {
 		if (fgets(rem, sizeof(rem), fp) != NULL)
@@ -145,7 +145,7 @@ static void filesystem_entry(struct filesystem *fs)
 	if (strcmp(fs->usage, "filesystem") != 0 &&
 	    strcmp(fs->usage, "other") != 0)
 		return;
-	
+
 	if (strncmp(fs->type, "ext", 3) == 0 ||
 	    strncmp(fs->type, "reiser", 6) == 0 ||
 	    strcmp(fs->type, "jfs") == 0 ||
@@ -165,17 +165,17 @@ static void filesystem_entry(struct filesystem *fs)
 		fs_pass = 0;
 	} else
 		return;
-	
+
 	if (fs->label)
 		fprintf(stdout, "\n# LABEL=%s\n", fs->label);
 	else
 		fprintf(stdout, "\n");
-	
+
 	if (opt_uuids && fs->uuid)
 		fprintf(stdout, "UUID=%s", fs->uuid);
 	else
 		fprintf(stdout, "%s", fs->node);
-	
+
 	if (strcmp(fs->type, "swap") == 0) {
 		fprintf(stdout, "\tnone\t\t");
 		fs_auto = "";
@@ -261,7 +261,7 @@ static int vol_id_probe(struct volume_id *vid, uint64_t size, const char *node)
 			if (setgroups(0, NULL) != 0 ||
 			    setegid(pw->pw_gid) != 0 ||
 			    seteuid(pw->pw_uid) != 0)
-			    	goto error;
+				goto error;
 		}
 	}
 
@@ -274,13 +274,13 @@ static int vol_id_probe(struct volume_id *vid, uint64_t size, const char *node)
 		if (seteuid(uid) != 0 ||
 		    setegid(gid) != 0 ||
 		    setgroups(grn, groups) != 0)
-		    	goto error;
+			goto error;
 	}
 
 	return ret;
 
  error:
- 	fprintf(stderr, "vol_id_probe() failed\n");
+	fprintf(stderr, "vol_id_probe() failed\n");
 	return -1;
 }
 
@@ -356,7 +356,7 @@ static int partition_number(const char *part, int baselen)
 	i = 0;
 	while (!isdigit(part[i]) && (i < partlen))
 		i++;
-	
+
 	j = 0;
 	while (i < partlen) {
 		if (isdigit(part[i]))
@@ -364,28 +364,38 @@ static int partition_number(const char *part, int baselen)
 		else
 			return 0;
 	}
-	
+
 	num[j] = '\0';
 
 	return atoi(num);
 }
 
+/* -------------------------------------------------------------------------
+   filesystem_debug
+   ----------------
+   Display the contents of the filesystem struct.
+   ------------------------------------------------------------------------- */
 static void filesystem_debug(struct filesystem *fs)
 {
 	if (!opt_debug)
 		return;
-	
-	fprintf(stderr, "\t* vol_id(%s)\n", fs->node);
-	fprintf(stderr, "\t\t* disk:  %d\n", fs->diskn);
-	fprintf(stderr, "\t\t* part:  %d\n", fs->partn);
+
+	if (fs->node)
+		fprintf(stderr, "\t* node:  %s\n", fs->node);
+	if (fs->diskn)
+		fprintf(stderr, "\t* diskn: %d\n", fs->diskn);
+	if (fs->diskn)
+		fprintf(stderr, "\t* partn: %d\n", fs->partn);
 	if (fs->label)
-		fprintf(stderr, "\t\t* label: %s\n", fs->label);
+		fprintf(stderr, "\t* label: %s\n", fs->label);
 	if (fs->type)
-		fprintf(stderr, "\t\t* type:  %s\n", fs->type);
+		fprintf(stderr, "\t* type:  %s\n", fs->type);
 	if (fs->usage)
-		fprintf(stderr, "\t\t* usage: %s\n", fs->usage);
+		fprintf(stderr, "\t* usage: %s\n", fs->usage);
 	if (fs->uuid)
-		fprintf(stderr, "\t\t* uuid:  %s\n", fs->uuid);
+		fprintf(stderr, "\t* uuid:  %s\n", fs->uuid);
+
+	fprintf(stderr, "\t---\n");
 }
 
 /* -------------------------------------------------------------------------
@@ -421,7 +431,8 @@ static void scandisk(const char *disk, int diskn)
 		int ret;
 		char node[DEV_PATH_MAX];
 
-		ret = snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir[n]->d_name);
+		ret = snprintf(node, sizeof(node), "%s/%s",
+			       DEV_DIR, dir[n]->d_name);
 		if (ret < 0)
 			continue;
 
