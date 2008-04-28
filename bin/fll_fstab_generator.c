@@ -45,7 +45,7 @@
    opt_uuids   - use filesystem uuids in fstab configuration
    ------------------------------------------------------------------------- */
 static int opt_automnt = 0;
-static int opt_debug = 1;
+static int opt_debug = 0;
 static int opt_mkmntpt = 0;
 static int opt_noswap = 0;
 static int opt_uuids = 0;
@@ -63,6 +63,7 @@ static int opt_uuids = 0;
    ------------------------------------------------------------------------- */
 struct filesystem {
 	int diskn;
+	int partn;
 	const char *node;
 	const char *label;
 	const char *type;
@@ -138,8 +139,8 @@ static void filesystem_entry(struct filesystem *fs)
 {
 	const char *fs_auto;
 	const char *fs_opts;
-	int fs_dumpno = 0;
-	int fs_passno = 2;
+	int fs_dump = 0;
+	int fs_pass = 2;
 
 	if (strcmp(fs->usage, "filesystem") != 0 &&
 	    strcmp(fs->usage, "other") != 0)
@@ -152,32 +153,46 @@ static void filesystem_entry(struct filesystem *fs)
 		fs_opts = "users,exec,noatime";
 	} else if (strcmp(fs->type, "swap") == 0) {
 		fs_opts = "sw";
-		fs_passno = 0;
+		fs_pass = 0;
 	} else if (strcmp(fs->type, "ntfs") == 0) {
 		fs_opts = "ro,dmask=0022,fmask=0133,nls=utf8";
-		fs_passno = 0;
+		fs_pass = 0;
 	} else if (strcmp(fs->type, "msdos") == 0) {
 		fs_opts = "quiet,umask=000,iocharset=utf8";
-		fs_passno = 0;
+		fs_pass = 0;
 	} else if (strcmp(fs->type, "vfat") == 0) {
 		fs_opts = "shortname=lower,quiet,umask=000,utf8";
-		fs_passno = 0;
+		fs_pass = 0;
 	} else
 		return;
 	
-	if (strcmp(fs->type, "swap") == 0)
-		fs_auto = "";
+	if (fs->label)
+		fprintf(stdout, "\n# LABEL=%s\n", fs->label);
 	else
+		fprintf(stdout, "\n");
+	
+	if (opt_uuids && fs->uuid)
+		fprintf(stdout, "UUID=%s", fs->uuid);
+	else
+		fprintf(stdout, "%s", fs->node);
+	
+	if (strcmp(fs->type, "swap") == 0) {
+		fprintf(stdout, "\tnone\t\t");
+		fs_auto = "";
+	} else {
+		fprintf(stdout, "\t/media/disk%dpart%d",
+			fs->diskn,
+			fs->partn);
 		fs_auto = opt_automnt ? "auto," : "noauto,";
+	}
 
-	fprintf(stdout, "\n%s\t/media/disk%dpart?\t%s\t%s%s  %d  %d\n",
-		fs->node,
-		fs->diskn,
-		fs->type,
+	fprintf(stdout, "\t%s", fs->type);
+
+	fprintf(stdout, "\t%s%s  %d  %d\n",
 		fs_auto,
 		fs_opts,
-		fs_dumpno,
-		fs_passno);
+		fs_dump,
+		fs_pass);
 }
 
 static void cdrom_entry(const char* cdrom)
@@ -327,6 +342,35 @@ static void vol_id(struct filesystem *fs, const char* node)
 }
 
 /* -------------------------------------------------------------------------
+   partition_number
+   ----------------
+   Return partition index (eg input = sda6, return 6).
+   ------------------------------------------------------------------------- */
+static int partition_number(const char *part, int baselen)
+{
+	int i, j;
+	int partlen = strlen(part);
+	int numlen = partlen - baselen;
+	char num[numlen + 1];
+
+	i = 0;
+	while (!isdigit(part[i]) && (i < partlen))
+		i++;
+	
+	j = 0;
+	while (i < partlen) {
+		if (isdigit(part[i]))
+			num[j++] = part[i++];
+		else
+			return 0;
+	}
+	
+	num[j] = '\0';
+
+	return atoi(num);
+}
+
+/* -------------------------------------------------------------------------
    scandisk
    --------
    Given the base disk device name, scan /dev/ for partitions
@@ -364,6 +408,7 @@ static void scandisk(const char *disk, int diskn)
 			continue;
 
 		f.diskn = diskn + 1;
+		f.partn = partition_number(dir[n]->d_name, disklen);
 		f.node  = node;
 		f.label = NULL;
 		f.type  = NULL;
@@ -375,6 +420,8 @@ static void scandisk(const char *disk, int diskn)
 
 		if (opt_debug) {
 			fprintf(stderr, "\t* vol_id(%s)\n", fs->node);
+			fprintf(stderr, "\t\t* disk:  %d\n", fs->diskn);
+			fprintf(stderr, "\t\t* part:  %d\n", fs->partn);
 			if (fs->label)
 				fprintf(stderr, "\t\t* label: %s\n", fs->label);
 			if (fs->type)
