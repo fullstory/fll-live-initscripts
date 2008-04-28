@@ -78,32 +78,29 @@ struct filesystem {
    ------------------------------------------------------------------------- */
 static int disk_filter(const struct dirent *d)
 {
-	/*
-	 * Return 1 for any symlink in /sys/block/ starting with sd or hd.
-	 */
-	if (d->d_type != DT_LNK)
+	int ret;
+	char sysfs_path[SYS_PATH_MAX];
+	char rem[2];
+	FILE *fp;
+
+	ret = snprintf(sysfs_path, sizeof(sysfs_path),
+		       "%s/%s/removable", SYS_BLK, d->d_name);
+	if (ret < 0)
 		return 0;
+	
+	fp = fopen(sysfs_path, "r");
+	if (fp) {
+		if (fgets(rem, sizeof(rem), fp) != NULL)
+			ret = atoi(rem);
 
-	if (d->d_name[0] == 'h' && d->d_name[1] == 'd')
-		return 1;
-	if (d->d_name[0] == 's' && d->d_name[1] == 'd')
-		return 1;
+		fclose(fp);
 
-	return 0;
-}
+		if (opt_debug)
+			fprintf(stderr, "%s = %d\n", sysfs_path, ret);
 
-static int part_filter(const struct dirent *d)
-{
-	/*
-	 * Return 1 for any block device in /dev/ starting with sd or hd.
-	 */
-	if (d->d_type != DT_BLK)
-		return 0;
-
-	if (d->d_name[0] == 'h' && d->d_name[1] == 'd')
-		return 1;
-	if (d->d_name[0] == 's' && d->d_name[1] == 'd')
-		return 1;
+		if (ret == 0)
+			return 1;
+	}
 
 	return 0;
 }
@@ -113,10 +110,8 @@ static int cdrom_filter(const struct dirent *d)
 	/*
 	 * Return 1 for any symlink in /dev/ starting with cdrom.
 	 */
-	if (d->d_type != DT_LNK)
-		return 0;
-
-	if (strncmp(d->d_name, "cdrom", 5) == 0)
+	if (strncmp(d->d_name, "cdrom", 5) == 0 &&
+	    d->d_type == DT_LNK)
 		return 1;
 
 	return 0;
@@ -127,10 +122,8 @@ static int floppy_filter(const struct dirent *d)
 	/*
 	 * Return 1 for any block device in /dev/ starting with fd.
 	 */
-	if (d->d_type != DT_BLK)
-		return 0;
-
-	if (strncmp(d->d_name, "fd", 2) == 0)
+	if (strncmp(d->d_name, "fd", 2) == 0 &&
+	    d->d_type == DT_BLK)
 		return 1;
 
 	return 0;
@@ -189,9 +182,12 @@ static void filesystem_entry(struct filesystem *fs)
 
 static void cdrom_entry(const char* cdrom)
 {
+	int ret;
 	char node[DEV_PATH_MAX];
 
-	snprintf(node, sizeof(node), "%s/%s", DEV_DIR, cdrom);
+	ret = snprintf(node, sizeof(node), "%s/%s", DEV_DIR, cdrom);
+	if (ret < 0)
+		return;
 
 	fprintf(stdout, "\n%s\t/media/%s\tudf,iso9660\tuser,noauto\t0  0\n",
 		node,
@@ -200,9 +196,12 @@ static void cdrom_entry(const char* cdrom)
 
 static void floppy_entry(const char* floppy)
 {
+	int ret;
 	char node[DEV_PATH_MAX];
 
-	snprintf(node, sizeof(node), "%s/%s", DEV_DIR, floppy);
+	ret = snprintf(node, sizeof(node), "%s/%s", DEV_DIR, floppy);
+	if (ret < 0)
+		return;
 
 	fprintf(stdout, "\n%s\t/media/%s\tauto\trw,user,noauto\t0  0\n",
 		node,
@@ -231,10 +230,8 @@ static int vol_id_probe(struct volume_id *vid, uint64_t size, const char *node)
 	gid = getegid();
 	grn = getgroups(ngroups_max, groups);
 
-	if (grn < 0) {
-		fprintf(stderr, "E: getgroups failed\n");
-		return -1;
-	}
+	if (grn < 0)
+		goto error;
 
 	groups[grn++] = gid;
 
@@ -246,18 +243,10 @@ static int vol_id_probe(struct volume_id *vid, uint64_t size, const char *node)
 		pw = getpwnam("nobody");
 
 		if (pw != NULL && pw->pw_uid > 0 && pw->pw_gid > 0) {
-			if (setgroups(0, NULL) != 0) {
-				fprintf(stderr, "E: setgroups failed\n");
-				return -1;
-			}
-			if (setegid(pw->pw_gid) != 0) {
-				fprintf(stderr, "E: setegid failed\n");
-				return -1;
-			}
-			if (seteuid(pw->pw_uid) != 0) {
-				fprintf(stderr, "E: seteuid failed\n");
-				return -1;
-			}
+			if (setgroups(0, NULL) != 0 ||
+			    setegid(pw->pw_gid) != 0 ||
+			    seteuid(pw->pw_uid) != 0)
+			    	goto error;
 		}
 	}
 
@@ -267,24 +256,17 @@ static int vol_id_probe(struct volume_id *vid, uint64_t size, const char *node)
 	 * restore original privileges
 	 */
 	if (uid == 0) {
-		if (seteuid(uid) != 0) {
-			fprintf(stderr, "E: seteuid failed\n");
-			return -1;
-		}
-		if (setegid(gid) != 0) {
-			fprintf(stderr, "E: setegid failed\n");
-			return -1;
-		}
-		if (setgroups(grn, groups) != 0) {
-			fprintf(stderr, "E: setgroups failed\n");
-			return -1;
-		}
+		if (seteuid(uid) != 0 ||
+		    setegid(gid) != 0 ||
+		    setgroups(grn, groups) != 0)
+		    	goto error;
 	}
 
-	if (ret != 0)
-		return -1;
+	return ret;
 
-	return 0;
+ error:
+ 	fprintf(stderr, "vol_id_probe() failed\n");
+	return -1;
 }
 
 static void vol_id(struct filesystem *fs, const char* node)
@@ -352,16 +334,21 @@ static void vol_id(struct filesystem *fs, const char* node)
 static void scandisk(const char *disk, int diskn)
 {
 	struct dirent **dir;
-	int dirnum;
-	int n;
+	int dirnum, n, ret;
 	int disklen = strlen(disk);
+	char sysfs_path[SYS_PATH_MAX];
+
+	ret = snprintf(sysfs_path, sizeof(sysfs_path),
+		       "%s/%s", SYS_BLK, disk);
+	if (ret < 0)
+		return;
 
 	/*
 	 * scan for partition device node symlinks
 	 */
-	dirnum = scandir(DEV_DIR,
+	dirnum = scandir(sysfs_path,
 			 &dir,
-			 part_filter,
+			 0,
 			 versionsort);
 
 	for (n = 0; n < dirnum; n++) {
@@ -369,9 +356,12 @@ static void scandisk(const char *disk, int diskn)
 			continue;
 
 		struct filesystem f, *fs;
+		int ret;
 		char node[DEV_PATH_MAX];
 
-		snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir[n]->d_name);
+		ret = snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir[n]->d_name);
+		if (ret < 0)
+			continue;
 
 		f.diskn = diskn + 1;
 		f.node  = node;
@@ -410,9 +400,7 @@ static void scandisk(const char *disk, int diskn)
 int main(int argc, char *argv[])
 {
 	struct dirent **dir;
-	int dirnum;
-	int n;
-	int opt;
+	int dirnum, n, opt;
 
 	while ((opt = getopt(argc, argv, "admnu")) != -1) {
 		switch (opt) {
