@@ -72,24 +72,17 @@ struct filesystem {
 };
 
 /* -------------------------------------------------------------------------
-   <device>_filter functions
-   -------------------------
-   These functions are given to scandir(2) when scanning for a particular
-   type of block device, to filter out the desired output.
+   sysfs_device_<attribue> functions
+   ---------------------------------
+   These functions are test propoerties of the sysfs heir of a disk to
+   determine if it should be considered for inclusion in fstab.
    ------------------------------------------------------------------------- */
-static int disk_filter(const struct dirent *d)
+static int sysfs_device_removable(const char *path)
 {
-	int ret;
-	char sysfs_path[SYS_PATH_MAX];
-	char rem[2];
 	FILE *fp;
+	char rem[2];
 
-	ret = snprintf(sysfs_path, sizeof(sysfs_path),
-		       "%s/%s/removable", SYS_BLK, d->d_name);
-	if (ret < 0)
-		return 0;
-
-	fp = fopen(sysfs_path, "r");
+	fp = fopen(path, "r");
 	if (fp) {
 		fgets(rem, sizeof(rem), fp);
 		fclose(fp);
@@ -98,13 +91,65 @@ static int disk_filter(const struct dirent *d)
 			return 0;
 
 		if (opt_debug)
-			fprintf(stderr, "%s = %s\n", sysfs_path, rem);
+			fprintf(stderr, "%s = %s\n", path, rem);
 
 		if (strncmp(rem, "0", 1) == 0)
-			return 1;
+			return 0;
 	}
 
+	return 1;
+}
+
+static int sysfs_device_isusb(const char *path)
+{
+	char device_link[SYS_PATH_MAX];
+
+	if (readlink(path, device_link, sizeof(device_link)) < 0)
+		return 1;
+	
+	if (device_link == NULL)
+		return 1;
+	
+	if (opt_debug)
+		fprintf(stderr, "usb? %s\n", device_link);
+	
+	if (strstr(device_link, "/usb") != NULL)
+		return 1;
+	
 	return 0;
+}
+
+/* -------------------------------------------------------------------------
+   <device>_filter functions
+   -------------------------
+   These functions are given to scandir(2) when scanning for a particular
+   type of block device, to filter out the desired output.
+   ------------------------------------------------------------------------- */
+static int disk_filter(const struct dirent *d)
+{
+	int ret;
+	char sysfs_rem_path[SYS_PATH_MAX];
+	char sysfs_dev_path[SYS_PATH_MAX];
+
+	ret = snprintf(sysfs_rem_path, sizeof(sysfs_rem_path),
+		       "%s/%s/removable", SYS_BLK, d->d_name);
+	if (ret < 0)
+		return 0;
+	
+	ret = sysfs_device_removable(sysfs_rem_path);
+	if (ret == 1)
+		return 0;
+	
+	ret = snprintf(sysfs_dev_path, sizeof(sysfs_dev_path),
+		       "%s/%s/device", SYS_BLK, d->d_name);
+	if (ret < 0)
+		return 0;
+	
+	ret = sysfs_device_isusb(sysfs_dev_path);
+	if (ret == 1)
+		return 0;
+
+	return 1;
 }
 
 static int cdrom_filter(const struct dirent *d)
