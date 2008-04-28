@@ -44,6 +44,15 @@ static int opt_mkmntpt = 0;
 static int opt_noswap = 0;
 static int opt_uuids = 0;
 
+/* ------------------------------------------------------------------------- *
+ *
+ * ------------------------------------------------------------------------- */
+struct filesystem {
+	const char *label;
+	const char *type;
+	const char *usage;
+	const char *uuid;
+};
 
 /* ------------------------------------------------------------------------- *
  *
@@ -78,7 +87,7 @@ static int floppy_filter(const struct dirent *d)
 /* ------------------------------------------------------------------------- *
  *
  * ------------------------------------------------------------------------- */
-static int vol_id(struct volume_id *vid, uint64_t size, const char *node)
+static int vol_id_probe(struct volume_id *vid, uint64_t size, const char *node)
 {
 	int ret, gid, uid, grn;
 	int ngroups_max = NGROUPS_MAX - 1;
@@ -141,7 +150,7 @@ static int vol_id(struct volume_id *vid, uint64_t size, const char *node)
 	return 0;
 }
 
-static void fs_entry(const char* node)
+static void vol_id(struct filesystem *fs, const char* node)
 {
 	struct volume_id *vid;
 	int fd, ret;
@@ -167,7 +176,7 @@ static void fs_entry(const char* node)
 	if (ioctl(fd, BLKGETSIZE64, &size) != 0)
 		size = 0;
 
-	ret = vol_id(vid, size, node);
+	ret = vol_id_probe(vid, size, node);
 	if (ret < 0)
 		goto end;
 
@@ -182,14 +191,14 @@ static void fs_entry(const char* node)
 	volume_id_encode_string(label, label_enc, sizeof(label_enc));
 	volume_id_encode_string(uuid, uuid_enc, sizeof(uuid_enc));
 
-	if (opt_debug && strlen(label_enc) > 0)
-		fprintf(stderr, "\t\t* %s\n", label);
-	if (opt_debug && strlen(uuid_enc) > 0)
-		fprintf(stderr, "\t\t* %s\n", uuid);
-	if (opt_debug && strlen(type) > 0)
-		fprintf(stderr, "\t\t* %s\n", type);
-	if (opt_debug && strlen(usage) > 0)
-		fprintf(stderr, "\t\t* %s\n", usage);
+	if (strlen(label_enc) > 0)
+		fs->label = label_enc;
+	if (strlen(uuid_enc) > 0)
+		fs->uuid = uuid_enc;
+	if (strlen(type) > 0)
+		fs->type = type;
+	if (strlen(usage) > 0)
+		fs->usage = usage;
 	
  end:
 	if (vid != NULL)
@@ -266,7 +275,7 @@ int main(int argc, char *argv[])
 		char *disk = dir[n]->d_name;
 
 		if (opt_debug)
-			fprintf(stderr, "---> %s (disk)\n", disk);
+			fprintf(stderr, "---> %s\n", disk);
 
 		/*
 		 * scan for partition device node symlinks
@@ -280,13 +289,29 @@ int main(int argc, char *argv[])
 			if (strncmp(dir2[m]->d_name, disk, strlen(disk)) != 0)
 				continue;
 
+			struct filesystem f, *fs;
 			char node[DEV_PATH_MAX];
 			snprintf(node, sizeof(node), "%s/%s", DEV_DIR, dir2[m]->d_name);
 
-			if (opt_debug)
-				fprintf(stderr, "\t* %s\n", node);
+			f.label = NULL;
+			f.type = NULL;
+			f.usage = NULL;
+			f.uuid = NULL;
+			
+			fs = &f;
+			vol_id(fs, node);
 
-			fs_entry(node);
+			if (opt_debug) {
+				fprintf(stderr, "\t* vol_id(%s)\n", node);
+				if (fs->label)
+					fprintf(stderr, "\t\t* label: %s\n", fs->label);
+				if (fs->type)
+					fprintf(stderr, "\t\t* type:  %s\n", fs->type);
+				if (fs->usage)
+					fprintf(stderr, "\t\t* usage: %s\n", fs->usage);
+				if (fs->uuid)
+					fprintf(stderr, "\t\t* uuid:  %s\n", fs->uuid);
+			}
 		}
 	}
 
@@ -300,7 +325,7 @@ int main(int argc, char *argv[])
 
 	for (n = 0; n < dirnum; n++) {
 		if (opt_debug)
-			fprintf(stderr, "---> %s (cdrom)\n", dir[n]->d_name);
+			fprintf(stderr, "---> %s\n", dir[n]->d_name);
 
 		cdrom_entry(dir[n]->d_name);
 	}
@@ -315,7 +340,7 @@ int main(int argc, char *argv[])
 
 	for (n = 0; n < dirnum; n++) {
 		if (opt_debug)
-			fprintf(stderr, "---> %s (floppy)\n", dir[n]->d_name);
+			fprintf(stderr, "---> %s\n", dir[n]->d_name);
 
 		floppy_entry(dir[n]->d_name);
 	}
