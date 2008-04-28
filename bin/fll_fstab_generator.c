@@ -26,7 +26,9 @@
 
 #include <libvolume_id.h>
 
+#ifndef BLKGETSIZE64
 #define BLKGETSIZE64    _IOR(0x12, 114, size_t)
+#endif
 
 #define SYS_BLK         "/sys/block"
 #define DEV_DIR         "/dev"
@@ -75,6 +77,28 @@ struct filesystem {
  * ------------------------------------------------------------------------- */
 static int disk_filter(const struct dirent *d)
 {
+	/*
+	 * Return 1 for any symlink in /sys/block/ starting with sd or hd.
+	 */
+	if (d->d_type != DT_LNK)
+		return 0;
+
+	if (d->d_name[0] == 'h' && d->d_name[1] == 'd')
+		return 1;
+	if (d->d_name[0] == 's' && d->d_name[1] == 'd')
+		return 1;
+
+	return 0;
+}
+
+static int part_filter(const struct dirent *d)
+{
+	/*
+	 * Return 1 for any block device in /dev/ starting with sd or hd.
+	 */
+	if (d->d_type != DT_BLK)
+		return 0;
+
 	if (d->d_name[0] == 'h' && d->d_name[1] == 'd')
 		return 1;
 	if (d->d_name[0] == 's' && d->d_name[1] == 'd')
@@ -85,6 +109,12 @@ static int disk_filter(const struct dirent *d)
 
 static int cdrom_filter(const struct dirent *d)
 {
+	/*
+	 * Return 1 for any symlink in /dev/ starting with cdrom.
+	 */
+	if (d->d_type != DT_LNK)
+		return 0;
+
 	if (strncmp(d->d_name, "cdrom", 5) == 0)
 		return 1;
 
@@ -93,12 +123,42 @@ static int cdrom_filter(const struct dirent *d)
 
 static int floppy_filter(const struct dirent *d)
 {
-	if (strncmp(d->d_name, "fd", 2) == 0 && strlen(d->d_name) >= 3)
+	/*
+	 * Return 1 for any block device in /dev/ starting with fd.
+	 */
+	if (d->d_type != DT_BLK)
+		return 0;
+
+	if (strncmp(d->d_name, "fd", 2) == 0)
 		return 1;
 
 	return 0;
 }
 
+/* ------------------------------------------------------------------------- *
+ * <device>_entry functions
+ * ------------------------
+ * Print out a line of fstab for a particular device type.
+ * ------------------------------------------------------------------------- */
+static void cdrom_entry(const char* cdrom)
+{
+	char node[DEV_PATH_MAX];
+
+	snprintf(node, sizeof(node), "%s/%s", DEV_DIR, cdrom);
+
+	fprintf(stdout, "\n%s\t/media/%s\tudf,iso9660\tuser,noauto\t0\t0\n",
+		node, cdrom);
+}
+
+static void floppy_entry(const char* floppy)
+{
+	char node[DEV_PATH_MAX];
+
+	snprintf(node, sizeof(node), "%s/%s", DEV_DIR, floppy);
+
+	fprintf(stdout, "\n%s\t/media/%s\tauto\trw,user,noauto\t0\t0\n",
+		node, floppy);
+}
 
 /* ------------------------------------------------------------------------- *
  * volume_id wrapping functions
@@ -236,32 +296,6 @@ static void vol_id(struct filesystem *fs, const char* node)
 }
 
 /* ------------------------------------------------------------------------- *
- * <device>_entry functions
- * ------------------------
- * Print out a line of fstab for a particular device type.
- * ------------------------------------------------------------------------- */
-static void cdrom_entry(const char* cdrom)
-{
-	char node[DEV_PATH_MAX];
-
-	snprintf(node, sizeof(node), "%s/%s", DEV_DIR, cdrom);
-
-	fprintf(stdout, "\n%s\t/media/%s\tudf,iso9660\tuser,noauto\t0\t0\n",
-		node, cdrom);
-}
-
-static void floppy_entry(const char* floppy)
-{
-	char node[DEV_PATH_MAX];
-
-	snprintf(node, sizeof(node), "%s/%s", DEV_DIR, floppy);
-
-	fprintf(stdout, "\n%s\t/media/%s\tauto\trw,user,noauto\t0\t0\n",
-		node, floppy);
-}
-
-
-/* ------------------------------------------------------------------------- *
  * main
  * ----
  * Detect block devices and output a fstab configuration.
@@ -317,7 +351,7 @@ int main(int argc, char *argv[])
 		 */
 		dirnum2 = scandir(DEV_DIR,
 				  &dir2,
-				  disk_filter,
+				  part_filter,
 				  versionsort);
 		
 		for (m = 0; m < dirnum2; m++) {
