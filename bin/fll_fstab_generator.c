@@ -1,12 +1,11 @@
-/*
- * fll_fstab_generator
- * -------------------
- * Detect block devices and output a fstab configuration.
- *
- * Copyright: (c) 2008 Kel Modderman <kel@otaku42.de>
- * License: GPLv2
- *
- */
+/* -------------------------------------------------------------------------
+   fll_fstab_generator
+   -------------------
+   Detect block devices and output a fstab configuration.
+
+   Copyright: (c) 2008 Kel Modderman <kel@otaku42.de>
+   License: GPLv2
+   ------------------------------------------------------------------------- */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
@@ -36,31 +35,31 @@
 #define DEV_PATH_MAX    VOLUME_ID_PATH_MAX
 #define SYS_PATH_MAX    VOLUME_ID_PATH_MAX
 
-/* ------------------------------------------------------------------------- *
- * global options
- * --------------
- * opt_automnt - automount filesystem volumes
- * opt_debug   - enable debugging
- * opt_mkmntpt - make mountpoints as required
- * opt_noswap  - disable swap configuration
- * opt_uuids   - use filesystem uuids in fstab configuration
- * ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------
+   global options
+   --------------
+   opt_automnt - automount filesystem volumes
+   opt_debug   - enable debugging
+   opt_mkmntpt - make mountpoints as required
+   opt_noswap  - disable swap configuration
+   opt_uuids   - use filesystem uuids in fstab configuration
+   ------------------------------------------------------------------------- */
 static int opt_automnt = 0;
 static int opt_debug = 1;
 static int opt_mkmntpt = 0;
 static int opt_noswap = 0;
 static int opt_uuids = 0;
 
-/* ------------------------------------------------------------------------- *
- * filesystem struct
- * -----------------
- * Hold information about a filesystem:
- *   node  - block device node
- *   label - filesystem label
- *   type  - filesystem type
- *   usage - volume usage
- *   uuid  - filesystem uuid
- * ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------
+   filesystem struct
+   -----------------
+   Hold information about a filesystem:
+     node  - block device node
+     label - filesystem label
+     type  - filesystem type
+     usage - volume usage
+     uuid  - filesystem uuid
+   ------------------------------------------------------------------------- */
 struct filesystem {
 	const char *node;
 	const char *label;
@@ -69,12 +68,12 @@ struct filesystem {
 	const char *uuid;
 };
 
-/* ------------------------------------------------------------------------- *
- * <device>_filter functions
- * -------------------------
- * These functions are given to scandir(2) when scanning for a particular
- * type of block device, to filter out the desired output.
- * ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------
+   <device>_filter functions
+   -------------------------
+   These functions are given to scandir(2) when scanning for a particular
+   type of block device, to filter out the desired output.
+   ------------------------------------------------------------------------- */
 static int disk_filter(const struct dirent *d)
 {
 	/*
@@ -135,11 +134,11 @@ static int floppy_filter(const struct dirent *d)
 	return 0;
 }
 
-/* ------------------------------------------------------------------------- *
- * <device>_entry functions
- * ------------------------
- * Print out a line of fstab for a particular device type.
- * ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------
+   <device>_entry functions
+   ------------------------
+   Print out a line of fstab for a particular device type.
+   ------------------------------------------------------------------------- */
 static void cdrom_entry(const char* cdrom)
 {
 	char node[DEV_PATH_MAX];
@@ -160,22 +159,22 @@ static void floppy_entry(const char* floppy)
 		node, floppy);
 }
 
-/* ------------------------------------------------------------------------- *
- * volume_id wrapping functions
- * ----------------------------
- * vol_id_probe() handles the filesystem probing, it temporarily drops privs
- * before reading the block device, then restroes privs thereafter.
- *
- * vol_id() fills the filesystem struct pointer with the probed filesystem
- * information.
- * ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------
+   volume_id wrapping functions
+   ----------------------------
+   vol_id_probe() handles the filesystem probing, it temporarily drops privs
+   before reading the block device, then restroes privs thereafter.
+
+   vol_id() fills the filesystem struct pointer with the probed filesystem
+   information.
+   ------------------------------------------------------------------------- */
 static int vol_id_probe(struct volume_id *vid, uint64_t size, const char *node)
 {
 	int ret, gid, uid, grn;
 	int ngroups_max = NGROUPS_MAX - 1;
 	gid_t groups[NGROUPS_MAX];
 
-	/* 
+	/*
 	 * store privilege properties for restoration later
 	 */
 	uid = geteuid();
@@ -189,7 +188,7 @@ static int vol_id_probe(struct volume_id *vid, uint64_t size, const char *node)
 
 	groups[grn++] = gid;
 
-	/* 
+	/*
 	 * try to drop all privileges before reading disk content
 	 */
 	if (uid == 0) {
@@ -214,7 +213,7 @@ static int vol_id_probe(struct volume_id *vid, uint64_t size, const char *node)
 
 	ret = volume_id_probe_all(vid, 0, size);
 
-	/* 
+	/*
 	 * restore original privileges
 	 */
 	if (uid == 0) {
@@ -287,7 +286,7 @@ static void vol_id(struct filesystem *fs, const char* node)
 		fs->type = type;
 	if (strlen(usage) > 0)
 		fs->usage = usage;
-	
+
  end:
 	if (vid != NULL)
 		volume_id_close(vid);
@@ -295,11 +294,11 @@ static void vol_id(struct filesystem *fs, const char* node)
 	close(fd);
 }
 
-/* ------------------------------------------------------------------------- *
- * scandisk
- * --------
- * Given the base disk device name, scan /dev/ for partitions
- * ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------
+   scandisk
+   --------
+   Given the base disk device name, scan /dev/ for partitions
+   ------------------------------------------------------------------------- */
 static void scandisk(const char *disk)
 {
 	struct dirent **dir;
@@ -314,7 +313,7 @@ static void scandisk(const char *disk)
 			 &dir,
 			 part_filter,
 			 versionsort);
-	
+
 	for (n = 0; n < dirnum; n++) {
 		if (strncmp(dir[n]->d_name, disk, disklen) != 0)
 			continue;
@@ -328,7 +327,7 @@ static void scandisk(const char *disk)
 		f.type  = NULL;
 		f.usage = NULL;
 		f.uuid  = NULL;
-		
+
 		fs = &f;
 		vol_id(fs, node);
 
@@ -346,11 +345,11 @@ static void scandisk(const char *disk)
 	}
 }
 
-/* ------------------------------------------------------------------------- *
- * main
- * ----
- * Detect block devices and output a fstab configuration.
- * ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------
+   main
+   ----
+   Detect block devices and output a fstab configuration.
+   ------------------------------------------------------------------------- */
 int main(int argc, char *argv[])
 {
 	struct dirent **dir;
