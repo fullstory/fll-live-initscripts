@@ -370,6 +370,24 @@ static int partition_number(const char *part, int baselen)
 	return atoi(num);
 }
 
+static void filesystem_debug(struct filesystem *fs)
+{
+	if (!opt_debug)
+		return;
+	
+	fprintf(stderr, "\t* vol_id(%s)\n", fs->node);
+	fprintf(stderr, "\t\t* disk:  %d\n", fs->diskn);
+	fprintf(stderr, "\t\t* part:  %d\n", fs->partn);
+	if (fs->label)
+		fprintf(stderr, "\t\t* label: %s\n", fs->label);
+	if (fs->type)
+		fprintf(stderr, "\t\t* type:  %s\n", fs->type);
+	if (fs->usage)
+		fprintf(stderr, "\t\t* usage: %s\n", fs->usage);
+	if (fs->uuid)
+		fprintf(stderr, "\t\t* uuid:  %s\n", fs->uuid);
+}
+
 /* -------------------------------------------------------------------------
    scandisk
    --------
@@ -418,19 +436,7 @@ static void scandisk(const char *disk, int diskn)
 		fs = &f;
 		vol_id(fs, node);
 
-		if (opt_debug) {
-			fprintf(stderr, "\t* vol_id(%s)\n", fs->node);
-			fprintf(stderr, "\t\t* disk:  %d\n", fs->diskn);
-			fprintf(stderr, "\t\t* part:  %d\n", fs->partn);
-			if (fs->label)
-				fprintf(stderr, "\t\t* label: %s\n", fs->label);
-			if (fs->type)
-				fprintf(stderr, "\t\t* type:  %s\n", fs->type);
-			if (fs->usage)
-				fprintf(stderr, "\t\t* usage: %s\n", fs->usage);
-			if (fs->uuid)
-				fprintf(stderr, "\t\t* uuid:  %s\n", fs->uuid);
-		}
+		filesystem_debug(fs);
 
 		if (!fs->usage || !fs->type)
 			continue;
