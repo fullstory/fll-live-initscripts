@@ -64,6 +64,7 @@ static int opt_uuids = 0;
 struct filesystem {
 	int diskn;
 	int partn;
+	const char *name;
 	const char *node;
 	const char *label;
 	const char *type;
@@ -100,20 +101,28 @@ static int sysfs_device_removable(const char *path)
 	return 1;
 }
 
-static int sysfs_device_isusb(const char *path)
+static int sysfs_device_isexternal(const char *path)
 {
-	char device_link[SYS_PATH_MAX];
+	char buf[SYS_PATH_MAX];
+	int buflen = SYS_PATH_MAX - 1;
+	int len;
 
-	if (readlink(path, device_link, sizeof(device_link)) < 0)
+	len = readlink(path, buf, buflen);
+	if (len < 0)
 		return 1;
-	
-	if (device_link == NULL)
-		return 1;
+	buf[len] = '\0';
 	
 	if (opt_debug)
-		fprintf(stderr, "usb? %s\n", device_link);
+		fprintf(stderr, "%s\n", buf);
 	
-	if (strstr(device_link, "/usb") != NULL)
+	/*
+	 * Hackish method of querying if disk device is attached
+	 * via a parent device of usb or firwire type.
+	 */
+	if (strstr(buf, "/usb") != NULL)
+		return 1;
+	
+	if (strstr(buf, "/fw") != NULL)
 		return 1;
 	
 	return 0;
@@ -140,12 +149,25 @@ static int disk_filter(const struct dirent *d)
 	if (ret == 1)
 		return 0;
 	
-	ret = snprintf(sysfs_dev_path, sizeof(sysfs_dev_path),
-		       "%s/%s/device", SYS_BLK, d->d_name);
+	if (d->d_type == DT_LNK) {
+		/*
+		 * Linux >= 2.6.25:
+		 *   /sys/block/sda -> ../devices/...
+		 */
+		ret = snprintf(sysfs_dev_path, sizeof(sysfs_dev_path),
+		       "%s/%s", SYS_BLK, d->d_name);
+	} else if (d->d_type == DT_DIR) {
+		/*
+		 * Linux < 2.6.25:
+		 *   /sys/block/sda/device -> ../../devices/...
+		 */
+		ret = snprintf(sysfs_dev_path, sizeof(sysfs_dev_path),
+			       "%s/%s/device", SYS_BLK, d->d_name);
+	}
 	if (ret < 0)
 		return 0;
 	
-	ret = sysfs_device_isusb(sysfs_dev_path);
+	ret = sysfs_device_isexternal(sysfs_dev_path);
 	if (ret == 1)
 		return 0;
 
@@ -167,10 +189,9 @@ static int cdrom_filter(const struct dirent *d)
 static int floppy_filter(const struct dirent *d)
 {
 	/*
-	 * Return 1 for any block device in /dev/ starting with fd.
+	 * Return 1 for any item in /sys/block/ starting with fd.
 	 */
-	if (strncmp(d->d_name, "fd", 2) == 0 &&
-	    d->d_type == DT_BLK)
+	if (strncmp(d->d_name, "fd", 2) == 0)
 		return 1;
 
 	return 0;
@@ -388,11 +409,11 @@ static void vol_id(struct filesystem *fs, const char* node)
 }
 
 /* -------------------------------------------------------------------------
-   partition_number
-   ----------------
+   part_index
+   ----------
    Return partition index (eg input = sda6, return 6).
    ------------------------------------------------------------------------- */
-static int partition_number(const char *part, int baselen)
+static int part_index(const char *part, int baselen)
 {
 	int i, j;
 	int partlen = strlen(part);
@@ -404,12 +425,8 @@ static int partition_number(const char *part, int baselen)
 		i++;
 
 	j = 0;
-	while (i < partlen) {
-		if (isdigit(part[i]))
-			num[j++] = part[i++];
-		else
-			return 0;
-	}
+	while (i < partlen)
+		num[j++] = part[i++];
 
 	num[j] = '\0';
 
@@ -426,6 +443,8 @@ static void filesystem_debug(struct filesystem *fs)
 	if (!opt_debug)
 		return;
 
+	if (fs->name)
+		fprintf(stderr, "\t* name:  %s\n", fs->name);
 	if (fs->node)
 		fprintf(stderr, "\t* node:  %s\n", fs->node);
 	if (fs->diskn)
@@ -483,7 +502,8 @@ static void scandisk(const char *disk, int diskn)
 			continue;
 
 		f.diskn = diskn + 1;
-		f.partn = partition_number(dir[n]->d_name, disklen);
+		f.partn = part_index(dir[n]->d_name, disklen);
+		f.name  = dir[n]->d_name;
 		f.node  = node;
 		f.label = NULL;
 		f.type  = NULL;
@@ -567,7 +587,7 @@ int main(int argc, char *argv[])
 	/*
 	 * scan for floppy device nodes
 	 */
-	dirnum = scandir(DEV_DIR,
+	dirnum = scandir(SYS_BLK,
 			 &dir,
 			 floppy_filter,
 			 versionsort);
