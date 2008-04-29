@@ -26,14 +26,18 @@
 #include <libvolume_id.h>
 
 #ifndef BLKGETSIZE64
-#define BLKGETSIZE64    _IOR(0x12, 114, size_t)
+#define BLKGETSIZE64     _IOR(0x12, 114, size_t)
 #endif
 
-#define SYS_BLK         "/sys/block"
-#define DEV_DIR         "/dev"
+#define SYS_BLK          "/sys/block"
+#define DEV_DIR          "/dev"
 
-#define DEV_PATH_MAX    VOLUME_ID_PATH_MAX
-#define SYS_PATH_MAX    VOLUME_ID_PATH_MAX
+#define DEV_DISK_BYID    "/dev/disk/by-id"
+#define DEV_DISK_BYLABEL "/dev/disk/by-label"
+#define DEV_DISK_BYUUIID "/dev/disk/by-uuid"
+
+#define DEV_PATH_MAX     VOLUME_ID_PATH_MAX
+#define SYS_PATH_MAX     VOLUME_ID_PATH_MAX
 
 /* -------------------------------------------------------------------------
    global options
@@ -73,6 +77,36 @@ struct filesystem {
 };
 
 /* -------------------------------------------------------------------------
+   filesystem_debug
+   ----------------
+   Display the contents of the filesystem struct.
+   ------------------------------------------------------------------------- */
+static void filesystem_debug(struct filesystem *fs)
+{
+	if (!opt_debug)
+		return;
+
+	if (fs->name)
+		fprintf(stderr, "\t* name:  %s\n", fs->name);
+	if (fs->node)
+		fprintf(stderr, "\t* node:  %s\n", fs->node);
+	if (fs->diskn)
+		fprintf(stderr, "\t* diskn: %d\n", fs->diskn);
+	if (fs->diskn)
+		fprintf(stderr, "\t* partn: %d\n", fs->partn);
+	if (fs->label)
+		fprintf(stderr, "\t* label: %s\n", fs->label);
+	if (fs->type)
+		fprintf(stderr, "\t* type:  %s\n", fs->type);
+	if (fs->usage)
+		fprintf(stderr, "\t* usage: %s\n", fs->usage);
+	if (fs->uuid)
+		fprintf(stderr, "\t* uuid:  %s\n", fs->uuid);
+
+	fprintf(stderr, "\t---\n");
+}
+
+/* -------------------------------------------------------------------------
    sysfs_device_<attribue> functions
    ---------------------------------
    These functions are test propoerties of the sysfs heir of a disk to
@@ -81,20 +115,20 @@ struct filesystem {
 static int sysfs_device_removable(const char *path)
 {
 	FILE *fp;
-	char rem[2];
+	char val[2];
 
 	fp = fopen(path, "r");
 	if (fp) {
-		fgets(rem, sizeof(rem), fp);
+		fgets(val, sizeof(val), fp);
 		fclose(fp);
 
-		if (rem == NULL)
-			return 0;
+		if (val == NULL)
+			return 1;
 
 		if (opt_debug)
-			fprintf(stderr, "%s = %s\n", path, rem);
+			fprintf(stderr, "%s\n---> %s\n", path, val);
 
-		if (strncmp(rem, "0", 1) == 0)
+		if (strcmp(val, "0") == 0)
 			return 0;
 	}
 
@@ -113,7 +147,7 @@ static int sysfs_device_isexternal(const char *path)
 	buf[len] = '\0';
 	
 	if (opt_debug)
-		fprintf(stderr, "%s\n", buf);
+		fprintf(stderr, "%s\n---> %s\n", path, buf);
 	
 	/*
 	 * Hackish method of querying if disk device is attached
@@ -177,7 +211,7 @@ static int disk_filter(const struct dirent *d)
 static int cdrom_filter(const struct dirent *d)
 {
 	/*
-	 * Return 1 for any symlink in /dev/ starting with cdrom.
+	 * Return 1 for any symlink starting with cdrom.
 	 */
 	if (strncmp(d->d_name, "cdrom", 5) == 0 &&
 	    d->d_type == DT_LNK)
@@ -189,7 +223,7 @@ static int cdrom_filter(const struct dirent *d)
 static int floppy_filter(const struct dirent *d)
 {
 	/*
-	 * Return 1 for any item in /sys/block/ starting with fd.
+	 * Return 1 for any item in starting with fd.
 	 */
 	if (strncmp(d->d_name, "fd", 2) == 0)
 		return 1;
@@ -434,36 +468,6 @@ static int part_index(const char *part, int baselen)
 }
 
 /* -------------------------------------------------------------------------
-   filesystem_debug
-   ----------------
-   Display the contents of the filesystem struct.
-   ------------------------------------------------------------------------- */
-static void filesystem_debug(struct filesystem *fs)
-{
-	if (!opt_debug)
-		return;
-
-	if (fs->name)
-		fprintf(stderr, "\t* name:  %s\n", fs->name);
-	if (fs->node)
-		fprintf(stderr, "\t* node:  %s\n", fs->node);
-	if (fs->diskn)
-		fprintf(stderr, "\t* diskn: %d\n", fs->diskn);
-	if (fs->diskn)
-		fprintf(stderr, "\t* partn: %d\n", fs->partn);
-	if (fs->label)
-		fprintf(stderr, "\t* label: %s\n", fs->label);
-	if (fs->type)
-		fprintf(stderr, "\t* type:  %s\n", fs->type);
-	if (fs->usage)
-		fprintf(stderr, "\t* usage: %s\n", fs->usage);
-	if (fs->uuid)
-		fprintf(stderr, "\t* uuid:  %s\n", fs->uuid);
-
-	fprintf(stderr, "\t---\n");
-}
-
-/* -------------------------------------------------------------------------
    scandisk
    --------
    Given the base disk device name, scan /dev/ for partitions
@@ -501,10 +505,21 @@ static void scandisk(const char *disk, int diskn)
 		if (ret < 0)
 			continue;
 
+		/*
+		 * disk + partition indeices
+		 */
 		f.diskn = diskn + 1;
 		f.partn = part_index(dir[n]->d_name, disklen);
+
+		/*
+		 * block device basename + device node
+		 */
 		f.name  = dir[n]->d_name;
 		f.node  = node;
+		
+		/*
+		 * initialize these before vol_id()
+		 */
 		f.label = NULL;
 		f.type  = NULL;
 		f.usage = NULL;
