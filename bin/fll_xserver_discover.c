@@ -91,6 +91,7 @@ static const char *fll_get_x_driver(uint16_t v_id, uint16_t d_id, int debug)
 
 	/* read each pciid list */
 	for (n = 0; n < dirnum; n++) {
+		FILE *file;
 		char filename[256];
 		char line[10];
 
@@ -103,7 +104,6 @@ static const char *fll_get_x_driver(uint16_t v_id, uint16_t d_id, int debug)
 			       filename);
 		}
 
-		FILE *file;
 		file = fopen(filename, "r");
 		if (!file)
 			continue;

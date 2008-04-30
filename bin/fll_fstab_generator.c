@@ -34,7 +34,7 @@
 
 #define DEV_DISK_BYID    "/dev/disk/by-id"
 #define DEV_DISK_BYLABEL "/dev/disk/by-label"
-#define DEV_DISK_BYUUIID "/dev/disk/by-uuid"
+#define DEV_DISK_BYUUID  "/dev/disk/by-uuid"
 
 #define DEV_PATH_MAX     VOLUME_ID_PATH_MAX
 #define SYS_PATH_MAX     VOLUME_ID_PATH_MAX
@@ -68,12 +68,15 @@ static int opt_uuids = 0;
 struct filesystem {
 	int diskn;
 	int partn;
-	const char *name;
-	const char *node;
 	const char *label;
 	const char *type;
 	const char *usage;
 	const char *uuid;
+	char label_enc[VOLUME_ID_PATH_MAX];
+	char uuid_enc[VOLUME_ID_PATH_MAX];
+	char by_id[DEV_PATH_MAX];
+	char by_label[DEV_PATH_MAX];
+	char by_uuid[DEV_PATH_MAX];
 };
 
 /* -------------------------------------------------------------------------
@@ -81,27 +84,36 @@ struct filesystem {
    ----------------
    Display the contents of the filesystem struct.
    ------------------------------------------------------------------------- */
-static void filesystem_debug(struct filesystem *fs)
+static void filesystem_debug(struct filesystem *fs, const char *name,
+			     const char *node)
 {
 	if (!opt_debug)
 		return;
 
-	if (fs->name)
-		fprintf(stderr, "\t* name:  %s\n", fs->name);
-	if (fs->node)
-		fprintf(stderr, "\t* node:  %s\n", fs->node);
+	fprintf(stderr, "---> %s (%s)\n", name, node);
+	
+	if (node)
+		fprintf(stderr, "\t* node:  %s\n", node);
 	if (fs->diskn)
 		fprintf(stderr, "\t* diskn: %d\n", fs->diskn);
 	if (fs->diskn)
 		fprintf(stderr, "\t* partn: %d\n", fs->partn);
-	if (fs->label)
-		fprintf(stderr, "\t* label: %s\n", fs->label);
+	if (fs->label_enc)
+		fprintf(stderr, "\t* label: %s\n", fs->label_enc);
 	if (fs->type)
 		fprintf(stderr, "\t* type:  %s\n", fs->type);
 	if (fs->usage)
 		fprintf(stderr, "\t* usage: %s\n", fs->usage);
-	if (fs->uuid)
-		fprintf(stderr, "\t* uuid:  %s\n", fs->uuid);
+	if (fs->uuid_enc)
+		fprintf(stderr, "\t* uuid:  %s\n", fs->uuid_enc);
+	
+	fprintf(stderr, "\t* links:\n");
+	if (fs->by_id)
+		fprintf(stderr, "\t\t%s\n", fs->by_id);
+	if (fs->by_label)
+		fprintf(stderr, "\t\t%s\n", fs->by_label);
+	if (fs->by_uuid)
+		fprintf(stderr, "\t\t%s\n", fs->by_uuid);
 
 	fprintf(stderr, "\t---\n");
 }
@@ -236,7 +248,7 @@ static int floppy_filter(const struct dirent *d)
    ------------------------
    Print out a line of fstab for a particular device type.
    ------------------------------------------------------------------------- */
-static void filesystem_entry(struct filesystem *fs)
+static void filesystem_entry(struct filesystem *fs, const char *node)
 {
 	const char *fs_auto;
 	const char *fs_opts;
@@ -275,7 +287,7 @@ static void filesystem_entry(struct filesystem *fs)
 	if (opt_uuids && fs->uuid)
 		fprintf(stdout, "UUID=%s", fs->uuid);
 	else
-		fprintf(stdout, "%s", fs->node);
+		fprintf(stdout, "%s", node);
 
 	if (strcmp(fs->type, "swap") == 0) {
 		fprintf(stdout, "\tnone\t\t");
@@ -390,9 +402,6 @@ static void vol_id(struct filesystem *fs, const char* node)
 	struct volume_id *vid;
 	int fd, ret;
 	uint64_t size;
-	char label_enc[VOLUME_ID_PATH_MAX];
-	char uuid_enc[VOLUME_ID_PATH_MAX];
-	const char *label, *uuid, *type, *usage;
 
 	fd = open(node, O_RDONLY);
 	if (fd < 0) {
@@ -403,7 +412,7 @@ static void vol_id(struct filesystem *fs, const char* node)
 
 	vid = volume_id_open_fd(fd);
 	if (vid == NULL) {
-		fprintf(stderr, "E: volume_id_open_fd failed to open file descriptor %d\n",
+		fprintf(stderr, "E: volume_id_open_fd failed to open fd %d\n",
 			fd);
 		goto end;
 	}
@@ -415,31 +424,69 @@ static void vol_id(struct filesystem *fs, const char* node)
 	if (ret < 0)
 		goto end;
 
-	if (!volume_id_get_label(vid, &label) ||
-	    !volume_id_get_usage(vid, &usage) ||
-	    !volume_id_get_type(vid, &type) ||
-	    !volume_id_get_uuid(vid, &uuid)) {
-		fprintf(stderr, "E: volume_id_get_* failed\n");
+	if (!volume_id_get_label(vid, &fs->label) ||
+	    !volume_id_get_usage(vid, &fs->usage) ||
+	    !volume_id_get_type(vid, &fs->type) ||
+	    !volume_id_get_uuid(vid, &fs->uuid))
 		goto end;
-	}
 
-	volume_id_encode_string(label, label_enc, sizeof(label_enc));
-	volume_id_encode_string(uuid, uuid_enc, sizeof(uuid_enc));
-
-	if (strlen(label_enc) > 0)
-		fs->label = label_enc;
-	if (strlen(uuid_enc) > 0)
-		fs->uuid = uuid_enc;
-	if (strlen(type) > 0)
-		fs->type = type;
-	if (strlen(usage) > 0)
-		fs->usage = usage;
+	volume_id_encode_string(fs->label, fs->label_enc,
+				sizeof(fs->label_enc));
+	volume_id_encode_string(fs->uuid, fs->uuid_enc,
+				sizeof(fs->uuid_enc));
 
  end:
 	if (vid != NULL)
 		volume_id_close(vid);
 
 	close(fd);
+}
+
+
+static void vol_ln(const char *by, const char *dev, char *link, int linklen)
+{
+	struct dirent **dir;
+	int dirnum, n;
+	char *base;
+
+	if (strcmp(by, "id") == 0)
+		base = DEV_DISK_BYID;
+	else if (strcmp(by, "label") == 0)
+		base = DEV_DISK_BYLABEL;
+	else if (strcmp(by, "uuid") == 0)
+		base = DEV_DISK_BYUUID;
+	else
+		return;
+	
+	dirnum = scandir(base,
+			 &dir,
+			 0,
+			 versionsort);
+	
+	for (n = 0; n < dirnum; n++) {
+		char ln[DEV_PATH_MAX];
+		char buf[DEV_PATH_MAX];
+		int buflen = DEV_PATH_MAX - 1;
+		int len, ret;
+
+		if (dir[n]->d_type != DT_LNK)
+			continue;
+		
+		ret = snprintf(ln, sizeof(ln), "%s/%s",
+			       base, dir[n]->d_name);
+		if (ret < 0)
+			continue;
+
+		len = readlink(ln, buf, buflen);
+		if (len < 0)
+			continue;
+		buf[len] = '\0';
+
+		if (strstr(buf, dev) != NULL) {
+			strncpy(link, ln, linklen);
+			break;
+		}
+	}
 }
 
 /* -------------------------------------------------------------------------
@@ -449,22 +496,27 @@ static void vol_id(struct filesystem *fs, const char* node)
    ------------------------------------------------------------------------- */
 static int part_index(const char *part, int baselen)
 {
-	int i, j;
-	int partlen = strlen(part);
-	int numlen = partlen - baselen;
-	char num[numlen + 1];
+	int i, j, n;
+	int plen = strlen(part);
+	int nlen = plen - baselen;
+	char *num = malloc(nlen + 1);
+
+	if (num == NULL)
+		return 0;
 
 	i = 0;
-	while (!isdigit(part[i]) && (i < partlen))
+	while (!isdigit(part[i]) && (i < plen))
 		i++;
 
 	j = 0;
-	while (i < partlen)
+	while (i < plen && j < nlen)
 		num[j++] = part[i++];
-
 	num[j] = '\0';
 
-	return atoi(num);
+	n = atoi(num);
+	free(num);
+
+	return n;
 }
 
 /* -------------------------------------------------------------------------
@@ -493,47 +545,50 @@ static void scandisk(const char *disk, int diskn)
 			 versionsort);
 
 	for (n = 0; n < dirnum; n++) {
-		if (strncmp(dir[n]->d_name, disk, disklen) != 0)
-			continue;
-
 		struct filesystem f, *fs;
 		int ret;
 		char node[DEV_PATH_MAX];
+		char *name = dir[n]->d_name;
+
+		if (strncmp(name, disk, disklen) != 0)
+			continue;
 
 		ret = snprintf(node, sizeof(node), "%s/%s",
-			       DEV_DIR, dir[n]->d_name);
+			       DEV_DIR, name);
 		if (ret < 0)
 			continue;
 
 		/*
-		 * disk + partition indeices
+		 * store disk + partition indices
 		 */
 		f.diskn = diskn + 1;
-		f.partn = part_index(dir[n]->d_name, disklen);
+		f.partn = part_index(name, disklen);
 
 		/*
-		 * block device basename + device node
+		 * get volume persistent symlinks
 		 */
-		f.name  = dir[n]->d_name;
-		f.node  = node;
-		
-		/*
-		 * initialize these before vol_id()
-		 */
-		f.label = NULL;
-		f.type  = NULL;
-		f.usage = NULL;
-		f.uuid  = NULL;
+		vol_ln("id", name, f.by_id, sizeof(f.by_id));
+		vol_ln("label", name, f.by_label, sizeof(f.by_label));
+		vol_ln("uuid", name, f.by_uuid, sizeof(f.by_uuid));
 
+		/*
+		 * get volume_id properties
+		 */
 		fs = &f;
 		vol_id(fs, node);
 
-		filesystem_debug(fs);
+		/*
+		 * debug volume filesystem struct
+		 */
+		filesystem_debug(fs, name, node);
 
+		/*
+		 * skip volumes without usage or type properties
+		 */
 		if (!fs->usage || !fs->type)
 			continue;
 
-		filesystem_entry(fs);
+		filesystem_entry(fs, node);
 	}
 }
 
