@@ -96,7 +96,7 @@ static const char *fll_get_x_driver(uint16_t v_id, uint16_t d_id, int debug)
 		char line[10];
 
 		snprintf(filename, sizeof(filename),
-		         "%s%s", XSERVER_PCIIDS_DIR, ids[n]->d_name);
+			 "%s%s", XSERVER_PCIIDS_DIR, ids[n]->d_name);
 
 		if (debug) {
 			printf("D: looking for %s in %s\n",
@@ -163,11 +163,11 @@ static int fll_get_vga_device(struct pci_device *dev, int debug)
 
 	if (debug)
 		printf("D: %s %s\n", ven_name, dev_name);
-	
+
 	if (((dev->device_class >> 16) & 0x0ff) == 0x03 &&
 	    ((dev->device_class >>  8) & 0x0ff) == 0x00 &&
 	    ((dev->device_class >>  0) & 0x0ff) == 0x00) {
-	    	printf("XVENDOR='%04x'\nXDEVICE='%04x'\n",
+		printf("XVENDOR='%04x'\nXDEVICE='%04x'\n",
 		       dev->vendor_id,
 		       dev->device_id);
 
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 	int debug = 0;
 
 	while ((opt = getopt(argc, argv, "d")) != -1) {
-		switch(opt) {
+		switch (opt) {
 		case 'd':
 			debug++;
 			break;

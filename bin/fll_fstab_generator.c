@@ -91,9 +91,7 @@ static void filesystem_debug(struct filesystem *fs, const char *name,
 		return;
 
 	fprintf(stderr, "---> %s (%s)\n", name, node);
-	
-	if (node)
-		fprintf(stderr, "\t* node:  %s\n", node);
+
 	if (fs->diskn)
 		fprintf(stderr, "\t* diskn: %d\n", fs->diskn);
 	if (fs->diskn)
@@ -106,7 +104,7 @@ static void filesystem_debug(struct filesystem *fs, const char *name,
 		fprintf(stderr, "\t* usage: %s\n", fs->usage);
 	if (fs->uuid_enc)
 		fprintf(stderr, "\t* uuid:  %s\n", fs->uuid_enc);
-	
+
 	fprintf(stderr, "\t* links:\n");
 	if (fs->by_id)
 		fprintf(stderr, "\t\t%s\n", fs->by_id);
@@ -157,20 +155,20 @@ static int sysfs_device_isexternal(const char *path)
 	if (len < 0)
 		return 1;
 	buf[len] = '\0';
-	
+
 	if (opt_debug)
 		fprintf(stderr, "%s\n---> %s\n", path, buf);
-	
+
 	/*
 	 * Hackish method of querying if disk device is attached
 	 * via a parent device of usb or firwire type.
 	 */
 	if (strstr(buf, "/usb") != NULL)
 		return 1;
-	
+
 	if (strstr(buf, "/fw") != NULL)
 		return 1;
-	
+
 	return 0;
 }
 
@@ -190,18 +188,18 @@ static int disk_filter(const struct dirent *d)
 		       "%s/%s/removable", SYS_BLK, d->d_name);
 	if (ret < 0)
 		return 0;
-	
+
 	ret = sysfs_device_removable(sysfs_rem_path);
 	if (ret == 1)
 		return 0;
-	
+
 	if (d->d_type == DT_LNK) {
 		/*
 		 * Linux >= 2.6.25:
 		 *   /sys/block/sda -> ../devices/...
 		 */
 		ret = snprintf(sysfs_dev_path, sizeof(sysfs_dev_path),
-		       "%s/%s", SYS_BLK, d->d_name);
+			       "%s/%s", SYS_BLK, d->d_name);
 	} else if (d->d_type == DT_DIR) {
 		/*
 		 * Linux < 2.6.25:
@@ -212,7 +210,7 @@ static int disk_filter(const struct dirent *d)
 	}
 	if (ret < 0)
 		return 0;
-	
+
 	ret = sysfs_device_isexternal(sysfs_dev_path);
 	if (ret == 1)
 		return 0;
@@ -457,12 +455,9 @@ static void vol_ln(const char *by, const char *dev, char *link, int linklen)
 		base = DEV_DISK_BYUUID;
 	else
 		return;
-	
-	dirnum = scandir(base,
-			 &dir,
-			 0,
-			 versionsort);
-	
+
+	dirnum = scandir(base, &dir, 0, versionsort);
+
 	for (n = 0; n < dirnum; n++) {
 		char ln[DEV_PATH_MAX];
 		char buf[DEV_PATH_MAX];
@@ -471,7 +466,7 @@ static void vol_ln(const char *by, const char *dev, char *link, int linklen)
 
 		if (dir[n]->d_type != DT_LNK)
 			continue;
-		
+
 		ret = snprintf(ln, sizeof(ln), "%s/%s",
 			       base, dir[n]->d_name);
 		if (ret < 0)
@@ -539,10 +534,7 @@ static void scandisk(const char *disk, int diskn)
 	/*
 	 * scan for partition device node symlinks
 	 */
-	dirnum = scandir(sysfs_path,
-			 &dir,
-			 0,
-			 versionsort);
+	dirnum = scandir(sysfs_path, &dir, 0, versionsort);
 
 	for (n = 0; n < dirnum; n++) {
 		struct filesystem f, *fs;
@@ -585,7 +577,7 @@ static void scandisk(const char *disk, int diskn)
 		/*
 		 * skip volumes without usage or type properties
 		 */
-		if (!fs->usage || !fs->type)
+		if (f.usage == NULL || f.type == NULL)
 			continue;
 
 		filesystem_entry(fs, node);
@@ -627,10 +619,7 @@ int main(int argc, char *argv[])
 	/*
 	 * scan for hard disk devices in sysfs dirheir
 	 */
-	dirnum = scandir(SYS_BLK,
-			 &dir,
-			 disk_filter,
-			 versionsort);
+	dirnum = scandir(SYS_BLK, &dir, disk_filter, versionsort);
 
 	for (n = 0; n < dirnum; n++) {
 		if (opt_debug)
@@ -642,10 +631,7 @@ int main(int argc, char *argv[])
 	/*
 	 * scan for cdrom device node symlinks
 	 */
-	dirnum = scandir(DEV_DIR,
-			 &dir,
-			 cdrom_filter,
-			 versionsort);
+	dirnum = scandir(DEV_DIR, &dir, cdrom_filter, versionsort);
 
 	for (n = 0; n < dirnum; n++) {
 		if (opt_debug)
@@ -657,10 +643,7 @@ int main(int argc, char *argv[])
 	/*
 	 * scan for floppy device nodes
 	 */
-	dirnum = scandir(SYS_BLK,
-			 &dir,
-			 floppy_filter,
-			 versionsort);
+	dirnum = scandir(SYS_BLK, &dir, floppy_filter, versionsort);
 
 	for (n = 0; n < dirnum; n++) {
 		if (opt_debug)
