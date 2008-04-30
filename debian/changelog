@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.30) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.30) unstable; urgency=low
 
   * fll_xserver_discover:
     - trivial change to compile with pedantic gcc pragma
