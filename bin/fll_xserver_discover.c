@@ -158,8 +158,8 @@ static int fll_get_vga_device(struct pci_device *dev, int debug)
 		ven_name = "Unknown vendor";
 
 	dev_name = pci_device_get_device_name(dev);
-	if (ven_name == NULL)
-		ven_name = "Unknown device";
+	if (dev_name == NULL)
+		dev_name = "Unknown device";
 
 	if (debug)
 		printf("D: %s %s\n", ven_name, dev_name);

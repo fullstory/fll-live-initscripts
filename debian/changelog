@@ -2,10 +2,12 @@ fll-live-initscripts (3.0.30) UNRELEASED; urgency=low
 
   * fll_xserver_discover:
     - trivial change to compile with pedantic gcc pragma
+    - fix typo causing dev_name to not be allocated a fallback string when it
+      is NULL
   * fll_fstab_generator:
     - able to generate basic fstab configurations
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 30 Apr 2008 14:18:16 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 30 Apr 2008 17:11:28 +1000
 
 fll-live-initscripts (3.0.29) unstable; urgency=low
 
