@@ -268,7 +268,10 @@ static void filesystem_entry(struct filesystem *fs, const char *node)
 		fs_pass = 0;
 	} else
 		return;
-
+	
+	/*
+	 * TODO: create function to print LABEL/UUID token
+	 */
 	if (fs->by_label)
 		fprintf(stdout, "\n# LABEL=%s\n", fs->by_label);
 	else
@@ -459,6 +462,10 @@ static void vol_ln(const char *by, const char *dev, char *link, int linklen)
 			continue;
 		buf[len] = '\0';
 
+		/*
+		 * TODO: need to strip of leading ../../ and compare
+		 * the remainder with 'dev'
+		 */
 		if (strstr(buf, dev) != NULL) {
 			strncpy(link, ln, linklen);
 			return;
