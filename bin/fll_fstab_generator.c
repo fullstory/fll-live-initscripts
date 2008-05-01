@@ -49,10 +49,10 @@
    opt_uuids   - use filesystem uuids in fstab configuration
    ------------------------------------------------------------------------- */
 static int opt_automnt = 0;
-static int opt_debug = 0;
+static int opt_debug   = 0;
 static int opt_mkmntpt = 0;
-static int opt_noswap = 0;
-static int opt_uuids = 0;
+static int opt_noswap  = 0;
+static int opt_uuids   = 0;
 
 /* -------------------------------------------------------------------------
    filesystem struct
@@ -68,15 +68,11 @@ static int opt_uuids = 0;
 struct filesystem {
 	int diskn;
 	int partn;
-	const char *label;
-	const char *type;
-	const char *usage;
-	const char *uuid;
-	char label_enc[VOLUME_ID_PATH_MAX];
-	char uuid_enc[VOLUME_ID_PATH_MAX];
 	char by_id[DEV_PATH_MAX];
 	char by_label[DEV_PATH_MAX];
 	char by_uuid[DEV_PATH_MAX];
+	const char *type;
+	const char *usage;
 };
 
 /* -------------------------------------------------------------------------
@@ -96,14 +92,10 @@ static void filesystem_debug(struct filesystem *fs, const char *name,
 		fprintf(stderr, "\t* diskn: %d\n", fs->diskn);
 	if (fs->diskn)
 		fprintf(stderr, "\t* partn: %d\n", fs->partn);
-	if (fs->label_enc)
-		fprintf(stderr, "\t* label: %s\n", fs->label_enc);
 	if (fs->type)
 		fprintf(stderr, "\t* type:  %s\n", fs->type);
 	if (fs->usage)
 		fprintf(stderr, "\t* usage: %s\n", fs->usage);
-	if (fs->uuid_enc)
-		fprintf(stderr, "\t* uuid:  %s\n", fs->uuid_enc);
 
 	fprintf(stderr, "\t* links:\n");
 	if (fs->by_id)
@@ -277,13 +269,13 @@ static void filesystem_entry(struct filesystem *fs, const char *node)
 	} else
 		return;
 
-	if (fs->label)
-		fprintf(stdout, "\n# LABEL=%s\n", fs->label);
+	if (fs->by_label)
+		fprintf(stdout, "\n# LABEL=%s\n", fs->by_label);
 	else
 		fprintf(stdout, "\n");
 
-	if (opt_uuids && fs->uuid)
-		fprintf(stdout, "UUID=%s", fs->uuid);
+	if (opt_uuids && fs->by_uuid)
+		fprintf(stdout, "UUID=%s", fs->by_uuid);
 	else
 		fprintf(stdout, "%s", node);
 
@@ -292,18 +284,14 @@ static void filesystem_entry(struct filesystem *fs, const char *node)
 		fs_auto = "";
 	} else {
 		fprintf(stdout, "\t/media/disk%dpart%d",
-			fs->diskn,
-			fs->partn);
+			fs->diskn, fs->partn);
 		fs_auto = opt_automnt ? "auto," : "noauto,";
 	}
 
 	fprintf(stdout, "\t%s", fs->type);
 
 	fprintf(stdout, "\t%s%s  %d  %d\n",
-		fs_auto,
-		fs_opts,
-		fs_dump,
-		fs_pass);
+		fs_auto, fs_opts, fs_dump, fs_pass);
 }
 
 static void cdrom_entry(const char* cdrom)
@@ -316,8 +304,7 @@ static void cdrom_entry(const char* cdrom)
 		return;
 
 	fprintf(stdout, "\n%s\t/media/%s\tudf,iso9660\tuser,noauto\t0  0\n",
-		node,
-		cdrom);
+		node, cdrom);
 }
 
 static void floppy_entry(const char* floppy)
@@ -330,8 +317,7 @@ static void floppy_entry(const char* floppy)
 		return;
 
 	fprintf(stdout, "\n%s\t/media/%s\tauto\trw,user,noauto\t0  0\n",
-		node,
-		floppy);
+		node, floppy);
 }
 
 /* -------------------------------------------------------------------------
@@ -401,6 +387,9 @@ static void vol_id(struct filesystem *fs, const char* node)
 	int fd, ret;
 	uint64_t size;
 
+	fs->type  = NULL;
+	fs->usage = NULL;
+
 	fd = open(node, O_RDONLY);
 	if (fd < 0) {
 		fprintf(stderr, "E: failed to get file descriptor for %s\n",
@@ -422,16 +411,9 @@ static void vol_id(struct filesystem *fs, const char* node)
 	if (ret < 0)
 		goto end;
 
-	if (!volume_id_get_label(vid, &fs->label) ||
-	    !volume_id_get_usage(vid, &fs->usage) ||
-	    !volume_id_get_type(vid, &fs->type) ||
-	    !volume_id_get_uuid(vid, &fs->uuid))
+	if (!volume_id_get_usage(vid, &fs->usage) ||
+	    !volume_id_get_type(vid, &fs->type))
 		goto end;
-
-	volume_id_encode_string(fs->label, fs->label_enc,
-				sizeof(fs->label_enc));
-	volume_id_encode_string(fs->uuid, fs->uuid_enc,
-				sizeof(fs->uuid_enc));
 
  end:
 	if (vid != NULL)
@@ -479,9 +461,14 @@ static void vol_ln(const char *by, const char *dev, char *link, int linklen)
 
 		if (strstr(buf, dev) != NULL) {
 			strncpy(link, ln, linklen);
-			break;
+			return;
 		}
 	}
+
+	/*
+	 * link was not found, fill char array with null bytes
+	 */
+	memset(link, 0, linklen);
 }
 
 /* -------------------------------------------------------------------------
