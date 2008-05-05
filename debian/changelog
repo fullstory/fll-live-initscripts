@@ -1,8 +1,9 @@
 fll-live-initscripts (3.0.32) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Nuke fll_fstab_generator, it was an experiment that will no longer be
+    persued.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 30 Apr 2008 12:25:18 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 05 May 2008 23:20:05 +1000
 
 fll-live-initscripts (3.0.31) unstable; urgency=low
 
