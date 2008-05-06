@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.32) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.32) unstable; urgency=low
 
   * Nuke fll_fstab_generator, it was an experiment that will no longer be
     persued.
