@@ -49,17 +49,9 @@ default_runlevel() {
 
 case "$1" in
 	configure)
+		# /etc/default/distro is written at distro build time, we
+		# claim owership of the conffile at installation time ...
 		ucfr distro-defaults /etc/default/distro
-
-		if [ ! -f /etc/default/distro ] && chrooted; then
-			echo 'Creating /etc/default/distro...'
-			cat > /etc/default/distro \
-<<EOF
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#          DO NOT EDIT * AUTOMATICALLY GENERATED FILE * DO NOT EDIT           #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-EOF
-		fi
 
 		for dm in gdm kdm
 		do			

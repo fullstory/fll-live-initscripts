@@ -5,8 +5,11 @@ fll-live-initscripts (3.0.33) UNRELEASED; urgency=low
     - general style cleanup
     - no longer hardcode "vesa" as default driver
     - only accept regular files in pci.ids scandir filter
+  * distro-defaults:
+    - do not bother writing a /etc/default/distro stub, just claim ownership
+      of the conffile
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 10 May 2008 14:55:14 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 10 May 2008 15:35:16 +1000
 
 fll-live-initscripts (3.0.32) unstable; urgency=low
 
