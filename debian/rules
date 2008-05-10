@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-build: initscriptcheck
+build:
 	dh $@
 	for i in bin contrib man; do $(MAKE) -C $$i all; done
 
@@ -30,7 +30,7 @@ binary-indep: install
 binary-arch: install
 	dh $@
 
-binary: binary-indep binary-arch
+binary: initscriptcheck binary-indep binary-arch
 
 initscriptcheck:
 	@for init in debian/*.init; do \
