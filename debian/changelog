@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.33) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.33) unstable; urgency=low
 
   * Adapt to dh centric packaging style.
   * fll_xserver_discover:
