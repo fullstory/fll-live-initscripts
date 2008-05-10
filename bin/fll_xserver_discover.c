@@ -32,7 +32,7 @@ static int ids_file(const struct dirent *entry)
 {
 	char *ptr;
 
-	if (entry->d_name[0] == '.')
+	if (entry->d_type != DT_REG)
 		return 0;
 
 	ptr = rindex(entry->d_name, '.');
@@ -77,12 +77,11 @@ static int driver_prio(const void *A, const void *B)
 static const char *fll_get_x_driver(uint16_t v_id, uint16_t d_id, int debug)
 {
 	struct dirent **ids;
-	int n;
-	int dirnum;
-	char *ptr;
-	char *driver = "vesa";
+	int n, dirnum;
+	char *ptr, *driver;
 	char string[10];
 
+	driver = NULL;
 	snprintf(string, sizeof(string), "%04x%04x", v_id, d_id);
 
 	dirnum = scandir(XSERVER_PCIIDS_DIR, &ids, ids_file, driver_prio);
@@ -92,17 +91,13 @@ static const char *fll_get_x_driver(uint16_t v_id, uint16_t d_id, int debug)
 	/* read each pciid list */
 	for (n = 0; n < dirnum; n++) {
 		FILE *file;
-		char filename[256];
-		char line[10];
+		char filename[256], line[10];
 
 		snprintf(filename, sizeof(filename),
 			 "%s%s", XSERVER_PCIIDS_DIR, ids[n]->d_name);
 
-		if (debug) {
-			printf("D: looking for %s in %s\n",
-			       string,
-			       filename);
-		}
+		if (debug)
+			printf("D: looking for %s in %s\n", string, filename);
 
 		file = fopen(filename, "r");
 		if (!file)
@@ -111,21 +106,19 @@ static const char *fll_get_x_driver(uint16_t v_id, uint16_t d_id, int debug)
 		while (fgets(line, sizeof(line), file) != NULL) {
 			if (debug > 1)
 				printf("%s: %s", filename, line);
+
 			if (strncasecmp(line, string, strlen(string)) == 0) {
 				/* found string in $driver.ids */
 				driver = ids[n]->d_name;
 
-				if (debug) {
-					printf("D: found %s in %s\n",
-					       string,
-					       driver);
-				}
+				if (debug)
+					printf("D: found in %s\n", driver);
 
 				/* strip .ids extenstion */
-				ptr = strrchr(driver, '.');
+				ptr = strstr(driver, ".ids");
 				*ptr = '\0';
 
-				if (!debug)
+				if (debug < 2)
 					break;
 			}
 		}
@@ -133,7 +126,7 @@ static const char *fll_get_x_driver(uint16_t v_id, uint16_t d_id, int debug)
 		fclose(file);
 		free(ids[n]);
 
-		if (strncmp(driver, "vesa", 4) != 0 && !debug)
+		if (driver && debug < 2)
 			break;
 	}
 
@@ -149,16 +142,14 @@ static const char *fll_get_x_driver(uint16_t v_id, uint16_t d_id, int debug)
  */
 static int fll_get_vga_device(struct pci_device *dev, int debug)
 {
-	const char *ven_name;
-	const char *dev_name;
-	const char *x_driver;
+	const char *ven_name, *dev_name, *x_driver;
 
 	ven_name = pci_device_get_vendor_name(dev);
-	if (ven_name == NULL)
+	if (!ven_name)
 		ven_name = "Unknown vendor";
 
 	dev_name = pci_device_get_device_name(dev);
-	if (dev_name == NULL)
+	if (!dev_name)
 		dev_name = "Unknown device";
 
 	if (debug)
@@ -184,7 +175,8 @@ static int fll_get_vga_device(struct pci_device *dev, int debug)
 					    dev->device_id,
 					    debug);
 
-		printf("XMODULE='%s'\n", x_driver);
+		if (x_driver)
+			printf("XMODULE='%s'\n", x_driver);
 
 		return 1;
 	}
@@ -200,9 +192,9 @@ int main(int argc, char *argv[])
 {
 	struct pci_device_iterator *iter;
 	struct pci_device *dev;
-	int ret;
-	int opt;
-	int debug = 0;
+	int ret, opt, debug;
+	
+	debug = 0;
 
 	while ((opt = getopt(argc, argv, "d")) != -1) {
 		switch (opt) {
