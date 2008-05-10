@@ -1,11 +1,12 @@
 fll-live-initscripts (3.0.33) UNRELEASED; urgency=low
 
+  * Adapt to dh centric packaging style.
   * fll_xserver_discover:
     - general style cleanup
     - no longer hardcode "vesa" as default driver
     - only accept regular files in pci.ids scandir filter
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 10 May 2008 13:19:00 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 10 May 2008 14:55:14 +1000
 
 fll-live-initscripts (3.0.32) unstable; urgency=low
 
