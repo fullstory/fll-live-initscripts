@@ -2,8 +2,9 @@ fll-live-initscripts (3.0.34) UNRELEASED; urgency=low
 
   * Adjust build system to something compat. with dh_auto_* as called by dh in
     debhelper >= 7. Add top level Makefile, move the initscripts check to it.
+  * Redirect noise from a2x in man/Makefile.
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 12 May 2008 15:09:33 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 12 May 2008 15:16:38 +1000
 
 fll-live-initscripts (3.0.33) unstable; urgency=low
 
