@@ -9,3 +9,5 @@ fll_xserver_discover:
 
 clean:
 	$(RM) $(ALL)
+
+distclean: clean

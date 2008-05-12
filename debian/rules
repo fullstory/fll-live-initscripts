@@ -2,11 +2,9 @@
 
 build:
 	dh $@
-	for i in bin contrib man; do $(MAKE) -C $$i all; done
 
 clean:
 	dh $@
-	for i in bin contrib man; do $(MAKE) -C $$i $@; done
 
 install: build
 	dh $@ --until dh_installinit
@@ -30,18 +28,4 @@ binary-indep: install
 binary-arch: install
 	dh $@
 
-binary: initscriptcheck binary-indep binary-arch
-
-initscriptcheck:
-	@for init in debian/*.init; do \
-		echo "   validating $${init##*/} ..." ; \
-		case "`head -n1 $$init`" in \
-			*/bin/bash*) \
-				bash -n $$init || exit ; \
-				;; \
-			*) \
-				dash -n $$init || exit ; \
-				checkbashisms $$init || exit ; \
-				;; \
-		esac ; \
-	done
+binary: binary-indep binary-arch

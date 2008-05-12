@@ -9,3 +9,5 @@ all: $(MAN)
 
 clean:
 	$(RM) $(MAN) $(XML)
+
+distclean: clean

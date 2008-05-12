@@ -13,3 +13,5 @@ xrandr/nv:
 clean:
 	$(RM) $(ALL)
 	if [ -d xrandr ]; then rmdir xrandr; fi
+
+distclean: clean
