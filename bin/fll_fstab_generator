@@ -1,0 +1,249 @@
+#!/bin/sh
+
+OPT_DEBUG=:
+OPT_UUIDS=:
+OPT_LABELS=false
+OPT_MKMNTPNT=false
+
+#
+# future proof udev info query tool command
+#
+if which udevadm >/dev/null; then
+	udev_info() { udevadm info --query="${1}" --name="${2}"; }
+else
+	udev_info() { udevinfo --query="${1}" --name="${2}"; }
+fi
+
+#
+# output udev enironment information for a block device
+#
+disk_env()
+{
+	[ -b "/dev/${1}" ] || return 1
+
+	udev_info env "/dev/${1}" 2>/dev/null
+}
+
+#
+# test block device "removable" attribute
+#
+is_removable()
+{
+	! grep -s -q '^0$' "${1}/removable"
+}
+
+#
+# return true for Linux native filesystems
+#
+is_nativefs()
+{
+	case "${1}" in
+		ext[2-4]|reiser*|[jx]fs|swap)
+			return 0
+			;;
+		*)
+			return 1
+			;;
+	esac
+}
+
+#
+# conditionally make mount point directories
+#
+mkmntpnt()
+{
+	if "${OPT_MKMNTPNT}"; then
+		mkdir -p "${1}"
+	fi
+}
+
+#
+# output debug starting with 'D:' to stderr
+#
+debugstr()
+{
+	if "${OPT_DEBUG}"; then
+		echo "D: ${@}" >/dev/stderr
+	fi
+}
+
+#
+# print fstab entry for a filesystem
+#
+print_fsentry()
+{
+	local disk part name type uuid label node mntpnt opts pass dump
+	disk="${1}"
+	part="${2}"
+	name="${3}"
+	type="${4}"
+	uuid="${5}"
+	label="${6}"
+
+	if "${OPT_LABELS}" && [ -L "/dev/disk/by-label/${label}" ]; then
+		if is_nativefs "${type}"; then
+			node="LABEL=${label}"
+		else
+			node="/dev/disk/by-label/${label}"
+		fi
+	elif "${OPT_UUIDS}" && [ -L "/dev/disk/by-uuid/${uuid}" ]; then
+		if is_nativefs "${type}"; then
+			node="UUID=${uuid}"
+		else
+			node="/dev/disk/by-uuid/${uuid}"
+		fi
+	else
+		node="/dev/${name}"
+	fi
+
+	case "${name}" in
+		dm-*)
+			mntpnt="/media/${name}"
+			;;
+		*)
+			mntpnt="/media/disk${disk}part${part}"
+			;;
+	esac
+
+	opts=defaults
+	pass=0
+	dump=0
+
+	printf "%s\t%s\t%s\t%s\t%d %d\n" "${node}" "${mntpnt}" "${type}" \
+	       "${opts}" "${pass}" "${dump}"
+}
+
+#
+# enumerate partitions to be added to fstab
+#
+scan_partitions()
+{
+	local path base disk name part retv
+	path="${1}"
+	base="${2}"
+	disk="${3}"
+	retv=1
+
+	for p in ${path}/${base}*; do
+		[ -d "${p}" ] || continue
+		name=${p##*/}
+
+		unset ID_FS_USAGE ID_FS_TYPE ID_FS_VERSION \
+		      ID_FS_UUID ID_FS_UUID_ENC \
+		      ID_FS_LABEL ID_FS_LABEL_ENC ID_FS_LABEL_SAFE
+
+
+		eval "$(disk_env ${name})"
+
+		debugstr "sysfs path: ${p}"
+		debugstr "ID_FS_USAGE=${ID_FS_USAGE}"
+		debugstr "ID_FS_TYPE=${ID_FS_TYPE}"
+		debugstr "ID_FS_VERSION=${ID_FS_VERSION}"
+		debugstr "ID_FS_UUID=${ID_FS_UUID}"
+		debugstr "ID_FS_UUID_ENC=${ID_FS_UUID_ENC}"
+		debugstr "ID_FS_LABEL=${ID_FS_LABEL}"
+		debugstr "ID_FS_LABEL_ENC=${ID_FS_LABEL_ENC}"
+		debugstr "ID_FS_LABEL_SAFE=${ID_FS_LABEL_SAFE}"
+
+		if [ "${ID_FS_USAGE}" != "filesystem" ] && \
+		   [ "${ID_FS_TYPE}" != "swap" ]; then
+			debugstr "partition not a valid filesystem"
+			continue
+		fi
+
+		# calculate partition number
+		if [ ${#name} -gt ${#base} ]; then
+			part=${name#${base}}
+			part=${part#-}
+			case "${part}" in
+				*[!0-9]*)
+					debugstr "invalid part number: ${part}"
+					continue
+					;;
+			esac
+		else
+			debugstr "error calculating part number"
+			continue
+		fi
+
+		# disk has yielded at least one volume
+		retv=0
+
+		print_fsentry "${disk}" "${part}" "${name}" "${ID_FS_TYPE}" \
+			      "${ID_FS_UUID_ENC}" "${ID_FS_LABEL_SAFE}"
+	done
+
+	return "${retv}"
+}
+
+#
+# scan for block devices
+#
+scan_disks()
+{
+	local disk name
+	disk=1
+	
+	for p in /sys/block/*; do
+		[ -d "${p}" ] || continue
+		name="${p#/sys/block/}"
+
+		unset ID_BUS ID_TYPE
+
+		eval "$(disk_env ${name})"
+
+		debugstr "sysfs path: ${p}"
+		debugstr "ID_BUS=${ID_BUS}"
+		debugstr "ID_TYPE=${ID_TYPE}"
+
+		if [ "${ID_TYPE}" != disk ]; then
+			debugstr "device is not of disk type, skip"
+			continue
+		elif [ "${ID_BUS}" = "usb" ]; then
+			debugstr "device is on usb bus, skip"
+			continue
+		elif is_removable "${p}"; then
+			debugstr "device has removable attribute, skip"
+			continue
+		fi
+
+		debugstr "device is a disk, count: ${disk}"
+		
+		scan_partitions "${p}" "${name}" "${disk}"
+		if [ "${?}" -eq 0 ]; then
+			disk=$((disk + 1))
+		fi
+	done
+}
+
+#
+# scan for cdom devices to add to fstab
+# NOTE: /dev/cdrom* are persistent symlinks managed by
+#   /etc/udev/rules.d/z25_persistent-cd.rules
+#
+scan_cdroms()
+{
+	for c in /dev/cdrom*; do
+		[ -L "${c}" ] || continue
+		printf "%s\t/media/%s\tudf,iso9660\tuser,noauto\t 0 0\n" \
+			"${c}" "${c#/dev/}"
+		mkmntpnt "${c#/dev/}"
+	done
+}
+
+#
+# scan for floppy devices to add to fstab
+#
+scan_floppies()
+{
+	for f in /dev/fd*; do
+		[ -b "${f}" ] || continue
+		printf "%s\t/media/%s\tauto\trw,user,noauto\t 0 0\n" \
+			"${f}" "${f#/dev/}"
+		mkmntpnt "${f#/dev/}"
+	done
+}
+
+scan_disks
+scan_cdroms
+scan_floppies
