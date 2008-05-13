@@ -25,6 +25,30 @@ disk_env()
 }
 
 #
+# resolve canonical device node
+#
+resolve_device()
+{
+	local name
+
+	case "${1}" in
+		LABEL=*|UUID=*)
+			name="$(findfs ${1})"
+			;;
+		/dev/disk/by-*)
+			name="$(readlink -f ${1})"
+			;;
+		/dev/*)
+			name="${1}"
+			;;
+	esac
+
+	if [ -b "${name}" ]; then
+		echo "${name}"
+	fi
+}
+
+#
 # test block device "removable" attribute
 #
 is_removable()
