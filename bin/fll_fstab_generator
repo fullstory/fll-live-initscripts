@@ -3,6 +3,7 @@
 OPT_DEBUG=:
 OPT_UUIDS=:
 OPT_LABELS=false
+OPT_AUTOMNT=false
 OPT_MKMNTPNT=false
 
 #
@@ -96,7 +97,8 @@ debugstr()
 #
 print_fsentry()
 {
-	local disk part name type uuid label node mntpnt opts pass dump
+	local fs_spec fs_file fs_vfstype fs_mntops
+	local disk part name type uuid label
 	disk="${1}"
 	part="${2}"
 	name="${3}"
@@ -104,37 +106,93 @@ print_fsentry()
 	uuid="${5}"
 	label="${6}"
 
+	#
+	# fs_spec - first field describes the block special device or remote
+	#           filesystem to be mounted
+	#
 	if "${OPT_LABELS}" && [ -L "/dev/disk/by-label/${label}" ]; then
 		if is_nativefs "${type}"; then
-			node="LABEL=${label}"
+			fs_spec="LABEL=${label}"
 		else
-			node="/dev/disk/by-label/${label}"
+			fs_spec="/dev/disk/by-label/${label}"
 		fi
 	elif "${OPT_UUIDS}" && [ -L "/dev/disk/by-uuid/${uuid}" ]; then
 		if is_nativefs "${type}"; then
-			node="UUID=${uuid}"
+			fs_spec="UUID=${uuid}"
 		else
-			node="/dev/disk/by-uuid/${uuid}"
+			fs_spec="/dev/disk/by-uuid/${uuid}"
 		fi
 	else
-		node="/dev/${name}"
+		fs_spec="/dev/${name}"
 	fi
 
-	case "${name}" in
-		dm-*)
-			mntpnt="/media/${name}"
+	#
+	# fs_file - second field describes the mount point for the filesystem
+	#
+	if [ "${type}" = "swap" ]; then
+		fs_file="none"
+	else
+		case "${name}" in
+			dm-*)
+				fs_file="/media/${name}"
+				;;
+			*)
+				fs_file="/media/disk${disk}part${part}"
+				;;
+		esac
+	fi
+
+	#
+	# fs_vfstype - third field describes the type of the filesystem
+	#
+	fs_vfstype="${type}"
+
+	#
+	# fs_mntops - fourth field describes the mount options associated with
+	#             the filesystem
+	#
+	if "${OPT_AUTOMNT}"; then
+		fs_mntops="auto"
+	else
+		fs_mntops="noauto"
+	fi
+
+	case "${type}" in
+		ntfs)
+			fs_mntops="${fs_mntops},ro,dmask=0022,fmask=0133,nls=utf8"
+			;;
+		msdos)
+			fs_mntops="${fs_mntops},quiet,umask=000,iocharset=utf8"
+			;;
+		vfat)
+			fs_mntops="${fs_mntops},shortname=lower,quiet,umask=000,utf8"
+			;;
+		swap)
+			fs_mntops="sw"
 			;;
 		*)
-			mntpnt="/media/disk${disk}part${part}"
+			if is_nativefs "${type}"; then
+				fs_mntops="${fs_mntops},users,exec,noatime"
+			else
+				fs_mntops="${fs_mntops},defaults"
+			fi
 			;;
 	esac
 
-	opts=defaults
-	pass=0
-	dump=0
+	#
+	# fs_freq - fifth field is used for these filesystems by the dump(8)
+	#           command
+	#
+	fs_freq=0
 
-	printf "%s\t%s\t%s\t%s\t%d %d\n" "${node}" "${mntpnt}" "${type}" \
-	       "${opts}" "${pass}" "${dump}"
+	#
+	# fs_passno - sizth field is used by the fsck(8) program to determine
+	#             the order in which filesystem checks are done at bootup
+	#
+	fs_passno=0
+
+	printf "%s\t%s\t%s\t%s\t%d %d\n\n" "${fs_spec}" "${fs_file}" \
+	       "${fs_vfstype}" "${fs_mntops}" "${fs_freq}" "${fs_passno}"
 }
 
 #
