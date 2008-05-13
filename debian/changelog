@@ -1,15 +1,13 @@
-fll-live-initscripts (3.0.35+nmu1) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.35) unstable; urgency=low
 
+  [ Joaquim Boura ]
   * Changed CD_KEYMAP on German to "latin1 - no dead keys"  as the keyboard
     on the textconsole was set to Programmer.
 
- -- Joaquim Boura <x-un-i@sidux.com>  Tue, 13 May 2008 22:14:37 +0200
+  [ Stefan Lippers-Hollmann ]
+  * add x-un-i to uploaders.
 
-fll-live-initscripts (3.0.35) UNRELEASED; urgency=low
-
-  * NOT RELEASED YET
-
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 12 May 2008 18:39:22 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 13 May 2008 23:27:29 +0200
 
 fll-live-initscripts (3.0.34) unstable; urgency=low
 
