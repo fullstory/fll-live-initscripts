@@ -1,3 +1,10 @@
+fll-live-initscripts (3.0.35+nmu1) UNRELEASED; urgency=low
+
+  * Changed CD_KEYMAP on German to "latin1 - no dead keys"  as the keyboard
+    on the textconsole was set to Programmer.
+
+ -- Joaquim Boura <x-un-i@sidux.com>  Tue, 13 May 2008 22:14:37 +0200
+
 fll-live-initscripts (3.0.35) UNRELEASED; urgency=low
 
   * NOT RELEASED YET

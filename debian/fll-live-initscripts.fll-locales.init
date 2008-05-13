@@ -679,7 +679,7 @@ case "${CD_COUNTRY}" in
 		;;
 	German)
 		CD_FAMILY="qwertz"
-		CD_KEYMAP="Standard"
+		CD_KEYMAP="latin1 - no dead keys"
 		CD_VARIANT="Standard"
 		CD_FULL="${CD_COUNTRY}"
 		;;
