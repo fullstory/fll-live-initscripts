@@ -159,12 +159,10 @@ print_fsentry()
 	# fs_mntops - fourth field describes the mount options associated with
 	#             the filesystem
 	#
-	if ! ${mounted}; then
-		if ${OPT_AUTOMNT}; then
-			fs_mntops="auto"
-		else
-			fs_mntops="noauto"
-		fi
+	if ${OPT_AUTOMNT}; then
+		fs_mntops="auto"
+	else
+		fs_mntops="noauto"
 	fi
 
 	case "${type}" in
