@@ -173,7 +173,7 @@ print_fsentry()
 			fs_mntops="${fs_mntops},quiet,umask=000,iocharset=utf8"
 			;;
 		vfat)
-			fs_mntops="${fs_mntops},shortname=lower,quiet,umask=000,utf8"
+			fs_mntops="${fs_mntops},shortname=lower,quiet,umask=000"
 			;;
 		swap)
 			fs_mntops="sw"
@@ -207,7 +207,11 @@ print_fsentry()
 				fs_passno=1
 				;;
 			*)
-				fs_passno=2
+				if is_nativefs "${type}"; then
+					fs_passno=2
+				else
+					fs_passno=0
+				fi
 				;;
 		esac
 	else
