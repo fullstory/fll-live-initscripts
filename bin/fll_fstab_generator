@@ -1,18 +1,79 @@
-#!/bin/sh
+#!/bin/dash
 
-OPT_DEBUG=false
-OPT_UUIDS=false
-OPT_LABELS=false
 OPT_AUTOMNT=false
+OPT_DEBUG=false
+OPT_LABELS=false
+OPT_LIVEONLY=false
 OPT_MKMNTPNT=false
+OPT_NOMNTPNT=false
+OPT_UUIDS=false
+
+OPT_CLIARGS=$(getopt --options adlmnu \
+		  --longoptions auto,debug,labels,mkdir,nomnts,uuids \
+		  --name "${0}" -- "${@}")
+
+if [ "${?}" -eq 0 ]; then
+	eval set -- "${OPT_CLIARGS}"
+else
+	echo "getopt terminated abnormally" >/dev/stderr
+	exit 255
+fi
+
+while :; do
+	case "${1}" in
+		-a|--auto)
+			OPT_AUTOMNT=:
+			;;
+		-d|--debug)
+			if ${OPT_DEBUG}; then
+				set -x
+			else
+				OPT_DEBUG=:
+			fi
+			;;
+		-l|--labels)
+			OPT_LABELS=:
+			;;
+		-m|--mkdir)
+			OPT_MKMNTPNT=:
+			;;
+		-n|--nomnt)
+			OPT_NOMNTPNT=:
+			;;
+		-u|--uuids)
+			OPT_UUIDS=:
+			;;
+		--)
+			shift
+			break
+			;;
+	esac
+	shift
+done
 
 #
 # future proof udev info query tool command
 #
 if which udevadm >/dev/null; then
-	udev_info() { udevadm info --query="${1}" --name="${2}"; }
+	udev_info()
+	{
+		udevadm info --query="${1}" --name="${2}"
+	}
+	udev_blkdev_trigger()
+	{
+		udevadm trigger --subsystem-match=block
+		udevadm settle --timeout=30
+	}
 else
-	udev_info() { udevinfo --query="${1}" --name="${2}"; }
+	udev_info()
+	{
+		udevinfo --query="${1}" --name="${2}"
+	}
+	udev_blkdev_trigger()
+	{
+		udevtrigger --subsystem-match=block
+		udevsettle --timeout=30
+	}
 fi
 
 #
@@ -26,27 +87,13 @@ disk_env()
 }
 
 #
-# resolve canonical device node
+# output udev symlink information for a block device
 #
-resolve_device()
+disk_symlinks()
 {
-	local name
+	[ -b "/dev/${1}" ] || return 1
 
-	case "${1}" in
-		LABEL=*|UUID=*)
-			name="$(findfs ${1})"
-			;;
-		/dev/disk/by-*)
-			name="$(readlink -f ${1})"
-			;;
-		/dev/*)
-			name="${1}"
-			;;
-	esac
-
-	if [ -b "${name}" ]; then
-		echo "${name}"
-	fi
+	udev_info symlink "/dev/${1}" 2>/dev/null
 }
 
 #
@@ -73,6 +120,22 @@ is_nativefs()
 }
 
 #
+# check for mounted device and return mount point
+#
+is_mounted()
+{
+	local mntpnt
+
+	for d in ${@}; do
+		mntpnt=$(sed -n "s%^/dev/${d} \([^[:space:]]\+\).*%\1%p" /proc/mounts | head -n1)
+		if [ "${mntpnt}" ]; then
+			echo "${mntpnt}"
+			break
+		fi
+	done
+}
+
+#
 # conditionally make mount point directories
 #
 mkmntpnt()
@@ -94,13 +157,25 @@ dbg()
 print_fsentry()
 {
 	local fs_spec fs_file fs_vfstype fs_mntops fs_freq fs_passno
-	local name mntpnt type uuid label mounted
+	local name type symlinks label uuid mounted
 	name="${1}"
-	mntpnt="${2}"
-	type="${3}"
-	uuid="${4}"
-	label="${5}"
-	mounted="false"
+	type="${2}"
+
+	symlinks=$(disk_symlinks ${name})
+	
+	for s in ${symlinks}; do
+		dbg "${s}"
+		
+		case "${s}" in
+			disk/by-label/*)
+				label="${s##*/}"
+				;;
+			disk/by-uuid/*)
+				uuid="${s##*/}"
+				;;
+		esac
+	done
+			
 
 	#
 	# fs_spec - first field describes the block special device or remote
@@ -125,19 +200,25 @@ print_fsentry()
 	#
 	# fs_file - second field describes the mount point for the filesystem
 	#
-	if [ "${mntpnt}" ]; then
+	if ! ${OPT_NOMNTPNT}; then
+		fs_file=$(is_mounted ${name} ${symlinks})
+	fi
+		
+	if [ "${fs_file}" ]; then
+		dbg "${name} is mounted on ${fs_file}"
 		mounted=:
-		fs_file="${mntpnt}"
+	elif [ "${type}" = "swap" ]; then
+		fs_file="none"
 	else
 		case "${name}" in
 			dm-*)
-				mnt="/media/${name}"
+				fs_file="/media/${name}"
 				;;
 			*)
-				part="$(echo ${name} | egrep -o '[[:digit:]]+$')"
+				part=$(echo ${name} | egrep -o '[[:digit:]]+$')
 				
 				if [ "${part}" ]; then
-					mnt="/media/disk${disk}part${part}"
+					fs_file="/media/disk${disk}part${part}"
 				else
 					dbg "partition index invalid"
 					continue
@@ -223,6 +304,8 @@ print_fsentry()
 		       "${fs_file}" "${fs_vfstype}" "${fs_mntops}" \
 		       "${fs_freq}" "${fs_passno}"
 	fi
+
+	mkmntpnt "${fs_file}"
 }
 
 #
@@ -230,7 +313,7 @@ print_fsentry()
 #
 scan_partitions()
 {
-	local name part mnt
+	local name part mntpnt
 	local path base disk
 	path="${1}"
 	base="${2}"
@@ -240,46 +323,21 @@ scan_partitions()
 		[ -d "${p}" ] || continue
 		name=${p##*/}
 
-		unset ID_FS_USAGE ID_FS_TYPE ID_FS_VERSION \
-		      ID_FS_UUID ID_FS_UUID_ENC \
-		      ID_FS_LABEL ID_FS_LABEL_ENC ID_FS_LABEL_SAFE \
-		      mnt
+		unset ID_FS_TYPE ID_FS_USAGE
 
-
-		eval "$(disk_env ${name} | grep -e '^ID_FS_USAGE=' \
-						-e '^ID_FS_TYPE=' \
-						-e '^ID_FS_VERSION=' \
-						-e '^ID_FS_UUID=' \
-						-e '^ID_FS_UUID_ENC=' \
-						-e '^ID_FS_LABEL=' \
-						-e '^ID_FS_LABEL_ENC=' \
-						-e '^ID_FS_LABEL_SAFE=')"
+		eval "$(disk_env ${name} | grep -e '^ID_FS_TYPE=' \
+						-e '^ID_FS_USAGE=')"
 
 		dbg "sysfs path: ${p}"
-		dbg "ID_FS_USAGE=${ID_FS_USAGE}"
-		dbg "ID_FS_TYPE=${ID_FS_TYPE}"
-		dbg "ID_FS_VERSION=${ID_FS_VERSION}"
-		dbg "ID_FS_UUID=${ID_FS_UUID}"
-		dbg "ID_FS_UUID_ENC=${ID_FS_UUID_ENC}"
-		dbg "ID_FS_LABEL=${ID_FS_LABEL}"
-		dbg "ID_FS_LABEL_ENC=${ID_FS_LABEL_ENC}"
-		dbg "ID_FS_LABEL_SAFE=${ID_FS_LABEL_SAFE}"
+		dbg "ID_FS_TYPE=${ID_FS_TYPE} ID_FS_USAGE=${ID_FS_USAGE}"
 
-		if [ "${ID_FS_USAGE}" = "filesystem" ]; then
-			if grep -s -q "^/dev/${name}" /etc/mtab; then
-				mnt="$(sed -n "s%^/dev/${name} \([^[:space:]]\+\).*%\1%p" /etc/mtab)"
-			fi
-		elif [ "${ID_FS_TYPE}" = "swap" ]; then
-			mnt="none"
-		else
+		if [ "${ID_FS_USAGE}" != "filesystem" ] && \
+		   [ "${ID_FS_TYPE}" != "swap" ]; then
 			dbg "partition not a valid filesystem"
 			continue
 		fi
 
-		print_fsentry "${name}" "${mnt}" "${ID_FS_TYPE}" \
-			      "${ID_FS_UUID_ENC}" "${ID_FS_LABEL_SAFE}"
-
-		mkmntpnt "${fs_file}"
+		print_fsentry "${name}" "${ID_FS_TYPE}"
 	done
 }
 
@@ -290,6 +348,10 @@ scan_disks()
 {
 	local disk name
 	disk=1
+
+	if [ "$(id -u)" -eq 0 ]; then
+		udev_blkdev_trigger
+	fi
 	
 	for p in /sys/block/*; do
 		[ -d "${p}" ] || continue
@@ -301,8 +363,7 @@ scan_disks()
 						-e '^ID_TYPE=')"
 
 		dbg "sysfs path: ${p}"
-		dbg "ID_BUS=${ID_BUS}"
-		dbg "ID_TYPE=${ID_TYPE}"
+		dbg "ID_BUS=${ID_BUS} ID_TYPE=${ID_TYPE}"
 
 		if [ "${ID_TYPE}" != disk ]; then
 			dbg "device is not of disk type, skip"
