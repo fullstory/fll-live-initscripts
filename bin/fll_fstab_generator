@@ -77,19 +77,15 @@ is_nativefs()
 #
 mkmntpnt()
 {
-	if ${OPT_MKMNTPNT}; then
-		mkdir -p "${1}"
-	fi
+	${OPT_MKMNTPNT} && mkdir -p "${1}"
 }
 
 #
 # output debug starting with 'D:' to stderr
 #
-debugstr()
+dbg()
 {
-	if ${OPT_DEBUG}; then
-		echo "D: ${@}" >/dev/stderr
-	fi
+	${OPT_DEBUG} && echo "D: ${@}" >/dev/stderr
 }
 
 #
@@ -143,7 +139,7 @@ print_fsentry()
 				if [ "${part}" ]; then
 					mnt="/media/disk${disk}part${part}"
 				else
-					debugstr "partition index invalid"
+					dbg "partition index invalid"
 					continue
 				fi
 				;;
@@ -259,15 +255,15 @@ scan_partitions()
 						-e '^ID_FS_LABEL_ENC=' \
 						-e '^ID_FS_LABEL_SAFE=')"
 
-		debugstr "sysfs path: ${p}"
-		debugstr "ID_FS_USAGE=${ID_FS_USAGE}"
-		debugstr "ID_FS_TYPE=${ID_FS_TYPE}"
-		debugstr "ID_FS_VERSION=${ID_FS_VERSION}"
-		debugstr "ID_FS_UUID=${ID_FS_UUID}"
-		debugstr "ID_FS_UUID_ENC=${ID_FS_UUID_ENC}"
-		debugstr "ID_FS_LABEL=${ID_FS_LABEL}"
-		debugstr "ID_FS_LABEL_ENC=${ID_FS_LABEL_ENC}"
-		debugstr "ID_FS_LABEL_SAFE=${ID_FS_LABEL_SAFE}"
+		dbg "sysfs path: ${p}"
+		dbg "ID_FS_USAGE=${ID_FS_USAGE}"
+		dbg "ID_FS_TYPE=${ID_FS_TYPE}"
+		dbg "ID_FS_VERSION=${ID_FS_VERSION}"
+		dbg "ID_FS_UUID=${ID_FS_UUID}"
+		dbg "ID_FS_UUID_ENC=${ID_FS_UUID_ENC}"
+		dbg "ID_FS_LABEL=${ID_FS_LABEL}"
+		dbg "ID_FS_LABEL_ENC=${ID_FS_LABEL_ENC}"
+		dbg "ID_FS_LABEL_SAFE=${ID_FS_LABEL_SAFE}"
 
 		if [ "${ID_FS_USAGE}" = "filesystem" ]; then
 			if grep -s -q "^/dev/${name}" /etc/mtab; then
@@ -276,7 +272,7 @@ scan_partitions()
 		elif [ "${ID_FS_TYPE}" = "swap" ]; then
 			mnt="none"
 		else
-			debugstr "partition not a valid filesystem"
+			dbg "partition not a valid filesystem"
 			continue
 		fi
 
@@ -304,22 +300,22 @@ scan_disks()
 		eval "$(disk_env ${name} | grep -e '^ID_BUS=' \
 						-e '^ID_TYPE=')"
 
-		debugstr "sysfs path: ${p}"
-		debugstr "ID_BUS=${ID_BUS}"
-		debugstr "ID_TYPE=${ID_TYPE}"
+		dbg "sysfs path: ${p}"
+		dbg "ID_BUS=${ID_BUS}"
+		dbg "ID_TYPE=${ID_TYPE}"
 
 		if [ "${ID_TYPE}" != disk ]; then
-			debugstr "device is not of disk type, skip"
+			dbg "device is not of disk type, skip"
 			continue
 		elif [ "${ID_BUS}" = "usb" ]; then
-			debugstr "device is on usb bus, skip"
+			dbg "device is on usb bus, skip"
 			continue
 		elif is_removable "${p}"; then
-			debugstr "device has removable attribute, skip"
+			dbg "device has removable attribute, skip"
 			continue
 		fi
 
-		debugstr "device is a disk, count: ${disk}"
+		dbg "device is a disk, count: ${disk}"
 		scan_partitions "${p}" "${name}" "${disk}"
 		disk=$((disk + 1))
 	done
