@@ -1,7 +1,7 @@
 #!/bin/sh
 
 OPT_DEBUG=false
-OPT_UUIDS=:
+OPT_UUIDS=false
 OPT_LABELS=false
 OPT_AUTOMNT=false
 OPT_MKMNTPNT=false
@@ -214,8 +214,15 @@ print_fsentry()
 		fs_passno=0
 	fi
 
-	printf "%-20s %-20s %-20s %-20s %d %d\n\n" "${fs_spec}" "${fs_file}" \
-	       "${fs_vfstype}" "${fs_mntops}" "${fs_freq}" "${fs_passno}"
+	if ${OPT_LABELS} || ${OPT_UUIDS}; then
+		printf "%-40s %-20s %-20s %-20s %d %d\n\n" "${fs_spec}" \
+		       "${fs_file}" "${fs_vfstype}" "${fs_mntops}" \
+		       "${fs_freq}" "${fs_passno}"
+	else
+		printf "%-20s %-20s %-20s %-20s %d %d\n\n" "${fs_spec}" \
+		       "${fs_file}" "${fs_vfstype}" "${fs_mntops}" \
+		       "${fs_freq}" "${fs_passno}"
+	fi
 }
 
 #
@@ -235,7 +242,8 @@ scan_partitions()
 
 		unset ID_FS_USAGE ID_FS_TYPE ID_FS_VERSION \
 		      ID_FS_UUID ID_FS_UUID_ENC \
-		      ID_FS_LABEL ID_FS_LABEL_ENC ID_FS_LABEL_SAFE
+		      ID_FS_LABEL ID_FS_LABEL_ENC ID_FS_LABEL_SAFE \
+		      mnt
 
 
 		eval "$(disk_env ${name} | grep -e '^ID_FS_USAGE=' \
