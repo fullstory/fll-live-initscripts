@@ -81,9 +81,7 @@ fi
 #
 disk_env()
 {
-	[ -b "/dev/${1}" ] || return 1
-
-	udev_info env "/dev/${1}" 2>/dev/null
+	[ -b "/dev/${1}" ] && udev_info env "/dev/${1}" 2>/dev/null
 }
 
 #
@@ -91,9 +89,7 @@ disk_env()
 #
 disk_symlinks()
 {
-	[ -b "/dev/${1}" ] || return 1
-
-	udev_info symlink "/dev/${1}" 2>/dev/null
+	[ -b "/dev/${1}" ] && udev_info symlink "/dev/${1}" 2>/dev/null
 }
 
 #
@@ -162,10 +158,10 @@ print_fsentry()
 	type="${2}"
 
 	symlinks=$(disk_symlinks ${name})
-	
+
 	for s in ${symlinks}; do
 		dbg "${s}"
-		
+
 		case "${s}" in
 			disk/by-label/*)
 				label="${s##*/}"
@@ -175,7 +171,6 @@ print_fsentry()
 				;;
 		esac
 	done
-			
 
 	#
 	# fs_spec - first field describes the block special device or remote
@@ -203,7 +198,7 @@ print_fsentry()
 	if ! ${OPT_NOMNTPNT}; then
 		fs_file=$(is_mounted ${name} ${symlinks})
 	fi
-		
+
 	if [ "${fs_file}" ]; then
 		dbg "${name} is mounted on ${fs_file}"
 		mounted=:
@@ -352,7 +347,7 @@ scan_disks()
 	if [ "$(id -u)" -eq 0 ]; then
 		udev_blkdev_trigger
 	fi
-	
+
 	for p in /sys/block/*; do
 		[ -d "${p}" ] || continue
 		name="${p#/sys/block/}"
@@ -397,12 +392,13 @@ scan_cdroms()
 
 	for c in /dev/cdrom*; do
 		[ -L "${c}" ] || continue
+
 		fs_spec="${c}"
 		fs_file="/media/${c#/dev/}"
-		
+
 		printf "%-20s %-20s %-20s %-20s %d %d\n\n" "${fs_spec}" "${fs_file}" \
 		       "${fs_vfstype}" "${fs_mntops}" "${fs_freq}" "${fs_passno}"
-		
+
 		mkmntpnt "${fs_file}"
 	done
 }
@@ -420,12 +416,13 @@ scan_floppies()
 
 	for f in /dev/fd*; do
 		[ -b "${f}" ] || continue
+
 		fs_spec="${f}"
 		fs_file="/media/${f#/dev/}"
-		
+
 		printf "%-20s %-20s %-20s %-20s %d %d\n\n" "${fs_spec}" "${fs_file}"  \
 		       "${fs_vfstype}" "${fs_mntops}" "${fs_freq}" "${fs_passno}"
-		
+
 		mkmntpnt "${fs_file}"
 	done
 }
