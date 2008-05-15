@@ -97,14 +97,13 @@ debugstr()
 #
 print_fsentry()
 {
-	local fs_spec fs_file fs_vfstype fs_mntops
-	local disk part name type uuid label
-	disk="${1}"
-	part="${2}"
-	name="${3}"
-	type="${4}"
-	uuid="${5}"
-	label="${6}"
+	local fs_spec fs_file fs_vfstype fs_mntops fs_freq fs_passno
+	local name mntpnt type uuid label
+	name="${1}"
+	mntpnt="${2}"
+	type="${3}"
+	uuid="${4}"
+	label="${5}"
 
 	#
 	# fs_spec - first field describes the block special device or remote
@@ -132,14 +131,7 @@ print_fsentry()
 	if [ "${type}" = "swap" ]; then
 		fs_file="none"
 	else
-		case "${name}" in
-			dm-*)
-				fs_file="/media/${name}"
-				;;
-			*)
-				fs_file="/media/disk${disk}part${part}"
-				;;
-		esac
+		fs_file="${mntpnt}"
 	fi
 
 	#
@@ -200,11 +192,11 @@ print_fsentry()
 #
 scan_partitions()
 {
-	local path base disk name part retv
+	local name part mnt
+	local path base disk
 	path="${1}"
 	base="${2}"
 	disk="${3}"
-	retv=1
 
 	for p in ${path}/${base}*; do
 		[ -d "${p}" ] || continue
@@ -233,29 +225,19 @@ scan_partitions()
 			continue
 		fi
 
-		# calculate partition number
-		if [ ${#name} -gt ${#base} ]; then
-			part=${name#${base}}
-			part=${part#-}
-			case "${part}" in
-				*[!0-9]*)
-					debugstr "invalid part number: ${part}"
-					continue
-					;;
-			esac
-		else
-			debugstr "error calculating part number"
-			continue
-		fi
+		case "${name}" in
+			dm-*)
+				mnt="/media/${name}"
+				;;
+			*)
+				part="$(echo ${name} | egrep -o '[[:digit:]]+$')"
+				mnt="/media/disk${disk}part${part}"
+				;;
+		esac
 
-		# disk has yielded at least one volume
-		retv=0
-
-		print_fsentry "${disk}" "${part}" "${name}" "${ID_FS_TYPE}" \
+		print_fsentry "${name}" "${mnt}" "${ID_FS_TYPE}" \
 			      "${ID_FS_UUID_ENC}" "${ID_FS_LABEL_SAFE}"
 	done
-
-	return "${retv}"
 }
 
 #
@@ -290,11 +272,8 @@ scan_disks()
 		fi
 
 		debugstr "device is a disk, count: ${disk}"
-		
 		scan_partitions "${p}" "${name}" "${disk}"
-		if [ "${?}" -eq 0 ]; then
-			disk=$((disk + 1))
-		fi
+		disk=$((disk + 1))
 	done
 }
 
