@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OPT_DEBUG=:
+OPT_DEBUG=false
 OPT_UUIDS=:
 OPT_LABELS=false
 OPT_AUTOMNT=false
@@ -77,7 +77,7 @@ is_nativefs()
 #
 mkmntpnt()
 {
-	if "${OPT_MKMNTPNT}"; then
+	if ${OPT_MKMNTPNT}; then
 		mkdir -p "${1}"
 	fi
 }
@@ -87,7 +87,7 @@ mkmntpnt()
 #
 debugstr()
 {
-	if "${OPT_DEBUG}"; then
+	if ${OPT_DEBUG}; then
 		echo "D: ${@}" >/dev/stderr
 	fi
 }
@@ -98,24 +98,25 @@ debugstr()
 print_fsentry()
 {
 	local fs_spec fs_file fs_vfstype fs_mntops fs_freq fs_passno
-	local name mntpnt type uuid label
+	local name mntpnt type uuid label mounted
 	name="${1}"
 	mntpnt="${2}"
 	type="${3}"
 	uuid="${4}"
 	label="${5}"
+	mounted="false"
 
 	#
 	# fs_spec - first field describes the block special device or remote
 	#           filesystem to be mounted
 	#
-	if "${OPT_LABELS}" && [ -L "/dev/disk/by-label/${label}" ]; then
+	if ${OPT_LABELS} && [ -L "/dev/disk/by-label/${label}" ]; then
 		if is_nativefs "${type}"; then
 			fs_spec="LABEL=${label}"
 		else
 			fs_spec="/dev/disk/by-label/${label}"
 		fi
-	elif "${OPT_UUIDS}" && [ -L "/dev/disk/by-uuid/${uuid}" ]; then
+	elif ${OPT_UUIDS} && [ -L "/dev/disk/by-uuid/${uuid}" ]; then
 		if is_nativefs "${type}"; then
 			fs_spec="UUID=${uuid}"
 		else
@@ -128,10 +129,25 @@ print_fsentry()
 	#
 	# fs_file - second field describes the mount point for the filesystem
 	#
-	if [ "${type}" = "swap" ]; then
-		fs_file="none"
-	else
+	if [ "${mntpnt}" ]; then
+		mounted=:
 		fs_file="${mntpnt}"
+	else
+		case "${name}" in
+			dm-*)
+				mnt="/media/${name}"
+				;;
+			*)
+				part="$(echo ${name} | egrep -o '[[:digit:]]+$')"
+				
+				if [ "${part}" ]; then
+					mnt="/media/disk${disk}part${part}"
+				else
+					debugstr "partition index invalid"
+					continue
+				fi
+				;;
+		esac
 	fi
 
 	#
@@ -143,10 +159,12 @@ print_fsentry()
 	# fs_mntops - fourth field describes the mount options associated with
 	#             the filesystem
 	#
-	if "${OPT_AUTOMNT}"; then
-		fs_mntops="auto"
-	else
-		fs_mntops="noauto"
+	if ! ${mounted}; then
+		if ${OPT_AUTOMNT}; then
+			fs_mntops="auto"
+		else
+			fs_mntops="noauto"
+		fi
 	fi
 
 	case "${type}" in
@@ -164,7 +182,11 @@ print_fsentry()
 			;;
 		*)
 			if is_nativefs "${type}"; then
-				fs_mntops="${fs_mntops},users,exec,noatime"
+				if ${mounted}; then
+					fs_mntops="defaults,noatime"
+				else
+					fs_mntops="${fs_mntops},users,exec,noatime"
+				fi
 			else
 				fs_mntops="${fs_mntops},defaults"
 			fi
@@ -181,9 +203,20 @@ print_fsentry()
 	# fs_passno - sizth field is used by the fsck(8) program to determine
 	#             the order in which filesystem checks are done at bootup
 	#
-	fs_passno=0
+	if ${mounted} && [ "${type}" != "swap" ]; then
+		case "${mntpnt}" in
+			/)
+				fs_passno=1
+				;;
+			*)
+				fs_passno=2
+				;;
+		esac
+	else
+		fs_passno=0
+	fi
 
-	printf "%s\t%s\t%s\t%s\t%d %d\n\n" "${fs_spec}" "${fs_file}" \
+	printf "%-20s %-20s %-10s %-20s %d %d\n\n" "${fs_spec}" "${fs_file}" \
 	       "${fs_vfstype}" "${fs_mntops}" "${fs_freq}" "${fs_passno}"
 }
 
@@ -207,7 +240,14 @@ scan_partitions()
 		      ID_FS_LABEL ID_FS_LABEL_ENC ID_FS_LABEL_SAFE
 
 
-		eval "$(disk_env ${name})"
+		eval "$(disk_env ${name} | grep -e '^ID_FS_USAGE=' \
+						-e '^ID_FS_TYPE=' \
+						-e '^ID_FS_VERSION=' \
+						-e '^ID_FS_UUID=' \
+						-e '^ID_FS_UUID_ENC=' \
+						-e '^ID_FS_LABEL=' \
+						-e '^ID_FS_LABEL_ENC=' \
+						-e '^ID_FS_LABEL_SAFE=')"
 
 		debugstr "sysfs path: ${p}"
 		debugstr "ID_FS_USAGE=${ID_FS_USAGE}"
@@ -219,24 +259,21 @@ scan_partitions()
 		debugstr "ID_FS_LABEL_ENC=${ID_FS_LABEL_ENC}"
 		debugstr "ID_FS_LABEL_SAFE=${ID_FS_LABEL_SAFE}"
 
-		if [ "${ID_FS_USAGE}" != "filesystem" ] && \
-		   [ "${ID_FS_TYPE}" != "swap" ]; then
+		if [ "${ID_FS_USAGE}" = "filesystem" ]; then
+			if grep -s -q "^/dev/${name}" /etc/mtab; then
+				mnt="$(sed -n "s%^/dev/${name} \([^[:space:]]\+\).*%\1%p" /etc/mtab)"
+			fi
+		elif [ "${ID_FS_TYPE}" = "swap" ]; then
+			mnt="none"
+		else
 			debugstr "partition not a valid filesystem"
 			continue
 		fi
 
-		case "${name}" in
-			dm-*)
-				mnt="/media/${name}"
-				;;
-			*)
-				part="$(echo ${name} | egrep -o '[[:digit:]]+$')"
-				mnt="/media/disk${disk}part${part}"
-				;;
-		esac
-
 		print_fsentry "${name}" "${mnt}" "${ID_FS_TYPE}" \
 			      "${ID_FS_UUID_ENC}" "${ID_FS_LABEL_SAFE}"
+
+		mkmntpnt "${fs_file}"
 	done
 }
 
@@ -254,7 +291,8 @@ scan_disks()
 
 		unset ID_BUS ID_TYPE
 
-		eval "$(disk_env ${name})"
+		eval "$(disk_env ${name} | grep -e '^ID_BUS=' \
+						-e '^ID_TYPE=')"
 
 		debugstr "sysfs path: ${p}"
 		debugstr "ID_BUS=${ID_BUS}"
@@ -284,11 +322,21 @@ scan_disks()
 #
 scan_cdroms()
 {
+	local fs_spec fs_file fs_vfstype fs_mntops fs_freq fs_passno
+	fs_vfstype="udf,iso9660"
+	fs_mntops="user,noauto"
+	fs_freq=0
+	fs_passno=0
+
 	for c in /dev/cdrom*; do
 		[ -L "${c}" ] || continue
-		printf "%s\t/media/%s\tudf,iso9660\tuser,noauto\t 0 0\n" \
-			"${c}" "${c#/dev/}"
-		mkmntpnt "${c#/dev/}"
+		fs_spec="${c}"
+		fs_file="/media/${c#/dev/}"
+		
+		printf "%-20s %-20s %-10s %-20s %d %d\n\n" "${fs_spec}" "${fs_file}" \
+		       "${fs_vfstype}" "${fs_mntops}" "${fs_freq}" "${fs_passno}"
+		
+		mkmntpnt "${fs_file}"
 	done
 }
 
@@ -297,11 +345,21 @@ scan_cdroms()
 #
 scan_floppies()
 {
+	local fs_spec fs_file fs_vfstype fs_mntops fs_freq fs_passno
+	fs_vfstype="auto"
+	fs_mntops="rw,user,noauto"
+	fs_freq=0
+	fs_passno=0
+
 	for f in /dev/fd*; do
 		[ -b "${f}" ] || continue
-		printf "%s\t/media/%s\tauto\trw,user,noauto\t 0 0\n" \
-			"${f}" "${f#/dev/}"
-		mkmntpnt "${f#/dev/}"
+		fs_spec="${f}"
+		fs_file="/media/${f#/dev/}"
+		
+		printf "%-20s %-20s %-10s %-20s %d %d\n\n" "${fs_spec}" "${fs_file}"  \
+		       "${fs_vfstype}" "${fs_mntops}" "${fs_freq}" "${fs_passno}"
+		
+		mkmntpnt "${fs_file}"
 	done
 }
 
