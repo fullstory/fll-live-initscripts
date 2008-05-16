@@ -1,8 +1,9 @@
 fll-live-initscripts (3.0.36) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - update contrib/src/nv_driver.c from xf86-video-nv 2.1.9.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 13 May 2008 23:29:21 +0200
+ -- Kel Modderman <kel@otaku42.de>  Fri, 16 May 2008 13:02:20 +1000
 
 fll-live-initscripts (3.0.35) unstable; urgency=low
 
