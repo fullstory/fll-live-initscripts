@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.36) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.36) unstable; urgency=low
 
   * fll-xorgconfig:
     - update contrib/src/nv_driver.c from xf86-video-nv 2.1.9.
