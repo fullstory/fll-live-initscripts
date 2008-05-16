@@ -172,20 +172,29 @@ print_fsentry()
 	type="${2}"
 	mounted=false
 
-	symlinks=$(disk_symlinks ${name})
+	case "${name}" in
+		dm-*)
+			type=$(/lib/udev/vol_id --type /dev/${name})
+			label=$(/lib/udev/vol_id --label /dev/${name})
+			uuid=$(/lib/udev/vol_id --uuid /dev/${name})
+			;;
+		*)
+			symlinks=$(disk_symlinks ${name})
 
-	for s in ${symlinks}; do
-		dbg "${s}"
+			for s in ${symlinks}; do
+				dbg "${s}"
 
-		case "${s}" in
-			disk/by-label/*)
-				label="${s##*/}"
-				;;
-			disk/by-uuid/*)
-				uuid="${s##*/}"
-				;;
-		esac
-	done
+				case "${s}" in
+					disk/by-label/*)
+						label="${s##*/}"
+						;;
+					disk/by-uuid/*)
+						uuid="${s##*/}"
+						;;
+				esac
+			done
+			;;
+	esac
 
 	#
 	# fs_spec - first field describes the block special device or remote
@@ -374,12 +383,16 @@ scan_disks()
 
 		case "${name}" in
 			dm-*)
-				dbg "device is a virtual blkdev"
+				dbg "device is a virtual block device"
+				print_fsentry "${name}"
 				;;
-			*)
+			[sh]d*)
 				dbg "device is a disk, count: ${disk}"
 				scan_partitions "${p}" "${name}" "${disk}"
 				disk=$((disk + 1))
+				;;
+			*)
+				echo "disk device unhandled: ${name} (${p})" >/dev/stderr
 				;;
 		esac
 	done
