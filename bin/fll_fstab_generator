@@ -371,7 +371,7 @@ scan_disks()
 		dbg "ID_BUS=${ID_BUS} ID_TYPE=${ID_TYPE}"
 
 		case "${name}" in
-			dm-*)
+			dm-[0-9]*)
 				dbg "device is a virtual block device"
 				print_fsentry "${name}"
 				continue
