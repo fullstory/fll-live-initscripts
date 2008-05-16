@@ -370,6 +370,14 @@ scan_disks()
 		dbg "sysfs path: ${p}"
 		dbg "ID_BUS=${ID_BUS} ID_TYPE=${ID_TYPE}"
 
+		case "${name}" in
+			dm-*)
+				dbg "device is a virtual block device"
+				print_fsentry "${name}"
+				continue
+				;;
+		esac
+
 		if [ "${ID_TYPE}" != disk ]; then
 			dbg "device is not of disk type, skip"
 			continue
@@ -382,10 +390,6 @@ scan_disks()
 		fi
 
 		case "${name}" in
-			dm-*)
-				dbg "device is a virtual block device"
-				print_fsentry "${name}"
-				;;
 			[sh]d*)
 				dbg "device is a disk, count: ${disk}"
 				scan_partitions "${p}" "${name}" "${disk}"
