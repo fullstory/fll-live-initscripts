@@ -9,3 +9,12 @@ $0 == "/*************** G8x ***************/" {
 		print substr(tolower($2), 7, 4), $3, $4, $5
 	}
 }
+
+$0 == "NVIsSupported(CARD32 id)" {
+	while(getline > 0) {
+		if($1 == "return")
+			break
+		if($2 ~ /^0x[0-9A-Z]+:$/)
+			print substr(tolower($2), 3, 4) " \"Too new/Unknown\""
+	}
+}
