@@ -182,6 +182,7 @@ print_fsentry()
 			symlinks=$(disk_symlinks ${name})
 
 			for s in ${symlinks}; do
+				[ -L "/dev/${s}" ] || continue
 				dbg "${s}"
 
 				case "${s}" in
@@ -200,13 +201,13 @@ print_fsentry()
 	# fs_spec - first field describes the block special device or remote
 	#           filesystem to be mounted
 	#
-	if ${OPT_LABELS} && [ -L "/dev/disk/by-label/${label}" ]; then
+	if ${OPT_LABELS} && [ "${label}" ]; then
 		if is_nativefs "${type}"; then
 			fs_spec="LABEL=${label}"
 		else
 			fs_spec="/dev/disk/by-label/${label}"
 		fi
-	elif ${OPT_UUIDS} && [ -L "/dev/disk/by-uuid/${uuid}" ]; then
+	elif ${OPT_UUIDS} && [ "${uuid}" ]; then
 		if is_nativefs "${type}"; then
 			fs_spec="UUID=${uuid}"
 		else
@@ -229,14 +230,21 @@ print_fsentry()
 	elif [ "${type}" = "swap" ]; then
 		fs_file="none"
 	else
-		part=$(echo ${name} | egrep -o '[[:digit:]]+$')
-		
-		if [ "${part}" ]; then
-			fs_file="/media/disk${disk}part${part}"
-		else
-			dbg "partition index invalid"
-			continue
-		fi
+		case "${name}" in
+			dm-*)
+				fs_file="/media/${name}"
+				;;
+			*)
+				part=$(echo ${name} | egrep -o '[[:digit:]]+$')
+				
+				if [ "${part}" ]; then
+					fs_file="/media/disk${disk}part${part}"
+				else
+					dbg "partition index invalid"
+					continue
+				fi
+				;;
+		esac
 	fi
 
 	#
