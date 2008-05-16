@@ -148,6 +148,20 @@ dbg()
 }
 
 #
+# private function to control formatting of printed output
+#
+_printf_mntent()
+{
+	if ${OPT_UUIDS}; then
+		printf "%-45s %-20s %-15s %-30s %d %d\n\n" \
+		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}"
+	else
+		printf "%-20s %-20s %-15s %-30s %d %d\n\n" \
+		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}"
+	fi
+}
+
+#
 # print fstab entry for a filesystem
 #
 print_fsentry()
@@ -156,6 +170,7 @@ print_fsentry()
 	local name type symlinks label uuid mounted
 	name="${1}"
 	type="${2}"
+	mounted=false
 
 	symlinks=$(disk_symlinks ${name})
 
@@ -274,7 +289,7 @@ print_fsentry()
 	#             the order in which filesystem checks are done at bootup
 	#
 	if ${mounted} && [ "${type}" != "swap" ]; then
-		case "${mntpnt}" in
+		case "${fs_file}" in
 			/)
 				fs_passno=1
 				;;
@@ -290,15 +305,8 @@ print_fsentry()
 		fs_passno=0
 	fi
 
-	if ${OPT_UUIDS}; then
-		printf "%-40s %-20s %-20s %-20s %d %d\n\n" "${fs_spec}" \
-		       "${fs_file}" "${fs_vfstype}" "${fs_mntops}" \
-		       "${fs_freq}" "${fs_passno}"
-	else
-		printf "%-20s %-20s %-20s %-20s %d %d\n\n" "${fs_spec}" \
-		       "${fs_file}" "${fs_vfstype}" "${fs_mntops}" \
-		       "${fs_freq}" "${fs_passno}"
-	fi
+	_printf_mntent "${fs_spec}" "${fs_file}" "${fs_vfstype}" \
+		       "${fs_mntops}" "${fs_freq}" "${fs_passno}"
 
 	mkmntpnt "${fs_file}"
 }
@@ -396,8 +404,8 @@ scan_cdroms()
 		fs_spec="${c}"
 		fs_file="/media/${c#/dev/}"
 
-		printf "%-20s %-20s %-20s %-20s %d %d\n\n" "${fs_spec}" "${fs_file}" \
-		       "${fs_vfstype}" "${fs_mntops}" "${fs_freq}" "${fs_passno}"
+		_printf_mntent "${fs_spec}" "${fs_file}" "${fs_vfstype}" \
+			       "${fs_mntops}" "${fs_freq}" "${fs_passno}"
 
 		mkmntpnt "${fs_file}"
 	done
@@ -420,8 +428,8 @@ scan_floppies()
 		fs_spec="${f}"
 		fs_file="/media/${f#/dev/}"
 
-		printf "%-20s %-20s %-20s %-20s %d %d\n\n" "${fs_spec}" "${fs_file}"  \
-		       "${fs_vfstype}" "${fs_mntops}" "${fs_freq}" "${fs_passno}"
+		_printf_mntent "${fs_spec}" "${fs_file}" "${fs_vfstype}" \
+			       "${fs_mntops}" "${fs_freq}" "${fs_passno}"
 
 		mkmntpnt "${fs_file}"
 	done
