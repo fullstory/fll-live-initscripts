@@ -167,7 +167,7 @@ _printf_mntent()
 print_fsentry()
 {
 	local fs_spec fs_file fs_vfstype fs_mntops fs_freq fs_passno
-	local name type symlinks label uuid mounted
+	local name type symlinks label uuid mounted part
 	name="${1}"
 	type="${2}"
 	mounted=false
@@ -220,21 +220,14 @@ print_fsentry()
 	elif [ "${type}" = "swap" ]; then
 		fs_file="none"
 	else
-		case "${name}" in
-			dm-*)
-				fs_file="/media/${name}"
-				;;
-			*)
-				part=$(echo ${name} | egrep -o '[[:digit:]]+$')
-				
-				if [ "${part}" ]; then
-					fs_file="/media/disk${disk}part${part}"
-				else
-					dbg "partition index invalid"
-					continue
-				fi
-				;;
-		esac
+		part=$(echo ${name} | egrep -o '[[:digit:]]+$')
+		
+		if [ "${part}" ]; then
+			fs_file="/media/disk${disk}part${part}"
+		else
+			dbg "partition index invalid"
+			continue
+		fi
 	fi
 
 	#
@@ -379,9 +372,16 @@ scan_disks()
 			continue
 		fi
 
-		dbg "device is a disk, count: ${disk}"
-		scan_partitions "${p}" "${name}" "${disk}"
-		disk=$((disk + 1))
+		case "${name}" in
+			dm-*)
+				dbg "device is a virtual blkdev"
+				;;
+			*)
+				dbg "device is a disk, count: ${disk}"
+				scan_partitions "${p}" "${name}" "${disk}"
+				disk=$((disk + 1))
+				;;
+		esac
 	done
 }
 
