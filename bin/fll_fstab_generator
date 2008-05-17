@@ -382,7 +382,7 @@ scan_partitions()
 
 		if [ "${ID_FS_USAGE}" != "filesystem" ] && \
 		   [ "${ID_FS_TYPE}" != "swap" ]; then
-			warn "partition not a valid filesystem: ${name}"
+			dbg "partition not a valid filesystem: ${name}"
 			continue
 		fi
 
