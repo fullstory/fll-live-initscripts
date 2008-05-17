@@ -1,8 +1,10 @@
 fll-live-initscripts (3.0.37) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Drop dash dependency, remove #!/bin/dash shebang line from all scripts.
+  * fll-xorgconfig:
+    - drop erroneous dependency on libfile-slurp-perl
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 17 May 2008 01:33:34 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sat, 17 May 2008 12:15:05 +1000
 
 fll-live-initscripts (3.0.36) unstable; urgency=low
 
