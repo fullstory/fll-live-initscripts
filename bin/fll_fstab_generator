@@ -10,10 +10,11 @@ OPT_LABELS=false
 OPT_LIVEONLY=false
 OPT_MKMNTPNT=false
 OPT_NOMNTPNT=false
+OPT_NOSWAP=false
 OPT_UUIDS=false
 
-OPT_CLIARGS=$(getopt --options adlmnu \
-		  --longoptions auto,debug,labels,mkdir,nomnts,uuids \
+OPT_CLIARGS=$(getopt --options adlmnsu \
+		  --longoptions auto,debug,labels,mkdir,nomnt,swapless,uuids \
 		  --name "${0}" -- "${@}")
 
 if [ "${?}" -eq 0 ]; then
@@ -43,6 +44,9 @@ while :; do
 			;;
 		-n|--nomnt)
 			OPT_NOMNTPNT=:
+			;;
+		-s|--swapless)
+			OPT_NOSWAP=:
 			;;
 		-u|--uuids)
 			OPT_UUIDS=:
@@ -233,6 +237,10 @@ print_fsentry()
 		mounted=:
 	elif [ "${type}" = "swap" ]; then
 		fs_file="none"
+
+		if ${OPT_NOSWAP}; then
+			return 0
+		fi
 	else
 		case "${name}" in
 			dm-*)

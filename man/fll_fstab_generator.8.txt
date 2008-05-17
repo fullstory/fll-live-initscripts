@@ -36,6 +36,9 @@ OPTIONS
 -n, --nomnt::
 	Disable detection of local mounts, simulating a fll live environment.
 
+-s, --swapless::
+	Disable addition of swap partitions to '/etc/fstab'.
+
 -u, --uuids::
 	Use UUID tokens for mount names when possible.
 
