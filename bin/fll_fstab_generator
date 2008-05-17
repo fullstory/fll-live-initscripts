@@ -84,6 +84,18 @@ else
 	}
 fi
 
+if [ "$(id -u)" -eq 0 ]; then
+	udev_volid()
+	{
+		/lib/udev/vol_id "--${1}" "${2}"
+	}
+else
+	udev_volid()
+	{
+		return
+	}
+fi
+
 #
 # output udev enironment information for a block device
 #
@@ -156,16 +168,24 @@ dbg()
 }
 
 #
+# output warning starting with 'W:' to stderr
+#
+warn()
+{
+	echo "W: ${@}" >/dev/stderr
+}
+
+#
 # private function to control formatting of printed output
 #
 _printf_mntent()
 {
 	if ${OPT_UUIDS}; then
 		printf "%-45s %-20s %-15s %-30s %d %d\n\n" \
-		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}"
+		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" >/dev/stdout
 	else
 		printf "%-20s %-20s %-15s %-30s %d %d\n\n" \
-		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}"
+		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" >/dev/stdout
 	fi
 }
 
@@ -182,9 +202,9 @@ print_fsentry()
 
 	case "${name}" in
 		dm-*)
-			type=$(/lib/udev/vol_id --type /dev/${name})
-			label=$(/lib/udev/vol_id --label /dev/${name})
-			uuid=$(/lib/udev/vol_id --uuid /dev/${name})
+			type=$(udev_volid type /dev/${name})
+			label=$(udev_volid label /dev/${name})
+			uuid=$(udev_volid uuid /dev/${name})
 			;;
 		*)
 			symlinks=$(disk_symlinks ${name})
@@ -262,6 +282,10 @@ print_fsentry()
 	#
 	# fs_vfstype - third field describes the type of the filesystem
 	#
+	if [ -z "${type}" ]; then
+		warn "could not determine filesystem type of ${name}"
+		return
+	fi
 	fs_vfstype="${type}"
 
 	#
@@ -358,7 +382,7 @@ scan_partitions()
 
 		if [ "${ID_FS_USAGE}" != "filesystem" ] && \
 		   [ "${ID_FS_TYPE}" != "swap" ]; then
-			dbg "partition not a valid filesystem"
+			warn "partition not a valid filesystem: ${name}"
 			continue
 		fi
 
@@ -416,7 +440,7 @@ scan_disks()
 				disk=$((disk + 1))
 				;;
 			*)
-				echo "disk device unhandled: ${name} (${p})" >/dev/stderr
+				warn "disk device unhandled: ${name} (${p})"
 				;;
 		esac
 	done
