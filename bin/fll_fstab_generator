@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# Copyright: (C) 2008 Kel Modderman <kel@otaku42.de>
+# License:   GPLv2
+#
 
 OPT_AUTOMNT=false
 OPT_DEBUG=false
