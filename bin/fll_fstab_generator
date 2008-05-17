@@ -239,7 +239,7 @@ print_fsentry()
 		fs_file="none"
 
 		if ${OPT_NOSWAP}; then
-			return 0
+			return
 		fi
 	else
 		case "${name}" in
