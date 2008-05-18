@@ -1,4 +1,4 @@
-fll-live-initscripts (3.0.37) UNRELEASED; urgency=low
+fll-live-initscripts (3.0.37) unstable; urgency=low
 
   * Drop dash dependency, remove #!/bin/dash shebang line from all scripts.
   * fll-xorgconfig:
