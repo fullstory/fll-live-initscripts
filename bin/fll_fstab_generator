@@ -60,6 +60,22 @@ while :; do
 done
 
 #
+# output debug starting with 'D:' to stderr
+#
+dbg()
+{
+	${OPT_DEBUG} && echo "D: ${@}" >/dev/stderr
+}
+
+#
+# output warning starting with 'W:' to stderr
+#
+warn()
+{
+	echo "W: ${@}" >/dev/stderr
+}
+
+#
 # future proof udev info query tool command
 #
 if which udevadm >/dev/null; then
@@ -92,6 +108,7 @@ if [ "$(id -u)" -eq 0 ]; then
 else
 	udev_volid()
 	{
+		warn "must be root user to execute vol_id"
 		return
 	}
 fi
@@ -160,31 +177,15 @@ mkmntpnt()
 }
 
 #
-# output debug starting with 'D:' to stderr
-#
-dbg()
-{
-	${OPT_DEBUG} && echo "D: ${@}" >/dev/stderr
-}
-
-#
-# output warning starting with 'W:' to stderr
-#
-warn()
-{
-	echo "W: ${@}" >/dev/stderr
-}
-
-#
 # private function to control formatting of printed output
 #
 _printf_mntent()
 {
 	if ${OPT_UUIDS}; then
-		printf "%-45s %-20s %-15s %-30s %d %d\n\n" \
+		printf "%-45s %-30s %-15s %-30s %d %d\n\n" \
 		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" >/dev/stdout
 	else
-		printf "%-20s %-20s %-15s %-30s %d %d\n\n" \
+		printf "%-20s %-30s %-15s %-30s %d %d\n\n" \
 		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" >/dev/stdout
 	fi
 }
@@ -201,7 +202,7 @@ print_fsentry()
 	mounted=false
 
 	case "${name}" in
-		dm-*)
+		mapper/*)
 			type=$(udev_volid type /dev/${name})
 			label=$(udev_volid label /dev/${name})
 			uuid=$(udev_volid uuid /dev/${name})
@@ -263,8 +264,8 @@ print_fsentry()
 		fi
 	else
 		case "${name}" in
-			dm-*)
-				fs_file="/media/${name}"
+			mapper/*)
+				fs_file="/media/${name#mapper/}"
 				;;
 			*)
 				part=$(echo ${name} | egrep -o '[[:digit:]]+$')
@@ -414,14 +415,6 @@ scan_disks()
 		dbg "sysfs path: ${p}"
 		dbg "ID_BUS=${ID_BUS} ID_TYPE=${ID_TYPE}"
 
-		case "${name}" in
-			dm-[0-9]*)
-				dbg "device is a virtual block device"
-				print_fsentry "${name}"
-				continue
-				;;
-		esac
-
 		if [ "${ID_TYPE}" != disk ]; then
 			dbg "device is not of disk type, skip"
 			continue
@@ -439,10 +432,28 @@ scan_disks()
 				scan_partitions "${p}" "${name}" "${disk}"
 				disk=$((disk + 1))
 				;;
+			dm-[0-9]*)
+				dbg "device is a virtual block device"
+				;;
 			*)
 				warn "disk device unhandled: ${name} (${p})"
 				;;
 		esac
+	done
+}
+
+#
+# scan for virtual (device mapper) block devices
+#
+scan_virtual_disks()
+{
+	local name
+
+	for b in /dev/mapper/*; do
+		[ -b "${b}" ] || continue
+		name="${b#/dev/}"
+
+		print_fsentry "${name}"
 	done
 }
 
@@ -497,5 +508,6 @@ scan_floppies()
 }
 
 scan_disks
+scan_virtual_disks
 scan_cdroms
 scan_floppies
