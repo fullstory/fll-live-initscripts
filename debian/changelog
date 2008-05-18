@@ -1,3 +1,9 @@
+fll-live-initscripts (3.0.38) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 18 May 2008 12:57:01 +0200
+
 fll-live-initscripts (3.0.37) unstable; urgency=low
 
   * Drop dash dependency, remove #!/bin/dash shebang line from all scripts.
