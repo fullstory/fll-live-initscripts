@@ -1,4 +1,4 @@
-fll-live-initscripts (3.1.0) UNRELEASED; urgency=low
+fll-live-initscripts (3.1.0) unstable; urgency=low
 
   * fll_fstab_generator:
     - include in binary package for first time
