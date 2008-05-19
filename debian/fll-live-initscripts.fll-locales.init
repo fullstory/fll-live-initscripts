@@ -815,7 +815,7 @@ localize_sources_list() {
 				;;
 			*)
 				# spline.de
-				SIDUX_MIRROR="http://ftp.spline.de/pub/sidux/debian/"
+				SIDUX_MIRROR="ftp://ftp.spline.de/pub/sidux/debian/"
 				;;
 		esac
 
