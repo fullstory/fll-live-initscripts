@@ -766,8 +766,19 @@ set_locale()
 	# select default locale and configure console-data via debconf
 	###
 	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring locales for '${LANG}'"
-	echo "locales locales/default_environment_locale select ${LANG}" | debconf-set-selections
+
+	for msg in "locales locales/default_environment_locale select ${LANG}" \
+		   "console-data console-data/keymap/policy select Select keymap from arch list" \
+		   "console-data console-data/keymap/family select ${CD_FAMILY}" \
+		   "console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX}" \
+		   "console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/variant select ${CD_VARIANT}" \
+		   "console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/${CD_VARIANT_PATH}/keymap select ${CD_KEYMAP}" \
+		   "console-data console-data/keymap/full select ${CD_FULL}"; do
+		echo "${msg}"
+	done | debconf-set-selections
+
 	update-locale "LANG=${LANG}"
+
 	log_end_msg "${?}"
 }
 
@@ -782,7 +793,9 @@ load_keymap() {
 
 	if [ "${keymap}" ]; then
 		log_daemon_msg "${NAME}"; log_action_begin_msg " loading ${KEYTABLE} keymap"
-		loadkeys "${keymap}"
+
+		loadkeys "${keymap}" >/dev/null
+
 		log_end_msg "${?}"
 	fi
 }
@@ -824,14 +837,11 @@ localize_sources_list() {
 	fi
 }
 
-save_locale_debconf_variables() {
-	for msg in "console-data console-data/keymap/policy select Select keymap from arch list" \
-		   "console-data console-data/keymap/family select ${CD_FAMILY}" \
-		   "console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX}" \
-		   "console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/variant select ${CD_VARIANT}" \
-		   "console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/${CD_VARIANT_PATH}/keymap select ${CD_KEYMAP}" \
-		   "console-data console-data/keymap/full select ${CD_FULL}"; do
-		echo "${msg}"
+save_locale_variables() {
+	for var in KEYTABLE XKBLAYOUT XKBVARIANT MIRROR \
+		   CD_COUNTRY CD_FAMILY CD_KEYMAP CD_VARIANT CD_FULL \
+		   CD_LAYOUT CD_LAYOUT_PATH CD_VARIANT_PATH CD_FULL_FIX; do
+		eval "echo ${var}=\"\$${var}\""
 	done > "/etc/default/${NAME}"
 }
 
@@ -841,7 +851,7 @@ case "${1}" in
 		set_locale
 		load_keymap
 		localize_sources_list
-		save_locale_debconf_variables
+		save_locale_variables
 		;;
 	stop)
 		# no-op
@@ -857,8 +867,9 @@ case "${1}" in
 		log_end_msg() { :; }
 		# localize
 		set_locale
+		load_keymap
 		localize_sources_list
-		save_locale_debconf_variables
+		save_locale_variables
 		;;
 	*)
 		echo "Usage: ${NAME} {start|stop|list|localize}" >&2
