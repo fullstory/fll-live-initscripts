@@ -7,9 +7,14 @@ fll-live-initscripts (3.1.0) UNRELEASED; urgency=low
     - fll_fshelper still included for now, until any reverse dependencies
       still remaining are converted
   * fll-locales:
-    - announce keymap installation at boot time
+    - announce keymap installation at boot time. Call loadkeys here, to
+      actually load the keymap, save console data preseeding for installation
+      stage
+    - /etc/default/fll-locales gets debconf values written to it, for reuse
+      later by fll-installer
+    - fix possible typo in default keymap selection case block
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 19 May 2008 13:33:50 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 19 May 2008 15:21:06 +1000
 
 fll-live-initscripts (3.0.37) unstable; urgency=low
 
