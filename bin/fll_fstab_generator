@@ -12,9 +12,13 @@ OPT_MKMNTPNT=false
 OPT_NOMNTPNT=false
 OPT_NOSWAP=false
 OPT_UUIDS=false
+OPT_WANTED=false
 
-OPT_CLIARGS=$(getopt --options adlmnsu \
-		  --longoptions auto,debug,labels,mkdir,nomnt,swapless,uuids \
+# Default output file is stdout
+OPT_FILE=/dev/stdout
+
+OPT_CLIARGS=$(getopt --options adf:lmnsuw: \
+		  --longoptions auto,debug,file:,labels,mkdir,nomnt,swapless,uuids,wanted: \
 		  --name "${0}" -- "${@}")
 
 if [ "${?}" -eq 0 ]; then
@@ -36,6 +40,10 @@ while :; do
 				OPT_DEBUG=:
 			fi
 			;;
+		-f|--file)
+			shift
+			OPT_FILE="${1}"
+			;;
 		-l|--labels)
 			OPT_LABELS=:
 			;;
@@ -50,6 +58,11 @@ while :; do
 			;;
 		-u|--uuids)
 			OPT_UUIDS=:
+			;;
+		-w|--wanted)
+			OPT_WANTED=:
+			shift
+			OPT_WANTED_DEVICES="${OPT_WANTED_DEVICES} ${1}"
 			;;
 		--)
 			shift
@@ -169,6 +182,28 @@ is_mounted()
 }
 
 #
+# we really want this device to be in fstab, even if it doesn't usually qualify
+# to be there (eg. usb disk)
+#
+is_wanted()
+{
+	local name node
+	name="${1}"
+	node="/dev/${1}"
+
+	if ! ${OPT_WANTED}; then
+		return 1
+	fi
+
+	for device in ${OPT_WANTED_DEVICES}; do
+		[ "${name}" = "${device}" ] && return 0
+		[ "${node}" = "${device}" ] && return 0
+	done
+
+	return 1
+}
+
+#
 # conditionally make mount point directories
 #
 mkmntpnt()
@@ -182,11 +217,11 @@ mkmntpnt()
 _printf_mntent()
 {
 	if ${OPT_UUIDS} || [ "${#1}" -ge 20 ]; then
-		printf "%-45s %-30s %-15s %-30s %d %d\n\n" \
-		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" >/dev/stdout
+		printf "%-45s %-30s %-15s %-40s %-6s %s\n\n" \
+		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" >>"${OPT_FILE}"
 	else
-		printf "%-20s %-30s %-15s %-30s %d %d\n\n" \
-		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" >/dev/stdout
+		printf "%-20s %-30s %-15s %-40s %-6s %s\n\n" \
+		       "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" >>"${OPT_FILE}"
 	fi
 }
 
@@ -315,9 +350,14 @@ print_fsentry()
 		*)
 			if is_nativefs "${type}"; then
 				if ${mounted}; then
-					fs_mntops="defaults,noatime"
-				else
-					fs_mntops="${fs_mntops},users,exec,noatime"
+					case "${fs_file}" in
+						/media/*)
+							fs_mntops="${fs_mntops},users,exec,noatime"
+							;;
+						*)
+							fs_mntops="defaults,noatime"
+							;;
+					esac
 				fi
 			else
 				fs_mntops="${fs_mntops},defaults"
@@ -353,7 +393,7 @@ print_fsentry()
 	fi
 
 	_printf_mntent "${fs_spec}" "${fs_file}" "${fs_vfstype}" \
-		       "${fs_mntops}" "${fs_freq}" "${fs_passno}"
+		       "${fs_mntops}" "  ${fs_freq}" "  ${fs_passno}"
 
 	mkmntpnt "${fs_file}"
 }
@@ -418,12 +458,14 @@ scan_disks()
 		if [ "${ID_TYPE}" != disk ]; then
 			dbg "device is not of disk type, skip"
 			continue
-		elif [ "${ID_BUS}" = "usb" ]; then
-			dbg "device is on usb bus, skip"
-			continue
-		elif is_removable "${p}"; then
-			dbg "device has removable attribute, skip"
-			continue
+		elif ! is_wanted "${name}"; then
+			if [ "${ID_BUS}" = "usb" ]; then
+				dbg "device is on usb bus, skip"
+				continue
+			elif is_removable "${p}"; then
+				dbg "device has removable attribute, skip"
+				continue
+			fi
 		fi
 
 		case "${name}" in
@@ -477,7 +519,7 @@ scan_cdroms()
 		fs_file="/media/${c#/dev/}"
 
 		_printf_mntent "${fs_spec}" "${fs_file}" "${fs_vfstype}" \
-			       "${fs_mntops}" "${fs_freq}" "${fs_passno}"
+			       "${fs_mntops}" "  ${fs_freq}" "  ${fs_passno}"
 
 		mkmntpnt "${fs_file}"
 	done
@@ -501,12 +543,32 @@ scan_floppies()
 		fs_file="/media/${f#/dev/}"
 
 		_printf_mntent "${fs_spec}" "${fs_file}" "${fs_vfstype}" \
-			       "${fs_mntops}" "${fs_freq}" "${fs_passno}"
+			       "${fs_mntops}" "  ${fs_freq}" "  ${fs_passno}"
 
 		mkmntpnt "${fs_file}"
 	done
 }
 
+fstab_header()
+{
+	cat >"${OPT_FILE}" <<EOF
+# /etc/fstab - static information about the filesystems - fstab(5)
+#
+# /etc/fstab is only read by programs, and not written; it is the duty of the
+# system administrator to properly maintain this file.
+#
+# Instead  of giving the device explicitly, one may indicate the filesystem
+# that is to be mounted by its UUID or VOLUME label. This will make the
+# system more robust: adding or removing a disk changes the disk device name
+# but not the filesystem UUID or VOLUME label.
+#
+EOF
+
+	_printf_mntent "# <filesystem>" "<mount point>" "<fstype>" \
+		       "<mount options>" "<dump>" "<pass>"
+}
+
+fstab_header
 scan_disks
 scan_virtual_disks
 scan_cdroms

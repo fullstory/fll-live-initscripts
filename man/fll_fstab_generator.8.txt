@@ -27,6 +27,9 @@ OPTIONS
 -d, --debug::
 	Enable debug output. Use twice to see shell execution (set -x).
 
+-f <file>, --file <file>::
+	File to write fstab configuration output to.
+
 -l, --labels::
 	Use LABELS tokens for mount names when possible.
 
@@ -41,6 +44,10 @@ OPTIONS
 
 -u, --uuids::
 	Use UUID tokens for mount names when possible.
+
+-w <device>, --wanted <device>::
+	Specify devices to include in fstab configuration when they would
+	usually not qualify for inclusion. For example, usb devices.
 
 
 SEE ALSO
