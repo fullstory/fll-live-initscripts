@@ -358,6 +358,8 @@ print_fsentry()
 							fs_mntops="defaults,noatime"
 							;;
 					esac
+				else
+					fs_mntops="${fs_mntops},users,exec,noatime"
 				fi
 			else
 				fs_mntops="${fs_mntops},defaults"
