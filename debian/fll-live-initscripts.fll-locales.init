@@ -783,23 +783,8 @@ set_locale()
 }
 
 load_keymap() {
-#	local keymap
-#
-#	for d in /usr/share/keymaps/*; do
-#		if [ -f "${d}/${CD_FAMILY}/${KEYTABLE}.kmap.gz" ]; then
-#			keymap="${d}/${CD_FAMILY}/${KEYTABLE}.kmap.gz"
-#		fi
-#	done
-#
-#	if [ "${keymap}" ]; then
-#		log_daemon_msg "${NAME}"; log_action_begin_msg " loading ${KEYTABLE} keymap"
-#
-#		loadkeys "${keymap}" >/dev/null
-#
-#		log_end_msg "${?}"
-#	fi
 	log_daemon_msg "${NAME}"; log_action_begin_msg " loading ${KEYTABLE} keymap"
-	dpkg-reconfigure -fnoninteractive -pcritical console-data >/dev/null
+	dpkg-reconfigure -fnoninteractive -pcritical console-data >/dev/null 2>&1
 	log_end_msg "${?}"
 }
 
