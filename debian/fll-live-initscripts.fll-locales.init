@@ -778,6 +778,9 @@ set_locale()
 	done | debconf-set-selections
 
 	update-locale "LANG=${LANG}"
+	log_end_msg "${?}"
+
+	log_daemon_msg "${NAME}"; log_action_begin_msg " installing keymap"
 	dpkg-reconfigure -fnoninteractive -pcritical --no-reload console-data >/dev/null 2>&1
 	log_end_msg "${?}"
 }
