@@ -4,8 +4,11 @@ fll-live-initscripts (3.1.2) UNRELEASED; urgency=low
     - revert change in version 3.0.36 introducing device id's of unknown but
       possibly supported boards to contrib/xrandr/nv list, it produced poor
       results on propoerly supported chips.
+  * fll_fstab_generator:
+    - tweak default mount options so that users may mount/unmount filesystems
+      by default.
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 23 May 2008 12:17:48 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 23 May 2008 12:59:10 +1000
 
 fll-live-initscripts (3.1.1) unstable; urgency=low
 
