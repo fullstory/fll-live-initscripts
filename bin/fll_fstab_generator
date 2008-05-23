@@ -339,10 +339,10 @@ print_fsentry()
 			fs_mntops="${fs_mntops},ro,dmask=0022,fmask=0133,nls=utf8"
 			;;
 		msdos)
-			fs_mntops="${fs_mntops},quiet,umask=000,iocharset=utf8"
+			fs_mntops="${fs_mntops},rw,quiet,umask=000,iocharset=utf8"
 			;;
 		vfat)
-			fs_mntops="${fs_mntops},quiet,umask=000,shortname=lower"
+			fs_mntops="${fs_mntops},rw,quiet,umask=000,shortname=lower"
 			;;
 		swap)
 			fs_mntops="sw"
@@ -352,14 +352,14 @@ print_fsentry()
 				if ${mounted}; then
 					case "${fs_file}" in
 						/media/*)
-							fs_mntops="${fs_mntops},exec,noatime"
+							fs_mntops="${fs_mntops},rw,exec,noatime"
 							;;
 						*)
 							fs_mntops="defaults,noatime"
 							;;
 					esac
 				else
-					fs_mntops="${fs_mntops},exec,noatime"
+					fs_mntops="${fs_mntops},rw,exec,noatime"
 				fi
 			else
 				warn "unhandled filesystem type: ${type}"
@@ -511,7 +511,7 @@ scan_cdroms()
 {
 	local fs_spec fs_file fs_vfstype fs_mntops fs_freq fs_passno
 	fs_vfstype="udf,iso9660"
-	fs_mntops="ro,users,noauto"
+	fs_mntops="noauto,ro,users"
 	fs_freq=0
 	fs_passno=0
 
@@ -535,7 +535,7 @@ scan_floppies()
 {
 	local fs_spec fs_file fs_vfstype fs_mntops fs_freq fs_passno
 	fs_vfstype="auto"
-	fs_mntops="rw,users,noauto"
+	fs_mntops="noauto,rw,users"
 	fs_freq=0
 	fs_passno=0
 

@@ -7,8 +7,10 @@ fll-live-initscripts (3.1.2) UNRELEASED; urgency=low
   * fll_fstab_generator:
     - tweak default mount options so that users may mount/unmount filesystems
       by default.
+    - add explicit 'rw' mount option for filesystems which support that
+    - reorder mount options of cdrom and floppy devices for consistency
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 23 May 2008 12:59:10 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 23 May 2008 13:04:49 +1000
 
 fll-live-initscripts (3.1.1) unstable; urgency=low
 
