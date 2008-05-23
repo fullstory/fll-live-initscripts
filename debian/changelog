@@ -1,4 +1,4 @@
-fll-live-initscripts (3.1.2) UNRELEASED; urgency=low
+fll-live-initscripts (3.1.2) unstable; urgency=low
 
   * fll-xorgconfig:
     - revert change in version 3.0.36 introducing device id's of unknown but
