@@ -281,17 +281,16 @@ print_fsentry()
 	mounted=false
 	label_is_safe=false
 
-	unset ID_FS_TYPE ID_FS_USAGE ID_FS_LABEL ID_FS_LABEL_ENC \
-	      ID_FS_LABEL_SAFE ID_FS_UUID ID_FS_UUID_ENC
+	unset ID_FS_TYPE ID_FS_USAGE \
+	      ID_FS_LABEL_ENC ID_FS_LABEL_SAFE \
+	      ID_FS_UUID_ENC
 
 	case "${name}" in
 		mapper/*)
 			eval "$(volumeid ${name} | grep -e '^ID_FS_TYPE=' \
 							-e '^ID_FS_USAGE=' \
-							-e '^ID_FS_LABEL=' \
 							-e '^ID_FS_LABEL_ENC=' \
 							-e '^ID_FS_LABEL_SAFE=' \
-							-e '^ID_FS_UUID=' \
 							-e '^ID_FS_UUID_ENC=')"
 
 			symlinks=""
@@ -299,10 +298,8 @@ print_fsentry()
 		*)
 			eval "$(disk_env ${name} | grep -e '^ID_FS_TYPE=' \
 							-e '^ID_FS_USAGE=' \
-							-e '^ID_FS_LABEL=' \
 							-e '^ID_FS_LABEL_ENC=' \
 							-e '^ID_FS_LABEL_SAFE=' \
-							-e '^ID_FS_UUID=' \
 							-e '^ID_FS_UUID_ENC=')"
 
 			symlinks=$(disk_symlinks ${name})
