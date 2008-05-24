@@ -9,8 +9,10 @@ fll-live-initscripts (3.1.3) UNRELEASED; urgency=low
     - check value returned by sed call in is_mounted() is actually a directory
       before returning it
     - if labels are wanted, use the "safe" label in fs_file
+    - major overhaul of print_fsentry()
+    - drop scan_partitions() function
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 24 May 2008 15:06:56 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 24 May 2008 22:29:43 +1000
 
 fll-live-initscripts (3.1.2) unstable; urgency=low
 

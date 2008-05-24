@@ -4,6 +4,12 @@
 # License:   GPLv2
 #
 
+if [ "$(id -u)" -eq 0 ]; then
+	ROOT=:
+else
+	ROOT=false
+fi
+
 OPT_AUTOMNT=false
 OPT_DEBUG=false
 OPT_LABELS=false
@@ -113,16 +119,20 @@ else
 	}
 fi
 
-if [ "$(id -u)" -eq 0 ]; then
-	udev_volid()
+if ! ${ROOT}; then
+	volumeid()
 	{
-		/lib/udev/vol_id "--${1}" "${2}"
+		return
+	}
+elif type vol_id; then
+	volumeid()
+	{
+		vol_id "${2}"
 	}
 else
-	udev_volid()
+	volumeid()
 	{
-		warn "must be root user to execute vol_id"
-		return
+		/lib/udev/vol_id "${2}"
 	}
 fi
 
@@ -173,7 +183,8 @@ is_mounted()
 	local mntpnt
 
 	for d in ${@}; do
-		mntpnt=$(sed -n "s%^/dev/${d} \([^[:space:]]\+\).*%\1%p" /proc/mounts | head -n1)
+		mntpnt=$(sed -n "s%^/dev/${d} \([^[:space:]]\+\).*%\1%p" \
+				/proc/mounts | head -n1)
 		if [ -d "${mntpnt}" ]; then
 			echo "${mntpnt}"
 			break
@@ -261,60 +272,71 @@ record_state_of()
 print_fsentry()
 {
 	local fs_spec fs_file fs_vfstype fs_mntops fs_freq fs_passno
-	local symlinks label uuid part
 
-	local name type label_safe
+	local name disk part
 	name="${1}"
-	type="${2}"
-	label_safe="${3}"
+	disk="${2}"
 
-	local mounted label_is_safe_and_sound
+	local mounted label_is_safe symlinks
 	mounted=false
-	label_is_safe_and_sound=false
+	label_is_safe=false
+
+	unset ID_FS_TYPE ID_FS_USAGE ID_FS_LABEL ID_FS_LABEL_ENC \
+	      ID_FS_LABEL_SAFE ID_FS_UUID ID_FS_UUID_ENC
 
 	case "${name}" in
 		mapper/*)
-			type=$(udev_volid type /dev/${name})
-			label=$(udev_volid label /dev/${name})
-			label_safe="${label}"
-			uuid=$(udev_volid uuid /dev/${name})
+			eval "$(volumeid ${name} | grep -e '^ID_FS_TYPE=' \
+							-e '^ID_FS_USAGE=' \
+							-e '^ID_FS_LABEL=' \
+							-e '^ID_FS_LABEL_ENC=' \
+							-e '^ID_FS_LABEL_SAFE=' \
+							-e '^ID_FS_UUID=' \
+							-e '^ID_FS_UUID_ENC=')"
+
+			symlinks=""
 			;;
 		*)
+			eval "$(disk_env ${name} | grep -e '^ID_FS_TYPE=' \
+							-e '^ID_FS_USAGE=' \
+							-e '^ID_FS_LABEL=' \
+							-e '^ID_FS_LABEL_ENC=' \
+							-e '^ID_FS_LABEL_SAFE=' \
+							-e '^ID_FS_UUID=' \
+							-e '^ID_FS_UUID_ENC=')"
+
 			symlinks=$(disk_symlinks ${name})
-
-			for symlink in ${symlinks}; do
-				[ -L "/dev/${symlink}" ] || continue
-				dbg "${symlink}"
-
-				case "${symlink}" in
-					disk/by-label/*)
-						label="${symlink#disk/by-label/}"
-						;;
-					disk/by-uuid/*)
-						uuid="${symlink#disk/by-uuid/}"
-						;;
-				esac
-			done
 			;;
 	esac
+
+	if [ "${ID_FS_USAGE}" != "filesystem" ] && \
+	   [ "${ID_FS_TYPE}" != "swap" ]; then
+		dbg "partition not a valid filesystem: ${name}"
+		return
+	fi
 
 	#
 	# fs_spec - first field describes the block special device or remote
 	#           filesystem to be mounted
 	#
-	if ${OPT_LABELS} && record_state_of "${label_safe}"; then
-		label_is_safe_and_sound=:
+	if ${OPT_LABELS} && record_state_of "${ID_FS_LABEL_ENC}"; then
+		[ "${ID_FS_LABEL_SAFE}" ] && label_is_safe=:
 
-		if is_nativefs "${type}"; then
-			fs_spec="LABEL=${label}"
+		if is_nativefs "${ID_FS_TYPE}"; then
+			# volume_id returns labels with spaces escaped with:
+			#   '\x20'
+			# mount(8) expects space characters to be escaped with:
+			#   '\040'
+			fs_spec=$(echo "LABEL=${ID_FS_LABEL_ENC}" | \
+					sed -e 's@\\x20@\\040@g')
 		else
-			fs_spec="/dev/disk/by-label/${label}"
+			fs_spec="/dev/disk/by-label/${ID_FS_LABEL_ENC}"
 		fi
-	elif ${OPT_UUIDS} && record_state_of "${uuid}"; then
-		if is_nativefs "${type}"; then
-			fs_spec="UUID=${uuid}"
+	elif ${OPT_UUIDS} && record_state_of "${ID_FS_UUID_ENC}"; then
+		if is_nativefs "${ID_FS_TYPE}"; then
+			fs_spec="UUID=${ID_FS_UUID_ENC}"
 		else
-			fs_spec="/dev/disk/by-uuid/${uuid}"
+			fs_spec="/dev/disk/by-uuid/${ID_FS_UUID_ENC}"
 		fi
 	else
 		fs_spec="/dev/${name}"
@@ -330,15 +352,15 @@ print_fsentry()
 	if [ "${fs_file}" ]; then
 		dbg "${name} is mounted on ${fs_file}"
 		mounted=:
-	elif [ "${type}" = "swap" ]; then
+	elif [ "${ID_FS_TYPE}" = "swap" ]; then
 		if ${OPT_NOSWAP}; then
 			dbg "ignoring swap partition"
 			return
 		else
 			fs_file="none"
 		fi
-	elif ${label_is_safe_and_sound}; then
-		fs_file="/media/${label_safe}"
+	elif ${label_is_safe}; then
+		fs_file="/media/${ID_FS_LABEL_SAFE}"
 	else
 		case "${name}" in
 			mapper/*)
@@ -366,11 +388,7 @@ print_fsentry()
 	#
 	# fs_vfstype - third field describes the type of the filesystem
 	#
-	if [ -z "${type}" ]; then
-		warn "could not determine filesystem type of ${name}"
-		return
-	fi
-	fs_vfstype="${type}"
+	fs_vfstype="${ID_FS_TYPE}"
 
 	#
 	# fs_mntops - fourth field describes the mount options associated with
@@ -382,7 +400,7 @@ print_fsentry()
 		fs_mntops="noauto,users"
 	fi
 
-	case "${type}" in
+	case "${ID_FS_TYPE}" in
 		ntfs)
 			fs_mntops="${fs_mntops},ro,dmask=0022,fmask=0133,nls=utf8"
 			;;
@@ -396,18 +414,21 @@ print_fsentry()
 			fs_mntops="sw"
 			;;
 		*)
-			if is_nativefs "${type}"; then
+			if is_nativefs "${ID_FS_TYPE}"; then
 				if ${mounted}; then
 					case "${fs_file}" in
 						/media/*)
 							fs_mntops="${fs_mntops},rw,exec,noatime"
 							;;
 						/)
-							if [ "${type}" = "ext2" ] || [ "${type}" = "ext3" ]; then
-								fs_mntops="errors=remount-ro,noatime"
-							else
-								fs_mntops="defaults,noatime"
-							fi
+							case "${ID_FS_TYPE}" in
+								ext[23])
+									fs_mntops="errors=remount-ro,noatime"
+									;;
+								*)
+									fs_mntops="defaults,noatime"
+									;;
+							esac
 							;;
 						*)
 							fs_mntops="defaults,noatime"
@@ -417,7 +438,7 @@ print_fsentry()
 					fs_mntops="${fs_mntops},rw,exec,noatime"
 				fi
 			else
-				warn "unhandled filesystem type: ${type}"
+				warn "unhandled filesystem type: ${ID_FS_TYPE}"
 				return
 			fi
 			;;
@@ -433,13 +454,13 @@ print_fsentry()
 	# fs_passno - sizth field is used by the fsck(8) program to determine
 	#             the order in which filesystem checks are done at bootup
 	#
-	if ${mounted} && [ "${type}" != "swap" ]; then
+	if ${mounted} && [ "${ID_FS_TYPE}" != "swap" ]; then
 		case "${fs_file}" in
 			/)
 				fs_passno=1
 				;;
 			*)
-				if is_nativefs "${type}"; then
+				if is_nativefs "${ID_FS_TYPE}"; then
 					fs_passno=2
 				else
 					fs_passno=0
@@ -457,80 +478,49 @@ print_fsentry()
 }
 
 #
-# enumerate partitions to be added to fstab
-#
-scan_partitions()
-{
-	local name part mntpnt
-	local path base disk
-	path="${1}"
-	base="${2}"
-	disk="${3}"
-
-	for p in ${path}/${base}*; do
-		[ -d "${p}" ] || continue
-		name=${p##*/}
-
-		unset ID_FS_TYPE ID_FS_USAGE ID_FS_LABEL_SAFE
-
-		eval "$(disk_env ${name} | grep -e '^ID_FS_TYPE=' \
-						-e '^ID_FS_USAGE=' \
-						-e '^ID_FS_LABEL_SAFE=')"
-
-		dbg "sysfs path: ${p}"
-		dbg "ID_FS_TYPE=${ID_FS_TYPE} ID_FS_USAGE=${ID_FS_USAGE}"
-
-		if [ "${ID_FS_USAGE}" != "filesystem" ] && \
-		   [ "${ID_FS_TYPE}" != "swap" ]; then
-			dbg "partition not a valid filesystem: ${name}"
-			continue
-		fi
-
-		print_fsentry "${name}" "${ID_FS_TYPE}" "${ID_FS_LABEL_SAFE}"
-	done
-}
-
-#
 # scan for block devices
 #
 scan_disks()
 {
-	local disk name
+	local name disk partitions
 	disk=1
-
-	if [ "$(id -u)" -eq 0 ]; then
-		udev_blkdev_trigger
-	fi
 
 	for p in /sys/block/*; do
 		[ -d "${p}" ] || continue
+
 		name="${p#/sys/block/}"
 
 		unset ID_BUS ID_TYPE
-
 		eval "$(disk_env ${name} | grep -e '^ID_BUS=' \
 						-e '^ID_TYPE=')"
 
 		dbg "sysfs path: ${p}"
 		dbg "ID_BUS=${ID_BUS} ID_TYPE=${ID_TYPE}"
 
-		if [ "${ID_TYPE}" != disk ]; then
+		if is_wanted "${name}"; then
+			: # do not filter out this device
+		elif [ "${ID_TYPE}" != disk ]; then
 			dbg "device is not of disk type, skip"
 			continue
-		elif ! is_wanted "${name}"; then
-			if [ "${ID_BUS}" = "usb" ]; then
-				dbg "device is on usb bus, skip"
-				continue
-			elif is_removable "${p}"; then
-				dbg "device has removable attribute, skip"
-				continue
-			fi
+		elif [ "${ID_BUS}" = "usb" ]; then
+			dbg "device is on usb bus, skip"
+			continue
+		elif is_removable "${p}"; then
+			dbg "device has removable attribute, skip"
+			continue
 		fi
 
 		case "${name}" in
 			[sh]d*)
 				dbg "device is a disk, count: ${disk}"
-				scan_partitions "${p}" "${name}" "${disk}"
+				partitions=$(find -L "${p}" -maxdepth 1 \
+							    -name "${name}[0-9]*" \
+							    -printf "%P\n")
+
+				for partition in ${partitions}; do
+					print_fsentry "${partition}" "${disk}"
+				done
+
 				disk=$((disk + 1))
 				;;
 			dm-[0-9]*)
@@ -548,13 +538,8 @@ scan_disks()
 #
 scan_virtual_disks()
 {
-	local name
-
 	for b in /dev/mapper/*; do
-		[ -b "${b}" ] || continue
-		name="${b#/dev/}"
-
-		print_fsentry "${name}"
+		[ -b "${b}" ] && print_fsentry "${b#/dev/}"
 	done
 }
 
@@ -628,6 +613,9 @@ EOF
 }
 
 fstab_header
+
+udev_blkdev_trigger
+
 scan_disks
 scan_virtual_disks
 scan_cdroms
