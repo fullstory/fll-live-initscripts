@@ -124,15 +124,15 @@ if ! ${ROOT}; then
 	{
 		return
 	}
-elif type vol_id; then
+elif type vol_id >/dev/null; then
 	volumeid()
 	{
-		vol_id "${2}"
+		vol_id "/dev/${1}"
 	}
 else
 	volumeid()
 	{
-		/lib/udev/vol_id "${2}"
+		/lib/udev/vol_id "/dev/${1}"
 	}
 fi
 
