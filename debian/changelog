@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.0) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.0) unstable; urgency=low
 
   * Tweak LSB comments of some initscripts
     - fll-network: drop required-start dep on $local_fs
