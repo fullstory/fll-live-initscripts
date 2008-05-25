@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-hwsetup
-# Required-Start:    $all
+# Required-Start:    $local_fs
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:

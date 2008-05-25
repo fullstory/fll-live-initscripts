@@ -2,14 +2,15 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-fstab
-# Required-Start:    udev mountdevsubfs
+# Required-Start:    mountdevsubfs
 # Required-Stop:
+# Should-Start:      lvm2
+# X-Start-Before:    mountall
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: generates /etc/fstab
-# Description:       The purpose of fll-fstab is to generate /etc.fstab via
-#                    fll_fshelper(8). It also handles mounting of detected
-#                    swap partitions
+# Description:       The purpose of fll-fstab is to generate /etc/fstab via
+#                    fll_fstab_generator(8).
 ### END INIT INFO
 
 ###

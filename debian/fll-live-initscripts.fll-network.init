@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-network
-# Required-Start:    $local_fs mountdevsubfs ifupdown
+# Required-Start:    mountdevsubfs ifupdown
 # Required-Stop:
 # X-Start-Before:    networking
 # Default-Start:     S

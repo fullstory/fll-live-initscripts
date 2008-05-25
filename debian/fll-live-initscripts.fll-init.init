@@ -4,7 +4,7 @@
 # Provides:          fll-init
 # Required-Start:
 # Required-Stop:
-# X-Start-Before:    hostname udev
+# X-Start-Before:    hostname
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: read in fll live specific cheatcodes at top of init
