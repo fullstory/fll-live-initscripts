@@ -1,3 +1,9 @@
+fll-live-initscripts (3.2.1) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 25 May 2008 14:03:50 +0200
+
 fll-live-initscripts (3.2.0) unstable; urgency=low
 
   * Tweak LSB comments of some initscripts
