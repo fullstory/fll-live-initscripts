@@ -4,7 +4,7 @@ all: $(ALL)
 
 xrandr/ati:
 	@mkdir -p xrandr
-	gawk -f nv.awk src/ati_pciids_gen.h > $@
+	gawk -f ati.awk src/ati_pciids_gen.h > $@
 
 xrandr/nv:
 	@mkdir -p xrandr
