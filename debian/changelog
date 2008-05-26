@@ -1,3 +1,9 @@
+fll-live-initscripts (3.2.2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 26 May 2008 14:12:27 +0200
+
 fll-live-initscripts (3.2.1) unstable; urgency=low
 
   * contrib/Makefile:
