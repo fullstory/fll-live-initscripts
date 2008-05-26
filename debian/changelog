@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.1) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.1) unstable; urgency=low
 
   * contrib/Makefile:
     - fix creation of xrandr/ati board list; actually use the gawk script
