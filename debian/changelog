@@ -1,14 +1,8 @@
 fll-live-initscripts (3.2.1) UNRELEASED; urgency=low
 
-  * fll-locales.init:
-    - call unicode_start/stop, assume the resposibility of keymap.sh of
-      console-common to avoid duplication of the sequqnce of events required
-      to prepare the console. We call install-keymap(8) indirectly when
-      reconfiguring console-data, this in turn loads the keymap that had been
-      selected. I think we need to establish unicode mode (or not) before the
-      keymap loading.
+  * NOT RELEASED YET
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 26 May 2008 12:55:21 +1000
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 25 May 2008 14:03:50 +0200
 
 fll-live-initscripts (3.2.0) unstable; urgency=low
 

@@ -4,6 +4,7 @@
 # Provides:          fll-locales
 # Required-Start:    mountdevsubfs
 # Required-Stop:
+# X-Start-Before:    keymap
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: live media locale autoconifgurator
@@ -782,13 +783,6 @@ set_locale()
 }
 
 load_keymap() {
-	CHARMAP=$(locale charmap)
-	if [ "$CHARMAP" = "UTF-8" ]; then
-		unicode_start 2>/dev/null
-	else
-		unicode_stop 2>/dev/null
-	fi
-
 	log_daemon_msg "${NAME}"; log_action_begin_msg " loading ${KEYTABLE} keymap"
 	dpkg-reconfigure -fnoninteractive -pcritical console-data >/dev/null 2>&1
 	log_end_msg "${?}"
