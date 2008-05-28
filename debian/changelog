@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.2) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.2) unstable; urgency=low
 
   * fll-reboot:
     - don't use ansi escape sequences
