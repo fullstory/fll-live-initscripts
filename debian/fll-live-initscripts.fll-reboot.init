@@ -49,18 +49,6 @@ fi
 . /lib/lsb/init-functions
 
 ###
-# ANSI escape sequences
-###
-N="[0;39m" # NORMAL
-R="[1;31m" # RED
-G="[1;32m" # GREEN
-Y="[1;33m" # YELLOW
-B="[1;34m" # BLUE
-M="[1;35m" # MAGENTA
-C="[1;36m" # CYAN
-W="[1;37m" # BOLD WHITE
-
-###
 # define this for copy_exec
 ###
 DESTDIR="/live-hack"
@@ -398,12 +386,12 @@ do_stop() {
 
 	case "${runlevel}" in
 		0)
-			echo "${G}System halted.${N}" > /dev/console
+			echo "System halted." > /dev/console
 			command="halt"
 			options="-h -n -p -i -f"
 			;;
 		6)
-			echo "${G}Preparing for reboot...${N}" > /dev/console
+			echo "Preparing for reboot..." > /dev/console
 			command="reboot"
 			options="-n -i -f"
 			;;
@@ -420,7 +408,9 @@ do_stop() {
 		${BINDIR}eject -m -p ${LIVE_CDROM}
 
 		if [ -z "${NOPROMPT}" ]; then
-			echo "${Y}Please remove CD, close cdrom drive then press enter.${N}" > /dev/console
+			echo ""
+			echo "Please remove CD, close cdrom drive then press enter." > /dev/console
+			echo ""
 			read x < /dev/console
 		fi
 	fi
