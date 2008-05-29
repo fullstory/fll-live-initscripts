@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.4) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.4) unstable; urgency=low
 
   * fll_fstab_generator:
     - set fs_passno whenever script is detecting local mount points
