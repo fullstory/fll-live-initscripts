@@ -4,6 +4,8 @@
 # License:   GPLv2
 #
 
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
 if [ "$(id -u)" -eq 0 ]; then
 	ROOT=:
 else
@@ -314,6 +316,9 @@ print_fsentry()
 	   [ "${ID_FS_TYPE}" != "swap" ]; then
 		dbg "partition not a valid filesystem: ${name}"
 		return
+	elif [ "${ID_FS_TYPE}" = "swap" ] && ${OPT_NOSWAP}; then
+		dbg "ignoring swap partition"
+		return
 	fi
 
 	#
@@ -346,20 +351,15 @@ print_fsentry()
 	#
 	# fs_file - second field describes the mount point for the filesystem
 	#
-	if ! ${OPT_NOMNTPNT}; then
+	if [ "${ID_FS_TYPE}" = "swap" ]; then
+		fs_file="none"
+	elif ! ${OPT_NOMNTPNT}; then
 		fs_file=$(is_mounted ${name} ${symlinks})
 	fi
 
 	if [ "${fs_file}" ]; then
 		dbg "${name} is mounted on ${fs_file}"
 		mounted=:
-	elif [ "${ID_FS_TYPE}" = "swap" ]; then
-		if ${OPT_NOSWAP}; then
-			dbg "ignoring swap partition"
-			return
-		else
-			fs_file="none"
-		fi
 	elif ${label_is_safe}; then
 		fs_file="/media/${ID_FS_LABEL_SAFE}"
 	else
@@ -411,36 +411,39 @@ print_fsentry()
 		vfat)
 			fs_mntops="${fs_mntops},rw,quiet,umask=000,shortname=lower"
 			;;
+		hfsplus)
+			fs_mntops="${fs_mntops},ro,exec"
+			;;
 		swap)
 			fs_mntops="sw"
 			;;
 		*)
-			if is_nativefs "${ID_FS_TYPE}"; then
-				if ${mounted}; then
-					case "${fs_file}" in
-						/media/*)
-							fs_mntops="${fs_mntops},rw,exec,noatime"
-							;;
-						/)
-							case "${ID_FS_TYPE}" in
-								ext[23])
-									fs_mntops="errors=remount-ro,noatime"
-									;;
-								*)
-									fs_mntops="defaults,noatime"
-									;;
-							esac
-							;;
-						*)
-							fs_mntops="defaults,noatime"
-							;;
-					esac
-				else
-					fs_mntops="${fs_mntops},rw,exec,noatime"
-				fi
-			else
-				warn "unhandled filesystem type: ${ID_FS_TYPE}"
+			if ! is_nativefs "${ID_FS_TYPE}"; then
+				dbg "unhandled filesystem type: ${ID_FS_TYPE}"
 				return
+			fi
+
+			if ${mounted}; then
+				case "${fs_file}" in
+					/media/*)
+						fs_mntops="${fs_mntops},rw,exec,noatime"
+						;;
+					/)
+						case "${ID_FS_TYPE}" in
+							ext[23])
+								fs_mntops="defaults,errors=remount-ro,noatime"
+								;;
+							*)
+								fs_mntops="defaults,noatime"
+								;;
+						esac
+						;;
+					*)
+						fs_mntops="defaults,noatime"
+						;;
+				esac
+			else
+				fs_mntops="${fs_mntops},rw,exec,noatime"
 			fi
 			;;
 	esac
@@ -455,17 +458,17 @@ print_fsentry()
 	# fs_passno - sizth field is used by the fsck(8) program to determine
 	#             the order in which filesystem checks are done at bootup
 	#
-	if ${mounted} && [ "${ID_FS_TYPE}" != "swap" ]; then
+	if is_nativefs "${ID_FS_TYPE}" && ${mounted}; then
 		case "${fs_file}" in
 			/)
 				fs_passno=1
 				;;
+			none)
+				# swap
+				fs_passno=0
+				;;
 			*)
-				if is_nativefs "${ID_FS_TYPE}"; then
-					fs_passno=2
-				else
-					fs_passno=0
-				fi
+				fs_passno=2
 				;;
 		esac
 	else

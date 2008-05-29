@@ -1,8 +1,11 @@
 fll-live-initscripts (3.2.3) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_fstab_generator:
+    - set a default PATH
+    - some code flow simplification
+    - handle hfsplus volumes
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 28 May 2008 11:07:40 +0200
+ -- Kel Modderman <kel@otaku42.de>  Thu, 29 May 2008 17:07:45 +1000
 
 fll-live-initscripts (3.2.2) unstable; urgency=low
 
