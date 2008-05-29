@@ -1,14 +1,19 @@
 fll-live-initscripts (3.2.5) UNRELEASED; urgency=low
 
   * fll-xorgconfig:
-    - drop nv override logic, it is error prone and crap to maintain
+    - reinvent nv override logic, emulating the NVIsSupported() function of
+      xf86-video-nv, which is basically a list of device id's that the driver
+      _should_ support, but god knows why they are not listed in
+      NVKnownChipsets...
     - xserver-xorg-video-geode ships a pci board id list, no need to override
       it either
     - xserver-xorg-video-vmware ships a pci board id list, we only need to
       provide a input device override
     - simplify blocks of code handling virtulbox and vmware
+    - cleanup code flow that detects of virtualbox guest support is wanted or
+      not
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 30 May 2008 09:31:01 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 30 May 2008 09:58:22 +1000
 
 fll-live-initscripts (3.2.4) unstable; urgency=low
 

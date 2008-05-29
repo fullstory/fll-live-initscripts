@@ -223,6 +223,18 @@ do_start() {
 	#     XMODULE XBOARDNAME XBUSID XVENDOR XDEVICE
 	eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
 
+	if [ "${XVENDOR}" = "10de" ] && [ "${XMODULE}" != "nv" ]; then
+		# Emulate NVIsSupported() function of xf86-video-nv.
+		# These boards are suspected to be supported by nv driver,
+		# even though they are not in the list of explicitly known
+		# board id's ...
+		case "${XDEVICE}" in
+			0040|0090|00c0|0120|0140|0160|0170|0180|01d0|0210|0220|0240|0250|0280|0290|0300|0310|0320|0330|0340|0390|03d0)
+			XMODULE="nv"
+			;;
+		esac
+	fi
+
 	# detected virtualbox emulated VGA hardware
 	if [ "${XVENDOR}" = "80ee" ] && [ "${XDEVICE}" = "beef" ] && \
 	   [ -d /sys/module/vboxadd ]; then
@@ -235,6 +247,10 @@ do_start() {
 		XNOXRESPROBE="1"
 		# disable modelines
 		XNOMODELINES="1"
+	else
+		# disable virtualbox-ose-guest-utils initscript
+		CMD=$(/usr/bin/fll_analyze_initscripts -f -r virtualbox-ose-guest-utils)
+		[ "${CMD}" ] && ${CMD} >/dev/null
 	fi
 
 	# detected vmware emulated VGA hardware
@@ -245,12 +261,6 @@ do_start() {
 		XNOXRESPROBE="1"
 		# disable modelines
 		XNOMODELINES="1"
-	fi
-
-	# disable guest extensions support initscript
-	CMD=$(/usr/bin/fll_analyze_initscripts -f -r virtualbox-ose-guest-utils)
-	if [ "${XMODULE}" != "vboxvideo" ] && [ "${CMD}" ]; then
-		${CMD} >/dev/null
 	fi
 
 	log_end_msg 0
