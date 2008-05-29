@@ -458,7 +458,7 @@ print_fsentry()
 	# fs_passno - sizth field is used by the fsck(8) program to determine
 	#             the order in which filesystem checks are done at bootup
 	#
-	if is_nativefs "${ID_FS_TYPE}" && ${mounted}; then
+	if is_nativefs "${ID_FS_TYPE}" && ! ${OPT_NOMNTPNT}; then
 		case "${fs_file}" in
 			/)
 				fs_passno=1
