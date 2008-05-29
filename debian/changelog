@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.3) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.3) unstable; urgency=low
 
   * fll_fstab_generator:
     - set a default PATH
