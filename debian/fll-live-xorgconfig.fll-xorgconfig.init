@@ -191,20 +191,6 @@ x_res_probe() {
 		}'
 }
 
-nv_overridable() {
-	[ "${1}" ] || return 1
-
-	# Gerforce{2,3,4}, Quadro family, GeForce 4XXX|5XXX|6XXX|7XXX|8XXX
-	# - yields coverage of ~300 boards described in pci.ids (20080319)
-	if echo "${1}" | egrep -q -i 'geforce[2-4]\>' || \
-	   echo "${1}" | egrep -q -i 'geforce\>.*\<[4-8][0-9]{3}' || \
-	   echo "${1}" | egrep -q -i 'quadro[24]?\>'; then
-		return 0
-	fi
-
-	return 1
-}
-
 do_start() {
 	log_daemon_msg "${NAME}"
 	log_action_begin_msg " detecting video hardware"
@@ -237,83 +223,31 @@ do_start() {
 	#     XMODULE XBOARDNAME XBUSID XVENDOR XDEVICE
 	eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
 
-	# nv driver override logic - not all device ids are listed in
-	# nv_driver.c, but most are supported by nv
-	if [ "${XVENDOR}" = "10de" ] && [ "${XMODULE}" != "nv" ]; then
-		case "${XDEVICE}" in
-			053a|053b|053e)
-				# blacklist
-				# 053a,053b - GeForce 7050 PV / nForce 630a
-				# 053e - GeForce 7025 / NVIDIA nForce 630a
-				;;
-			0008|0009|0010)
-				# very old
-				;;
-			*)
-				# Do some check on the board description to decide
-				# whether or not to force nv as driver
-				if nv_overridable "${XBOARDNAME}"; then
-					XMODULE="nv"
-					#XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
-				fi
-				;;
-		esac
-	fi
-
-	# AMD Geode GX/LX display driver
-	if [ -z "${XMODULE}" ] && [ -f /usr/lib/xorg/modules/drivers/amd_drv.so ]; then
-		case "${XVENDOR}" in
-			1078)	# Cyrix Corporation - 5530 Video [Kahlua]
-				if [ "${XDEVICE}" = "0104" ]; then
-					XMODULE="geode"
-				fi
-				;;
-			100b)	# National Semiconductor Corporation - Geode GX2 Graphics Processor
-				# National Semiconductor Corporation - SCx200 | SCx400
-				case "${XDEVICE}" in
-					0030|0504|0104)
-						XMODULE="geode"
-						;;
-				esac
-				;;
-			1022)	# Advanced Micro Devices [AMD] - Geode LX Video
-				if [ "${XDEVICE}" = "2081" ]; then
-					XMODULE="geode"
-				fi
-				;;
-		esac
-	fi
-
 	# detected virtualbox emulated VGA hardware
-	if [ "${XVENDOR}" = "80ee" ] && [ "${XDEVICE}" = "beef" ]; then
-		# check for virtualbox kernel support
-		if [ -d /sys/module/vboxadd ]; then
-			# override video
-			XMODULE="vboxvideo"
-			#XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
-			# ...and mouse
-			XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
-			# disable monitor probe
-			XNOXRESPROBE="1"
-			# disable modelines
-			XNOMODELINES="1"
-		fi
+	if [ "${XVENDOR}" = "80ee" ] && [ "${XDEVICE}" = "beef" ] && \
+	   [ -d /sys/module/vboxadd ]; then
+		# override video
+		XMODULE="vboxvideo"
+		#XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
+		# ...and mouse
+		XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
+		# disable monitor probe
+		XNOXRESPROBE="1"
+		# disable modelines
+		XNOMODELINES="1"
 	fi
 
 	# vmware
-	if [ "${XVENDOR}" = "15ad" ]; then
-		case "${XDEVICE}" in
-			0405|0710)
-				# override video
-				XMODULE="vmware"
-				# ...and mouse
-				XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
-				# disable monitor probe
-				XNOXRESPROBE="1"
-				# disable modelines
-				XNOMODELINES="1"
-				;;
-		esac
+	if [ "${XVENDOR}" = "15ad" ] && ( [ "${XDEVICE}" = "0405" ] || \
+	   [ "${XDEVICE}" = "0710" ] ); then
+		# override video
+		XMODULE="vmware"
+		# ...and mouse
+		XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
+		# disable monitor probe
+		XNOXRESPROBE="1"
+		# disable modelines
+		XNOMODELINES="1"
 	fi
 
 	# disable guest extensions support initscript
