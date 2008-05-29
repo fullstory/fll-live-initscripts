@@ -237,12 +237,9 @@ do_start() {
 		XNOMODELINES="1"
 	fi
 
-	# vmware
-	if [ "${XVENDOR}" = "15ad" ] && ( [ "${XDEVICE}" = "0405" ] || \
-	   [ "${XDEVICE}" = "0710" ] ); then
-		# override video
-		XMODULE="vmware"
-		# ...and mouse
+	# detected vmware emulated VGA hardware
+	if [ "${XMODULE}" = "vmware" ]; then
+		# override mouse
 		XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 		# disable monitor probe
 		XNOXRESPROBE="1"

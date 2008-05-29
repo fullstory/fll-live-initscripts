@@ -4,9 +4,11 @@ fll-live-initscripts (3.2.5) UNRELEASED; urgency=low
     - drop nv override logic, it is error prone and crap to maintain
     - xserver-xorg-video-geode ships a pci board id list, no need to override
       it either
+    - xserver-xorg-video-vmware ships a pci board id list, we only need to
+      provide a input device override
     - simplify blocks of code handling virtulbox and vmware
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 30 May 2008 09:16:52 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 30 May 2008 09:31:01 +1000
 
 fll-live-initscripts (3.2.4) unstable; urgency=low
 
