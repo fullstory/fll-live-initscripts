@@ -1,3 +1,9 @@
+fll-live-initscripts (3.2.6) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 30 May 2008 23:41:39 +0200
+
 fll-live-initscripts (3.2.5) unstable; urgency=low
 
   * fll-xorgconfig:
