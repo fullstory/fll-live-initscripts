@@ -125,17 +125,17 @@ sub input_priority {
 	# preserve order of detection for input devices of same type
 	if ($a_type eq $b_type) { $retval = $a <=> $b; }
 
-	# ps2/usb is always last -> (semi)removable
-	elsif ($a_type eq 'auto')     { $retval++; }
-	elsif ($b_type eq 'auto')     { $retval--; }
-
-	# top-down priority for the rest
+	# top-down priority
 	elsif ($a_type eq 'alps')      { $retval--; }
 	elsif ($b_type eq 'alps')      { $retval++; }
 	elsif ($a_type eq 'synaptics') { $retval--; }
 	elsif ($b_type eq 'synaptics') { $retval++; }
 	elsif ($a_type eq 'serial')    { $retval--; }
 	elsif ($b_type eq 'serial')    { $retval++; }
+	elsif ($a_type eq 'auto')      { $retval--; }
+	elsif ($b_type eq 'auto')      { $retval++; }
+	elsif ($a_type eq 'wacom')     { $retval--; }
+	elsif ($b_type eq 'wacom')     { $retval++; }
 
 	# preserve order of detection for unhandled input devices
 	else { $retval = $a <=> $b; }
@@ -148,26 +148,15 @@ sub input_priority {
 sub input_detect {
 	my $options = shift;
 	my ($name, $device, $phys, $mouse, $type, $protocol, $corepointer, $auto);
-
-	if (-f '/proc/bus/input/devices') {
-		dbg "using primary detection method: /proc/bus/input/devices";
-		open(my $id, '<', '/proc/bus/input/devices')
-		        or die "Unable to read '/proc/bus/input/devices': $!\n";
-		while (<$id>) {
+	my $input_file = '/proc/bus/input/devices';
+	
+	if (-f $input_file) {
+		dbg "using primary detection method: $input_file";
+		open(my $id, '<', $input_file)
+		        or die "Unable to read '$input_file': $!\n";
+INPUT:		while (<$id>) {
 			chomp;
 			dbg $_;
-
-			#
-			#I: Bus=0011 Vendor=0002 Product=0005 Version=0000
-			#N: Name="ImPS/2 Generic Wheel Mouse"
-			#P: Phys=isa0060/serio1/input0
-			#S: Sysfs=/class/input/input2
-			#U: Uniq=
-			#H: Handlers=mouse0 event2 ts0
-			#B: EV=7
-			#B: KEY=70000 0 0 0 0
-			#B: REL=103
-			#
 
 			unless (/^./) {
 				# each input device block is seperated by a blank line
@@ -187,8 +176,11 @@ sub input_detect {
 				}
 				when 'handlers' {
 					# filter out handlers containing kbd (eg, usb remote)
+					if ($val =~ /^kbd/) {
+						next INPUT;
+					}
 					# the mice have already been counted
-					if ($val !~ /^kbd/ and $val =~ /mouse(\d+)/) {
+					if ($val =~ /mouse(\d+)/) {
 						$mouse = $1;
 					}
 				}
@@ -196,7 +188,14 @@ sub input_detect {
 					# filter out physical connections
 					# we cannot handle (eg, usb remote)
 					if ($val =~ /^(isa|usb)/) {
-						$phys = $val;
+						$phys = $1;
+					}
+				}
+				when 'sysfs' {
+					# use sysfs key as secondary method
+					# for detecting bus type
+					if ($val =~ /\/(usb)\d+\//) {
+						$phys = $1;
 					}
 				}
 			}
@@ -204,25 +203,33 @@ sub input_detect {
 			next unless (defined $mouse and $name and $phys);
 
 			given ($phys) {
-				when m/^isa/ {
+				when 'isa' {
 					given ($name) {
 						when m/^SynPS\/2/ {
-							$type   = 'synaptics';
+							$type     = 'synaptics';
 							$protocol = 'auto-dev';
 						}
 						when m/^AlpsPS\/2/ {
-							$type   = 'alps';
+							$type     = 'alps';
 							$protocol = 'auto-dev';
 						}
 						default {
-							$type = 'auto';
+							$type     = 'auto';
 							$protocol = 'Auto';
 						}
 					}
 				}
-				when m/^usb/ {
-					$type = 'auto';
-					$protocol = 'Auto';
+				when 'usb' {
+					given ($name) {
+						when m/^Wacom/ {
+							$type     = 'wacom_usb';
+							$device   = '/dev/input/wacom';
+						}
+						default {
+							$type     = 'auto';
+							$protocol = 'Auto';
+						}
+					}
 				}
 			}
 
@@ -231,10 +238,12 @@ sub input_detect {
 				next;
 			}
 
+			$device ||= '/dev/input/mice';
+
 			$input{$mouse} = {
 				'name'     => $name,
 				'type'     => $type,
-				'device'   => '/dev/input/mice',
+				'device'   => $device,
 				'protocol' => $protocol,
 			};
 
@@ -292,24 +301,44 @@ sub input_detect {
 			dbg "Avoiding duplicate auto device entry...";
 			next;
 		}
+		elsif ($input{$key}->{'type'} =~ /^wacom/) {
+			for ('stylus', 'eraser', 'cursor') {
+				input(undef, 'name', $input{$key}->{'name'} . " $_");
+				input(undef, 'type', $input{$key}->{'type'});
+				input(undef, 'device', $input{$key}->{'device'});
+				input(undef, 'protocol', $_);
+				input(undef, 'corepointer', 'SendCoreEvents');
+			}
 
-		# form --input argument string to give to fll_xorgconfig
-		for ('name', 'type', 'device', 'protocol') {
-			input(undef, $_, $input{$key}->{$_}),;
-		}
-
-		# elect a Core Pointer - USB device hotplugged later currently
-		# may not work if we do this :/
-		if ($corepointer) {
-			input(undef, 'corepointer', 'SendCoreEvents');
+			# Some wacom tablets get a pad section
+			if ($input{$key}->{'name'} =~ /^Wacom (Intuos3|Graphire4|Bamboo)/) {
+				input(undef, 'name', $input{$key}->{'name'} . " pad");
+				input(undef, 'type', $input{$key}->{'type'});
+				input(undef, 'device', $input{$key}->{'device'});
+				input(undef, 'protocol', 'pad');
+				input(undef, 'corepointer', undef);
+			}
 		}
 		else {
-			input(undef, 'corepointer', 'CorePointer');
-			$corepointer++;
+
+			# form --input argument string to give to fll_xorgconfig
+			for ('name', 'type', 'device', 'protocol') {
+				input(undef, $_, $input{$key}->{$_});
+			}
+
+			# elect a Core Pointer - USB device hotplugged later currently
+			# may not work if we do this :/
+			if ($corepointer) {
+				input(undef, 'corepointer', 'SendCoreEvents');
+			}
+			else {
+				input(undef, 'corepointer', 'CorePointer');
+				$corepointer++;
+			}
+			
+			# count auto devices, we don't want to add > 1 of them
+			$input{$key}->{'type'} eq 'auto' and $auto++;
 		}
-		
-		# count auto devices, we don't want to add > 1 of them
-		$input{$key}->{'type'} eq 'auto' and $auto++;
 	}
 
 	if ($corepointer and not $auto) {
