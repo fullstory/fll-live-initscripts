@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.6) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.6) unstable; urgency=low
 
   * fll-xorgconfig:
     - add initial support for detection + first time only setup of USB Wacom
