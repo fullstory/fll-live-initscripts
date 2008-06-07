@@ -1,12 +1,12 @@
-ALL := xrandr/nv xrandr/ati
+ALL := xrandr/nv.ids xrandr/ati.ids
 
 all: $(ALL)
 
-xrandr/ati:
+xrandr/ati.ids:
 	@mkdir -p xrandr
 	gawk -f ati.awk src/ati_pciids_gen.h > $@
 
-xrandr/nv:
+xrandr/nv.ids:
 	@mkdir -p xrandr
 	gawk -f nv.awk src/nv_driver.c > $@
 
