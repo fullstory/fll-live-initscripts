@@ -139,7 +139,7 @@ setup_gdm() {
 			/etc/gdm/gdm.conf
 
 	if [ "${CUSTOM_DPI}" ]; then
-		sed -i -e "s/\(command\=\/usr\/bin\/X \-dpi \).*\( -audit.*$\)/\1${CUSTOM_DPI}\2/" \
+		sed -i -e "s/\(command\=\/usr\/bin\/X \-audit [0-9]*$\)/\1 \-dpi ${CUSTOM_DPI}/" \
 			/usr/share/gdm/defaults.conf
 	fi
 	
