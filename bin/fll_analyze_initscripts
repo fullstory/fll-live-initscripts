@@ -30,7 +30,7 @@ use Cwd qw(realpath);
 use Getopt::Long qw(:config bundling no_auto_abbrev);
 
 my (%init, @glob, $chroot);
-my ($def, $dry, $frc, $rem, $urcd);
+my ($def, $dry, $frc, $lvl, $rem, $urcd);
 my $etc   = '/etc';
 my $found = 0;
 
@@ -38,7 +38,8 @@ GetOptions(
 	"c|chroot=s" => \$chroot,
 	"d|defaults" => \$def,
 	"f|force"    => \$frc,
-	"n|dryrun"    => \$dry,
+	"l|runlevel" => \$lvl,
+	"n|dryrun"   => \$dry,
 	"r|remove"   => \$rem,
 );
 
@@ -65,7 +66,7 @@ for my $svc (sort keys %init) {
 	next if not -x $etc . '/init.d/' . $svc;
 
 	my (@par, $prm);
-	if (-x '/sbin/insserv' &&
+	if (-x '/sbin/insserv' && not $lvl &&
 	    realpath('/usr/sbin/update-rc.d') =~ /insserv$/) {
 		$urcd = 'insserv';
 		$frc and push(@par, '--force');
