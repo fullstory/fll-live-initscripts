@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.8) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.8) unstable; urgency=low
 
   * fll_analyze_initscripts:
     - add -l|--runlevel cli option to force runlevel configuration dump on
