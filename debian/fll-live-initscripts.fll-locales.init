@@ -800,7 +800,7 @@ localize_sources_list() {
 
 	# deploy load balancing for first generation sidux push mirrors
 	if [ -w /etc/apt/sources.list.d/sidux.list ]; then
-		case "$(mawk 'BEGIN{print int(7 * rand())}')" in
+		case "$(mawk 'BEGIN{print int(5 * rand())}')" in
 			0|1)
 				# sidux.com
 				SIDUX_MIRROR="http://sidux.com/debian/"
@@ -809,13 +809,9 @@ localize_sources_list() {
 				# sidux.net
 				SIDUX_MIRROR="http://sidux.net/debian/"
 				;;
-			3|4)
+			*)
 				# debian.tu-bs.de
 				SIDUX_MIRROR="http://debian.tu-bs.de/project/sidux/debian/"
-				;;
-			*)
-				# spline.de
-				SIDUX_MIRROR="ftp://ftp.spline.de/pub/sidux/debian/"
 				;;
 		esac
 
