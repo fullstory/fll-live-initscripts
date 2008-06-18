@@ -1,3 +1,9 @@
+fll-live-initscripts (3.2.10) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 18 Jun 2008 16:00:59 +0200
+
 fll-live-initscripts (3.2.9) unstable; urgency=low
 
   * fll-network.init:
