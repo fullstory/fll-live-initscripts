@@ -58,6 +58,9 @@ if [ -f /proc/cmdline ]; then
 			flldebug=*)
 				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
+			ifplugd)
+				IFPLUGD="yes"
+				;;
 			nodhcp|dhcp=no)
 				NODHCP="yes"
 				;;
@@ -159,6 +162,16 @@ ifplug_dhcp() {
 	return 0
 }
 
+ifplugd_dhcp() {
+	sed -i 's@\(^HOTPLUG_INTERFACES=\).*@\1"'"${@}"'"@p' /etc/default/ifplugd
+
+	for netdev in ${@}; do
+		log_progress_msg "${1}"
+		write_dhcp_to_eni none "${1}"
+		INTERFACE="${netdev}" ACTION=add /lib/udev/ifplugd.agent
+	done
+}
+
 do_start() {
 	write_skel_to_eni
 
@@ -174,15 +187,22 @@ do_start() {
 	fi
 	
 	log_daemon_msg "${NAME}"
-	log_action_begin_msg " probing for an ethernet link"
 	
-	for netdev in ${NETDEVICES}; do
-		# fork child process to do cable link test
-		ifplug_dhcp "${netdev}" &
-	done
+	if [ "${IFPLUGD}" = "yes" ]; then
+		log_action_begin_msg " activating ifplugd link detection"
 
-	# wait for child processes to finish. yes, dash supports this.
-	wait
+		ifplugd_dhcp ${NETDEVICES}
+	else
+		log_action_begin_msg " probing for an ethernet link"
+		
+		for netdev in ${NETDEVICES}; do
+			# fork child process to do cable link test
+			ifplug_dhcp "${netdev}" &
+		done
+
+		# wait for child processes to finish. yes, dash supports this.
+		wait
+	fi
 
 	log_end_msg 0
 }
