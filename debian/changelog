@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.9) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.9) unstable; urgency=low
 
   * fll-network.init:
     - add initial auto-configuration of udev/hotplug style ifplugd feature,
