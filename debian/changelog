@@ -1,3 +1,9 @@
+fll-live-initscripts (3.2.11) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 18 Jun 2008 23:52:44 +0200
+
 fll-live-initscripts (3.2.10) unstable; urgency=low
 
   * ftp.spline.de is offline for now, remove it as an option.
