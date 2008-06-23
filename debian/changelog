@@ -4,8 +4,10 @@ fll-live-initscripts (3.2.11) UNRELEASED; urgency=low
     - prioritize the radeon xorg driver to last position. It has been
       separated from the ati wrapper, and we are still giving priority to
       radeonhd
+    - modify driver_prio() sorting function to use strcmp and not strncpy for
+      more precise whole string comparison
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 23 Jun 2008 21:01:15 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 23 Jun 2008 21:22:13 +1000
 
 fll-live-initscripts (3.2.10) unstable; urgency=low
 

@@ -58,13 +58,13 @@ static int driver_prio(const void *A, const void *B)
 	const char *a = (*(const struct dirent **)A)->d_name;
 	const char *b = (*(const struct dirent **)B)->d_name;
 
-	if (strncmp("ati", a, 3) == 0)
+	if (strcmp("ati.ids", a) == 0)
 		return 1;
-	if (strncmp("ati", b, 3) == 0)
+	if (strcmp("ati.ids", b) == 0)
 		return -1;
-	if (strncmp("radeon", a, 6) == 0)
+	if (strcmp("radeon.ids", a) == 0)
 		return 1;
-	if (strncmp("radeon", b, 6) == 0)
+	if (strcmp("radeon.ids", b) == 0)
 		return -1;
 
 	return versionsort(A, B);
