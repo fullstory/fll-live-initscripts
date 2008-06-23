@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.11) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.11) unstable; urgency=low
 
   * fll_xserver_discover:
     - prioritize the radeon xorg driver to last position. It has been
