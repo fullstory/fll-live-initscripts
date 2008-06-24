@@ -1,0 +1,33 @@
+# Common functions for fll-live-initscripts
+
+insert_initscript() {
+	local CMD
+
+	if [ "${#}" -ne 2 ] || [ ! -d "${2}" ]; then
+		return 1
+	fi
+
+	CMD=$(fll_analyze_initscripts "${1}" --chroot "${2}")
+	if [ "${CMD}" ]; then
+		${CMD} >/dev/null
+		return "${?}"
+	fi
+
+	return 1
+}
+
+remove_initscript() {
+	local CMD
+
+	if [ "${#}" -ne 1 ]; then
+		return 1
+	fi
+
+	CMD=$(fll_analyze_initscripts --remove "${1}")
+	if [ "${CMD}" ]; then
+		${CMD} >/dev/null
+		return "${?}"
+	fi
+
+	return 1
+}

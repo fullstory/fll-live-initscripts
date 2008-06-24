@@ -54,6 +54,11 @@ fi
 . /lib/lsb/init-functions
 
 ###
+# source fll functions
+###
+. /lib/init/fll
+
+###
 # ensure this is clean variable
 ###
 NOSWAP=""

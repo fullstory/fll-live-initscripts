@@ -53,6 +53,11 @@ fi
 . /lib/lsb/init-functions
 
 ###
+# source fll functions
+###
+. /lib/init/fll
+
+###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then

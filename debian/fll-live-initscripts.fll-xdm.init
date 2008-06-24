@@ -48,6 +48,11 @@ fi
 . /lib/lsb/init-functions
 
 ###
+# source fll functions
+###
+. /lib/init/fll
+
+###
 # debian's default-display-manager control file
 ###
 DEFAULT_DISPLAY_MANAGER_FILE=/etc/X11/default-display-manager
@@ -89,21 +94,6 @@ get_init_seq_num() {
 					printf "%s=%s\n", toupper($i), $++i
 			}
 		}'
-}
-
-insert_initscript() {
-	if [ "${#}" -ne 2 ] || [ ! -d "${2}" ] || \
-		[ ! -x /usr/bin/fll_analyze_initscripts ]; then
-		return
-	fi
-
-	CMD=$(/usr/bin/fll_analyze_initscripts "${1}" --chroot "${2}")
-	if [ "${CMD}" ]; then
-		${CMD} >/dev/null
-		return "${?}"
-	fi
-
-	return 1
 }
 
 setup_kdm() {

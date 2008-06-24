@@ -49,6 +49,11 @@ fi
 . /lib/lsb/init-functions
 
 ###
+# source fll functions
+###
+. /lib/init/fll
+
+###
 # define this for copy_exec
 ###
 DESTDIR="/live-hack"

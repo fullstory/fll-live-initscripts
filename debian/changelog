@@ -1,8 +1,14 @@
 fll-live-initscripts (3.2.12) UNRELEASED; urgency=low
 
   * Fix typo in last changelog entry (s/strncpy/strncmp/).
+  * Install a common shell function library to /lib/init/fll
+  * debian/*.init:
+    - source /lib/init/fll, common shell function library for our live
+      initscripts
+  * fll-xdm:
+    - remove inline insert_initscript() function
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 24 Jun 2008 10:17:29 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 24 Jun 2008 12:53:09 +1000
 
 fll-live-initscripts (3.2.11) unstable; urgency=low
 
