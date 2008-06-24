@@ -116,7 +116,7 @@ setup_kdm() {
 		update-rc.d kdm start "${START}" 5 . stop "${STOP}" 0 1 2 3 4 6 . >/dev/null
 		return "${?}"
 	else
-		insert_initscript kdm "${FLL_MOUNTPOINT}"
+		insert_initscript kdm
 		return "${?}"
 	fi
 }
@@ -139,7 +139,7 @@ setup_gdm() {
 		update-rc.d gdm start "${START}" 5 . stop "${STOP}" 0 1 2 3 4 6 . >/dev/null
 		return "${?}"
 	else
-		insert_initscript gdm "${FLL_MOUNTPOINT}"
+		insert_initscript gdm
 		return "${?}"
 	fi
 }

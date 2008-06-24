@@ -252,10 +252,10 @@ do_start() {
 		XNOXRESPROBE="1"
 		# disable modelines
 		XNOMODELINES="1"
+		# make sure the virtualbox-ose-guest-utils service is configured to start
+		insert_initscript virtualbox-ose-guest-utils
 	else
-		# disable virtualbox-ose-guest-utils initscript
-		CMD=$(/usr/bin/fll_analyze_initscripts -f -r virtualbox-ose-guest-utils)
-		[ "${CMD}" ] && ${CMD} >/dev/null
+		remove_initscript virtualbox-ose-guest-utils
 	fi
 
 	# detected vmware emulated VGA hardware

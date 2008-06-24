@@ -1,14 +1,19 @@
 fll-live-initscripts (3.2.12) UNRELEASED; urgency=low
 
   * Fix typo in last changelog entry (s/strncpy/strncmp/).
-  * Install a common shell function library to /lib/init/fll
+  * Install a common shell function library to /lib/init/fll.
+  * Adjust insert_initscript common function to use FLL_MOUNTPOINT variable if
+    set, which it always should be.
   * debian/*.init:
     - source /lib/init/fll, common shell function library for our live
       initscripts
   * fll-xdm:
     - remove inline insert_initscript() function
+  * fll-xorgconfig:
+    - use new remove_initscript function for vbox guest utils service removal
+    - always ensure vbox guest utils is configured to start
 
- -- Kel Modderman <kel@otaku42.de>  Tue, 24 Jun 2008 12:53:09 +1000
+ -- Kel Modderman <kel@otaku42.de>  Tue, 24 Jun 2008 13:12:38 +1000
 
 fll-live-initscripts (3.2.11) unstable; urgency=low
 
