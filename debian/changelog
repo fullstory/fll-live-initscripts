@@ -1,8 +1,8 @@
 fll-live-initscripts (3.2.12) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Fix typo in last changelog entry (s/strncpy/strncmp/).
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 24 Jun 2008 01:36:34 +0200
+ -- Kel Modderman <kel@otaku42.de>  Tue, 24 Jun 2008 10:17:29 +1000
 
 fll-live-initscripts (3.2.11) unstable; urgency=low
 
@@ -10,7 +10,7 @@ fll-live-initscripts (3.2.11) unstable; urgency=low
     - prioritize the radeon xorg driver to last position. It has been
       separated from the ati wrapper, and we are still giving priority to
       radeonhd
-    - modify driver_prio() sorting function to use strcmp and not strncpy for
+    - modify driver_prio() sorting function to use strcmp and not strncmp for
       more precise whole string comparison
 
  -- Kel Modderman <kel@otaku42.de>  Mon, 23 Jun 2008 21:22:13 +1000
