@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.12) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.12) unstable; urgency=low
 
   * Fix typo in last changelog entry (s/strncpy/strncmp/).
   * Install a common shell function library to /lib/init/fll.
