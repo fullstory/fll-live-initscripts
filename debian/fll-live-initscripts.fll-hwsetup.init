@@ -98,7 +98,7 @@ do_start() {
 		log_daemon_msg "${NAME}" "printer is '${PRINTER}'"
 		log_end_msg 0
 	else
-		update-rc.d -f cupsys remove >/dev/null 2>&1
+		update-rc.d -f cups remove >/dev/null 2>&1
 	fi
 }
 
