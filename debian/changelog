@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.14) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.14) unstable; urgency=low
 
   * fll-xorgconfig:
     - allow XFORCERANDR to override XNORANDR
