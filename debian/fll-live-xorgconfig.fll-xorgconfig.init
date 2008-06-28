@@ -267,6 +267,11 @@ do_start() {
 		XNOMODELINES="1"
 	fi
 
+	if [ -z "${XMODULE}" ]; then
+		# for now we hardcode the fallback -> vesa
+		XMODULE="vesa"
+	fi
+
 	log_end_msg 0
 	
 	log_daemon_msg "${NAME}"
@@ -306,9 +311,9 @@ do_start() {
 		XCFG_OPTS="${XCFG_OPTS} --boardname '${XBOARDNAME}'"
 	fi
 	
-	if [ -z "${XMODULE}" ] || xserver_has_xrandr "${XMODULE}" "${XDEVICE}"; then
-		# failed to identify driver or driver is randr1.2 aware
-		# let the xserver try its best to do the right thing
+	if xserver_has_xrandr "${XMODULE}" "${XDEVICE}"; then
+		# driver is randr1.2 aware - let the xserver try its best
+		# ... to do the right thing
 		XCFG_OPTS="${XCFG_OPTS} --xrandr"
 		
 		if [ "${XMODES}" ]; then
