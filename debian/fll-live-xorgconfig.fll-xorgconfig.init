@@ -125,11 +125,12 @@ fi
 # functions...
 ###
 xserver_has_xrandr() {
-	[ "${1}" ] && [ -z "${XNOXRANDR}" ] || return 1
-	
 	if [ "${XFORCERANDR}" ]; then
 		# force xrandr style configuration
 		return 0
+	elif [ "${XNOXRANDR}" ]; then
+		# force legacy style configuration
+		return 1
 	fi
 
 	# http://wiki.debian.org/XStrikeForce/HowToRandR12
@@ -248,10 +249,8 @@ do_start() {
 		#XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
 		# ...and mouse
 		XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
-		# disable monitor probe
-		XNOXRESPROBE="1"
-		# disable modelines
-		XNOMODELINES="1"
+		# create xrandr style configuration
+		XFORCERANDR="1"
 		# make sure the virtualbox-ose-guest-utils service is configured to start
 		insert_initscript virtualbox-ose-guest-utils
 	else

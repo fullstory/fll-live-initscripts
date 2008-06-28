@@ -1,8 +1,11 @@
 fll-live-initscripts (3.2.14) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_xorgconfig:
+    - allow XFORCERANDR to override XNORANDR
+    - create xrandr style configuration for Vbox guests, the guest module no
+      longer respects user defined modes at all
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 25 Jun 2008 13:52:40 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sat, 28 Jun 2008 10:33:08 +1000
 
 fll-live-initscripts (3.2.13) unstable; urgency=low
 
