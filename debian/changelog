@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.15) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.15) unstable; urgency=low
 
   [ Kel Modderman ]
   * fll_fstab_generator:
