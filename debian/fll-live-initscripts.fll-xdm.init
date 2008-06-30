@@ -123,10 +123,14 @@ setup_kdm() {
 
 setup_gdm() {
 	# autologin + greeter theme
+	# timed login required for login after x restart
 	sed -i	-e "/^AutomaticLogin\=.*/d" \
 		-e "/^AutomaticLoginEnable\=.*/d" \
-		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true/" \
-			/etc/gdm/gdm.conf
+		-e "/^TimedLoginEnable\=.*/d" \
+		-e "/^TimedLogin\=.*/d" \
+		-e "/^TimedLoginDelay\=.*/d" \
+		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true \
+			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=0/" /etc/gdm/gdm.conf
 
 	if [ "${CUSTOM_DPI}" ]; then
 		sed -i -e "s/\(command\=\/usr\/bin\/X \-audit [0-9]*$\)/\1 \-dpi ${CUSTOM_DPI}/" \
