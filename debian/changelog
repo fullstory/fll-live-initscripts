@@ -11,7 +11,11 @@ fll-live-initscripts (3.2.15) unstable; urgency=low
   [ Bernard Gray ]
   * add timed auto-login for gdm after x restart. Fixes bug in xfce 2008-02
 
- -- Bernard Gray <bernard.gray@gmail.com>  Mon, 30 Jun 2008 16:24:36 +1000
+  [ Stefan Lippers-Hollmann ]
+  * only register one variable at a time using local, while still not SuSv3
+    compatible it meets the exceptions defined by Debian Policy 10.4.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 30 Jun 2008 10:32:53 +0200
 
 fll-live-initscripts (3.2.14) unstable; urgency=low
 

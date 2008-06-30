@@ -71,7 +71,8 @@ fi
 do_start() {
 	log_daemon_msg "${NAME}"; log_action_begin_msg " detecting resume partition"
 	
-	local RESUME SWAPUUID
+	local RESUME
+	local SWAPUUID
 
 	if [ -s /etc/initramfs-tools/conf.d/resume ]; then
 		. /etc/initramfs-tools/conf.d/resume
