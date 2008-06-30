@@ -161,7 +161,13 @@ is_removable()
 {
 	local rem
 
-	read rem < "${1}/removable"
+	if [ -f "${1}/removable" ]; then
+		read rem < "${1}/removable"
+	else
+		warn "${1}/removable does not exist"
+		# treat it as removable
+		return 0
+	fi
 
 	case "${rem}" in
 		0)

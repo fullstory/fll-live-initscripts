@@ -2,8 +2,10 @@ fll-live-initscripts (3.2.15) UNRELEASED; urgency=low
 
   * fll_fstab_generator:
     - enhance is_removable() for improved readability
+    - omit warning when "removable" sysfs attribute file is not present for
+      a block device
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 30 Jun 2008 13:39:48 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 30 Jun 2008 16:17:44 +1000
 
 fll-live-initscripts (3.2.14) unstable; urgency=low
 
