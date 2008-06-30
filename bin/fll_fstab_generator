@@ -126,7 +126,7 @@ if ! ${ROOT}; then
 	{
 		return
 	}
-elif type vol_id >/dev/null; then
+elif which vol_id >/dev/null; then
 	volumeid()
 	{
 		vol_id "/dev/${1}"
