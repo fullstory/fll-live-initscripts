@@ -159,7 +159,20 @@ disk_symlinks()
 #
 is_removable()
 {
-	! grep -s -q '^0$' "${1}/removable"
+	local rem
+
+	read rem < "${1}/removable"
+
+	case "${rem}" in
+		0)
+			# fixed disk
+			return 1
+			;;
+		1|*)
+			# removable or unknown disk
+			return 0
+			;;
+	esac
 }
 
 #

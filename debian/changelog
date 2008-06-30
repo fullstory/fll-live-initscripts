@@ -1,8 +1,9 @@
 fll-live-initscripts (3.2.15) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll_fstab_generator:
+    - enhance is_removable() for improved readability
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 28 Jun 2008 11:57:14 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 30 Jun 2008 13:39:48 +1000
 
 fll-live-initscripts (3.2.14) unstable; urgency=low
 
