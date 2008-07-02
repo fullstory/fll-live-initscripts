@@ -123,25 +123,15 @@ EOF
 }
 
 write_dhcp_to_eni() {
-	while [ "${#}" -gt 0 ]; do
-		case "${1}" in
-			auto)
-				shift
-				printf "\nauto ${1}\n" >> \
-					/etc/network/interfaces
-				;;
-			allow-hotplug)
-				shift
-				printf "\nallow-hotplug ${1}\n" >> \
-					/etc/network/interfaces
-				;;
-			*)
-				printf "iface ${1} inet dhcp\n" >> \
-					/etc/network/interfaces
-				shift
-				;;
-		esac
-	done
+	case "${1}" in
+		auto|allow-*)
+			printf "\n${1} ${2}\n" >> /etc/network/interfaces
+			;;
+		*)
+			;;
+	esac
+
+	printf "iface ${2} inet dhcp\n" >> /etc/network/interfaces
 }
 
 ifplug_dhcp() {
@@ -168,11 +158,9 @@ ifplug_dhcp() {
 }
 
 ifplugd_dhcp() {
-	sed -i 's@\(^HOTPLUG_INTERFACES=\).*@\1"'"${@}"'"@p' /etc/default/ifplugd
-
 	for netdev in ${@}; do
 		log_progress_msg "${1}"
-		write_dhcp_to_eni none "${1}"
+		write_dhcp_to_eni allow-ifplugd "${1}"
 		INTERFACE="${netdev}" ACTION=add /lib/udev/ifplugd.agent
 	done
 }
