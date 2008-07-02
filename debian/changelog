@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.17) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.17) unstable; urgency=low
 
   * fll-network:
     - simplify write_dhcp_to_eni()
