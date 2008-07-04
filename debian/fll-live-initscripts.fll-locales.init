@@ -813,20 +813,20 @@ apt_install_lang() {
 
 	LIVEAPT="${FLL_CD_MNT}/i18n"
 	if [ ! -d "${LIVEAPT}" ]; then
-		echo "did not find a liveapt archive on the cd"
+		log_warning_msg " did not find a liveapt archive on the cd"
 		return
 	fi
 
 	# don't touch apt if it has been used
 	if [ /var/lib/dpkg/status -nt ${FLL_CD_MNT}/${FLL_IMAGE_LOCATION} ]; then
-		echo "dpkg status updated, liveapt is no longer possible"
+		log_warning_msg " dpkg status updated, liveapt is no longer possible"
 		return
 	fi
 
 	APTARCH=$(dpkg-architecture -qDEB_BUILD_ARCH)
 	# e.g. /fll/sr0/i18n/i386/en_IE
 	if [ ! -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
-		echo "did not find a package list for your lang ("${LANG%%[.]*}")"
+		log_warning_msg " did not find a package list for your lang ("${LANG%%[.]*}")"
 		return
 	fi
 	LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
@@ -835,7 +835,7 @@ apt_install_lang() {
 	APTGETBASE="apt-get -o Dir::Etc=$LIVEAPTSOURCES"
 	echo 'deb file://'${LIVEAPT}' sid main' > ${LIVEAPTSOURCES}/sources.list
 	if ! ${APTGETBASE} update > /dev/null; then
-		echo "apt-get update for i18n packages from cd failed"
+		log_failure_msg " apt-get update for i18n packages from cd failed"
 		apt_install_lang_clean
 		return
 	fi
@@ -854,15 +854,15 @@ apt_install_lang() {
 		# check free - used > minspace (256M)
 		MEMAFTER=$(( ${FREEMEM} - ${APTUSES} ))
 		if [ ${MEMAFTER} -lt 256 ]; then
-			echo "minimum 256MB free ram free needed for liveapt"
-			echo "you would have ${MEMAFTER}MB free after lang install"
+			log_warning_msg " minimum 256MB free ram free needed for liveapt"
+			log_warning_msg " you would have ${MEMAFTER}MB free after lang install"
 			apt_install_lang_clean
 			return
 		fi
 		# check used/free > minratio
 		USESRATIO=$(( ${FREEMEM} / ${APTUSES} ))
 		if [ ${USESRATIO} -lt 10 ]; then
-			echo "lang packages would use (${APTUSES}MB) more then 10% of available memory (${FREEMEM}MB)"
+			log_warning_msg " lang packages would use (${APTUSES}MB) more then 10% of available memory (${FREEMEM}MB)"
 			apt_install_lang_clean
 			return
 		fi
