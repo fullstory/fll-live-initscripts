@@ -80,6 +80,18 @@ if [ -f /proc/cmdline ]; then
 			tz=*)
 				CUSTOM_TZ="${param#tz=}"
 				;;
+			liveapt)
+				LIVEAPT="yes"
+				;;
+			image_dir=*)
+				FLL_IMAGE_DIR="${param#image_dir=}"
+				FLL_IMAGE_LOCATION="${FLL_IMAGE_DIR}/${FLL_IMAGE_FILE}"
+				;;
+			image_name=*)
+				FLL_IMAGE_FILE="${param#image_name=}"
+				FLL_IMAGE_LOCATION="${FLL_IMAGE_DIR}/${FLL_IMAGE_FILE}"
+				;;
+
 		esac
 	done
 fi
@@ -787,6 +799,89 @@ set_locale()
 	log_end_msg "${?}"
 }
 
+apt_install_lang() {
+	###
+	# install debs for lang from deb archive on cd
+	###
+	if [ -z "$LIVEAPT" ]; then
+		return
+	fi
+	log_daemon_msg "${NAME}"
+	log_action_begin_msg " installing language packages for '${LANG}'"
+
+	FLL_CD_MNT=$( echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1 | sed 's|\/'${FLL_IMAGE_LOCATION}'$||')
+
+	LIVEAPT="${FLL_CD_MNT}/i18n"
+	if [ ! -d "${LIVEAPT}" ]; then
+		echo "did not find a liveapt archive on the cd"
+		return
+	fi
+
+	# don't touch apt if it has been used
+	if [ /var/lib/dpkg/status -nt ${FLL_CD_MNT}/${FLL_IMAGE_LOCATION} ]; then
+		echo "dpkg status updated, liveapt is no longer possible"
+		return
+	fi
+
+	APTARCH=$(dpkg-architecture -qDEB_BUILD_ARCH)
+	# e.g. /fll/sr0/i18n/i386/en_IE
+	if [ ! -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
+		echo "did not find a package list for your lang ("${LANG%%[.]*}")"
+		return
+	fi
+	LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
+
+	LIVEAPTSOURCES=$(mktemp -d -t liveapt.XXXXXX)
+	APTGETBASE="apt-get -o Dir::Etc=$LIVEAPTSOURCES"
+	echo 'deb file://'${LIVEAPT}' sid main' > ${LIVEAPTSOURCES}/sources.list
+	if ! ${APTGETBASE} update > /dev/null; then
+		echo "apt-get update for i18n packages from cd failed"
+		apt_install_lang_clean
+		return
+	fi
+
+	APTGETBASE="${APTGETBASE} --allow-unauthenticated --trivial-only --no-remove"
+
+	# do a dry-run to calculate size of packages and that will be used
+	APTUSESRAW=$( LANG=C ${APTGETBASE} --print-uris install ${LANGPACKS} | \
+		awk '/^After\ this\ operation\,\ /{print $4}')
+	APTUSES=${APTUSESRAW%%[.]*MB}
+
+	# lets assume it is <MB and ok if it's not in MB
+	if [ "${APTUSES}" != "${APTUSESRAW}" ]; then
+		# get a free memory figure
+		FREEMEM=$( LANG=C free -m | awk '/\-\/\+\ buffers/{print $4}' )
+		# check free - used > minspace (256M)
+		MEMAFTER=$(( ${FREEMEM} - ${APTUSES} ))
+		if [ ${MEMAFTER} -lt 256 ]; then
+			echo "minimum 256MB free ram free needed for liveapt"
+			echo "you would have ${MEMAFTER}MB free after lang install"
+			apt_install_lang_clean
+			return
+		fi
+		# check used/free > minratio
+		USESRATIO=$(( ${FREEMEM} / ${APTUSES} ))
+		if [ ${USESRATIO} -lt 10 ]; then
+			echo "lang packages would use (${APTUSES}MB) more then 10% of available memory (${FREEMEM}MB)"
+			apt_install_lang_clean
+			return
+		fi
+	fi
+
+	# install the packages
+	${APTGETBASE} install ${LANGPACKS} > /dev/null
+	# clean up
+	apt_install_lang_clean
+}
+
+apt_install_lang_clean() {
+	echo '' > ${LIVEAPTSOURCES}/sources.list
+	apt-get -o Dir::Etc=$LIVEAPTSOURCES update > /dev/null
+	apt-get -o Dir::Etc=$LIVEAPTSOURCES clean > /dev/null
+	rm -rf ${LIVEAPTSOURCES}
+	log_end_msg "${?}"
+}
+
 load_keymap() {
 	log_daemon_msg "${NAME}"; log_action_begin_msg " loading ${KEYTABLE} keymap"
 	dpkg-reconfigure -fnoninteractive -pcritical console-data >/dev/null 2>&1
@@ -839,6 +934,7 @@ case "${1}" in
 	start)
 		set_timezone
 		set_locale
+		apt_install_lang
 		load_keymap
 		localize_sources_list
 		save_locale_variables
