@@ -41,7 +41,7 @@ if [ -s /etc/default/distro ]; then
 fi
 
 if [ "${FLL_DISTRO_MODE}" != "live" ]; then
-	[ "${FLL_LANG}" ] || exit 0
+	[ -n "${FLL_LANG}" ] || exit 0
 fi
 
 ###
@@ -80,8 +80,8 @@ if [ -f /proc/cmdline ]; then
 			tz=*)
 				CUSTOM_TZ="${param#tz=}"
 				;;
-			liveapt)
-				LIVEAPT="yes"
+			noliveapt)
+				NOLIVEAPT="yes"
 				;;
 			image_dir=*)
 				FLL_IMAGE_DIR="${param#image_dir=}"
@@ -99,7 +99,7 @@ fi
 ###
 # allow FLL_LANG environment variable to trump
 ###
-if [ "${FLL_LANG}" ]; then
+if [ -n "${FLL_LANG}" ]; then
 	LANGUAGE="${FLL_LANG}"
 fi
 
@@ -803,7 +803,7 @@ apt_install_lang() {
 	###
 	# install debs for lang from deb archive on cd
 	###
-	if [ -z "$LIVEAPT" ]; then
+	if [ -n "$NOLIVEAPT" ]; then
 		return
 	fi
 	log_daemon_msg "${NAME}"
@@ -854,15 +854,15 @@ apt_install_lang() {
 		# check free - used > minspace (256M)
 		MEMAFTER=$(( ${FREEMEM} - ${APTUSES} ))
 		if [ ${MEMAFTER} -lt 256 ]; then
-			log_warning_msg " minimum 256MB free ram free needed for liveapt"
-			log_warning_msg " you would have ${MEMAFTER}MB free after lang install"
+			log_warning_msg " minimum 256MB free ram needed for i18n packages"
+			log_warning_msg " you would only have ${MEMAFTER}MB free, not installing"
 			apt_install_lang_clean
 			return
 		fi
 		# check used/free > minratio
 		USESRATIO=$(( ${FREEMEM} / ${APTUSES} ))
 		if [ ${USESRATIO} -lt 10 ]; then
-			log_warning_msg " lang packages would use (${APTUSES}MB) more then 10% of available memory (${FREEMEM}MB)"
+			log_warning_msg " i18n packages would use (${APTUSES}MB) more then 10% of available memory (${FREEMEM}MB), not installing."
 			apt_install_lang_clean
 			return
 		fi
@@ -892,7 +892,7 @@ localize_sources_list() {
 	###
 	# localise /etc/apt/sources.list
 	###
-	if [ "${MIRROR}" ] && [ -f /etc/apt/sources.list ]; then
+	if [ -n "${MIRROR}" ] && [ -f /etc/apt/sources.list ]; then
 		sed -i 's|/ftp\.\(..\.\)\?debian\.org/|/'"${MIRROR}"'/|' \
 			/etc/apt/sources.list \
 			/etc/apt/sources.list.d/debian.list
@@ -953,6 +953,7 @@ case "${1}" in
 		log_end_msg() { :; }
 		# localize
 		set_locale
+		apt_install_lang
 		load_keymap
 		localize_sources_list
 		save_locale_variables
