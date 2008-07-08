@@ -80,8 +80,8 @@ if [ -f /proc/cmdline ]; then
 			tz=*)
 				CUSTOM_TZ="${param#tz=}"
 				;;
-			noliveapt)
-				NOLIVEAPT="yes"
+			noaptlang)
+				NOAPTLANG="yes"
 				;;
 			image_dir=*)
 				FLL_IMAGE_DIR="${param#image_dir=}"
@@ -803,33 +803,31 @@ apt_install_lang() {
 	###
 	# install debs for lang from deb archive on cd
 	###
-	if [ -n "$NOLIVEAPT" ]; then
+	if [ -n "$NOAPTLANG" ]; then
 		return
 	fi
-	log_daemon_msg "${NAME}"
-	log_action_begin_msg " installing language packages for '${LANG}'"
 
 	FLL_CD_MNT=$( echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1 | sed 's|\/'${FLL_IMAGE_LOCATION}'$||')
-
 	LIVEAPT="${FLL_CD_MNT}/i18n"
+
 	if [ ! -d "${LIVEAPT}" ]; then
-		log_warning_msg " did not find a liveapt archive on the cd"
 		return
 	fi
 
 	# don't touch apt if it has been used
 	if [ /var/lib/dpkg/status -nt ${FLL_CD_MNT}/${FLL_IMAGE_LOCATION} ]; then
-		log_warning_msg " dpkg status updated, liveapt is no longer possible"
 		return
 	fi
 
 	APTARCH=$(dpkg-architecture -qDEB_BUILD_ARCH)
 	# e.g. /fll/sr0/i18n/i386/en_IE
 	if [ ! -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
-		log_warning_msg " did not find a package list for your lang ("${LANG%%[.]*}")"
 		return
 	fi
 	LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
+
+	log_daemon_msg "${NAME}"
+	log_action_begin_msg " installing language packages for '${LANG}'"
 
 	LIVEAPTSOURCES=$(mktemp -d -t liveapt.XXXXXX)
 	APTGETBASE="apt-get -o Dir::Etc=$LIVEAPTSOURCES"
