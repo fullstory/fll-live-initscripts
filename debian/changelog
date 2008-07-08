@@ -1,9 +1,5 @@
-fll-live-initscripts (3.2.19) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.19) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
   * fll-locales:
     - liveapt is on by default, cheatcode now noliveapt to diable it.
     - make some liveapt warnings a little clearer
