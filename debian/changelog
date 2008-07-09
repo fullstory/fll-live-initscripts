@@ -1,9 +1,5 @@
-fll-live-initscripts (3.2.20) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.20) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
   * fll-locales:
     - don't produce any messages from liveapt in fll-locales unless
       the package list for the arch/lang is found.
