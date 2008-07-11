@@ -1,4 +1,4 @@
-fll-live-initscripts (3.2.21) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.21) unstable; urgency=low
 
   * fll_fstab_generator:
     - add workaround for likely buggy behaviour in udev package version
