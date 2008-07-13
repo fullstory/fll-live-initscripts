@@ -522,9 +522,16 @@ scan_disks()
 
 		if is_wanted "${name}"; then
 			: # do not filter out this device
-		elif [ "${ID_TYPE}" ] && [ "${ID_TYPE}" != disk ]; then
-			dbg "device is not of disk type, skip"
-			continue
+		elif [ "${ID_TYPE}" != disk ]; then
+			# udev >- 0.124-1 not reporting ID_TYPE=disk
+			case "${name}" in
+				dm-[0-9]*|[sh]d[a-z]*)
+					;;
+				*)
+					dbg "device is not of disk type, skip"
+					continue
+					;;
+			esac
 		elif [ "${ID_BUS}" = "usb" ]; then
 			dbg "device is on usb bus, skip"
 			continue
