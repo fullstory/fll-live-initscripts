@@ -523,7 +523,7 @@ scan_disks()
 		if is_wanted "${name}"; then
 			: # do not filter out this device
 		elif [ "${ID_TYPE}" != disk ]; then
-			# udev >- 0.124-1 not reporting ID_TYPE=disk
+			# udev >= 0.124-1 is not reporting ID_TYPE=disk for ata devices
 			case "${name}" in
 				dm-[0-9]*|[sh]d[a-z]*)
 					;;
