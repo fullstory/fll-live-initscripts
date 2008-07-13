@@ -1,8 +1,9 @@
-fll-live-initscripts (3.2.22) UNRELEASED; urgency=low
+fll-live-initscripts (3.2.22) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * ftp.spline.de is online again, put it back into the load balancing
+    rotation.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 11 Jul 2008 11:46:45 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 13 Jul 2008 13:53:54 +0200
 
 fll-live-initscripts (3.2.21) unstable; urgency=low
 
