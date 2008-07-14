@@ -242,12 +242,8 @@ do_start() {
 	fi
 
 	# detected virtualbox emulated VGA hardware
-	if [ "${XVENDOR}" = "80ee" ] && [ "${XDEVICE}" = "beef" ] && \
-	   [ -d /sys/module/vboxadd ]; then
-		# override video
-		XMODULE="vboxvideo"
-		#XCFG_OPTS="${XCFG_OPTS} --driver vboxvideo"
-		# ...and mouse
+	if [ "${XMODULE}" = "vboxvideo" ]; then
+		# override mouse
 		XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 		# create xrandr style configuration
 		XFORCERANDR="1"
@@ -261,10 +257,8 @@ do_start() {
 	if [ "${XMODULE}" = "vmware" ]; then
 		# override mouse
 		XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
-		# disable monitor probe
-		XNOXRESPROBE="1"
-		# disable modelines
-		XNOMODELINES="1"
+		# create xrandr style configuration
+		XFORCERANDR="1"
 	fi
 
 	if [ -z "${XMODULE}" ]; then
