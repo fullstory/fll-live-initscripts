@@ -819,8 +819,7 @@ apt_install_lang() {
 		return
 	fi
 
-	[ -x "$(which dpkg-architecture)" ] || return
-	APTARCH=$(dpkg-architecture -qDEB_BUILD_ARCH)
+	APTARCH=$(dpkg --print-architecture)
 	# e.g. /fll/sr0/i18n/i386/en_IE
 	if [ ! -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
 		return
