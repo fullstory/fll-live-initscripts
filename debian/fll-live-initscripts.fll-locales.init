@@ -112,13 +112,6 @@ LANG_CODE=${LANGUAGE%%[-_]*}
 DEMO_CODE=${LANGUAGE##*[-_]}
 
 ###
-# if demographic code was ommitted, base demographic choice on language code
-###
-if [ -z "${DEMO_CODE}" ]; then
-	DEMO_CODE="${LANG_CODE}"
-fi
-
-###
 # language, timezone and keyboard related locale settings
 # (good reference: http://www.debian.org/mirror/list)
 ###
@@ -214,6 +207,14 @@ case "${LANG_CODE}" in
 		;;
 	*)	LANG="en_US.UTF-8" ;;
 esac
+
+###
+# if demographic code was ommitted, extract default demo_code from LANG
+###
+if [ -z "${DEMO_CODE}" ]; then
+	LANG_CHECK="${LANG%%.*}"
+	DEMO_CODE="${LANG_CHECK##*_}"
+fi
 
 ###
 # country/territory-related locale settings
