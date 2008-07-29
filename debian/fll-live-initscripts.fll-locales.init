@@ -248,6 +248,13 @@ case "${DEMO_CODE}" in
 		CD_COUNTRY="Brazilian"
 		MIRROR="ftp.br.debian.org"
 		;;
+	by)	### BY Belarus kb:by ###
+		KEYTABLE="by"
+		XKBLAYOUT="by,us"
+		TZ="Europe/Minsk"
+		CD_COUNTRY="Byelorussian"
+		MIRROR="linux.org.by"
+		;;
 	ch)	### CH Switzerland kb:de ###
 		KEYTABLE="sg-latin1"
 		XKBLAYOUT="de,fr,us"
