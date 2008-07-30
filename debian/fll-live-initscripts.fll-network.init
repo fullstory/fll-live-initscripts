@@ -77,36 +77,43 @@ if [ -f /proc/cmdline ]; then
 fi
 
 detect_netdevs() {
-	for netdev in /sys/class/net/*; do
-		if [ ! -L "${netdev}/device" ]; then
+	for path in /sys/class/net/*; do
+		local ifname
+		local alen
+		local type
+
+		ifname="$(basename ${path})"
+
+		if [ ! -L "${path}/device" ]; then
 			# not a valid device
 			continue
 		fi
 
-		if [ -d "${netdev}/wireless" ] || [ -d "${netdev}/phy80211" ]; then
-			# no sane defaults for wireless
-			continue
-		fi
-
-		if [ -f "${netdev}/addr_len" ]; then
+		if [ -f "${path}/addr_len" ]; then
+			alen="$(cat ${path}/addr_len)"
 			# unwanted, > 6 byte mac length
-			[ "$(cat ${netdev}/addr_len)" -eq 6 ] || continue
+			[ "${alen}" -eq 6 ] || continue
 		fi
 
-		if [ -f "${netdev}/type" ]; then
+		if [ -f "${path}/type" ]; then
+			type="$(cat ${path}/type)"
 			# unwanted type
-			[ "$(cat ${netdev}/type)" -eq 1 ] || continue
+			[ "${type}" -eq 1 ] || continue
 		fi
 
-		case "${netdev##*/}" in
+		case "${ifname}" in
 			lo|br*|sit*|vmnet*)
 				# blacklisted
 				continue
 				;;
-			*)
-				echo "${netdev##*/}"
-				;;
 		esac
+
+		if fll_is80211 "${ifname}"; then
+			# there are no sane defaults for 802.11 devices
+			continue
+		fi
+
+		echo "${ifname}"
 	done
 }
 

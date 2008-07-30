@@ -1,0 +1,41 @@
+FLL_IS80211(1)
+============
+Kel Modderman <kel@otaku42.de>
+
+
+NAME
+----
+fll_is80211 - program to determine if network interface is 802.11 capable
+
+
+SYNOPSIS
+--------
+'fll_80211 <ifname>'
+
+
+DESCRIPTION
+-----------
+'fll_80211' takes one argument, the name of a network interface and returns
+an exit value of 0 if the interface in 802.11 capable, otherwise 1.
+
+
+OPTIONS
+-------
+'fll_is80211' takes no options
+
+
+AUTHOR
+------
+Kel Modderman <kel@otaku42.de>
+
+
+RESOURCES
+---------
+FULLSTORY Homepage: http://developer.berlios.de/projects/fullstory/[]
+
+
+COPYING
+-------
+Copyright \(C) 2007 Kel Modderman. Free use of this software is
+granted under the terms of the GNU General Public License (GPL)
+version 2, or at your choice, any later version.

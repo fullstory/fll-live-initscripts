@@ -1,4 +1,1 @@
-bin/fll_analyze_initscripts usr/bin
-bin/fll_fstab_generator     usr/sbin
-bin/fll_login               usr/bin
-fll                         lib/init
+fll lib/init
