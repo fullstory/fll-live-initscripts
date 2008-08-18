@@ -47,8 +47,18 @@ default_runlevel() {
 	fi
 }
 
+do_override() {
+	# Usage: do_override kdm 5
+	if [ -s /etc/init.d/${1} ] && [ "${2}" -eq 5 ]; then
+		echo "distro-defaults: overriding LSB init info for ${1} ..."
+		override_dm_lsb_defaults /etc/init.d/${1} /etc/insserv/overrides/${1}
+	fi
+}
+
 case "$1" in
 	configure)
+		runlevel=$(default_runlevel)
+
 		# /etc/default/distro is written at distro build time, we
 		# claim owership of the conffile at installation time ...
 		ucfr distro-defaults /etc/default/distro
@@ -56,13 +66,7 @@ case "$1" in
 		for dm in gdm kdm xdm
 		do			
 			ucfr distro-defaults /etc/insserv/overrides/${dm}
-
-			runlevel=$(default_runlevel)
-			if [ -s /etc/init.d/${dm} ] && [ "${runlevel:-0}" -eq 5 ]; then
-				echo "distro-defaults: overriding LSB init info for ${dm} ..."
-				override_dm_lsb_defaults /etc/init.d/${dm} \
-					/etc/insserv/overrides/${dm}
-			fi
+			do_override "${dm}" "${runlevel:-0}"
 		done
 
 		# We don't register this conffile with ucf, or purge it in postrm
@@ -84,16 +88,12 @@ EOF
 		fi
 		;;
 	triggered)
-		shift
-
 		runlevel=$(default_runlevel)
+
+		shift
 		for interest in "${@}"; do
 			dm="$(basename ${interest})"
-			if [ -s /etc/init.d/${dm} ] && [ "${runlevel:-0}" -eq 5 ]; then
-				echo "distro-defaults: overriding LSB init info for ${dm} ..."
-				override_dm_lsb_defaults /etc/init.d/${dm} \
-					/etc/insserv/overrides/${dm}
-			fi
+			do_override "${dm}" "${runlevel:-0}"
 		done
 		;;
 	abort-upgrade|abort-deconfigure|abort-remove)
