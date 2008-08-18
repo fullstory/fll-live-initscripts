@@ -88,16 +88,12 @@ EOF
 
 		runlevel=$(default_runlevel)
 		for interest in "${@}"; do
-			case "${interest}" in
-				/etc/init.d/*)
-					dm="$(basename ${interest})"
-					if [ -s /etc/init.d/${dm} ] && [ "${runlevel:-0}" -eq 5 ]; then
-						echo "distro-defaults: overriding LSB init info for ${dm} ..."
-						override_dm_lsb_defaults /etc/init.d/${dm} \
-							/etc/insserv/overrides/${dm}
-					fi
-					;;
-			esac
+			dm="$(basename ${interest})"
+			if [ -s /etc/init.d/${dm} ] && [ "${runlevel:-0}" -eq 5 ]; then
+				echo "distro-defaults: overriding LSB init info for ${dm} ..."
+				override_dm_lsb_defaults /etc/init.d/${dm} \
+					/etc/insserv/overrides/${dm}
+			fi
 		done
 		;;
 	abort-upgrade|abort-deconfigure|abort-remove)
