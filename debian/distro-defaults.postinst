@@ -91,9 +91,9 @@ EOF
 		runlevel=$(default_runlevel)
 
 		shift
-		for interest in "${@}"; do
-			dm="$(basename ${interest})"
-			do_override "${dm}" "${runlevel:-0}"
+		for interest in "${@}"
+		do
+			do_override "${interest#/etc/init.d/}" "${runlevel:-0}"
 		done
 		;;
 	abort-upgrade|abort-deconfigure|abort-remove)
