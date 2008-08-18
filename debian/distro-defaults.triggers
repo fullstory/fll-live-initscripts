@@ -1,0 +1,2 @@
+interest /etc/init.d/kdm
+interest /etc/init.d/gdm

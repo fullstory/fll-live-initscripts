@@ -59,13 +59,9 @@ case "$1" in
 
 			runlevel=$(default_runlevel)
 			if [ -s /etc/init.d/${dm} ] && [ "${runlevel:-0}" -eq 5 ]; then
-				echo "Overriding LSB init defaults for ${dm}."
+				echo "distro-defaults: overriding LSB init info for ${dm} ..."
 				override_dm_lsb_defaults /etc/init.d/${dm} \
 					/etc/insserv/overrides/${dm}
-
-				if which insserv >/dev/null && chrooted; then
-					insserv --default ${dm}
-				fi
 			fi
 		done
 
@@ -86,6 +82,23 @@ case "$1" in
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 EOF
 		fi
+		;;
+	triggered)
+		shift
+
+		runlevel=$(default_runlevel)
+		for interest in "${@}"; do
+			case "${interest}" in
+				/etc/init.d/*)
+					dm="$(basename ${interest})"
+					if [ -s /etc/init.d/${dm} ] && [ "${runlevel:-0}" -eq 5 ]; then
+						echo "distro-defaults: overriding LSB init info for ${dm} ..."
+						override_dm_lsb_defaults /etc/init.d/${dm} \
+							/etc/insserv/overrides/${dm}
+					fi
+					;;
+			esac
+		done
 		;;
 	abort-upgrade|abort-deconfigure|abort-remove)
 		;;
