@@ -45,7 +45,7 @@ case "$1" in
 	purge)
 		purge_conffile /etc/default/distro
 
-		for dm in gdm kdm
+		for dm in gdm kdm xdm
 		do
 			purge_conffile /etc/insserv/overrides/${dm}
 		done
