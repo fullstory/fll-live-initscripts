@@ -1,9 +1,5 @@
-fll-live-initscripts (3.3.5) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.5) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * Add deb-trigger support to distro-defaults for enhanced insserv override
     control. Also override for xdm.
   * Don't call insserv directly in postinst, that is nasty.
