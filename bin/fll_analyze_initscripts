@@ -49,8 +49,8 @@ if ($chroot) {
 	$etc = $chroot . $etc;
 }
 
-if (not $lvl && realpath('/usr/sbin/update-rc.d') =~ /insserv$/) {
-	$insserv++;
+if (realpath('/usr/sbin/update-rc.d') =~ /insserv$/) {
+	$lvl or $insserv++;
 }
 
 for my $svc (@ARGV) {
