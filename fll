@@ -27,7 +27,7 @@ remove_initscript() {
 		return 1
 	fi
 
-	CMD=$(fll_analyze_initscripts --remove "${1}")
+	CMD=$(fll_analyze_initscripts --force --remove "${1}")
 	if [ "${CMD}" ]; then
 		${CMD} >/dev/null
 		return "${?}"
