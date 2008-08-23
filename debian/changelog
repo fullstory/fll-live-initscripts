@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.6) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.6) unstable; urgency=low
 
   * fll_analyze_initscripts:
     - fix previous cleanup to not _always_ detect insserv as installed
