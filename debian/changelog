@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.7~kelmo8) unstable; urgency=low
+fll-live-initscripts (3.3.7) unstable; urgency=low
 
   * fll-reboot:
     - provide halt and reboot facilities
@@ -6,7 +6,7 @@ fll-live-initscripts (3.3.7~kelmo8) unstable; urgency=low
       when boot system is dependency based
     - perform same maintainer script actions for remove and purge arguments
 
- -- Kel Modderman <kel@otaku42.de>  Mon, 25 Aug 2008 11:51:01 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 25 Aug 2008 12:04:06 +1000
 
 fll-live-initscripts (3.3.6) unstable; urgency=low
 
