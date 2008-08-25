@@ -49,9 +49,14 @@ default_runlevel() {
 
 do_override() {
 	# Usage: do_override kdm 5
-	if [ -s /etc/init.d/${1} ] && [ "${2}" -eq 5 ]; then
+	[ -s /etc/init.d/${1} ] || return 0
+
+	if [ "${2}" -eq 5 ]; then
 		echo "distro-defaults: overriding LSB init info for ${1} ..."
 		override_dm_lsb_defaults /etc/init.d/${1} /etc/insserv/overrides/${1}
+	elif [ -s /etc/insserv/overrides/${1} ]; then
+		echo "distro-defaults: removing LSB override for ${1} ..."
+		rm -fv /etc/insserv/overrides/${1}
 	fi
 }
 
