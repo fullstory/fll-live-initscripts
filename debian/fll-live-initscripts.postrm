@@ -48,12 +48,16 @@ case "$1" in
 			purge_conffile "${filename}"
 		done
 
+		# Ensure removal, as it declares duplicate provision of core
+		# dependency boot facilities
 		rm -f /etc/init.d/fll-reboot
 
 		for script in halt reboot
 		do
 			purge_conffile "/etc/insserv/overrides/${script}"
 
+			# If insserv is present and configured, call it to
+			# replace halt and reboot facility runlevel links
 			case "$(readlink -f /usr/sbin/update-rc.d)" in
 				*-insserv)
 					insserv "/etc/init.d/${script}"
