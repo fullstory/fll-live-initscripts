@@ -76,7 +76,7 @@ case "$1" in
 
 		# We don't register this conffile with ucf, or purge it in postrm
 		if [ ! -f /etc/apt/sources.list ] && chrooted; then
-			echo 'Creating /etc/apt/sources.list...'
+			echo 'distro-defaults: creating /etc/apt/sources.list ...'
 			cat > /etc/apt/sources.list \
 <<EOF
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
