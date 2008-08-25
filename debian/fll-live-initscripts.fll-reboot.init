@@ -1,15 +1,16 @@
 #!/bin/bash
 
 ### BEGIN INIT INFO
-# Provides:          fll-reboot
+# Provides:          halt reboot
 # Required-Start:
-# Required-Stop:     $all
+# Required-Stop:
 # Default-Start:
 # Default-Stop:      0 6
 # Short-Description: shutdown and eject live media
 # Description:       This script provides the equivalent of umountfs,
-#                    umountroot and halt on a stadard debian system. It umounts
-#                    live mounts and ejects the live media at shutdown/reboot.
+#                    umountroot, reboot and halt on a standard debian system.
+#                    It umounts live mounts and ejects the live media at
+#                    shutdown/reboot.
 ### END INIT INFO
 
 ###

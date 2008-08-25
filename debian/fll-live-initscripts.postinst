@@ -15,6 +15,19 @@
 # If prerm fails during replacement due to conflict:
 #       <postinst> abort-remove in-favour <new-package> <version>
 
+override_lsb_provides() {
+	# Dump the LSB header to insserv override file
+	sed -n '/^### BEGIN INIT INFO/,/^### END INIT INFO/p' ${1} > ${2}
+
+	# Override all essential fields
+	sed -i -e 's/^\(# Provides:[[:space:]]\+\).*/\1'"x${1##*/}x"'/' \
+	       -e 's/^\(# .\+-Start:\).*/\1/' \
+	       -e 's/^\(# .\+-Stop:\).*/\1/' \
+		${2}
+
+	echo '# Managed by the distro-defaults package.' >> ${2}
+}
+
 case "$1" in
 	configure)
 		for filename in /etc/default/fll-init /etc/default/fll-locales
@@ -30,6 +43,16 @@ case "$1" in
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 EOF
 			fi
+		done
+
+		for script in halt reboot
+		do
+			ucfr fll-live-initscripts "/etc/insserv/overrides/${script}"
+
+			override_lsb_provides "/etc/init.d/${script}" \
+				"/etc/insserv/overrides/${script}"
+
+			rm -fv /etc/rc[0-6S]\.d/[SK]??${script}
 		done
 		;;
 	abort-upgrade|abort-deconfigure|abort-remove)

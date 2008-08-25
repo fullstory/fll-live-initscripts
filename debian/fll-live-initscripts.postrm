@@ -39,13 +39,26 @@ purge_conffile() {
 	fi
 }
 
+#DEBHELPER#
+
 case "$1" in
-	remove)
-		;;
-	purge)
+	remove|purge)
 		for filename in /etc/default/fll-init /etc/default/fll-locales
 		do
 			purge_conffile "${filename}"
+		done
+
+		rm -f /etc/init.d/fll-reboot
+
+		for script in halt reboot
+		do
+			purge_conffile "/etc/insserv/overrides/${script}"
+
+			case "$(readlink -f /usr/sbin/update-rc.d)" in
+				*-insserv)
+					insserv "/etc/init.d/${script}"
+					;;
+			esac
 		done
 		;;
 	upgrade|failed-upgrade|disappear)
@@ -58,5 +71,4 @@ case "$1" in
 		;;
 esac
 
-#DEBHELPER#
 exit 0
