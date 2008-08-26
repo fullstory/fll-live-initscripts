@@ -45,9 +45,9 @@ case "$1" in
 	purge)
 		purge_conffile /etc/default/distro
 
-		for dm in gdm kdm xdm
+		for file in gdm kdm xdm hwclock.sh hwclockfirst.sh
 		do
-			purge_conffile /etc/insserv/overrides/${dm}
+			purge_conffile /etc/insserv/overrides/${file}
 		done
 		;;
 	upgrade|failed-upgrade|disappear)

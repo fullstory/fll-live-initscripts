@@ -74,6 +74,38 @@ case "$1" in
 			do_override "${dm}" "${runlevel:-0}"
 		done
 
+		# Override these until #487196 is addressed by the util-linux
+		# maintainer one way or another ...
+		if [ ! -f /etc/insserv/overrides/hwclock.sh ]; then
+			echo "distro-defaults: overriding LSB init info for hwclock.sh ..."
+			ucfr distro-defaults /etc/insserv/overrides/hwclock.sh
+			cat > /etc/insserv/overrides/hwclock.sh \
+<<EOF
+### BEGIN INIT INFO
+# Provides:          hwclock
+# Required-Start:    \$local_fs
+# Required-Stop:     \$local_fs
+# Default-Start:     S
+# Default-Stop:      0 6
+### END INIT INFO
+EOF
+		fi
+
+		if [ ! -f /etc/insserv/overrides/hwclockfirst.sh ]; then
+			echo "distro-defaults: overriding LSB init info for hwclockfirst.sh ..."
+			ucfr distro-defaults /etc/insserv/overrides/hwclockfirst.sh
+			cat > /etc/insserv/overrides/hwclockfirst.sh \
+<<EOF
+### BEGIN INIT INFO
+# Provides:          hwclockfirst
+# Required-Start:    mountdevsubfs
+# Required-Stop:     umountroot
+# Default-Start:     S
+# Default-Stop:
+### END INIT INFO
+EOF
+		fi
+
 		# We don't register this conffile with ucf, or purge it in postrm
 		if [ ! -f /etc/apt/sources.list ] && chrooted; then
 			echo 'distro-defaults: creating /etc/apt/sources.list ...'
