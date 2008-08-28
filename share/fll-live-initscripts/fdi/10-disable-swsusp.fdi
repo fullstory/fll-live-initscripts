@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Disable suspend/hibernate in live mode -->
+
+<deviceinfo version="0.2">
+  <device>
+    <match key="info.udi" string="/org/freedesktop/Hal/devices/computer">
+      <merge key="power_management.can_suspend"        type="bool">false</merge>
+      <merge key="power_management.can_suspend_hybrid" type="bool">false</merge>
+      <merge key="power_management.can_hibernate"      type="bool">false</merge>
+    </match>
+  </device>
+</deviceinfo>

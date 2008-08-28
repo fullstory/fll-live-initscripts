@@ -1,1 +1,2 @@
-fll lib/init
+fll                                  lib/init
+share/fll-live-initscripts/fdi/*.fdi usr/share/hal/fdi/policy/20thirdparty
