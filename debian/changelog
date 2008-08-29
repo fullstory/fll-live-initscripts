@@ -1,8 +1,9 @@
 fll-live-initscripts (3.3.11) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-live-initscripts:
+    - relax new HAL policy for suspend to allow suspend-to-ram
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 29 Aug 2008 02:13:09 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sat, 30 Aug 2008 08:53:50 +1000
 
 fll-live-initscripts (3.3.10) unstable; urgency=low
 
