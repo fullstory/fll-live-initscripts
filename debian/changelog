@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.10) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.10) unstable; urgency=low
 
   * fll-xorgconfig:
     - don't be too fancy with alps/synaptics input device templates, let the
