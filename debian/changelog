@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.11) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.11) unstable; urgency=low
 
   * fll-live-initscripts:
     - relax new HAL policy for suspend to allow suspend-to-ram
