@@ -1,8 +1,10 @@
 fll-live-initscripts (3.3.13) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * Remove fll-resume.init, instead add a general utility in
+    /usr/sbin/fll_resume_validate which contains the same functionality.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 31 Aug 2008 21:53:31 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 01 Sep 2008 05:59:05 +1000
 
 fll-live-initscripts (3.3.12) unstable; urgency=low
 

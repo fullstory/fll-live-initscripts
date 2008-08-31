@@ -11,7 +11,6 @@ install: build
 	dh_installinit --no-start --name=fll-init       -- start 00 S .
 	dh_installinit --no-start --name=fll-locales    -- start 05 S .
 	dh_installinit --no-start --name=fll-fstab      -- start 30 S .
-	dh_installinit --no-start --name=fll-resume     -- start 30 S .
 	dh_installinit --no-start --name=fll-network    -- start 38 S .
 	dh_installinit --no-start --name=fll-xorgconfig -- start 80 S .
 	dh_installinit --no-start --name=fll-shell      -- start 90 S .

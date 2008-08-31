@@ -2,3 +2,4 @@ man/fll_analyze_initscripts.1
 man/fll_is80211.1
 man/fll_fstab_generator.8
 man/fll_login.1
+man/fll_resume_validate.8
