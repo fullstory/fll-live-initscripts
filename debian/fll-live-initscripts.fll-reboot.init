@@ -403,7 +403,7 @@ do_stop() {
 		# disable kernel messages while ejecting cdrom (libata noise)
 		echo "0" > /proc/sys/kernel/printk
 
-		${BINDIR}eject -m -p ${LIVE_CDROM}
+		${BINDIR}eject -m -p /dev/fll-cdrom
 
 		if [ -z "${NOPROMPT}" ]; then
 			echo ""
