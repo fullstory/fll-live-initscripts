@@ -68,37 +68,36 @@ fi
 ###
 # functions...
 ###
-do_start() {
-	###
-	# don't start gpm if a mouse device is not present
-	###
-	if [ ! -c /dev/input/mice ]; then
-		update-rc.d -f gpm remove >/dev/null 2>&1
+hw_present() {
+	if [ "$(hwinfo --${1} --short | sed -n '/^[a-z]\+:/!s/[ \t]\+//p' | head -n1)" ]; then
+		return 0
 	fi
 
+	return 1
+}
+
+do_start() {
 	# we don't depend on hwinfo, return if it is not installed
 	which hwinfo >/dev/null || return 0
 
 	###
 	# bluetooth management
 	###
-	BLUETOOTH=$(hwinfo --bluetooth --short | sed -n '/^[a-z]\+:/!s/[ \t]\+//p' | head -n1)
-	if [ "${BLUETOOTH}" ]; then
+	if hw_present bluetooth; then
 		log_daemon_msg "${NAME}" "detected bluetooth"
 		log_end_msg 0
 	else
-		update-rc.d -f bluetooth remove >/dev/null 2>&1
+		remove_initscript bluetooth
 	fi
 
 	###
 	# printer management
 	###
-	PRINTER=$(hwinfo --printer --short | sed -n '/^[a-z]\+:/!s/[ \t]\+//p' | head -n1)
-	if [ "${PRINTER}" ]; then
+	if hw_present printer; then
 		log_daemon_msg "${NAME}" "printer is '${PRINTER}'"
 		log_end_msg 0
 	else
-		update-rc.d -f cups remove >/dev/null 2>&1
+		remove_initscript cups
 	fi
 }
 

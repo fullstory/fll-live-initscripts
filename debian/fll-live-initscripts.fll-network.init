@@ -141,10 +141,20 @@ write_dhcp_to_eni() {
 	printf "iface ${2} inet dhcp\n" >> /etc/network/interfaces
 }
 
-ifplug_dhcp() {
+if which ip >/dev/null; then
+	if_set_up() {
+		ip link set "${1}" up
+	}
+else
+	if_set_up() {
+		ifconfig "${1}" up
+	}
+fi
+
+ifplugstatus_dhcp() {
 	[ "${1}" ] || return 1
 
-	if ifconfig "${1}" up; then
+	if if_set_up "${1}"; then
 		# settle
 		sleep 2
 				
@@ -197,10 +207,10 @@ do_start() {
 		
 		for netdev in ${NETDEVICES}; do
 			# fork child process to do cable link test
-			ifplug_dhcp "${netdev}" &
+			ifplugstatus_dhcp "${netdev}" &
 		done
 
-		# wait for child processes to finish. yes, dash supports this.
+		# wait for child processes to finish
 		wait
 	fi
 
