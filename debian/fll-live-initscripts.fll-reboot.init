@@ -65,7 +65,7 @@ if [ -f /proc/cmdline ]; then
 			flldebug=*)
 				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
 				;;
-			noeject)
+			noeject|toram)
 				NOEJECT="1"
 				;;
 			noprompt)
