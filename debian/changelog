@@ -1,12 +1,15 @@
 fll-live-initscripts (3.3.13) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
   * Remove fll-resume.init, instead add a general utility in
     /usr/sbin/fll_resume_validate which contains the same functionality.
   * Purge /etc/udev/rules.d/70-fll-live.rules in fll-live-
     initscripts.postrm, it may have been created by fll-live-initramfs.
+  * fll-reboot:
+    - make use of /dev/fll-cdrom symlink established via fll-live-initramfs
+      generated udev rule instead of trying to detect media was found on
+      iso9660fs
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 01 Sep 2008 06:51:20 +1000
+ -- Kel Modderman <kel@otaku42.de>  Mon, 01 Sep 2008 07:23:01 +1000
 
 fll-live-initscripts (3.3.12) unstable; urgency=low
 

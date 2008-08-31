@@ -136,11 +136,7 @@ do_umount() {
 			/fll/*)
 				case "$FSTYPE" in
 					iso9660)
-						if [ "$MTPT" = /fll/fromiso ]; then
-							LIVE_MTPTS="$LIVE_MTPTS $MTPT"
-						else
-							LIVE_CDROM="$DEV"
-						fi
+						[ "$MTPT" = /fll/fromiso ] && LIVE_MTPTS="$LIVE_MTPTS $MTPT"
 						;;
 					*)
 						LIVE_MTPTS="$LIVE_MTPTS $MTPT"
@@ -291,10 +287,6 @@ do_umount() {
 			log_end_msg $?
 		fi
 	fi
-
-	if [ "$LIVE_CDROM" ]; then
-		export LIVE_CDROM
-	fi
 }
 ###############################################################################
 # Adapted from initramfs-tools hook-functions (0.87b)
@@ -407,7 +399,7 @@ do_stop() {
 			;;
 	esac
 
-	if [ -b "${LIVE_CDROM}" ] && [ -z "${NOEJECT}" ]; then
+	if [ -b /dev/fll-cdrom ] && [ -z "${NOEJECT}" ]; then
 		# disable kernel messages while ejecting cdrom (libata noise)
 		echo "0" > /proc/sys/kernel/printk
 
