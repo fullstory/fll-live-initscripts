@@ -1,3 +1,9 @@
+fll-live-initscripts (3.3.14) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 31 Aug 2008 23:59:27 +0200
+
 fll-live-initscripts (3.3.13) unstable; urgency=low
 
   * Remove fll-resume.init, instead add a general utility in
