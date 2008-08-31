@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.12) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.12) unstable; urgency=low
 
   * fll-adduser:
     - remove legacy code for adding user to extra groups
