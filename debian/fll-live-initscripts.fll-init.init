@@ -119,7 +119,11 @@ do_start() {
 	###
 	# disable cpufreq as per cheatcode
 	###
-	[ "${NOCPUFREQ}" ] && remove_initscript loadcpufreq
+	if [ "${NOCPUFREQ}" ]; then
+		remove_initscript loadcpufreq
+	else
+		insert_initscript loadcpufreq
+	fi
 }
 
 case "${1}" in
