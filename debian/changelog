@@ -1,3 +1,9 @@
+fll-live-initscripts (3.3.16) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 01 Sep 2008 22:56:22 +0200
+
 fll-live-initscripts (3.3.15) unstable; urgency=low
 
   * fll-init, fll-hwsetup:
