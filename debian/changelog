@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.15) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.15) unstable; urgency=low
 
   * fll-init, fll-hwsetup:
     - use insert_initscript() wherever remove_initscript() is used to enhance
