@@ -9,8 +9,9 @@ fll-live-initscripts (3.3.16) UNRELEASED; urgency=low
       try and use the first match for the language (e.g. try en_* for en_IE).
     - Use --assume-yes rather then --trivial-only with apt-get.  Needed to
       allow dependencies to install (e.g. for ja_JP)
+    - Make spacing consistent on $()
 
- -- Niall Walsh <niallwalsh@users.berlios.de>  Tue, 02 Sep 2008 15:15:18 +0100
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Tue, 02 Sep 2008 18:25:49 +0100
 
 fll-live-initscripts (3.3.15) unstable; urgency=low
 

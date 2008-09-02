@@ -815,7 +815,7 @@ apt_install_lang() {
 		return
 	fi
 
-	FLL_CD_MNT=$( echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1 | sed 's|\/'${FLL_IMAGE_LOCATION}'$||')
+	FLL_CD_MNT=$(echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1 | sed 's|\/'${FLL_IMAGE_LOCATION}'$||')
 	LIVEAPT="${FLL_CD_MNT}/i18n"
 
 	if [ ! -d "${LIVEAPT}" ]; then
@@ -830,11 +830,11 @@ apt_install_lang() {
 	APTARCH=$(dpkg --print-architecture)
 	# e.g. try /fll/sr0/i18n/i386/en_IE then the first en_* found
 	if [ -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
-		LANGPACKS=$( cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" )
+		LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
 	else
-		LANGFILE=$( ls ${LIVEAPT}/${APTARCH}/${LANG%%[_]*}* | head -n 1 )
+		LANGFILE=$(ls ${LIVEAPT}/${APTARCH}/${LANG%%[_]*}* | head -n 1)
 		if [ -n "${LANGFILE}" ]; then
-			LANGPACKS=$( cat "${LANGFILE}" )
+			LANGPACKS=$(cat "${LANGFILE}")
 		else
 			return
 		fi
@@ -855,14 +855,14 @@ apt_install_lang() {
 	APTGETBASE="${APTGETBASE} --allow-unauthenticated --assume-yes --no-remove"
 
 	# do a dry-run to calculate size of packages and that will be used
-	APTUSESRAW=$( LANG=C ${APTGETBASE} --print-uris install ${LANGPACKS} | \
+	APTUSESRAW=$(LANG=C ${APTGETBASE} --print-uris install ${LANGPACKS} | \
 		awk '/^After\ this\ operation\,\ /{print $4}')
 	APTUSES=${APTUSESRAW%%[.]*MB}
 
 	# lets assume it is <MB and ok if it's not in MB
 	if [ "${APTUSES}" != "${APTUSESRAW}" ]; then
 		# get a free memory figure
-		FREEMEM=$( LANG=C free -m | awk '/\-\/\+\ buffers/{print $4}' )
+		FREEMEM=$(LANG=C free -m | awk '/\-\/\+\ buffers/{print $4}')
 		# check free - used > minspace (256M)
 		MEMAFTER=$(( ${FREEMEM} - ${APTUSES} ))
 		if [ ${MEMAFTER} -lt 256 ]; then
