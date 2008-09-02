@@ -1,8 +1,16 @@
 fll-live-initscripts (3.3.16) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 01 Sep 2008 22:56:22 +0200
+  [ Niall Walsh ]
+  * fll-locales:
+    - If no list of i18n packages exists for the selected ll_CC,
+      try and use the first match for the language (e.g. try en_* for en_IE).
+    - Use --assume-yes rather then --trivial-only with apt-get.  Needed to
+      allow dependencies to install (e.g. for ja_JP)
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Tue, 02 Sep 2008 15:15:18 +0100
 
 fll-live-initscripts (3.3.15) unstable; urgency=low
 

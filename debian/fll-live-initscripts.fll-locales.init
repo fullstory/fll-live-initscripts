@@ -828,11 +828,17 @@ apt_install_lang() {
 	fi
 
 	APTARCH=$(dpkg --print-architecture)
-	# e.g. /fll/sr0/i18n/i386/en_IE
-	if [ ! -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
-		return
+	# e.g. try /fll/sr0/i18n/i386/en_IE then the first en_* found
+	if [ -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
+		LANGPACKS=$( cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" )
+	else
+		LANGFILE=$( ls ${LIVEAPT}/${APTARCH}/${LANG%%[_]*}* | head -n 1 )
+		if [ -n "${LANGFILE}" ]; then
+			LANGPACKS=$( cat "${LANGFILE}" )
+		else
+			return
+		fi
 	fi
-	LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
 
 	log_daemon_msg "${NAME}"
 	log_action_begin_msg " installing language packages for '${LANG}'"
@@ -846,7 +852,7 @@ apt_install_lang() {
 		return
 	fi
 
-	APTGETBASE="${APTGETBASE} --allow-unauthenticated --trivial-only --no-remove"
+	APTGETBASE="${APTGETBASE} --allow-unauthenticated --assume-yes --no-remove"
 
 	# do a dry-run to calculate size of packages and that will be used
 	APTUSESRAW=$( LANG=C ${APTGETBASE} --print-uris install ${LANGPACKS} | \
