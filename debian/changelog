@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.17) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.17) unstable; urgency=low
 
   * fll-hwsetup:
     - do not use return code with log_end_msg()
