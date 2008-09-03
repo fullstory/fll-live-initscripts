@@ -100,7 +100,7 @@ do_start() {
 		log_daemon_msg "${NAME}" "blacklisting modules"
 		for module in ${BLACKLIST}; do
 			log_progress_msg "${module}"
-			if ! grep -s "^blacklist ${module}" /etc/modprobe.d/blacklist; then
+			if ! grep -s -q "^blacklist ${module}" /etc/modprobe.d/blacklist; then
 				echo "blacklist ${module}" >> /etc/modprobe.d/blacklist
 			fi
 		done
@@ -111,7 +111,7 @@ do_start() {
 	# make sure capability module is loaded if present
 	###
 	if modprobe --ignore-install capability 2>/dev/null; then
-		if ! grep -s -w capability /etc/modules; then
+		if ! grep -s -q -w capability /etc/modules; then
 			echo capability >> /etc/modules
 		fi
 	fi
