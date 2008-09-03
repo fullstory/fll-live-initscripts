@@ -7,7 +7,11 @@ fll-live-initscripts (3.3.18) UNRELEASED; urgency=low
   * fll-init:
     - make grep quiet again
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 04 Sep 2008 09:36:12 +1000
+  [ Niall Walsh ]
+  * fll-locales:
+    - allow liveapt to use up to 1/5th of free mem
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Thu, 04 Sep 2008 00:40:42 +0100
 
 fll-live-initscripts (3.3.17) unstable; urgency=low
 

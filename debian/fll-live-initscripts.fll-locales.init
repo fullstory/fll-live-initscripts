@@ -873,8 +873,8 @@ apt_install_lang() {
 		fi
 		# check used/free > minratio
 		USESRATIO=$(( ${FREEMEM} / ${APTUSES} ))
-		if [ ${USESRATIO} -lt 10 ]; then
-			log_warning_msg " i18n packages would use (${APTUSES}MB) more then 10% of available memory (${FREEMEM}MB), not installing."
+		if [ ${USESRATIO} -lt 5 ]; then
+			log_warning_msg " i18n packages would use (${APTUSES}MB) more then 20% of available memory (${FREEMEM}MB), not installing."
 			apt_install_lang_clean
 			return
 		fi
