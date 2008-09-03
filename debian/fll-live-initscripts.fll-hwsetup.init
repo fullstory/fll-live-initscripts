@@ -86,7 +86,7 @@ do_start() {
 	if hw_present bluetooth; then
 		log_daemon_msg "${NAME}" "detected bluetooth"
 		insert_initscript
-		log_end_msg "${?}"
+		log_end_msg 0
 	else
 		remove_initscript bluetooth
 	fi
@@ -97,7 +97,7 @@ do_start() {
 	if hw_present printer; then
 		log_daemon_msg "${NAME}" "printer is '${PRINTER}'"
 		insert_initscript
-		log_end_msg "${?}"
+		log_end_msg 0
 	else
 		remove_initscript cups
 	fi
