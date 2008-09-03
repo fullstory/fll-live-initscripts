@@ -2,8 +2,10 @@ fll-live-initscripts (3.3.17) UNRELEASED; urgency=low
 
   * fll-hwsetup:
     - do not use return code with log_end_msg()
+  * fll-xorgconfig:
+    - use nv for nVidia Corporation GeForce 7950 GT AGP
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 03 Sep 2008 15:32:09 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 03 Sep 2008 22:14:52 +1000
 
 fll-live-initscripts (3.3.16) unstable; urgency=low
 
