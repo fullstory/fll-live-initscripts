@@ -10,8 +10,9 @@ fll-live-initscripts (3.3.18) UNRELEASED; urgency=low
   [ Niall Walsh ]
   * fll-locales:
     - allow liveapt to use up to 1/5th of free mem
+    - guess Romanian demo code block
 
- -- Niall Walsh <niallwalsh@users.berlios.de>  Thu, 04 Sep 2008 00:40:42 +0100
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Thu, 04 Sep 2008 16:45:06 +0100
 
 fll-live-initscripts (3.3.17) unstable; urgency=low
 

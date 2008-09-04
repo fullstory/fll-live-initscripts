@@ -404,6 +404,13 @@ case "${DEMO_CODE}" in
 		CD_COUNTRY="Portugese"
 		MIRROR="ftp.pt.debian.org"
 		;;
+	ro)	### RO Romania kb:ro ###
+		KEYTABLE="ro"
+		XKBLAYOUT="ro,us"
+		TZ="Europe/Bucharest"
+		CD_COUNTRY="Romanian"
+		MIRROR="ftp.ro.debian.org"
+		;;
 	ru)	### RU Russia kb:ru ###
 		KEYTABLE="ru"
 		XKBLAYOUT="ru,us"
