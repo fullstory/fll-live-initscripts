@@ -1,7 +1,4 @@
-fll-live-initscripts (3.3.18) UNRELEASED; urgency=low
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (3.3.18) unstable; urgency=low
 
   [ Kel Modderman ]
   * fll-init:
