@@ -35,3 +35,13 @@ remove_initscript() {
 
 	return 1
 }
+
+fll_get_mnt() {
+	if grep -qs fromiso /proc/cmdline; then
+		echo /fll/fromiso
+	else
+		mount | awk -v fll=$(readlink -f /dev/fll) \
+			'$1 == fll { print $3 }'
+	fi
+}
+

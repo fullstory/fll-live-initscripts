@@ -7,8 +7,11 @@ fll-live-initscripts (3.3.19) UNRELEASED; urgency=low
   * fll-locales:
     - fix liveapt size checking
     - switch default for pt to pt-br
+    - use fll_get_mnt to find the "cd" mount point for liveapt
+  * fll
+    - add fll_get_mnt to return /fll/fromiso or follow /dev/fll as appropriate
 
- -- Niall Walsh <niallwalsh@users.berlios.de>  Fri, 05 Sep 2008 13:56:02 +0100
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Fri, 05 Sep 2008 15:43:25 +0100
 
 fll-live-initscripts (3.3.18) unstable; urgency=low
 

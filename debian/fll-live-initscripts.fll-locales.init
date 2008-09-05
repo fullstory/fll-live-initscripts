@@ -822,7 +822,7 @@ apt_install_lang() {
 		return
 	fi
 
-	FLL_CD_MNT=$(echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1 | sed 's|\/'${FLL_IMAGE_LOCATION}'$||')
+	FLL_CD_MNT=$(fll_get_mnt)
 	LIVEAPT="${FLL_CD_MNT}/i18n"
 
 	if [ ! -d "${LIVEAPT}" ]; then
