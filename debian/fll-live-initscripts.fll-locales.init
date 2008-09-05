@@ -188,8 +188,8 @@ case "${LANG_CODE}" in
 	pl)	LANG="pl_PL.UTF-8" ;;
 	pt)
 		case "${DEMO_CODE}" in
-			br)	LANG="pt_BR.UTF-8" ;;
-			*)	LANG="pt_PT.UTF-8" ;;
+			pt)	LANG="pt_PT.UTF-8" ;;
+			*)	LANG="pt_BR.UTF-8" ;;
 		esac
 		;;
 	ro)	LANG="ro_RO.UTF-8" ;;
@@ -865,9 +865,11 @@ apt_install_lang() {
 	APTUSESRAW=$(LANG=C ${APTGETBASE} --print-uris install ${LANGPACKS} | \
 		awk '/^After\ this\ operation\,\ /{print $4}')
 	APTUSES=${APTUSESRAW%%[.]*MB}
+	APTUSES=$(echo $APTUSESRAW | sed 's|MB$||;')
 
 	# lets assume it is <MB and ok if it's not in MB
 	if [ "${APTUSES}" != "${APTUSESRAW}" ]; then
+		APTUSES=$(echo $APTUSES | sed 's|\.[0-9]*$||;')
 		# get a free memory figure
 		FREEMEM=$(LANG=C free -m | awk '/\-\/\+\ buffers/{print $4}')
 		# check free - used > minspace (256M)
