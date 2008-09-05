@@ -1,9 +1,5 @@
-fll-live-initscripts (3.3.19) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.19) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
   * fll-locales:
     - fix liveapt size checking
     - switch default for pt to pt-br
