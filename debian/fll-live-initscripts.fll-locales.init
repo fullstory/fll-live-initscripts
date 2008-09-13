@@ -378,7 +378,7 @@ case "${DEMO_CODE}" in
 		;;
 	nl)	### NL Netherlands kb:nl ###
 		KEYTABLE="us"
-		XKBLAYOUT="nl,us"
+		XKBLAYOUT="us,nl"
 		TZ="Europe/Amsterdam"
 		CD_COUNTRY="Dutch"
 		MIRROR="ftp.nl.debian.org"
