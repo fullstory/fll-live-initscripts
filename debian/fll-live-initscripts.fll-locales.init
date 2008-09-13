@@ -822,15 +822,17 @@ apt_install_lang() {
 		return
 	fi
 
-	FLL_CD_MNT=$(fll_get_mnt)
-	LIVEAPT="${FLL_CD_MNT}/i18n"
-
+	LIVEAPT="$(echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1 | sed 's|\/'${FLL_IMAGE_LOCATION}'$||')/i18n"
 	if [ ! -d "${LIVEAPT}" ]; then
 		return
 	fi
 
+	log_daemon_msg "${NAME}"
+	log_action_begin_msg " installing language packages for '${LANG}'"
+
 	# don't touch apt if it has been used
-	if [ /var/lib/dpkg/status -nt ${FLL_CD_MNT}/${FLL_IMAGE_LOCATION} ]; then
+	if [ "/var/lib/dpkg/status" -nt "$(echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1 | sed 's|\/'${FLL_IMAGE_LOCATION}'$||')/${FLL_IMAGE_LOCATION}" ]; then
+		log_failure_msg " already updated"
 		return
 	fi
 
@@ -843,12 +845,10 @@ apt_install_lang() {
 		if [ -n "${LANGFILE}" ]; then
 			LANGPACKS=$(cat "${LANGFILE}")
 		else
+			log_failure_msg " cannot parse language files"
 			return
 		fi
 	fi
-
-	log_daemon_msg "${NAME}"
-	log_action_begin_msg " installing language packages for '${LANG}'"
 
 	LIVEAPTSOURCES=$(mktemp -d -t liveapt.XXXXXX)
 	APTGETBASE="apt-get -o Dir::Etc=$LIVEAPTSOURCES"
