@@ -1,10 +1,4 @@
-fll-live-initscripts (3.3.20~slh.7) UNRELEASED; urgency=low
-
-  * NOT RELEASED YET
-
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 13 Sep 2008 22:59:59 +0200
-
-fll-live-initscripts (3.3.20~slh.6) unstable; urgency=low
+fll-live-initscripts (3.3.20) unstable; urgency=low
 
   * add further debugging infos for liveapt.
   * temporarily revert to classic mountpoint detection for liveapt.
