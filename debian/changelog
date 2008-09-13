@@ -1,8 +1,8 @@
-fll-live-initscripts (3.3.22) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.22) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * override console-data to US american for dutch as well.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 14 Sep 2008 01:30:39 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 14 Sep 2008 01:58:03 +0200
 
 fll-live-initscripts (3.3.21) unstable; urgency=low
 

@@ -605,7 +605,7 @@ case "${CD_COUNTRY}" in
 		CD_FAMILY="qwerty"
 		CD_KEYMAP="Standard"
 		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
+		CD_FULL="US american"
 		;;
 	Norwegian)
 		CD_FAMILY="qwerty"
