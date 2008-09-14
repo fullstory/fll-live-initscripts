@@ -1,9 +1,5 @@
-fll-live-initscripts (3.3.25) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.25) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
   * fll-locales:
     - No output from liveapt until a language file is found
     - Surpress any ls errors from trying to find a fallback liveapt list
