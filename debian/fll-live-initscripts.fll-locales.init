@@ -827,27 +827,26 @@ apt_install_lang() {
 		return
 	fi
 
-	log_daemon_msg "${NAME}"
-	log_action_begin_msg " installing language packages for '${LANG}'"
-
-	# don't touch apt if it has been used
-	if [ "/var/lib/dpkg/status" -nt "$(echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1 | sed 's|\/'${FLL_IMAGE_LOCATION}'$||')/${FLL_IMAGE_LOCATION}" ]; then
-		log_failure_msg " already updated"
-		return
-	fi
-
 	APTARCH=$(dpkg --print-architecture)
 	# e.g. try /fll/sr0/i18n/i386/en_IE then the first en_* found
 	if [ -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
 		LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
 	else
-		LANGFILE=$(ls ${LIVEAPT}/${APTARCH}/${LANG%%[_]*}* | head -n 1)
+		LANGFILE=$(ls ${LIVEAPT}/${APTARCH}/${LANG%%[_]*}* 2>/dev/null | head -n 1)
 		if [ -n "${LANGFILE}" ]; then
 			LANGPACKS=$(cat "${LANGFILE}")
 		else
-			log_failure_msg " cannot parse language files"
 			return
 		fi
+	fi
+
+	log_daemon_msg "${NAME}"
+	log_action_begin_msg " installing language packages for '${LANG}'"
+
+	# don't touch apt if it has been used
+	if [ "/var/lib/dpkg/status" -nt "$(echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1)" ]; then
+		log_failure_msg " dpkg already updated"
+		return
 	fi
 
 	LIVEAPTSOURCES=$(mktemp -d -t liveapt.XXXXXX)
