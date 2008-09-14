@@ -1,9 +1,5 @@
-fll-live-initscripts (3.3.23) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.23) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Joaquim Boura ]
   * fixed set custom dpi for xfce/gdm
 
  -- Joaquim Boura <x-un-i@sidux.com>  Sun, 14 Sep 2008 14:20:02 +0200
