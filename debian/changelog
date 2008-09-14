@@ -1,9 +1,5 @@
-fll-live-initscripts (3.3.24) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.24) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Joaquim Boura ]
   * removed spurious $ that was creating troubles on the previous change.
 
  -- Joaquim Boura <x-un-i@sidux.com>  Sun, 14 Sep 2008 16:37:26 +0200
