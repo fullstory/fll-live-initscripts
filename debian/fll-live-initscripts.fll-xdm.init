@@ -133,7 +133,7 @@ setup_gdm() {
 			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=0/" /etc/gdm/gdm.conf
 
 	if [ "${CUSTOM_DPI}" ]; then
-		sed -i -e "s/\(command\=.*audit [0-9]*$\)/\1 \-dpi ${CUSTOM_DPI}/" \
+		sed -i -e "s/\(command\=.*audit [0-9]*\)/\1 \-dpi ${CUSTOM_DPI}/" \
 			/usr/share/gdm/defaults.conf
 	fi
 	
