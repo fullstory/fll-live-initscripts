@@ -822,7 +822,7 @@ apt_install_lang() {
 		return
 	fi
 
-	LIVEAPT="$(echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1 | sed 's|\/'${FLL_IMAGE_LOCATION}'$||')/i18n"
+	LIVEAPT="$(fll_get_mnt)/i18n"
 	if [ ! -d "${LIVEAPT}" ]; then
 		return
 	fi
@@ -844,7 +844,7 @@ apt_install_lang() {
 	log_action_begin_msg " installing language packages for '${LANG}'"
 
 	# don't touch apt if it has been used
-	if [ "/var/lib/dpkg/status" -nt "$(echo /fll/*/${FLL_IMAGE_LOCATION} | head -n 1)" ]; then
+	if [ "/var/lib/dpkg/status" -nt "$(fll_get_mnt)/${FLL_IMAGE_LOCATION}" ]; then
 		log_failure_msg " dpkg already updated"
 		return
 	fi
