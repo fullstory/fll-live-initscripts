@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.26) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.26) unstable; urgency=low
 
   * fll:
     - when looking for mount point associated with /dev/fll, consider all udev
