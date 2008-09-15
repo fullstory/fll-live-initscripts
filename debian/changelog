@@ -1,8 +1,10 @@
 fll-live-initscripts (3.3.26) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll:
+    - when looking for mount point associated with /dev/fll, consider all udev
+      symlinks as possible device name
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 14 Sep 2008 19:25:59 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 15 Sep 2008 17:01:24 +1000
 
 fll-live-initscripts (3.3.25) unstable; urgency=low
 

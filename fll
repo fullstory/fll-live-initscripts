@@ -37,11 +37,21 @@ remove_initscript() {
 }
 
 fll_get_mnt() {
-	if grep -qs fromiso /proc/cmdline; then
+	local FLL
+	local DEVS
+
+	if grep -s -q -w fromiso /proc/cmdline; then
 		echo /fll/fromiso
 	else
-		mount | awk -v fll=$(readlink -f /dev/fll) \
-			'$1 == fll { print $3 }'
+		FLL="$(readlink -f /dev/fll)"
+
+		for ln in $(udevadm info --query=symlink --name=${FLL}); do
+			DEVS="${DEVS} /dev/${ln}"
+		done
+
+		for dev in ${FLL} ${DEVS}; do
+			mount | awk -v fll="${dev}" '$1 == fll { print $3 }'
+		done
 	fi
 }
 
