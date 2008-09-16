@@ -1,9 +1,5 @@
-fll-live-initscripts (3.3.27) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.27) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * Remove fll-hwsetup, it is not needed or wanted to manage cups or
     bluetooth in this way anymore.
 
