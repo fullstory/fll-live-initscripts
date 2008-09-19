@@ -11,8 +11,10 @@ fll-live-initscripts (3.3.28) UNRELEASED; urgency=low
   [ Kel Modderman ]
   * fll-hwsetup:
     - resurrect script, to manage bluetooth runlevel links
+  * fll-locales:
+    - tru to fix a bit of syntax breakage
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 20 Sep 2008 06:12:24 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 20 Sep 2008 06:22:51 +1000
 
 fll-live-initscripts (3.3.27) unstable; urgency=low
 

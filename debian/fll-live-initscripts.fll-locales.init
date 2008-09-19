@@ -832,17 +832,15 @@ apt_install_lang() {
 	if [ -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
 		# we have the variant requested
 		LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
-	else
-		if [ ${LANG%%[_]*} != 'en' ]; then
-			for lf in ${LIVEAPT}/${APTARCH}/${LANG%[_]*}*; do
-				if [ -f "${lf}" ]; then
-					# we have a file for the language
-					LANGPACKS=$(cat "${lf}")
-					break
-				fi
-			done
-			[ -z "${LANGPACKS}" ] && return
-		fi
+	elif [ "${LANG%%[_]*}" != 'en' ]; then
+		for lf in ${LIVEAPT}/${APTARCH}/${LANG%[_]*}*; do
+			if [ -f "${lf}" ]; then
+				# we have a file for the language
+				LANGPACKS=$(cat "${lf}")
+				break
+			fi
+		done
+		[ -z "${LANGPACKS}" ] && return
 	else
 		# it's english and we don't have the variant requested
 		return
