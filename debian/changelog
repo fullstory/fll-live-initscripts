@@ -1,7 +1,4 @@
-fll-live-initscripts (3.3.28) UNRELEASED; urgency=low
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (3.3.28) unstable; urgency=low
 
   [ Niall Walsh ]
   * fll-locales:
