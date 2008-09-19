@@ -828,16 +828,24 @@ apt_install_lang() {
 	fi
 
 	APTARCH=$(dpkg --print-architecture)
-	# e.g. try /fll/sr0/i18n/i386/en_IE then the first en_* found
+	# e.g. try /fll/sr0/i18n/i386/de_AT then the first de_* found
 	if [ -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
+		# we have the variant requested
 		LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
 	else
-		LANGFILE=$(ls ${LIVEAPT}/${APTARCH}/${LANG%%[_]*}* 2>/dev/null | head -n 1)
-		if [ -n "${LANGFILE}" ]; then
-			LANGPACKS=$(cat "${LANGFILE}")
-		else
-			return
+		if [ ${LANG%%[_]*} != 'en' ]; then
+			for lf in ${LIVEAPT}/${APTARCH}/${LANG%[_]*}*; do
+				if [ -f "${lf}" ]; then
+					# we have a file for the language
+					LANGPACKS=$(cat "${lf}")
+					break
+				fi
+			done
+			[ -z "${LANGPACKS}" ] && return
 		fi
+	else
+		# it's english and we don't have the variant requested
+		return
 	fi
 
 	log_daemon_msg "${NAME}"
