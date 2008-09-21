@@ -1,6 +1,6 @@
 Section "InputDevice"
 	Identifier	"@@NAME@@"
-	#Driver		"vmmouse"		# Broken
+	#Driver		"vmmouse"		# Broken - #490912
 	Driver		"mouse"
 	Option		"Device"		"@@DEVICE@@"
 	Option		"Protocol"		"@@PROTOCOL@@"
