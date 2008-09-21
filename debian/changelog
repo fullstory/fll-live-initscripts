@@ -1,8 +1,10 @@
 fll-live-initscripts (3.3.29) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - vmmouse is not working well at all right now, so just use mouse driver
+      per default for now
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 19 Sep 2008 22:43:05 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 22 Sep 2008 07:54:13 +1000
 
 fll-live-initscripts (3.3.28) unstable; urgency=low
 
