@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.29) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.29) unstable; urgency=low
 
   * fll-xorgconfig:
     - vmmouse is not working well at all right now, so just use mouse driver
