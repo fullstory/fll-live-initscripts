@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.30) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.30) unstable; urgency=low
 
   * fll-network:
     - depend on ceni, use nicinfo for ethernet detection so that this code
