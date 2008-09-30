@@ -33,10 +33,6 @@ purge_conffile() {
 	do
 		rm -f ${1}${ext}
 	done
-
-	if which ucfr >/dev/null; then
-		ucfr --purge fll-live-initscripts ${1}
-	fi
 }
 
 #DEBHELPER#

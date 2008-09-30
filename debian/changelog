@@ -1,8 +1,20 @@
 fll-live-initscripts (3.3.30) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-network:
+    - depend on ceni, use nicinfo for ethernet detection so that this code
+      need only exist, and be fixed, in one place
+    - add code to handle addition of ethernet devices to HOTPLUG_INTERFACES
+      configuration for ifplugd
+  * fll-live-utils:
+    - drop fll_is80211
+  * fll-live-initscripts:
+    - depend on ceni
+    - remove usage of ucf, not required for this live only package, all files
+      are handled by maintainer scripts
+  * fll-xorgconfig:
+    - recommend xresprobe only
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 22 Sep 2008 19:55:25 +0200
+ -- Kel Modderman <kel@otaku42.de>  Tue, 30 Sep 2008 23:20:07 +1000
 
 fll-live-initscripts (3.3.29) unstable; urgency=low
 

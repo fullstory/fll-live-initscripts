@@ -32,8 +32,6 @@ case "$1" in
 	configure)
 		for filename in /etc/default/fll-init /etc/default/fll-locales
 		do
-			ucfr fll-live-initscripts "${filename}"
-
 			if [ ! -f "${filename}" ]; then
 				echo "fll-live-initscripts: creating ${filename} ..."
 					cat > "${filename}" \
@@ -47,8 +45,6 @@ EOF
 
 		for script in halt reboot
 		do
-			ucfr fll-live-initscripts "/etc/insserv/overrides/${script}"
-
 			echo "fll-live-initscripts: overriding LSB init info for ${script} ..."
 			override_lsb_provides "/etc/init.d/${script}" \
 				"/etc/insserv/overrides/${script}"
