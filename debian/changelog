@@ -1,5 +1,6 @@
 fll-live-initscripts (3.3.31) unstable; urgency=low
 
+  [ Kel Modderman ]
   * fll-desktop:
     - add support for LXDE desktop
     - reorder desktop list order
@@ -11,7 +12,10 @@ fll-live-initscripts (3.3.31) unstable; urgency=low
     - patch thanks to ModestUser:
       http://sidux.com/PNphpBB2-viewtopic-t-12823.html
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 03 Oct 2008 23:17:43 +1000
+  [ Stefan Lippers-Hollmann ]
+  * remove no longer existing manpage from debian/*.manpages.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 04 Oct 2008 00:47:30 +0200
 
 fll-live-initscripts (3.3.30) unstable; urgency=low
 
