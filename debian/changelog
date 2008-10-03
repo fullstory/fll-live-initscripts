@@ -5,8 +5,13 @@ fll-live-initscripts (3.3.31) UNRELEASED; urgency=low
     - reorder desktop list order
     - patch thanks to ModestUser:
       http://sidux.com/PNphpBB2-viewtopic-t-12841.html
+  * fll-xdm:
+    - add logic for detecting kdmrc file for kde3 and kde4
+    - source system locale and set kdm language setting
+    - patch thanks to ModestUser:
+      http://sidux.com/PNphpBB2-viewtopic-t-12823.html
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 03 Oct 2008 23:04:18 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 03 Oct 2008 23:17:43 +1000
 
 fll-live-initscripts (3.3.30) unstable; urgency=low
 

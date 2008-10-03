@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-xdm
-# Required-Start:    $remote_fs
+# Required-Start:    $remote_fs fll-locales
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:
@@ -53,6 +53,11 @@ fi
 . /lib/init/fll
 
 ###
+# source global language setting
+###
+. /etc/default/locale
+
+###
 # debian's default-display-manager control file
 ###
 DEFAULT_DISPLAY_MANAGER_FILE=/etc/X11/default-display-manager
@@ -97,6 +102,15 @@ get_init_seq_num() {
 }
 
 setup_kdm() {
+	# check for KDM configuration file
+	if [ -w '/etc/kde4/kdm/kdmrc' ]; then
+		KDMRC='/etc/kde4/kdm/kdmrc'
+	elif [ -w '/etc/kde3/kdm/kdmrc' ]; then
+		KDMRC='/etc/kde3/kdm/kdmrc'
+	else
+		return 1
+	fi
+
 	# wallpaper
 	echo "USEBACKGROUND=true"		>  /etc/default/kdm.d/wallpaper
 	echo "WALLPAPER=${FLL_WALLPAPER}"	>> /etc/default/kdm.d/wallpaper
@@ -107,8 +121,16 @@ setup_kdm() {
 
 	if [ "${CUSTOM_DPI}" ]; then
 		sed -i -e "s/\(ServerArgsLocal\=\-nolisten tcp\).*$/\1 \-dpi ${CUSTOM_DPI}/" \
-			/etc/kde3/kdm/kdmrc
+			"${KDMRC}"
 	fi
+
+	# set language for KDM
+	if grep -q "Language=" "${KDMRC}"; then
+		sed -ri -e 's/^Language=.*/# &/' \
+			-e "0,/Language=/ s/.*Language=.*/Language=${LANG}/" "${KDMRC}"
+	else
+		echo "Language=${LANG}" >> "${KDMRC}"
+	fi 
 	
 	unset START STOP
 	eval $(get_init_seq_num kdm ${FLL_MOUNTPOINT} 2>/dev/null)
