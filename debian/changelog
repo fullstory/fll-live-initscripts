@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.31) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.31) unstable; urgency=low
 
   * fll-desktop:
     - add support for LXDE desktop
