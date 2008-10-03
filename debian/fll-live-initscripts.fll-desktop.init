@@ -69,7 +69,10 @@ if [ -f /proc/cmdline ]; then
 fi
 
 if [ -z "${DESKTOP}" ]; then
-	[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"	# fourth choice
+	[ -x "/usr/bin/icewm" ] && DESKTOP="icewm"		# sixth choice
+	[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"	# fifth choice
+	[ -x "/usr/bin/startlxde" ] && \
+		[ -x "/usr/bin/openbox" ] && DESKTOP="lxde"	# fourth choice
 	[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce4"		# third choice
 	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# second choice
 	[ -x "/usr/bin/kwin" ] && DESKTOP="kde"			# first choice, if installed and desktop= is empty
@@ -86,20 +89,23 @@ do_start() {
 	log_daemon_msg "${NAME}"
 
 	case "${DESKTOP}" in 
-		kde)
-			WM="/usr/bin/kwin"
+		flux*)
+			WM="/usr/bin/startfluxbox"
 			;;
 		gnome)
 			WM="/usr/bin/metacity"
 			;;
-		flux*)
-			WM="/usr/bin/startfluxbox"
+		icewm)
+			WM="/usr/bin/icewm"
+			;;
+		kde)
+			WM="/usr/bin/kwin"
+			;;
+		lxde)	
+			WM="/usr/bin/openbox"
 			;;
 		xfce*)
 			WM="/usr/bin/xfwm4"
-			;;
-		icewm)
-			WM="/usr/bin/icewm"
 			;;
 		*)
 			log_action_msg " desktop '${DESKTOP}' is not available"
@@ -124,6 +130,9 @@ do_start() {
 				;;
 			"/usr/bin/icewm")
 				XSESSION="IceWM"
+				;;
+			"/usr/bin/openbox")
+				XSESSION="LXDE"
 				;;
 		esac
 	
@@ -152,7 +161,7 @@ case "${1}" in
 		echo "Error: argument '${1}' not supported" >&2
 		exit 3
 		;;
-	kde|gnome|flux*|xfce*|icewm)
+	kde|gnome|flux*|xfce*|icewm|lxde)
 		DESKTOP="${1}"
 		do_start
 		;;

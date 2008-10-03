@@ -1,8 +1,12 @@
 fll-live-initscripts (3.3.31) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-desktop:
+    - add support for LXDE desktop
+    - reorder desktop list order
+    - patch thanks to ModestUser:
+      http://sidux.com/PNphpBB2-viewtopic-t-12841.html
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 30 Sep 2008 23:34:20 +0200
+ -- Kel Modderman <kel@otaku42.de>  Fri, 03 Oct 2008 23:04:18 +1000
 
 fll-live-initscripts (3.3.30) unstable; urgency=low
 
