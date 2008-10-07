@@ -1,8 +1,10 @@
 fll-live-initscripts (3.3.32) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xdm:
+    - allow gdm to be preferred when lxde desktop is chosen
+      <https://noc.sidux.com/fll/ticket/1>
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 04 Oct 2008 00:49:49 +0200
+ -- Kel Modderman <kel@otaku42.de>  Wed, 08 Oct 2008 03:47:30 +1000
 
 fll-live-initscripts (3.3.31) unstable; urgency=low
 

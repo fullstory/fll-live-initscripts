@@ -200,7 +200,7 @@ case "${1}" in
 		# based on desktop choice cheatcode
 		if [ -n "${KDM}" ] && [ -n "${GDM}" ]; then
 			case "${DESKTOP}" in
-				gnome|xfce*)
+				gnome|xfce*|lxde)
 					echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					;;
 			esac
