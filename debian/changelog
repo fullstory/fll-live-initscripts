@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.32) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.32) unstable; urgency=low
 
   * fll-xdm:
     - allow gdm to be preferred when lxde desktop is chosen
