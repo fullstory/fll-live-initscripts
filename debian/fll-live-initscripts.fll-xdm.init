@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-xdm
-# Required-Start:    $remote_fs fll-locales
+# Required-Start:    $remote_fs
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:
@@ -51,11 +51,6 @@ fi
 # source fll functions
 ###
 . /lib/init/fll
-
-###
-# source global language setting
-###
-. /etc/default/locale
 
 ###
 # debian's default-display-manager control file
@@ -123,14 +118,6 @@ setup_kdm() {
 		sed -i -e "s/\(ServerArgsLocal\=\-nolisten tcp\).*$/\1 \-dpi ${CUSTOM_DPI}/" \
 			"${KDMRC}"
 	fi
-
-	# set language for KDM
-	if grep -q "Language=" "${KDMRC}"; then
-		sed -ri -e 's/^Language=.*/# &/' \
-			-e "0,/Language=/ s/.*Language=.*/Language=${LANG}/" "${KDMRC}"
-	else
-		echo "Language=${LANG}" >> "${KDMRC}"
-	fi 
 	
 	unset START STOP
 	eval $(get_init_seq_num kdm ${FLL_MOUNTPOINT} 2>/dev/null)

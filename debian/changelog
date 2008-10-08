@@ -1,8 +1,11 @@
-fll-live-initscripts (3.3.33) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.33) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * partially revert r20333: drop the language selection, but keep the kdmrc
+    detection for KDE3 and KDE4. This avoids changing a Debian Conffile (kdmrc)
+    proactively on every system, while still leaving the same problem for 
+    setting specific dpi values.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 07 Oct 2008 20:17:59 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 08 Oct 2008 23:07:15 +0200
 
 fll-live-initscripts (3.3.32) unstable; urgency=low
 
