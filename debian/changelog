@@ -1,3 +1,9 @@
+fll-live-initscripts (3.3.34) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 08 Oct 2008 23:14:02 +0200
+
 fll-live-initscripts (3.3.33) unstable; urgency=low
 
   * partially revert r20333: drop the language selection, but keep the kdmrc
