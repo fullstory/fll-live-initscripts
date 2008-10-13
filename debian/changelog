@@ -1,8 +1,11 @@
 fll-live-initscripts (3.3.34) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-xorgconfig:
+    - relax LSB dependency on fll-locales to Should-Start, and avoid apt
+      bailing out due to insserv dependency error when fll-live-initscripts
+      is not yet configured at fll-live-xorgconfig configure time
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 08 Oct 2008 23:14:02 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 13 Oct 2008 10:58:44 +1000
 
 fll-live-initscripts (3.3.33) unstable; urgency=low
 
