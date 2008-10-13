@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.34) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.34) unstable; urgency=low
 
   * fll-xorgconfig:
     - relax LSB dependency on fll-locales to Should-Start, and avoid apt
