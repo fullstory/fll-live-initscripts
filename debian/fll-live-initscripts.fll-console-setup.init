@@ -1,0 +1,119 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          fll-console-setup
+# Required-Start:    $remote_fs fll-locales
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: set up console-setup
+# Description:       write configuration to /etc/default/console-setup and
+#                    launch setupcon
+### END INIT INFO
+
+###
+# F.U.L.L.S.T.O.R.Y init script
+#
+# Copyright: (C) 2008 Michael Deelwater <michael.deelwater@googlemail.com>
+# License:   GPLv2
+#
+# F.U.L.L.S.T.O.R.Y Project Homepage:
+# http://developer.berlios.de/projects/fullstory
+###
+
+set -e
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+NAME="fll-console-setup"
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -s /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+# defaults, could be sourced from a separate file
+FLL_CHARMAP="UTF-8"
+FLL_CODESET="Uni2"
+FLL_FONTFACE="Terminus"
+FLL_FONTSIZE="14"
+FLL_XKBOPTIONS="lv3:ralt_switch,compose:lwin,grp:ctrl_shift_toggle"
+
+###
+# source fll functions
+###
+. /lib/init/fll
+
+###
+# source locales
+###
+if [ -s /etc/default/fll-locales ]; then
+	. /etc/default/fll-locales
+fi
+
+###
+# cheatcode handling
+###
+if [ -f /proc/cmdline ]; then
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			flldebug=*)
+				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
+				;;
+			xkboptions=*)
+				FLL_XKBOPTIONS="${param#xkboptions=}"
+				;;
+		esac
+	done
+fi
+
+do_start() {
+
+	if ! which setupcon >/dev/null; then
+		return 0
+	fi
+
+ 	# write configuration
+ 	cat > /etc/default/console-setup <<EOF
+VERBOSE_OUTPUT=no
+ACTIVE_CONSOLES="/dev/tty[1-6]"
+CHARMAP="${FLL_CHARMAP:-}"
+CODESET="${FLL_CODESET:-}"
+FONTFACE="${FLL_FONTFACE:-}"
+FONTSIZE="${FLL_FONTSIZE:-}"
+XKBMODEL=""
+XKBLAYOUT="${XKBLAYOUT:-}"
+XKBVARIANT="${XKBVARIANT:-}"
+XKBOPTIONS="${FLL_XKBOPTIONS:-}"
+BOOTTIME_KMAP_MD5="95e71d412f954d9170caff7417185d77"
+EOF
+
+	# setup console now
+	setupcon --save
+
+}
+
+case "${1}" in
+	start)
+		do_start
+		;;
+	stop)
+		;;
+	restart|force-reload)
+		echo "Error: argument '${1}' not supported" >&2
+		exit 3
+		;;
+	*)
+		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+		exit 3
+		;;
+esac
+
+:
