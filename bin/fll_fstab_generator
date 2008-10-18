@@ -232,6 +232,16 @@ is_wanted()
 		[ "${node}" = "${device}" ] && return 0
 	done
 
+	#
+	# dirty hack to allow PS3 block devices to
+	# avoid disk type checking
+	#
+	case "${name}" in
+		ps3d*)
+			return 0
+			;;
+	esac
+
 	return 1
 }
 
@@ -309,7 +319,7 @@ print_fsentry()
 	      ID_FS_UUID_ENC
 
 	case "${name}" in
-		mapper/*)
+		mapper/*|ps3d*)
 			eval "$(volumeid ${name} | sed  -e 's@^\(ID_FS_[^=]\+\)=\(.*\)$@\1='\''\2'\''@g' | \
 						   grep -e '^ID_FS_TYPE=' \
 							-e '^ID_FS_USAGE=' \
