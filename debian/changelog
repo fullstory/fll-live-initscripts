@@ -26,11 +26,12 @@ fll-live-initscripts (3.3.35) unstable; urgency=low
     preseed console-setup, i only requires XKBLAYOUT.
   * fll-locales:
     - rename SIDUX_MIRROR to FLL_MIRROR, to remain in a neutral namespace
+    - try using VGA as default console font
   * Rename fll-hwsetup to fll-bluez, remove the need for hwinfo and simply
     check if a bluetooth class driver has loaded yet. Start later in runlevel
     S.
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 19 Oct 2008 04:37:18 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 19 Oct 2008 06:09:27 +1000
 
 fll-live-initscripts (3.3.34) unstable; urgency=low
 

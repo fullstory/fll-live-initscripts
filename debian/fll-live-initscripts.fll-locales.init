@@ -65,7 +65,9 @@ fi
 ###
 CHARMAP="UTF-8"
 CODESET="Uni2"
-FONTFACE="Terminus"
+# Debian agrees that Terminus doesn't look great enough to be default
+# http://bugs.debian.org/497331
+FONTFACE="VGA"
 FONTSIZE="14"
 
 XKBLAYOUT="us"
