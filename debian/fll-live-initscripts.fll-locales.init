@@ -4,7 +4,7 @@
 # Provides:          fll-locales
 # Required-Start:    mountdevsubfs
 # Required-Stop:
-# X-Start-Before:    keymap
+# X-Start-Before:    keymap keyboard-setup
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: live media locale autoconifgurator

@@ -14,8 +14,16 @@ fll-live-initscripts (3.3.35) UNRELEASED; urgency=low
     - use vol_id to determine fstype of ps3d* devices
   * fll-live-utils:
     - it is arch: all package
+  * fll-console:
+    - rename fll-console-setup to fll-console. It is a script to preseed
+      console-setup
+    - adjust LSB dependencies of fll-locales and fll-console to ensure start
+      before scripts which load keymaps early in runelvel S
+    - remove hardcoded md5sum from console-setup
+    - only save setupcon configuration, let the initscript do the loading of it
+      later
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 18 Oct 2008 10:27:32 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 18 Oct 2008 12:18:50 +1000
 
 fll-live-initscripts (3.3.34) unstable; urgency=low
 

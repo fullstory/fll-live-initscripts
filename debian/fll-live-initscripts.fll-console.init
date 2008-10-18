@@ -1,9 +1,10 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          fll-console-setup
-# Required-Start:    $remote_fs fll-locales
+# Provides:          fll-console
+# Required-Start:    fll-locales
 # Required-Stop:
+# X-Start-Before:    keymap keyboard-setup
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: set up console-setup
@@ -24,7 +25,7 @@
 set -e
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-NAME="fll-console-setup"
+NAME="fll-console"
 
 ###
 # source distro-defaults, no-op unless in live mode
@@ -84,20 +85,18 @@ do_start() {
  	cat > /etc/default/console-setup <<EOF
 VERBOSE_OUTPUT=no
 ACTIVE_CONSOLES="/dev/tty[1-6]"
-CHARMAP="${FLL_CHARMAP:-}"
-CODESET="${FLL_CODESET:-}"
-FONTFACE="${FLL_FONTFACE:-}"
-FONTSIZE="${FLL_FONTSIZE:-}"
+CHARMAP="${FLL_CHARMAP}"
+CODESET="${FLL_CODESET}"
+FONTFACE="${FLL_FONTFACE}"
+FONTSIZE="${FLL_FONTSIZE}"
 XKBMODEL=""
-XKBLAYOUT="${XKBLAYOUT:-}"
-XKBVARIANT="${XKBVARIANT:-}"
-XKBOPTIONS="${FLL_XKBOPTIONS:-}"
-BOOTTIME_KMAP_MD5="95e71d412f954d9170caff7417185d77"
+XKBLAYOUT="${XKBLAYOUT}"
+XKBVARIANT="${XKBVARIANT}"
+XKBOPTIONS="${FLL_XKBOPTIONS}"
+BOOTTIME_KMAP_MD5=""
 EOF
 
-	# setup console now
-	setupcon --save
-
+	setupcon --save-only
 }
 
 case "${1}" in
