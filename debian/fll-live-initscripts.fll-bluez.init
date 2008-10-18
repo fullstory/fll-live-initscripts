@@ -1,14 +1,14 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          fll-hwsetup
-# Required-Start:    $local_fs
+# Provides:          fll-bluez
+# Required-Start:    $remote_fs
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:
-# Short-Description: fll hwsetup init service
-# Description:       The purpose of this script is to invoke hwsetup to
-#                    facilitate various hardware detection routines.
+# Short-Description: detect if bluetooth support is needed
+# Description:       The purpose of this script is to make sure bluez-utils
+#                    is prepared to start if bluetooth devices are present.
 ### END INIT INFO
 
 ###
@@ -22,7 +22,7 @@
 ###
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-NAME="fll-hwsetup"
+NAME="fll-bluez"
 
 ###
 # source distro-defaults, no-op unless in live mode
@@ -65,26 +65,13 @@ if [ -f /proc/cmdline ]; then
 	done
 fi
 
-###
-# functions...
-###
-hw_present() {
-	which hwinfo >/dev/null || return 1
-
-	if [ "$(hwinfo --${1} --short | sed -n '/^[a-z]\+:/!s/[ \t]\+//p' | head -n1)" ]; then
-		return 0
-	fi
-
-	return 1
-}
-
 do_start() {
 	###
 	# bluetooth management
 	###
-	if hw_present bluetooth; then
+	if [ -d /sys/class/bluetooth/ ]; then
 		log_daemon_msg "${NAME}" "detected bluetooth"
-		insert_initscript
+		insert_initscript bluetooth
 		log_end_msg "${?}"
 	else
 		remove_initscript bluetooth

@@ -17,6 +17,7 @@
 # F.U.L.L.S.T.O.R.Y init script
 #
 # Copyright: (C) 2007 - 2008 Kel Modderman <kel@otaku42.de>
+#            (C) 2008 Michael Deelwater <michael.deelwater@googlemail.com>
 # License:   GPLv2
 #
 # F.U.L.L.S.T.O.R.Y Project Homepage:
@@ -60,6 +61,19 @@ fi
 . /lib/init/fll
 
 ###
+# some console-setup defaults
+###
+CHARMAP="UTF-8"
+CODESET="Uni2"
+FONTFACE="Terminus"
+FONTSIZE="14"
+
+XKBLAYOUT="us"
+XKBMODEL="" # pc105 is default
+XKBOPTIONS="lv3:ralt_switch,compose:lwin,grp:ctrl_shift_toggle"
+XKBVARIANT=""
+
+###
 # cheatcode handling
 ###
 if [ -f /proc/cmdline ]; then
@@ -91,7 +105,9 @@ if [ -f /proc/cmdline ]; then
 				FLL_IMAGE_FILE="${param#image_name=}"
 				FLL_IMAGE_LOCATION="${FLL_IMAGE_DIR}/${FLL_IMAGE_FILE}"
 				;;
-
+			xkboptions=*)
+				FLL_XKBOPTIONS="${param#xkboptions=}"
+				;;
 		esac
 	done
 fi
@@ -221,237 +237,171 @@ fi
 ###
 case "${DEMO_CODE}" in
 	au)	### AU Australia kb:us ###
-		KEYTABLE="us"
 		XKBLAYOUT="us"
 		TZ="Australia/Sydney"
-		CD_COUNTRY="us_american"
 		MIRROR="mirror.linux.org.au"
 		;;
 	be) 	### BE Belgium kb:be ###
-		KEYTABLE="be2-latin1"
 		XKBLAYOUT="be,fr,us"
 		TZ="Europe/Brussels"
-		CD_COUNTRY="Belgian"
 		MIRROR="ftp.belnet.be"
 		;;
 	bg)	### BG Bulgaria kb:bg ###
-		KEYTABLE="bg"
 		XKBLAYOUT="bg,us"
 		TZ="Europe/Sofia"
-		CD_COUNTRY="Bulgarian"
 		MIRROR="ftp.bg.debian.org"
 		;;
 	br)	### BR Brazil kb:br ###
-		KEYTABLE="br-abnt2"
 		XKBLAYOUT="br,us"
 		TZ="America/Sao_Paulo"
-		CD_COUNTRY="Brazilian"
 		MIRROR="ftp.br.debian.org"
 		;;
 	by)	### BY Belarus kb:by ###
-		KEYTABLE="by"
 		XKBLAYOUT="by,us"
 		TZ="Europe/Minsk"
-		CD_COUNTRY="Byelorussian"
 		MIRROR="linux.org.by"
 		;;
 	ch)	### CH Switzerland kb:de ###
-		KEYTABLE="sg-latin1"
 		XKBLAYOUT="de,fr,us"
 		TZ="Europe/Zurich"
-		CD_COUNTRY="Swiss-de"
 		MIRROR="ftp.ch.debian.org"
 		;;
 	cn)	### CN Chinese (Simplified) kb:us ###
-		KEYTABLE="us"
 		XKBLAYOUT="us"
 		TZ="Asia/Shanghai"
-		CD_COUNTRY=""
 		MIRROR="ftp.hk.debian.org" # no primary mirror
 		;;
 	cz|cs)	### CZ CzechRepublic kb:cs ###
-		KEYTABLE="cz-lat2"
 		XKBLAYOUT="cs,us"
 		TZ="Europe/Prague"
-		CD_COUNTRY="Czech-qwerty"
 		MIRROR="ftp.cz.debian.org"
 		;;
 	de)	### DE Germany kb:de ###
 		#KEYTABLE="de-latin1-nodeadkeys"	# breaks virtualbox and X.org 7.3
-		KEYTABLE="de-latin1"
 		XKBLAYOUT="de,us"
 		#XKBVARIANT="nodeadkeys,"		# breaks virtualbox and X.org 7.3
 		TZ="Europe/Berlin"
-		CD_COUNTRY="German"
 		MIRROR="ftp.de.debian.org"
 		;;
 	dk|da)	### DK Denmark kb:dk ###
-		KEYTABLE="dk"
 		XKBLAYOUT="dk,us"
 		TZ="Europe/Copenhagen"
-		CD_COUNTRY="Danish"
 		MIRROR="ftp.dk.debian.org"
 		;;
 	es)	### ES Spain kb:es ###
-		KEYTABLE="es"
 		XKBLAYOUT="es,us"
 		TZ="Europe/Madrid"
-		CD_COUNTRY="Spanish"
 		MIRROR="ftp.es.debian.org"
 		;;
 	fi)	### FI Finland kb:fi ### 
-		KEYTABLE="fi-latin1"
 		XKBLAYOUT="fi,us"
 		TZ="Europe/Helsinki"
-		CD_COUNTRY="Swedish"
 		MIRROR="ftp.fi.debian.org"
 		;;
 	fr)	### FR France kb:fr ###
-		KEYTABLE="fr"
 		XKBLAYOUT="fr,us"
 		TZ="Europe/Paris"
-		CD_COUNTRY="French"
 		MIRROR="ftp.fr.debian.org"
 		;;
 	gr|el)	### GR Greece kb:gr ###
-		KEYTABLE="gr"
 		XKBLAYOUT="gr,us"
 		TZ="Europe/Athens"
-		CD_COUNTRY="Greek"
 		MIRROR="ftp.es.debian.org" # no primary mirror
 		;;
 	gb|uk)	### GB GreatBritain kb:gb ###
-		KEYTABLE="uk"
 		XKBLAYOUT="gb,us"
 		TZ="Europe/London"
-		CD_COUNTRY="British"
 		MIRROR="ftp.uk.debian.org"
 		;;
 	il|he)	### IL Israel (Hebrew) kb:il ###
-		KEYTABLE="us"
 		XKBLAYOUT="il,us"
 		TZ="Asia/Jerusalem"
-		CD_COUNTRY="Hebrew"
 		MIRROR="ftp.us.debian.org"
 		;;
 	hr) 	### HR Croatia kb:hr ###
-		KEYTABLE="hr" 
 		XKBLAYOUT="hr,us"
 		TZ="Europe/Zagreb" 
-		CD_COUNTRY="Croatian"
 		MIRROR="ftp.hr.debian.org" # no primary mirror
 		;;
 	ie)	### IE Ireland (English) kb:ie ###
-		KEYTABLE="uk"
 		XKBLAYOUT="ie,gb,us"
 		TZ="Europe/Dublin"
-		CD_COUNTRY="British"
 		MIRROR="ftp.ie.debian.org"
 		;;
 	ga)	### IE Ireland (Gaeilge) kb:ie ###
-		KEYTABLE="uk"
 		XKBLAYOUT="ie"
 		TZ="Europe/Dublin"
-		CD_COUNTRY="British"
 		MIRROR="ftp.ie.debian.org"
 		;;
 	it)	### IT Italy kb:it ###
-		KEYTABLE="it"
 		XKBLAYOUT="it,us"
 		TZ="Europe/Rome"
-		CD_COUNTRY="Italian"
 		MIRROR="ftp.it.debian.org"
 		;;
 	jp|ja)	### JP Japanese (Limited) kb:jp ###
-		KEYTABLE="us"
 		XKBLAYOUT="jp,us"
 		TZ="Asia/Tokyo"
-		CD_COUNTRY="Japanese"
 		MIRROR="ftp.jp.debian.org"
 		;;
 	ko|kr)	### KR Korean kb:kr ###
-		KEYTABLE="us"
 		XKBLAYOUT="kr,us"
 		TZ="Asia/Seoul"
-		CD_COUNTRY="Korean"
 		MIRROR="ftp.kr.debian.org"
 		;;
 	nl)	### NL Netherlands kb:nl ###
-		KEYTABLE="us"
 		XKBLAYOUT="us,nl"
 		TZ="Europe/Amsterdam"
-		CD_COUNTRY="Dutch"
 		MIRROR="ftp.nl.debian.org"
 		;;
 	no)	### NO Norway kb:no ###
-		KEYTABLE="no"
 		XKBLAYOUT="no,us"
 		TZ="Europe/Oslo"
-		CD_COUNTRY="Norwegian"
 		MIRROR="ftp.no.debian.org"
 		;;
 	pl)	### PL Poland kb:pl ###
-		KEYTABLE="pl"
 		XKBLAYOUT="pl,us"
 		TZ="Europe/Warsaw"
-		CD_COUNTRY="Polish"
 		MIRROR="ftp.pl.debian.org"
 		;;
 	pt)	### PT Portugal kb:pt ###
-		KEYTABLE="pt-latin1"
 		XKBLAYOUT="pt,us"
 		TZ="Europe/Lisbon"
-		CD_COUNTRY="Portugese"
 		MIRROR="ftp.pt.debian.org"
 		;;
 	ro)	### RO Romania kb:ro ###
-		KEYTABLE="ro"
 		XKBLAYOUT="ro,us"
 		TZ="Europe/Bucharest"
-		CD_COUNTRY="Romanian"
 		MIRROR="ftp.ro.debian.org"
 		;;
 	ru)	### RU Russia kb:ru ###
-		KEYTABLE="ru"
 		XKBLAYOUT="ru,us"
 		TZ="Europe/Moscow"
-		CD_COUNTRY="Russian"
 		MIRROR="ftp.ru.debian.org"
 		;;
 	si|sl)	### SI Slovenia kb:si ###
-		KEYTABLE="slovene"
 		XKBLAYOUT="si,us"
 		TZ="Europe/Ljubljana"
 		#CONSOLEFONT="iso02g"
-		CD_COUNTRY="Slovene"
 		MIRROR="ftp.si.debian.org"
 		;;
 	sk)	### SK Slovakia kb:sk ###
-		KEYTABLE="sk-qwerty"
 		XKBLAYOUT="sk,us"
 		TZ="Europe/Bratislava"
-		CD_COUNTRY="Slovak-qwerty"
 		MIRROR="ftp.sk.debian.org"
 		;;
 	tr)	### TR Turkey kb:tr ###
-		KEYTABLE="tr_q-latin5"
 		XKBLAYOUT="tr,us"
 		TZ="Europe/Istanbul"
-		CD_COUNTRY="Turkish"
 		MIRROR="ftp.tr.debian.org"
 		;;
 	tw)	### TW Taiwan (TraditionalChinese) kb:us ###
-		KEYTABLE="us"
 		XKBLAYOUT="us"
 		TZ="Asia/Taipei"
-		CD_COUNTRY=""
 		MIRROR="ftp.tw.debian.org"
 		;;
 	us|*)	### US UnitedStates kb:us ###
-		KEYTABLE="us"
 		XKBLAYOUT="us,ca"
 		TZ="America/New_York"
-		CD_COUNTRY="us_american"
 		MIRROR="ftp.us.debian.org"
 		;;
 esac
@@ -468,302 +418,6 @@ if [ -n "${CUSTOM_TZ}" ]; then
 	[ -f "/usr/share/zoneinfo/${CUSTOM_TZ}" ] && TZ="${CUSTOM_TZ}"
 fi
 
-case "${CD_COUNTRY}" in
-	French)
-		CD_FAMILY="azerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Same as X11 (latin 9)"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Belgian)
-		CD_FAMILY="azerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	us_american)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="US american"
-		;;
-	British)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Bulgarian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Byelorussian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Brazilian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Canadian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="English"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Canadian-fr)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="French"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Czech-qwerty)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Danish)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Spanish)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Estonian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Finnish)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Polish)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Greek)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Italian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Lithuanian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Latvian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Norwegian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Japanese)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Korean)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Dutch)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="US american"
-		;;
-	Norwegian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Hebrew)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Hungarian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Icelandic)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Latin_American)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="Latin American"
-		;;
-	Macedonian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Portugese)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Romanian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Russian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Serbian-qwerty)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Swedish)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Slovak-qwerty)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Thai)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Turkish)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Ukrainian)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Swiss-fr)
-		CD_FAMILY="qwertz"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="French"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Swiss-de)
-		CD_FAMILY="qwertz"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="German"
-		CD_FULL="German"
-		;;
-	German)
-		CD_FAMILY="qwertz"
-		CD_KEYMAP="latin1 - no dead keys"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Slovak-qwertz)
-		CD_FAMILY="qwertz"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Czech-qwertz)
-		CD_FAMILY="qwertz"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Hungarian)
-		CD_FAMILY="qwertz"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Slovene)
-		CD_FAMILY="qwertz"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Croat)
-		CD_FAMILY="qwertz"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	Serbian-qwertz)
-		CD_FAMILY="qwertz"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="${CD_COUNTRY}"
-		;;
-	*)
-		CD_FAMILY="qwerty"
-		CD_KEYMAP="Standard"
-		CD_VARIANT="Standard"
-		CD_FULL="US american"
-		;;
-esac
-
-CD_LAYOUT="$(echo ${CD_COUNTRY} | cut -d'-' -f1)"
-CD_LAYOUT_PATH="$(echo ${CD_COUNTRY} | tr [A-Z] [a-z] | cut -d'-' -f1)"
-CD_VARIANT_PATH="$(echo ${CD_VARIANT} | tr [A-Z] [a-z] | sed 's%\(\ \|(\|)\)%_%g')"
-CD_FULL_FIX="$(echo ${CD_FULL} | cut -d'-' -f1)"
-
 set_timezone()
 {
 	###
@@ -778,7 +432,9 @@ set_timezone()
 	###
 	# hack rcS, make localtime default, unless tz=Etc/UTC or utc=yes
 	###
-	if [ "${TZ}" != "Etc/UTC" ] && [ "${UTC}" != "yes" ]; then
+	if [ "${TZ}" = "Etc/UTC" ] || [ "${UTC}" = "yes" ]; then
+		[ -w /etc/default/rcS ] && sed -i 's/^UTC=.*/UTC=yes/' /etc/default/rcS
+	else
 		# debian defaults to UTC=yes, which is rumored to be dual-boot unfriendly
 		[ -w /etc/default/rcS ] && sed -i 's/^UTC=.*/UTC=no/' /etc/default/rcS
 	fi
@@ -799,19 +455,35 @@ set_locale()
 	###
 	log_daemon_msg "${NAME}"; log_action_begin_msg " configuring locales for '${LANG}'"
 
-	for msg in "locales locales/default_environment_locale select ${LANG}" \
-		   "console-data console-data/keymap/policy select Select keymap from arch list" \
-		   "console-data console-data/keymap/family select ${CD_FAMILY}" \
-		   "console-data console-data/keymap/${CD_FAMILY}/layout select ${CD_FULL_FIX}" \
-		   "console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/variant select ${CD_VARIANT}" \
-		   "console-data console-data/keymap/${CD_FAMILY}/${CD_LAYOUT_PATH}/${CD_VARIANT_PATH}/keymap select ${CD_KEYMAP}" \
-		   "console-data console-data/keymap/full select ${CD_FULL}"; do
-		echo "${msg}"
-	done | debconf-set-selections
-
+	echo "locales locales/default_environment_locale select ${LANG}" | \
+		debconf-set-selections
 	update-locale "LANG=${LANG}"
 
 	log_end_msg "${?}"
+}
+
+set_console()
+{
+	# write configuration
+ 	cat > /etc/default/console-setup <<EOF
+ACTIVE_CONSOLES="/dev/tty[1-6]"
+CHARMAP="${CHARMAP}"
+CODESET="${CODESET}"
+FONTFACE="${FONTFACE}"
+FONTSIZE="${FONTSIZE}"
+XKBMODEL="${XKBMODEL}"
+XKBLAYOUT="${XKBLAYOUT%%,*}"
+XKBVARIANT="${XKBVARIANT}"
+XKBOPTIONS="${XKBOPTIONS}"
+EOF
+
+	setupcon --save-only
+	
+	BOOTTIME_KMAP_MD5=$(md5sum /etc/console-setup/boottime.kmap.gz | sed 's/ .*//')
+
+	cat >> /etc/default/console-setup <<EOF
+BOOTTIME_KMAP_MD5="${BOOTTIME_KMAP_MD5}"
+EOF
 }
 
 apt_install_lang() {
@@ -908,12 +580,6 @@ apt_install_lang_clean() {
 	log_end_msg "${?}"
 }
 
-load_keymap() {
-	log_daemon_msg "${NAME}"; log_action_begin_msg " loading ${KEYTABLE} keymap"
-	dpkg-reconfigure -fnoninteractive -pcritical console-data >/dev/null 2>&1
-	log_end_msg "${?}"
-}
-
 localize_sources_list() {
 	###
 	# localise /etc/apt/sources.list
@@ -929,32 +595,31 @@ localize_sources_list() {
 		case "$(mawk 'BEGIN{print int(7 * rand())}')" in
 			0|1)
 				# sidux.com
-				SIDUX_MIRROR="http://sidux.com/debian/"
+				FLL_MIRROR="http://sidux.com/debian/"
 				;;
 			2)
 				# sidux.net
-				SIDUX_MIRROR="http://sidux.net/debian/"
+				FLL_MIRROR="http://sidux.net/debian/"
 				;;
 			3|4)
 				# debian.tu-bs.de
-				SIDUX_MIRROR="http://debian.tu-bs.de/project/sidux/debian/"
+				FLL_MIRROR="http://debian.tu-bs.de/project/sidux/debian/"
 				;;
 			*)
 				# spline.de
-				SIDUX_MIRROR="ftp://ftp.spline.de/pub/sidux/debian/"
+				FLL_MIRROR="ftp://ftp.spline.de/pub/sidux/debian/"
 				;;
 		esac
 
-		sed -i "s|\(deb.*[ \t]\)http://sidux.com/debian/|\1 ${SIDUX_MIRROR}|" \
+		sed -i "s|\(deb.*[ \t]\)http://sidux.com/debian/|\1 ${FLL_MIRROR}|" \
 			/etc/apt/sources.list \
 			/etc/apt/sources.list.d/sidux.list
 	fi
 }
 
 save_locale_variables() {
-	for var in KEYTABLE XKBLAYOUT XKBVARIANT MIRROR \
-		   CD_COUNTRY CD_FAMILY CD_KEYMAP CD_VARIANT CD_FULL \
-		   CD_LAYOUT CD_LAYOUT_PATH CD_VARIANT_PATH CD_FULL_FIX; do
+	for var in MIRROR FLL_MIRROR CHARMAP CODESET FONTFACE FONTSIZE \
+		   XKBMODEL XKBLAYOUT XKBVARIANT XKBOPTIONS; do
 		val=$(eval echo \$${var})
 		echo "${var}=\"${val}\""
 	done > "/etc/default/${NAME}"
@@ -964,8 +629,8 @@ case "${1}" in
 	start)
 		set_timezone
 		set_locale
+		set_console
 		apt_install_lang
-		load_keymap
 		localize_sources_list
 		save_locale_variables
 		;;
@@ -983,8 +648,8 @@ case "${1}" in
 		log_end_msg() { :; }
 		# localize
 		set_locale
+		set_console
 		apt_install_lang
-		load_keymap
 		localize_sources_list
 		save_locale_variables
 		;;
