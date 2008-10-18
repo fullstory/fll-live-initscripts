@@ -42,7 +42,7 @@ Description: fll live media xorg related tools
  A set of scripts to generate a Xorg configuration.
 
 Package: fll-live-utils
-Architecture: any
+Architecture: all
 Depends: ${shlibs:Depends}, perl, libfile-slurp-perl, udev
 Description: fll live utilities
  A set of tools for use by fll-live-initscripts.

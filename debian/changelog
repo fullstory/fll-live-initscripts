@@ -12,8 +12,10 @@ fll-live-initscripts (3.3.35) UNRELEASED; urgency=low
     - avoid checking if ps3d* are disk devices with udevadm by having the
       is_wanted() function always return 0 for them
     - use vol_id to determine fstype of ps3d* devices
+  * fll-live-utils:
+    - it is arch: all package
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 18 Oct 2008 10:16:01 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 18 Oct 2008 10:27:32 +1000
 
 fll-live-initscripts (3.3.34) unstable; urgency=low
 
