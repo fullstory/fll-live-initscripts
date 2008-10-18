@@ -223,15 +223,6 @@ is_wanted()
 	name="${1}"
 	node="/dev/${1}"
 
-	if ! ${OPT_WANTED}; then
-		return 1
-	fi
-
-	for device in ${OPT_WANTED_DEVICES}; do
-		[ "${name}" = "${device}" ] && return 0
-		[ "${node}" = "${device}" ] && return 0
-	done
-
 	#
 	# dirty hack to allow PS3 block devices to
 	# avoid disk type checking
@@ -241,6 +232,15 @@ is_wanted()
 			return 0
 			;;
 	esac
+
+	if ! ${OPT_WANTED}; then
+		return 1
+	fi
+
+	for device in ${OPT_WANTED_DEVICES}; do
+		[ "${name}" = "${device}" ] && return 0
+		[ "${node}" = "${device}" ] && return 0
+	done
 
 	return 1
 }
