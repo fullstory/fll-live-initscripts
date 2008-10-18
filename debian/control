@@ -43,6 +43,6 @@ Description: fll live media xorg related tools
 
 Package: fll-live-utils
 Architecture: all
-Depends: ${shlibs:Depends}, perl, libfile-slurp-perl, udev
+Depends: perl, libfile-slurp-perl, udev
 Description: fll live utilities
  A set of tools for use by fll-live-initscripts.
