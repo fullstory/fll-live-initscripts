@@ -1,7 +1,5 @@
 #!/bin/sh
 
-setupcon
-
 [ -s /etc/default/distro ] && . /etc/default/distro
 
 if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
