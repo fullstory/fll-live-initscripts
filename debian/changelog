@@ -30,8 +30,11 @@ fll-live-initscripts (3.3.35) unstable; urgency=low
   * Rename fll-hwsetup to fll-bluez, remove the need for hwinfo and simply
     check if a bluetooth class driver has loaded yet. Start later in runlevel
     S.
+  * fll_login:
+    - call setupcon, to avoid odd relatively slow console events midway through
+      non-interactive boot process
 
- -- Kel Modderman <kel@otaku42.de>  Sun, 19 Oct 2008 06:09:27 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sun, 19 Oct 2008 06:53:39 +1000
 
 fll-live-initscripts (3.3.34) unstable; urgency=low
 
