@@ -1,8 +1,10 @@
 fll-live-initscripts (3.3.36) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fll-locales:
+    - avoid switching font size from defaults, this blanks the VT 1/2 way
+      through boot
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 20 Oct 2008 01:34:43 +0200
+ -- Kel Modderman <kel@otaku42.de>  Mon, 20 Oct 2008 20:50:07 +1000
 
 fll-live-initscripts (3.3.35) unstable; urgency=low
 

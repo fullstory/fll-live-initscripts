@@ -68,10 +68,12 @@ CODESET="Uni2"
 # Debian agrees that Terminus doesn't look great enough to be default
 # http://bugs.debian.org/497331
 FONTFACE="VGA"
-FONTSIZE="14"
+# Keep the default size of 16 here to avoid clearing VT 1/2 way through
+# bootup sequence
+FONTSIZE="16"
 
 XKBLAYOUT="us"
-XKBMODEL="" # pc105 is default
+XKBMODEL=""
 XKBOPTIONS="lv3:ralt_switch,compose:lwin,grp:ctrl_shift_toggle"
 XKBVARIANT=""
 
