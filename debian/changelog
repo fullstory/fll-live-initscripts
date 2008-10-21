@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.36) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.36) unstable; urgency=low
 
   * fll-locales:
     - avoid switching font size from defaults, this blanks the VT 1/2 way
