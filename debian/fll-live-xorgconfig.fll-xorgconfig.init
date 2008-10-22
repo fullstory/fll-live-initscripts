@@ -25,6 +25,7 @@
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 NAME="fll-xorgconfig"
+DPKG_ARCH="$(dpkg --print-architecture)"
 
 ###
 # source distro-defaults, no-op unless in live mode
@@ -101,7 +102,7 @@ if [ -f /proc/cmdline ]; then
 				XKBVARIANT="${param#xkbvariant=}"
 				;;
 			xdriver=*|xmodule=*)
-				XNEWMODULE="${param#xmodule=}"
+				XNEWMODULE="${param#x*=}"
 				;;
 			xrate=*|rate=*)
 				XRATE="${param#*rate=}"
@@ -263,8 +264,13 @@ do_start() {
 	fi
 
 	if [ -z "${XMODULE}" ]; then
-		# for now we hardcode the fallback -> vesa
-		XMODULE="vesa"
+		if [ "${DPKG_ARCH}" != "powerpc" ]; then
+			# for now we hardcode the fallback -> vesa
+			XMODULE="vesa"
+		else
+			# fallback to fbdev on powerpc
+			XMODULE="fbdev"
+		fi
 	fi
 
 	log_end_msg 0
@@ -274,19 +280,18 @@ do_start() {
 	if [ "${XNEWMODULE}" ]; then
 		# user override
 		log_progress_msg "driver(*): ${XNEWMODULE}"
-		XCFG_OPTS="${XCFG_OPTS} --driver '${XNEWMODULE}'"
 		XMODULE="${XNEWMODULE}"
 	elif [ "${XMODULE}" ]; then
 		log_progress_msg "driver: ${XMODULE}"
-		XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
-
-		# turn composite on for modules that support it well
-		case "${XMODULE}" in
-			intel)
-				XCFG_OPTS="${XCFG_OPTS} --composite"
-				;;
-		esac
 	fi
+	XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
+
+	# turn composite on for modules that support it well
+	case "${XMODULE}" in
+		intel)
+			XCFG_OPTS="${XCFG_OPTS} --composite"
+			;;
+	esac
 
 	if [ "${XVENDOR}" ] && [ "${XDEVICE}" ]; then
 		log_progress_msg "pciid: ${XVENDOR}:${XDEVICE}"

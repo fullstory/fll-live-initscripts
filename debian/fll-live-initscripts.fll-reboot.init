@@ -356,6 +356,11 @@ live_hack() {
 	LD_LINUX="${DESTDIR}/lib/ld-linux.so.2"
 	if [ -e "${DESTDIR}/lib64/ld-linux-x86-64.so.2" ]; then
 		LD_LINUX="${DESTDIR}/lib64/ld-linux-x86-64.so.2"
+	elif [ ! -e $LD_LINUX ]; then
+		LD_LINUX="${DESTDIR}/lib/ld.so.1"
+		if [ -e "${DESTDIR}/lib64/ld64.so.1" ]; then
+			LD_LINUX="${DESTDIR}/lib64/ld64.so.1"
+		fi
 	fi
 	export LD_LINUX
 
