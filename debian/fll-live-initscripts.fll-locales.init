@@ -7,7 +7,7 @@
 # X-Start-Before:    keymap keyboard-setup
 # Default-Start:     S
 # Default-Stop:
-# Short-Description: live media locale autoconifgurator
+# Short-Description: live media locale autoconfigurator
 # Description:       The purpose of fll-locales is to calculate required
 #                    strings to configure the locale settings of system
 #                    according to given lang= string.
@@ -469,6 +469,8 @@ set_locale()
 set_console()
 {
 	# write configuration
+	# if multiple layouts are given in XKBLAYOUT, the user can switch between
+	# them with the toggle combination defined in XKBOPTIONS
  	cat > /etc/default/console-setup <<EOF
 ACTIVE_CONSOLES="/dev/tty[1-6]"
 CHARMAP="${CHARMAP}"
@@ -476,7 +478,7 @@ CODESET="${CODESET}"
 FONTFACE="${FONTFACE}"
 FONTSIZE="${FONTSIZE}"
 XKBMODEL="${XKBMODEL}"
-XKBLAYOUT="${XKBLAYOUT%%,*}"
+XKBLAYOUT="${XKBLAYOUT}"
 XKBVARIANT="${XKBVARIANT}"
 XKBOPTIONS="${XKBOPTIONS}"
 EOF
