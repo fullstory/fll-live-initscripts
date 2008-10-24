@@ -265,8 +265,11 @@ case "${DEMO_CODE}" in
 		TZ="Europe/Minsk"
 		MIRROR="linux.org.by"
 		;;
-	ch)	### CH Switzerland kb:de ###
-		XKBLAYOUT="de,fr,us"
+	ch)	### CH Switzerland kb:ch ###
+		# The de variant seems to be identical with the German layouts. Some Swiss users
+		# were missing a correct layout. The fr variant seems to be the standard Swiss one.
+		XKBLAYOUT="ch,us"
+		XKBVARIANT="fr"
 		TZ="Europe/Zurich"
 		MIRROR="ftp.ch.debian.org"
 		;;
