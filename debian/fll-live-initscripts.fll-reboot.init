@@ -294,8 +294,8 @@ do_umount() {
 # $1 is source
 # $2 is relative destination
 copy_exec() {
-	local verbose="${VERBOSE}"
-	local final_destination=${DESTDIR}/${2}/`basename ${1}`
+	verbose="${VERBOSE}"
+	final_destination=${DESTDIR}/${2}/$(basename ${1})
 	
 	if [ -L "$final_destination" ]; then
 		if ! [ `readlink ${final_destination}` = "${1}" ]; then
@@ -372,8 +372,6 @@ live_hack() {
 }
 
 do_stop() {
-	local command message options runlevel
-
 	# calculate runlevel
 	runlevel="$(runlevel)"
 	runlevel="${runlevel#* }"

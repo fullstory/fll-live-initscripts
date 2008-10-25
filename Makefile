@@ -1,21 +1,18 @@
-all:
-	for i in bin contrib man; do $(MAKE) -C $$i $@; done
+DIRS := bin contrib man
+INIT := $(notdir $(wildcard debian/*.init))
 
-clean:
-	for i in bin contrib man; do $(MAKE) -C $$i $@; done
+all: $(DIRS:%=all-%)
+all-%:
+	$(MAKE) -C $* all
+
+clean: $(DIRS:%=clean-%)
+clean-%:
+	$(MAKE) -C $* clean
 
 distclean: clean
 
-test:
-	@for init in $(CURDIR)/debian/*.init; do \
-		echo "   validating $${init##*/} ..." ; \
-		case "`head -n1 $$init`" in \
-			*/bin/bash*) \
-				bash -n $$init || exit ; \
-				;; \
-			*) \
-				dash -n $$init || exit ; \
-				checkbashisms $$init || exit ; \
-				;; \
-		esac ; \
-	done
+test: $(INIT:%=test-%)
+test-%:
+	$(info checking $* ...)
+	@dash -n debian/$*
+	@checkbashisms -p debian/$*

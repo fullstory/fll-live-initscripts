@@ -148,10 +148,10 @@ xserver_has_xrandr() {
 	# DEVICE="${2}"
 	
 	case "${1}" in
-		ati)
+		ati|radeon)
 			# find ${DEVICE} in a list of r200/r300/r400 device ids
 			if [ -z "${2}" ] || ! grep -s -q "^${2}" \
-				"/usr/share/fll-live-xorgconfig/xrandr/${1}.ids"; then
+				"/usr/share/fll-live-xorgconfig/xrandr/ati.ids"; then
 				return 1
 			fi
 			return 0
@@ -165,7 +165,7 @@ xserver_has_xrandr() {
 		nv)
 			# find ${DEVICE} in a list of G8x device ids
 			if [ -z "${2}" ] || ! grep -s -q "^${2}" \
-				"/usr/share/fll-live-xorgconfig/xrandr/${1}.ids"; then
+				"/usr/share/fll-live-xorgconfig/xrandr/nv.ids"; then
 				return 1
 			fi
 			return 0
@@ -203,9 +203,6 @@ do_start() {
 	log_daemon_msg "${NAME}"
 	log_action_begin_msg " detecting video hardware"
 	
-	# fll_xorgconfig option array
-	local XCFG_OPTS
-
 	if [ "${VERBOSE}" = "yes" ]; then
 		XCFG_OPTS="${XCFG_OPTS} --verbose"
 	fi

@@ -1,12 +1,12 @@
+ALL    := fll_xserver_discover
 COPTS  := -W -Wall -Werror
 CFLAGS := -g -O2
-LIBS_PCIACCESS := $(shell pkg-config --libs pciaccess)
-ALL := fll_xserver_discover
 
-all: $(ALL)
+fll_xserver_discover_LIBS := $(shell pkg-config --libs pciaccess)
 
-fll_xserver_discover:
-	gcc $(COPTS) $(CFLAGS) $(LIBS_PCIACCESS) -o $@ $@.c
+all: $(ALL:%=all-%)
+all-%:
+	gcc $(COPTS) $(CFLAGS) $($*_LIBS) -o $* $*.c
 
 clean:
 	$(RM) $(ALL)

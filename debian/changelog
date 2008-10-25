@@ -1,8 +1,17 @@
 fll-live-initscripts (3.3.39) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Give build system so love:
+    - use make-ish style targets instead of shell for loops
+    - tighten initscript check to enforce posix scripting
+  * fll-reboot:
+    - remove use of local
+  * fll-xorgconfig:
+    - remove use of local
+    - check /usr/share/fll-live-xorgconfig/xrandr/ati.ids for radeon XMODULE
+      too
+    - organise contrib/ into directories of driver name
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 25 Oct 2008 02:49:32 +0200
+ -- Kel Modderman <kel@otaku42.de>  Sun, 26 Oct 2008 09:31:40 +1000
 
 fll-live-initscripts (3.3.38) unstable; urgency=low
 

@@ -1,13 +1,13 @@
-MAN_TXT = $(wildcard *.txt)
-MAN = $(patsubst %.txt,%,$(MAN_TXT))
-XML = $(patsubst %,%.xml,$(MAN))
+MANPAGE := $(patsubst %.txt,%,$(wildcard *.txt))
 
-all: $(MAN)
+all: man
 
-%.1 %.2 %.3 %.4 %.5 %.6 %.7 %.8 : %.*.txt
+man: $(MANPAGE:%=man-%)
+man-%: %.txt
 	a2x -d manpage -f manpage $< 2>/dev/null
 
-clean:
-	$(RM) $(MAN) $(XML)
+clean: $(MANPAGE:%=clean-%)
+clean-%:
+	$(RM) $* $*.xml
 
 distclean: clean
