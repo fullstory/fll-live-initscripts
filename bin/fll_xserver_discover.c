@@ -48,23 +48,18 @@ static int ids_file(const struct dirent *entry)
  * fashion, giving or taking priority away from select drivers, falling back
  * to versionsort(A, B).
  *
- * Use the ati/radeon driver as a last resort, allow devices to be claimed by
- * radeonhd first.
- * http://www.phoronix.com/scan.php?page=article&item=radeon_vs_radeonhd&num=1
- * http://bgoglin.livejournal.com/15162.html
+ * Use the radeonhd driver as a last resort, allow devices to be claimed by
+ * ati/ radeon first.
+ * http://thread.gmane.org/gmane.comp.freedesktop.xorg.cvs/10962/
  */
 static int driver_prio(const void *A, const void *B)
 {
 	const char *a = (*(const struct dirent **)A)->d_name;
 	const char *b = (*(const struct dirent **)B)->d_name;
 
-	if (strcmp("ati.ids", a) == 0)
+	if (strcmp("radeonhd.ids", a) == 0)
 		return 1;
-	if (strcmp("ati.ids", b) == 0)
-		return -1;
-	if (strcmp("radeon.ids", a) == 0)
-		return 1;
-	if (strcmp("radeon.ids", b) == 0)
+	if (strcmp("radeonhd.ids", b) == 0)
 		return -1;
 
 	return versionsort(A, B);

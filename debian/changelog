@@ -1,8 +1,15 @@
-fll-live-initscripts (3.3.38) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.38) unstable; urgency=low
 
-  * NOT RELEASED YET
+  [ Michael Deelwater ]
+  * fll-locales:
+    - Set XKBLAYOUT=ch, XKBVARIANT=fr for Swiss demographic code.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 23 Oct 2008 00:47:41 +0200
+  [ Stefan Lippers-Hollmann ]
+  * prefer ati/ radeon over radeonhd, it's now the only driver shipped by 
+    upstream X.org and supports recent cards (in sid and experimental) better 
+    than radeonhd.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 25 Oct 2008 02:45:35 +0200
 
 fll-live-initscripts (3.3.37) unstable; urgency=low
 
@@ -17,9 +24,8 @@ fll-live-initscripts (3.3.37) unstable; urgency=low
   [ Michael Deelwater ]
   * fll-locales:
     - Let use console-setup use multiple keyboard layouts if available.
-    - Set XKBLAYOUT=ch, XKBVARIANT=fr for Swiss demographic code.
 
- -- Michael Deelwater <michael.deelwater@googlemail.com>  Fri, 24 Oct 2008 23:08:58 +0200
+ -- Michael Deelwater <michael.deelwater@googlemail.com>  Wed, 22 Oct 2008 18:53:23 +0200
 
 fll-live-initscripts (3.3.36) unstable; urgency=low
 
