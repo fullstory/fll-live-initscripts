@@ -50,7 +50,8 @@ static int ids_file(const struct dirent *entry)
  *
  * Use the radeonhd driver as a last resort, allow devices to be claimed by
  * ati/ radeon first.
- * http://thread.gmane.org/gmane.comp.freedesktop.xorg.cvs/10962/
+ * http://cgit.freedesktop.org/xorg/util/modular/commit/?id=aa066db9fe03e39156ebd2416aea25ac72408d99
+ * http://lists.freedesktop.org/archives/xorg/2008-October/039580.html
  */
 static int driver_prio(const void *A, const void *B)
 {
