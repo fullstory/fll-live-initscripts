@@ -1,4 +1,4 @@
-fll-live-initscripts (3.3.39) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.39) unstable; urgency=low
 
   * Give build system so love:
     - use make-ish style targets instead of shell for loops
