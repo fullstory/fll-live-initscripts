@@ -1,3 +1,9 @@
+fll-live-initscripts (3.3.40) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 26 Oct 2008 02:25:35 +0200
+
 fll-live-initscripts (3.3.39) unstable; urgency=low
 
   * Give build system so love:
