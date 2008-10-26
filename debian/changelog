@@ -1,3 +1,9 @@
+fll-live-initscripts (3.3.41) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 27 Oct 2008 00:31:20 +0100
+
 fll-live-initscripts (3.3.40) unstable; urgency=low
 
   * add support for the "ETPS/2 Elantech Touchpad", as found in Asus EeePC 
