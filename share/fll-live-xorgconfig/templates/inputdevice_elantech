@@ -1,0 +1,22 @@
+Section "InputDevice"
+	Identifier	"@@NAME@@"
+	Driver		"synaptics"
+	Option		"Device"		"@@DEVICE@@"
+	Option		"Protocol"		"@@PROTOCOL@@"
+	Option		"SHMConfig"		"on"
+	Option		"AccelFactor"		"0.0320"	# default: 0.0015
+	Option		"MaxSpeed"		"0.72"		# default: 0.18
+	Option		"Emulate3Buttons"	"off"
+	Option		"LBCornerButton"	"2"
+	Option		"LeftEdge"		"60"
+	Option		"RightEdge"		"1070"
+	Option		"TopEdge"		"90"
+	Option		"BottomEdge"		"680"
+	Option		"VertTwoFingerScroll"	"1"
+	Option		"HorizTwoFingerScroll"	"1"
+	Option		"LockedDrags"		"1"
+	Option		"CoastingSpeed"		"0.13"
+	Option		"CircularScrolling"	"1"
+	Option		"CircScrollTrigger"	"8"		# 8=Top Left Corner
+	Option		"@@COREPOINTER@@"
+EndSection

@@ -128,6 +128,8 @@ sub input_priority {
 	# top-down priority
 	elsif ($a_type eq 'alps')      { $retval--; }
 	elsif ($b_type eq 'alps')      { $retval++; }
+	elsif ($a_type eq 'elantech') { $retval--; }
+	elsif ($b_type eq 'elantech') { $retval++; }
 	elsif ($a_type eq 'synaptics') { $retval--; }
 	elsif ($b_type eq 'synaptics') { $retval++; }
 	elsif ($a_type eq 'serial')    { $retval--; }
@@ -207,6 +209,10 @@ INPUT:		while (<$id>) {
 					given ($name) {
 						when m/^SynPS\/2/ {
 							$type     = 'synaptics';
+							$protocol = 'auto-dev';
+						}
+						when m/^ETPS\/2/ {
+							$type     = 'elantech';
 							$protocol = 'auto-dev';
 						}
 						when m/^AlpsPS\/2/ {
