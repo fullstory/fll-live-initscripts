@@ -265,6 +265,14 @@ case "${DEMO_CODE}" in
 		TZ="Europe/Minsk"
 		MIRROR="linux.org.by"
 		;;
+	ca)	### CA Canadian kb:us ###
+		case "${LANG_CODE}" in
+			en)	XKBLAYOUT="us,ca" ;;
+			fr)	XKBLAYOUT="ca,us" ;;
+		esac
+		TZ="America/Toronto"
+		MIRROR="ftp.ca.debian.org"
+		;;
 	ch)	### CH Switzerland kb:ch ###
 		# The de variant seems to be identical with the German layouts. Some Swiss users
 		# were missing a correct layout. The fr variant seems to be the standard Swiss one.
@@ -330,13 +338,8 @@ case "${DEMO_CODE}" in
 		TZ="Europe/Zagreb" 
 		MIRROR="ftp.hr.debian.org" # no primary mirror
 		;;
-	ie)	### IE Ireland (English) kb:ie ###
+	ie)	### IE Ireland kb:ie ###
 		XKBLAYOUT="ie,gb,us"
-		TZ="Europe/Dublin"
-		MIRROR="ftp.ie.debian.org"
-		;;
-	ga)	### IE Ireland (Gaeilge) kb:ie ###
-		XKBLAYOUT="ie"
 		TZ="Europe/Dublin"
 		MIRROR="ftp.ie.debian.org"
 		;;

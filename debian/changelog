@@ -1,8 +1,14 @@
 fll-live-initscripts (3.3.41) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 27 Oct 2008 00:31:20 +0100
+  [ Niall Walsh ]
+  * fll-locales
+    - Add DEMO_CODE section for Canada
+    - Remove unnecessary "ga" DEMO_CODE section
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Wed, 12 Nov 2008 19:57:30 +0000
 
 fll-live-initscripts (3.3.40) unstable; urgency=low
 
