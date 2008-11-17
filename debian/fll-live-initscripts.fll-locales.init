@@ -74,7 +74,7 @@ FONTSIZE="16"
 
 XKBLAYOUT="us"
 XKBMODEL=""
-XKBOPTIONS="lv3:ralt_switch,compose:lwin,grp:ctrl_shift_toggle"
+XKBOPTIONS="lv3:ralt_switch,compose:lwin,grp:alt_shift_toggle"
 XKBVARIANT=""
 
 ###
