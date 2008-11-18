@@ -1,9 +1,5 @@
-fll-live-initscripts (3.3.42) UNRELEASED; urgency=low
+fll-live-initscripts (3.3.42) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Michael Deelwater ]
   * fll-locales:
     - Change CTRL-SHIFT to ALT-SHIFT for switching keyboard layouts. This does
       not interfere with konsole's CTRL-SHIFT-N when X is running.
