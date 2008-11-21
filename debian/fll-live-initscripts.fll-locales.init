@@ -630,8 +630,6 @@ localize_sources_list() {
 }
 
 save_locale_variables() {
-	# grp:alt_shift_toggle interferes with X server
-	XKBOPTIONS="${XKBOPTIONS%,grp*}"
 	for var in MIRROR FLL_MIRROR CHARMAP CODESET FONTFACE FONTSIZE \
 		   XKBMODEL XKBLAYOUT XKBVARIANT XKBOPTIONS; do
 		val=$(eval echo \$${var})
