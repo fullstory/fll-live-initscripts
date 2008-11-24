@@ -1,16 +1,8 @@
 fll-live-initscripts (3.3.43) UNRELEASED; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
-  [ Michael Deelwater ]
-  * fll-locales: 
-    - Remove grp:alt_shift_toggle entry from XKBOPTIONS before writing to
-      /etc/default/fll-locales. Interferes with X server.
-    - Revert the above change. This does not occur on the HD install, nor on
-      Xfce, so it seems to be a KDE issue.
-
- -- Michael Deelwater <michael.deelwater@googlemail.com>  Fri, 21 Nov 2008 21:16:07 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 18 Nov 2008 02:18:27 +0100
 
 fll-live-initscripts (3.3.42) unstable; urgency=low
 
