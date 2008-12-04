@@ -1,8 +1,9 @@
 fll-live-initscripts (3.3.43) unstable; urgency=low
 
   * #490912 is fixed, re- enable vmmouse.
+  * depend on ${misc:Depends}, to make lintian (and dh) happy.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 04 Dec 2008 23:17:21 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 04 Dec 2008 23:20:53 +0100
 
 fll-live-initscripts (3.3.42) unstable; urgency=low
 
