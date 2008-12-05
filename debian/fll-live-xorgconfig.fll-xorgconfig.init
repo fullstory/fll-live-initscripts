@@ -254,10 +254,13 @@ do_start() {
 
 	# detected vmware emulated VGA hardware
 	if [ "${XMODULE}" = "vmware" ]; then
-		# override mouse
-		XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 		# create xrandr style configuration
 		XFORCERANDR="1"
+	fi
+
+	# detect vmmouse
+	if /usr/sbin/fll_xserver_discover; then
+		XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 	fi
 
 	if [ -z "${XMODULE}" ]; then

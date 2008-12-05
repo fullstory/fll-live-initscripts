@@ -1,8 +1,8 @@
-fll-live-initscripts (3.3.44) UNRELEASED; urgency=low
+fll-live-initscripts (3.4.0) experimental; urgency=low
 
-  * NOT RELEASED YET
+  * add detect_vmmouse from xf86-input-vmmouse.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 04 Dec 2008 23:25:41 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 05 Dec 2008 01:55:18 +0100
 
 fll-live-initscripts (3.3.43) unstable; urgency=low
 
