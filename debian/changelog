@@ -1,8 +1,8 @@
-fll-live-initscripts (3.4.1) UNRELEASED; urgency=low
+fll-live-initscripts (3.4.1) experimental; urgency=low
 
-  * NOT RELEASED YET
+  * d'oh, we want to detect fll_detect_vmmouse, not fll_xserver_discover.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 05 Dec 2008 02:00:17 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 05 Dec 2008 02:16:06 +0100
 
 fll-live-initscripts (3.4.0) experimental; urgency=low
 
