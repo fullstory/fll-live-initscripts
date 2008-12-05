@@ -1,8 +1,9 @@
 fll-live-initscripts (3.4.2) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * add upstream manpage from xf86-input-vmmouse 12.6.2.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 05 Dec 2008 02:18:35 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 05 Dec 2008 16:27:10 +0100
 
 fll-live-initscripts (3.4.1) experimental; urgency=low
 

@@ -1,2 +1,3 @@
 man/fll_xorgconfig.8
 man/fll_xserver_discover.8
+contrib/vmmouse_detect/fll_vmmouse_detect.8
