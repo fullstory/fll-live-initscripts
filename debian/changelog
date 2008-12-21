@@ -1,8 +1,12 @@
 fll-live-initscripts (3.4.3) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 05 Dec 2008 16:34:54 +0100
+  [ Kel Modderman ]
+  * Adjust contrib/Makefile for proper build/clean of vmmouse_detect.
+
+ -- Kel Modderman <kel@otaku42.de>  Mon, 22 Dec 2008 02:24:18 +1000
 
 fll-live-initscripts (3.4.2) unstable; urgency=low
 

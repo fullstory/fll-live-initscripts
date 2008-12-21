@@ -1,11 +1,13 @@
 ALL := ati nv
 
-all: $(addsuffix .ids,$(ALL))
+all:  $(addsuffix .ids,$(ALL))
+	$(MAKE) -C vmmouse_detect
+
 %.ids:
 	gawk -f $*/$*.awk $*/*.[ch] > $@
-	$(MAKE) -C vmmouse_detect
 
 clean:
 	$(RM) *.ids
+	$(MAKE) -C vmmouse_detect clean
 
 distclean: clean
