@@ -1,3 +1,9 @@
+fll-live-initscripts (3.4.5) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 26 Dec 2008 16:08:44 +0100
+
 fll-live-initscripts (3.4.4) unstable; urgency=low
 
   * enable the mouse wheel for vmmouse.
