@@ -1,8 +1,8 @@
-fll-live-initscripts (3.4.5) UNRELEASED; urgency=low
+fll-live-initscripts (3.4.5) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fix quotation marks for ZAxisMapping in vmmouse templates.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 26 Dec 2008 16:08:44 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 07 Jan 2009 17:06:48 +0100
 
 fll-live-initscripts (3.4.4) unstable; urgency=low
 
