@@ -1,8 +1,12 @@
 fll-live-initscripts (3.4.6) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 07 Jan 2009 17:08:52 +0100
+  [ Joaquim Boura ]
+  * added recognition of virtio block devices ( thks kelmo)
+
+ -- Joaquim Boura <x-un-i@sidux.com>  Sun, 11 Jan 2009 02:35:17 +0100
 
 fll-live-initscripts (3.4.5) unstable; urgency=low
 

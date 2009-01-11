@@ -228,7 +228,7 @@ is_wanted()
 	# avoid disk type checking
 	#
 	case "${name}" in
-		ps3d*)
+		ps3d*|vd[a-z]*)
 			return 0
 			;;
 	esac
@@ -544,7 +544,7 @@ scan_disks()
 		fi
 
 		case "${name}" in
-			[sh]d[a-z]*|ps3d*)
+			[shv]d[a-z]*|ps3d*)
 				dbg "device is a disk, count: ${disk}"
 				partitions=$(find -L "${p}" -maxdepth 1 \
 							    -name "${name}[0-9]*" \
