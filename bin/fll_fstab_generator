@@ -462,6 +462,9 @@ print_fsentry()
 							ext[23])
 								fs_mntops="defaults,errors=remount-ro,noatime"
 								;;
+							ext4)
+								fs_mntops="defaults,errors=remount-ro,noatime,barrier=0"
+								;;
 							*)
 								fs_mntops="defaults,noatime"
 								;;
