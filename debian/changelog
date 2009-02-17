@@ -1,3 +1,9 @@
+fll-live-initscripts (3.4.8) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 17 Feb 2009 21:42:00 +0100
+
 fll-live-initscripts (3.4.7) unstable; urgency=low
 
   * mount ext4 with barrier=0.
