@@ -100,8 +100,8 @@ do_start() {
 		log_daemon_msg "${NAME}" "blacklisting modules"
 		for module in ${BLACKLIST}; do
 			log_progress_msg "${module}"
-			if ! grep -s -q "^blacklist ${module}" /etc/modprobe.d/blacklist; then
-				echo "blacklist ${module}" >> /etc/modprobe.d/blacklist
+			if ! grep -s -q "^blacklist ${module}" /etc/modprobe.d/*; then
+				echo "blacklist ${module}" >> /etc/modprobe.d/fll-blacklist.conf
 			fi
 		done
 		log_end_msg 0
