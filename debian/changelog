@@ -3,9 +3,11 @@ fll-live-initscripts (3.4.8) unstable; urgency=low
   * parse all files in /etc/modprobe.d/* for potential blacklist entries;
     this does not filter out conffile backups and other cruft.
   * don't append blacklists to udev conffile, but create new 
-    /etc/modprobe.d/fll-blacklist.conf, if unavoidable.
+    /etc/modprobe.d/fll-blacklist.conf, if unavoidable. Treat 
+    fll-blacklist.conf as configuration file under the responsibility of the 
+    local admin and do not remove it on purge.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 05 Mar 2009 22:36:11 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 05 Mar 2009 22:41:30 +0100
 
 fll-live-initscripts (3.4.7) unstable; urgency=low
 
