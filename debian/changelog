@@ -1,3 +1,9 @@
+fll-live-initscripts (3.4.10) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 27 Mar 2009 01:10:17 +0100
+
 fll-live-initscripts (3.4.9) unstable; urgency=low
 
   * increase number of random characters for mktemp, required since mktemp
