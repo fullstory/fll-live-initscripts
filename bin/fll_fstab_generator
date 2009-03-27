@@ -271,7 +271,7 @@ _printf_mntent()
 # create state directory
 #
 set -e
-FSTAB_STATE_DIR=$(mktemp -p /tmp -d fstab.XXXX)
+FSTAB_STATE_DIR=$(mktemp -p /tmp -d fstab.XXXXXX)
 trap "{
 	if [ -d \"${FSTAB_STATE_DIR}\" ]; then
 		find \"${FSTAB_STATE_DIR}\" -delete
