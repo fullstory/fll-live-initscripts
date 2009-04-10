@@ -1,5 +1,4 @@
 bin/fll_xorgconfig				usr/sbin
 bin/fll_xserver_discover			usr/sbin
 contrib/*.ids					usr/share/fll-live-xorgconfig/xrandr
-contrib/vmmouse_detect/fll_vmmouse_detect	usr/sbin/
 share/fll-live-xorgconfig/templates		usr/share/fll-live-xorgconfig/

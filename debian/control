@@ -54,7 +54,7 @@ Depends: ${misc:Depends},
  distro-defaults,
  perl,
  xserver-xorg-core (>= 2:1.4-3)
-Recommends: kdm | gdm, xresprobe
+Recommends: kdm | gdm, xresprobe, xserver-xorg-input-vmmouse (>> 12.6.3)
 Description: fll live media xorg related tools
  A set of scripts to generate a Xorg configuration.
 

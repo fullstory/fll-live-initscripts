@@ -259,7 +259,7 @@ do_start() {
 	fi
 
 	# detect vmmouse
-	if /usr/sbin/fll_vmmouse_detect; then
+	if /usr/bin/vmmouse_detect; then
 		XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 	fi
 

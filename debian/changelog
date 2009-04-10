@@ -1,8 +1,10 @@
 fll-live-initscripts (3.4.10) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * drop our own vmmouse_detect copy, it's now part of 
+    xserver-xorg-input-vmmouse (>> 12.6.3), recommend it appropriately.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 27 Mar 2009 01:10:17 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 10 Apr 2009 15:36:38 +0200
 
 fll-live-initscripts (3.4.9) unstable; urgency=low
 
