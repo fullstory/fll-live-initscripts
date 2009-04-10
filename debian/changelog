@@ -3,8 +3,11 @@ fll-live-initscripts (3.4.10) UNRELEASED; urgency=low
   * NOT RELEASED YET
   * drop our own vmmouse_detect copy, it's now part of 
     xserver-xorg-input-vmmouse (>> 12.6.3), recommend it appropriately.
+  * add preliminary hal policies:
+    - keyboard
+    - simple synaptics
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 10 Apr 2009 15:36:38 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 10 Apr 2009 16:27:01 +0200
 
 fll-live-initscripts (3.4.9) unstable; urgency=low
 
