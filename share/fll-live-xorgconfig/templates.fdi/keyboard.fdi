@@ -3,8 +3,10 @@
 	<device>
 			<match key="info.capabilities" contains="input.keys">
 			<merge key="input.x11_driver" type="string">evdev</merge>
-			<merge key="input.x11_options.XkbLayout" type="string">@@XKBLAYOUT@@</merge>
+			<merge key="input.x11_options.XkbRules" type="string">xorg</merge>
 			<merge key="input.x11_options.XkbModel" type="string">@@XKBMODEL@@</merge>
+			<merge key="input.x11_options.XkbLayout" type="string">@@XKBLAYOUT@@</merge>
+			<merge key="input.x11_options.XkbVariant" type="string">@@XKBVARIANT@@</merge>
 			<merge key="input.x11_options.XkbOptions" type="string">@@XKBOPTIONS@@</merge>
 		</match>
 	</device>
