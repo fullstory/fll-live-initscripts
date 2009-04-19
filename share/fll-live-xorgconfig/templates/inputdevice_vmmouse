@@ -1,8 +1,0 @@
-Section "InputDevice"
-	Identifier	"@@NAME@@"
-	Driver		"vmmouse"
-	Option		"Device"		"@@DEVICE@@"
-	Option		"Protocol"		"@@PROTOCOL@@"
-	Option		"ZAxisMapping"		"4 5"
-	Option		"@@COREPOINTER@@"
-EndSection 

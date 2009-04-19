@@ -1,13 +1,13 @@
-fll-live-initscripts (3.4.10) UNRELEASED; urgency=low
+fll-live-initscripts (3.5.0) unstable; urgency=low
 
-  * NOT RELEASED YET
   * drop our own vmmouse_detect copy, it's now part of 
     xserver-xorg-input-vmmouse (>> 12.6.3), recommend it appropriately.
   * add preliminary hal policies:
     - simple synaptics
     - elantech, thanks to ffws.
+  * drop input templates and detection.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 14 Apr 2009 19:45:22 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 19 Apr 2009 17:26:05 +0200
 
 fll-live-initscripts (3.4.9) unstable; urgency=low
 

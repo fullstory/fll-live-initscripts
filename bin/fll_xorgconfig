@@ -41,11 +41,6 @@ my $xorg_tmpl = "$Bin/../share/fll-live-xorgconfig/templates";
 # used for counting line numbers
 my $n;
 
-# for handling multiple mice
-my %input;
-my $mice        = 0;
-my $mouse_index = 0;
-
 # the array to be tied to xorg.conf
 my @x;
 
@@ -67,11 +62,6 @@ my %x = (
 	'horizsync'   => '28-96',
 	'vertrefresh' => '50-75',
 
-	# keyboard
-	'xkblayout'  => 'us',
-	'xkbmodel'   => 'pc105',
-	'xkboptions' => 'altwin:super_win',
-
 	# extensions
 	'composite' => 0,
 );
@@ -92,271 +82,6 @@ sub dbg {
 		}
 		else {
 			print STDERR "$_\n";
-		}
-	}
-}
-
-# mouse <option> <key> <value>
-# function to place multiple mice into %x structure
-sub input {
-	# For a hash destination, the second arguments is the key to the hash,
-	# and the third argument the value to be stored.
-	my ($option, $key, $value) = (shift, shift, shift);
-
-	# store $key/$value in current $mouse_index
-	$x{'mouse'}{$mouse_index}{$key} = $value;
-
-	# call to &mouse, inciment $mice
-	# 3rd call to &mouse and inciment $mouse_index
-	$mouse_index++ if ++$mice % 5 == 0;
-}
-
-sub input_priority {
-	my $retval = 0;
-
-	my $a_type = $input{$a}->{'type'};
-	my $b_type = $input{$b}->{'type'};
-
-	dbg $a_type . " ($a) <=> ($b) " . $b_type;
-
-	# input device sorting function assigns priority according to type:
-	# alps/synaptics > serial > (?) > ps2/usb
-
-	# preserve order of detection for input devices of same type
-	if ($a_type eq $b_type) { $retval = $a <=> $b; }
-
-	# top-down priority
-	elsif ($a_type eq 'alps')      { $retval--; }
-	elsif ($b_type eq 'alps')      { $retval++; }
-	elsif ($a_type eq 'elantech') { $retval--; }
-	elsif ($b_type eq 'elantech') { $retval++; }
-	elsif ($a_type eq 'synaptics') { $retval--; }
-	elsif ($b_type eq 'synaptics') { $retval++; }
-	elsif ($a_type eq 'serial')    { $retval--; }
-	elsif ($b_type eq 'serial')    { $retval++; }
-	elsif ($a_type eq 'auto')      { $retval--; }
-	elsif ($b_type eq 'auto')      { $retval++; }
-	elsif ($a_type eq 'wacom')     { $retval--; }
-	elsif ($b_type eq 'wacom')     { $retval++; }
-
-	# preserve order of detection for unhandled input devices
-	else { $retval = $a <=> $b; }
-
-	dbg "retval: $retval";
-
-	return $retval;
-}
-
-sub input_detect {
-	my $options = shift;
-	my ($name, $device, $phys, $mouse, $type, $protocol, $corepointer, $auto);
-	my $input_file = '/proc/bus/input/devices';
-	
-	if (-f $input_file) {
-		dbg "using primary detection method: $input_file";
-		open(my $id, '<', $input_file)
-		        or die "Unable to read '$input_file': $!\n";
-INPUT:		while (<$id>) {
-			chomp;
-			dbg $_;
-
-			unless (/^./) {
-				# each input device block is seperated by a blank line
-				# clear these variables when we reach end of each block
-				($name, $device, $phys, $mouse, $type, $protocol) = ();
-				next;
-			}
-
-			my ($key, $val) = split '=';
-			($key and $val) or next;
-
-			$key =~ s/^\w:\s+//;
-
-			given (lc($key)) {
-				when 'name' {
-					($name = $val) =~ s/"//g;
-				}
-				when 'handlers' {
-					# filter out handlers containing kbd (eg, usb remote)
-					if ($val =~ /^kbd/) {
-						next INPUT;
-					}
-					# the mice have already been counted
-					if ($val =~ /mouse(\d+)/) {
-						$mouse = $1;
-					}
-				}
-				when 'phys' {
-					# filter out physical connections
-					# we cannot handle (eg, usb remote)
-					if ($val =~ /^(isa|usb)/) {
-						$phys = $1;
-					}
-				}
-				when 'sysfs' {
-					# use sysfs key as secondary method
-					# for detecting bus type
-					if ($val =~ /\/(usb)\d+\//) {
-						$phys = $1;
-					}
-				}
-			}
-
-			next unless (defined $mouse and $name and $phys);
-
-			given ($phys) {
-				when 'isa' {
-					given ($name) {
-						when m/^SynPS\/2/ {
-							$type     = 'synaptics';
-							$protocol = 'auto-dev';
-						}
-						when m/^ETPS\/2/ {
-							$type     = 'elantech';
-							$protocol = 'auto-dev';
-						}
-						when m/^AlpsPS\/2/ {
-							$type     = 'alps';
-							$protocol = 'auto-dev';
-						}
-						default {
-							$type     = 'auto';
-							$protocol = 'Auto';
-						}
-					}
-				}
-				when 'usb' {
-					given ($name) {
-						when m/^Wacom/ {
-							$type     = 'wacom_usb';
-							$device   = '/dev/input/wacom';
-						}
-						default {
-							$type     = 'auto';
-							$protocol = 'Auto';
-						}
-					}
-				}
-			}
-
-			unless ($type) {
-				dbg "Unknown type, skipping...";
-				next;
-			}
-
-			$device ||= '/dev/input/mice';
-
-			$input{$mouse} = {
-				'name'     => $name,
-				'type'     => $type,
-				'device'   => $device,
-				'protocol' => $protocol,
-			};
-
-			dbg \%{ $input{$mouse} };
-
-			($name, $phys, $mouse) = ();
-		}
-		close($id);
-
-		dbg \%input;
-	}
-
-	# set $mouse to current input device count
-	$mouse = keys %input ? keys %input : 0;
-	dbg "mouse count: $mouse";
-
-	# fallback mouse detection via hwinfo - probe for serial mouse when
-	# no other devices detected above via /proc/bus/input/devices
-	if (($x{'serial-mouse'} or not keys %input) and -x '/usr/sbin/hwinfo') {
-		dbg "using alternative detection method: hwinfo --mouse --short";
-		
-		open(my $hw, '-|', '/usr/sbin/hwinfo --mouse --short')
-		        or die("Unable to execute hwinfo --mouse: $!\n");
-		while (<$hw>) {
-			chomp;
-			dbg $_;
-
-			($name, $device, $type) = ();
-
-			if (m|^\s*(/dev/tty[^\s]+)\s+(.*)$|) {
-				($device, $name, $type) = ($1, $2, 'serial');
-
-				$input{$mouse} = {
-					'name'     => $name,
-					'type'     => $type,
-					'device'   => $device,
-					'protocol' => 'Microsoft',
-				};
-
-				dbg \%{ $input{$mouse} };
-
-				$mouse++;
-			}
-		}
-		close($hw);
-
-		dbg \%input;
-	}
-
-	for my $key (sort input_priority keys %input) {
-		dbg $input{$key};
-
-		# only give one auto device to fll_xorgconfig
-		if ($input{$key}->{'type'} eq 'auto' and $auto) {
-			dbg "Avoiding duplicate auto device entry...";
-			next;
-		}
-		elsif ($input{$key}->{'type'} =~ /^wacom/) {
-			for ('stylus', 'eraser', 'cursor') {
-				input(undef, 'name', $input{$key}->{'name'} . " $_");
-				input(undef, 'type', $input{$key}->{'type'});
-				input(undef, 'device', $input{$key}->{'device'});
-				input(undef, 'protocol', $_);
-				input(undef, 'corepointer', 'SendCoreEvents');
-			}
-
-			# Some wacom tablets get a pad section
-			if ($input{$key}->{'name'} =~ /^Wacom (Intuos3|Graphire4|Bamboo)/) {
-				input(undef, 'name', $input{$key}->{'name'} . " pad");
-				input(undef, 'type', $input{$key}->{'type'});
-				input(undef, 'device', $input{$key}->{'device'});
-				input(undef, 'protocol', 'pad');
-				input(undef, 'corepointer', undef);
-			}
-		}
-		else {
-
-			# form --input argument string to give to fll_xorgconfig
-			for ('name', 'type', 'device', 'protocol') {
-				input(undef, $_, $input{$key}->{$_});
-			}
-
-			# elect a Core Pointer - USB device hotplugged later currently
-			# may not work if we do this :/
-			if ($corepointer) {
-				input(undef, 'corepointer', 'SendCoreEvents');
-			}
-			else {
-				input(undef, 'corepointer', 'CorePointer');
-				$corepointer++;
-			}
-			
-			# count auto devices, we don't want to add > 1 of them
-			$input{$key}->{'type'} eq 'auto' and $auto++;
-		}
-	}
-
-	if ($corepointer and not $auto) {
-		for (
-			'name=Generic Mouse',
-			'type=auto',
-			'device=/dev/input/mice',
-			'corepointer=SendCoreEvents',
-			'protocol=Auto',
-			) {
-			my ($k, $v) = split(/=/, $_);
-			input(undef, $k, $v);
 		}
 	}
 }
@@ -495,18 +220,6 @@ GetOptions(
 	'horizsync=s',
 	'vertrefresh=s',
 
-	# input device
-	# --input type=<synaptics,alps,serial,auto> protocol=<> \
-	# 	dev=<> name=<> corepointer=<CorePointer,SendCoreEvents>
-	'input=s%{5}' => \&input,
-	'serial-mouse',
-
-	# keyboard
-	'xkblayout=s',
-	'xkbmodel=s',
-	'xkboptions=s',
-	'xkbvariant=s',
-
 	# xrandr
 	'xrandr',
 	'mode=s',
@@ -560,59 +273,10 @@ for my $key (keys %x) {
 my @heading      = get_template('heading');
 my @serverlayout = get_template('serverlayout');
 my @serverflags  = get_template('serverflags');
-my @keyboard     = get_template('inputdevice_keyboard');
-my @input;       # template(s) handled below
 my @monitor      = get_template('monitor');
 my @device       = ($x{'driver'} or $x{'busid'} or $x{'boardname'}) ? get_template('device') : undef;
 my @screen       = get_template('screen');
 my @extensions   = get_template('extensions');
-
-###########################################################
-# input devices
-input_detect unless $mice;
-
-MICE: for my $m (sort { $a <=> $b } keys %{ $x{'mouse'} }) {
-	# append current mouse number to name, ensuring it will be unique
-	$x{'mouse'}{$m}{'name'} .= " $m";
-
-	# take a slice of $x{'mouse'}{$m}
-	my ($type, $device, $name, $protocol) =
-		@{ $x{'mouse'}{$m} }{ 'type', 'device', 'name', 'protocol' };
-	
-	# add inputdevice line to ServerLayout
-	dbg "pushing input_device '$name' to serverlayout section";
-	splice(@serverlayout, -1, 0, "\tInputDevice\t\"$name\"");
-
-	my @section = get_template("inputdevice_$type");
-
-	$n = 0;
-MOUSE:	while ($section[$n]) {
-		my $line = $section[$n];
-		dbg "$n: $line";
-
-		given ($line) {
-			when m/@@\w+@@/ {
-				if ($line =~ m/@@(\w+)@@/ and $x{'mouse'}{$m}{ lc($1) }) {
-					dbg "Modifying line '$n': $1 => " . $x{'mouse'}{$m}{ lc($1) };
-					my $sub = $x{'mouse'}{$m}{ lc($1) };
-					(my $newline = $line) =~ s/@@\w+@@/$sub/;
-					push(@input, $newline);
-				}
-				else {
-					dbg "Ignoring line '$n'";
-				}
-				next MOUSE;
-			}
-		}
-
-		push(@input, $line);
-	}
-	continue {
-		$n++;
-	}
-}
-
-dbg \@input;
 
 ###########################################################
 # monitor settings
@@ -677,8 +341,6 @@ $x_o->flock;
 	@heading,
 	@serverlayout,
 	@serverflags,
-	@keyboard,
-	@input,
 	@device,
 	@monitor,
 	@screen,

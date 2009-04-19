@@ -16,9 +16,7 @@ SYNOPSIS
 DESCRIPTION
 -----------
 fll_xorgconfig(8) provides a framework for generating a valid xorg.conf(5) for
-the local system. Only basic input detection is performed by the script (as a
-temporary workaround for input hotplugging), all other input must be done by a
-shell wrapper.
+the local system.
 
 Templates for various Sections of xorg.conf are manipulated and put together
 based on what options are given.
@@ -68,30 +66,6 @@ OPTIONS
 --vertrefresh 'string'::
 	String containing Vertical refresh range.
 	Default: "50-75"
-
---input 'type=<> protocol=<> dev=<> name=<> corepointer=<>'::
-	Only used for internal regression testing.
-
---serial-mouse::
-	Use fallback detection method that utilizes hwinfo(8) in attempt to
-	probe for serial mice.
-	Default: false
-
---xkblayout 'string'::
-	String to be used as XkbLayout value in keyboard section.
-	Default: "us"
-
---xkbmodel 'string'::
-	String to be used as XkbModel value in keyboard section.
-	Default: "pc105"
-
---xkboptions 'string'::
-	String to be used as XkbOptions value in keyboard section.
-	Default: "altwin:super_win"
-
---xkbvariant 'string'::
-	String to be used as XkbVariant value in keyboard section.
-	Default: None
 
 --xrandr::
 	Turn on method of configuration for RandR 1.2 aware drivers. This

@@ -1,3 +1,4 @@
-Section "ServerFlags"
-	Option		"AllowMouseOpenFail"	"true"
-EndSection
+#Section "ServerFlags"
+#	Option		"AllowMouseOpenFail"	"true"
+#	Option		"DontZap"		"false"
+#EndSection

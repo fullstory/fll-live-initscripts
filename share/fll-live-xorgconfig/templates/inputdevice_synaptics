@@ -1,8 +1,0 @@
-Section "InputDevice"
-	Identifier	"@@NAME@@"
-	Driver		"synaptics"
-	Option		"Device"		"@@DEVICE@@"
-	Option		"Protocol"		"@@PROTOCOL@@"
-	Option		"SHMConfig"		"on"
-	Option		"@@COREPOINTER@@"
-EndSection

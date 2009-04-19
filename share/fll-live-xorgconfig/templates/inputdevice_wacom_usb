@@ -1,8 +1,0 @@
-Section "InputDevice"
-	Identifier	"@@NAME@@"
-	Driver		"wacom"
-	Option		"Device"		"@@DEVICE@@"
-	Option		"Type"			"@@PROTOCOL@@"
-	Option		"USB"			"on"
-	Option		"@@COREPOINTER@@"
-EndSection

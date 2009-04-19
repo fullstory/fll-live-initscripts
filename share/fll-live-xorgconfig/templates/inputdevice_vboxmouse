@@ -1,7 +1,0 @@
-Section "InputDevice"
-	Identifier	"@@NAME@@"
-	Driver		"vboxmouse"
-	Option		"Device"		"@@DEVICE@@"
-	Option		"Protocol"		"@@PROTOCOL@@"
-	Option		"@@COREPOINTER@@"
-EndSection

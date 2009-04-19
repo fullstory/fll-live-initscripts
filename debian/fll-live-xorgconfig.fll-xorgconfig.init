@@ -44,11 +44,6 @@ if [ ! -x /usr/sbin/fll_xorgconfig ] || [ ! -x /usr/sbin/fll_xserver_discover ];
 	exit 0
 fi
 
-# XKBLAYOUT is stored here by /etc/init.d/fll-locales
-if [ -s /etc/default/fll-locales ]; then
-	. /etc/default/fll-locales
-fi
-
 ###
 # source lsb functions
 ###
@@ -80,26 +75,11 @@ if [ -f /proc/cmdline ]; then
 			nomodelines|noml)
 				XNOMODELINES="1"
 				;;
-			smouse)
-				XPROBE_SERIAL_MOUSE="1"
-				;;
 			xdepth=*|depth=*)
 				XDEPTH="${param#*depth=}"
 				;;
 			xhrefresh=*|hsync=*)
 				XHORIZSYNC="${param#*=}"
-				;;
-			xkblayout=*)
-				XKBLAYOUT="${param#xkblayout=}"
-				;;
-			xkbmodel=*)
-				XKBMODEL="${param#xkbmodel=}"
-				;;
-			xkboptions=*)
-				XKBOPTIONS="${param#xkboptions=}"
-				;;
-			xkbvariant=*)
-				XKBVARIANT="${param#xkbvariant=}"
 				;;
 			xdriver=*|xmodule=*)
 				XNEWMODULE="${param#x*=}"
@@ -207,23 +187,6 @@ do_start() {
 		XCFG_OPTS="${XCFG_OPTS} --verbose"
 	fi
 
-	# sourced earlier from /etc/default/fll-locales
-	if [ "${XKBLAYOUT}" ]; then
-		XCFG_OPTS="${XCFG_OPTS} --xkblayout '${XKBLAYOUT}'"
-	fi
-
-	if [ "${XKBMODEL}" ]; then
-		XCFG_OPTS="${XCFG_OPTS} --xkbmodel '${XKBMODEL}'"
-	fi
-
-	if [ "${XKBVARIANT}" ]; then
-		XCFG_OPTS="${XCFG_OPTS} --xkbvariant '${XKBVARIANT}'"
-	fi
-
-	if [ "${XKBOPTIONS}" ]; then
-		XCFG_OPTS="${XCFG_OPTS} --xkboptions '${XKBOPTIONS}'"
-	fi
-
 	# detect video hardware via fll_xserver_discover
 	#     XMODULE XBOARDNAME XBUSID XVENDOR XDEVICE
 	eval $(/usr/sbin/fll_xserver_discover 2>/dev/null)
@@ -242,8 +205,6 @@ do_start() {
 
 	# detected virtualbox emulated VGA hardware
 	if [ "${XMODULE}" = "vboxvideo" ]; then
-		# override mouse
-		XCFG_OPTS="${XCFG_OPTS} --input name=VBoxMouse type=vboxmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 		# create xrandr style configuration
 		XFORCERANDR="1"
 		# make sure the virtualbox-ose-guest-utils service is configured to start
@@ -256,11 +217,6 @@ do_start() {
 	if [ "${XMODULE}" = "vmware" ]; then
 		# create xrandr style configuration
 		XFORCERANDR="1"
-	fi
-
-	# detect vmmouse
-	if /usr/bin/vmmouse_detect; then
-		XCFG_OPTS="${XCFG_OPTS} --input name=VMMouse type=vmmouse device=/dev/input/mice corepointer=CorePointer protocol=Auto"
 	fi
 
 	if [ -z "${XMODULE}" ]; then
@@ -421,10 +377,6 @@ do_start() {
 		XCFG_OPTS="${XCFG_OPTS} --colordepth '${XDEPTH}'"
 	elif [ "${XMODULE}" = "vesa" ]; then
 		XCFG_OPTS="${XCFG_OPTS} --colordepth 16"
-	fi
-
-	if [ "${XPROBE_SERIAL_MOUSE}" ]; then
-		XCFG_OPTS="${XCFG_OPTS} --serial-mouse"
 	fi
 
 	# write the configuration to file
