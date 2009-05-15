@@ -55,3 +55,8 @@ fll_get_mnt() {
 	fi
 }
 
+fll_redirect() {
+	exec  >/tmp/${NAME}.log 2>&1
+	set -x
+}
+

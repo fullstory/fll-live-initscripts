@@ -84,7 +84,8 @@ if [ -f /proc/cmdline ]; then
 	for param in $(cat /proc/cmdline); do
 		case "${param}" in
 			flldebug=*)
-				[ "${param#flldebug=}" = "${NAME#fll-}" ] && set -x
+				[ "${param#flldebug=}" = "${NAME#fll-}"  -o "${param#flldebug=}" = "all" ] && \
+					fll_redirect
 				;;
 			lang=*)
 				LANGUAGE=$(awk 'BEGIN{ print tolower("'"${param#lang=}"'") }')
