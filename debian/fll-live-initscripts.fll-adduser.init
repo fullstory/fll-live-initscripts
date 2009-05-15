@@ -71,7 +71,7 @@ if [ -f /proc/cmdline ]; then
 	done
 fi
 
-&& add_live_user() {
+add_live_user() {
 	if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
 		log_action_begin_msg " user '${FLL_LIVE_USER}' exists"
 		return 0
