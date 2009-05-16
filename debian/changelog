@@ -1,7 +1,4 @@
-fll-live-initscripts (3.5.2) UNRELEASED; urgency=low
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (3.5.2) unstable; urgency=low
 
   [ Joaquim Boura ]
   * on debug redirect output to a log file in /tmp/${NAME}.log.
