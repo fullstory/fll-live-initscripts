@@ -127,7 +127,7 @@ do_start() {
 				XSESSION="fluxbox"
 				;;
 			"/usr/bin/xfwm4")
-				XSESSION="xfce4"
+				XSESSION="xfce"
 				;;
 			"/usr/bin/icewm")
 				XSESSION="IceWM"
