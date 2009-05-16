@@ -8,7 +8,10 @@ fll-live-initscripts (3.5.2) unstable; urgency=low
   [ Bernard Gray ]
   * xfce requires session xfce not xfce4 in ~/.dmrc
 
- -- Bernard Gray <bernard.gray@gmail.com>  Sat, 16 May 2009 23:54:15 +1000
+  [ Stefan Lippers-Hollmann ]
+  * fix bashisms introduced in r23385.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 17 May 2009 00:09:06 +0200
 
 fll-live-initscripts (3.5.1) unstable; urgency=low
 
