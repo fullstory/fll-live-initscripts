@@ -1,9 +1,5 @@
-fll-live-initscripts (3.5.3) UNRELEASED; urgency=low
+fll-live-initscripts (3.5.3) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Joaquim Boura ]
   * somehow last cleary fix was gone. redoing it.
 
  -- Joaquim Boura <x-un-i@sidux.com>  Sun, 17 May 2009 15:25:32 +0200
