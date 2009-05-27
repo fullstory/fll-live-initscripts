@@ -70,6 +70,7 @@ if [ -f /proc/cmdline ]; then
 				;;
 			noxrandr)
 				XNOXRANDR="1"
+				XOVERRIDE="1"
 				;;
 			noxresprobe|noxprobe)
 				XNOXRESPROBE="1"
@@ -79,24 +80,29 @@ if [ -f /proc/cmdline ]; then
 				;;
 			xdepth=*|depth=*)
 				XDEPTH="${param#*depth=}"
+				XOVERRIDE="1"
 				;;
 			xhrefresh=*|hsync=*)
 				XHORIZSYNC="${param#*=}"
+				XOVERRIDE="1"
 				;;
 			xdriver=*|xmodule=*)
 				XNEWMODULE="${param#x*=}"
 				;;
 			xrate=*|rate=*)
 				XRATE="${param#*rate=}"
+				XOVERRIDE="1"
 				;;
 			xrandr)
 				XFORCERANDR="1"
 				;;
 			xscreen=*|screen=*|xmode=*|mode=*)
 				XMODES="${param#*=}"
+				XOVERRIDE="1"
 				;;
 			xvrefresh=*|vsync=*)
 				XVERTREFRESH="${param#*=}"
+				XOVERRIDE="1"
 				;;
 			vesa)
 				XNEWMODULE="vesa"
@@ -274,17 +280,21 @@ do_start() {
 		# ... to do the right thing
 		XCFG_OPTS="${XCFG_OPTS} --xrandr"
 		
-		if [ "${XMODES}" ]; then
-			XCFG_OPTS="${XCFG_OPTS} --mode '${XMODES}'"
-		fi
+		if [ -z "${XOVERRIDE}" ]; then
+			XCFG_OPTS="${XCFG_OPTS} --nocheat"
+		else
+			if [ "${XMODES}" ]; then
+				XCFG_OPTS="${XCFG_OPTS} --mode '${XMODES}'"
+			fi
 
-		# warn about override semantic difference
-		if [ "${XVERTREFRESH}" ] && [ -z "${XRATE}" ]; then
-			log_warning_msg "ignoring vsync=${XVERTREFRESH}"
-		fi
+			# warn about override semantic difference
+			if [ "${XVERTREFRESH}" ] && [ -z "${XRATE}" ]; then
+				log_warning_msg "ignoring vsync=${XVERTREFRESH}"
+			fi
 
-		if [ "${XRATE}" ]; then
-			XCFG_OPTS="${XCFG_OPTS} --rate '${XRATE}'"
+			if [ "${XRATE}" ]; then
+				XCFG_OPTS="${XCFG_OPTS} --rate '${XRATE}'"
+			fi
 		fi
 	else
 		log_daemon_msg "${NAME}"

@@ -1,8 +1,9 @@
-fll-live-initscripts (3.5.4) UNRELEASED; urgency=low
+fll-live-initscripts (3.5.4) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * create a minimal (device section only) xorg.conf for xrandr 1.2 compatible
+    hardware, in case no manual cheatcodes affecting xorg.conf are supplied.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 18 May 2009 00:19:09 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 28 May 2009 00:39:24 +0200
 
 fll-live-initscripts (3.5.3) unstable; urgency=low
 
