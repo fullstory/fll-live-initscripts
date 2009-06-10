@@ -1,8 +1,13 @@
 fll-live-initscripts (3.5.5) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 28 May 2009 00:41:36 +0200
+  [ Michael Deelwater ]
+  * fll-locales:
+    - Remove BOOTTIME.KMAP MD5 hash calculation. Has been dropped completely.
+
+ -- Michael Deelwater <michael.deelwater@googlemail.com>  Thu, 11 Jun 2009 01:11:44 +0200
 
 fll-live-initscripts (3.5.4) unstable; urgency=low
 

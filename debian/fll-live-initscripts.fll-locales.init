@@ -492,12 +492,6 @@ XKBOPTIONS="${XKBOPTIONS}"
 EOF
 
 	setupcon --save-only
-	
-	BOOTTIME_KMAP_MD5=$(md5sum /etc/console-setup/boottime.kmap.gz | sed 's/ .*//')
-
-	cat >> /etc/default/console-setup <<EOF
-BOOTTIME_KMAP_MD5="${BOOTTIME_KMAP_MD5}"
-EOF
 }
 
 apt_install_lang() {
