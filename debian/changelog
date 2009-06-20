@@ -1,8 +1,9 @@
-fll-live-initscripts (3.5.6) UNRELEASED; urgency=low
+fll-live-initscripts (3.5.6) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fll-locales:
+    - add sidux.office-vienna.at as new primary to the mirror preseeding.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 11 Jun 2009 02:01:41 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 20 Jun 2009 15:04:21 +0200
 
 fll-live-initscripts (3.5.5) unstable; urgency=low
 
