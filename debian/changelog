@@ -1,8 +1,17 @@
-fll-live-initscripts (3.5.7) UNRELEASED; urgency=low
+fll-live-initscripts (3.5.7) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * update shipped PCI IDs in contrib:
+    - xserver-xorg-video-ati 1:6.12.2-2
+    - xserver-xorg-video-nv 1:2.1.13-1
+  * add new PCI IDs in contrib:
+    - xserver-xorg-video-intel 2:2.7.1-1
+    - xserver-xorg-video-radeon 1:6.12.2-2
+  * temporarily ship PCI IDs which were already removed from the corresponding
+    xserver-xorg-video-* packages, conflict with older versions still providing
+    them.
+  * bump standards version to 3.8.2, no changes necessary.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 20 Jun 2009 15:05:49 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 21 Jun 2009 02:22:41 +0200
 
 fll-live-initscripts (3.5.6) unstable; urgency=low
 

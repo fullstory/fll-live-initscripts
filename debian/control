@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 7),
  docbook-xsl,
  devscripts,
  dash
-Standards-Version: 3.8.0
+Standards-Version: 3.8.2
 Vcs-Svn: svn://svn.berlios.de/fullstory/fll-live-initscripts/trunk
 Vcs-Browser: http://svn.berlios.de/wsvn/fullstory/fll-live-initscripts/trunk/
 
@@ -55,6 +55,9 @@ Depends: ${misc:Depends},
  perl,
  xserver-xorg-core (>= 2:1.6.1)
 Recommends: kdm | gdm, xresprobe, xserver-xorg-input-vmmouse (>> 12.6.3)
+Conflicts: xserver-xorg-video-ati (<< 1:6.12.2-2),
+ xserver-xorg-video-intel (<< 2:2.7.1-1),
+ xserver-xorg-video-radeonhd (<< 1.2.4-3)
 Description: fll live media xorg related tools
  A set of scripts to generate a Xorg configuration.
 
