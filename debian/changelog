@@ -10,8 +10,11 @@ fll-live-initscripts (3.5.7) unstable; urgency=low
     xserver-xorg-video-* packages, conflict with older versions still providing
     them.
   * bump standards version to 3.8.2, no changes necessary.
+  * contrib/*/Makefile inherited by the work for 
+    xserver-xorg-video-{ati,intel,radeonhd} by Brice Goglin 
+    <bgoglin@debian.org> and Julien Cristau <jcristau@debian.org>.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 21 Jun 2009 02:22:41 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 21 Jun 2009 02:43:13 +0200
 
 fll-live-initscripts (3.5.6) unstable; urgency=low
 
