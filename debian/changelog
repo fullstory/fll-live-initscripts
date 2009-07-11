@@ -1,3 +1,9 @@
+fll-live-initscripts (3.5.11) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 09 Jul 2009 03:26:39 +0200
+
 fll-live-initscripts (3.5.10) unstable; urgency=low
 
   * support slim >=1.3.1 in addition to kdm/ gdm, thanks to edhunter.
