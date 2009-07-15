@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.1) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 15 Jul 2009 02:50:53 +0200
+
 fll-live-initscripts (3.6.0) unstable; urgency=low
 
   * X-org 7.4 doesn't evaluate /usr/share/xserver-xorg/pci/ to determine the 
