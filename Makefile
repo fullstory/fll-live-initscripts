@@ -1,4 +1,4 @@
-DIRS := bin contrib man
+DIRS := man
 INIT := $(notdir $(wildcard debian/*.init))
 
 all: $(DIRS:%=all-%)

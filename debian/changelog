@@ -1,8 +1,13 @@
-fll-live-initscripts (3.5.11) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.0) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * X-org 7.4 doesn't evaluate /usr/share/xserver-xorg/pci/ to determine the 
+    installed graphics cards anymore:
+    - drop temporarily shipped PCI IDs in contrib/
+    - drop fll_xserver_discover
+    - adapt debian/control accordingly.
+  * make fll-live-xorgconfig arch=all.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 09 Jul 2009 03:26:39 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 15 Jul 2009 02:45:07 +0200
 
 fll-live-initscripts (3.5.10) unstable; urgency=low
 
