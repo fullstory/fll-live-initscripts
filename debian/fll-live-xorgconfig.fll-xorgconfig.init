@@ -78,7 +78,7 @@ if [ -f /proc/cmdline ]; then
 				XHORIZSYNC="${param#*=}"
 				;;
 			xdriver=*|xmodule=*)
-				XNEWMODULE="${param#x*=}"
+				XMODULE="${param#x*=}"
 				;;
 			xrate=*|rate=*)
 				XRATE="${param#*rate=}"
@@ -93,7 +93,7 @@ if [ -f /proc/cmdline ]; then
 				XVERTREFRESH="${param#*=}"
 				;;
 			vesa)
-				XNEWMODULE="vesa"
+				XMODULE="vesa"
 				;;
 		esac
 	done
@@ -150,12 +150,11 @@ do_start() {
 	   [ -z "${XNOMODELINES}" ] && \
 	   [ -z "${XDEPTH}" ] && \
 	   [ -z "${XHORIZSYNC}" ] && \
-	   [ -z "${XNEWMODULE}" ] && \
+	   [ -z "${XMODULE}" ] && \
 	   [ -z "${XRATE}" ] && \
 	   [ -z "${XFORCERANDR}" ] && \
 	   [ -z "${XMODES}" ] && \
-	   [ -z "${XVERTREFRESH}" ] && \
-	   [ -z "${XNEWMODULE}" ]; then
+	   [ -z "${XVERTREFRESH}" ]; then
 		log_action_begin_msg " no cheatcodes detected, dereferring X detection to X.org"
 		log_end_msg 0
 
@@ -180,14 +179,10 @@ do_start() {
 	
 	log_daemon_msg "${NAME}"
 
-	if [ "${XNEWMODULE}" ]; then
-		# user override
-		log_progress_msg "driver(*): ${XNEWMODULE}"
-		XMODULE="${XNEWMODULE}"
-	elif [ "${XMODULE}" ]; then
+	if [ "${XMODULE}" ]; then
 		log_progress_msg "driver: ${XMODULE}"
+		XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
 	fi
-	XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
 
 	# turn composite on for modules that support it well
 	case "${XMODULE}" in

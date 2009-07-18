@@ -1,8 +1,8 @@
-fll-live-initscripts (3.6.5) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.5) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * merge XMODULE and XNEWMODULE usage.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 23:16:44 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 23:55:55 +0200
 
 fll-live-initscripts (3.6.4) unstable; urgency=low
 
