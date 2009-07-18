@@ -1,8 +1,9 @@
 fll-live-initscripts (3.6.2) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * xresprobe is no more, remove code chunks parsing it.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 14:05:41 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 15:23:04 +0200
 
 fll-live-initscripts (3.6.1) unstable; urgency=low
 

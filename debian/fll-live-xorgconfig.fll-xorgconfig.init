@@ -72,9 +72,6 @@ if [ -f /proc/cmdline ]; then
 				XNOXRANDR="1"
 				XOVERRIDE="1"
 				;;
-			noxresprobe|noxprobe)
-				XNOXRESPROBE="1"
-				;;
 			nomodelines|noml)
 				XNOMODELINES="1"
 				;;
@@ -165,26 +162,6 @@ xserver_has_xrandr() {
 			return 1
 			;;
 	esac
-}
-
-x_res_probe() {
-	[ "${XNOXRESPROBE}" ] && return 0
-	
-	awk -F: -v driver="${1}" '
-		BEGIN {
-			cmd = "xresprobe " driver
-			while ((cmd | getline) > 0) {
-				sub(/^[ \t]+/,"",$2)
-				if ($1 == "freq") {
-					split($2,f," ")
-					print "XHFREQ" "=\"" f[1] "\""
-					print "XVFREQ" "=\"" f[2] "\""
-					delete f
-				}
-				else 
-					print "X" toupper($1) "=\"" $2 "\""
-			}
-		}'
 }
 
 do_start() {
@@ -298,31 +275,12 @@ do_start() {
 		fi
 	else
 		log_daemon_msg "${NAME}"
-		if [ "${XNOXRESPROBE}" ]; then
-			log_action_begin_msg " default monitor settings"
-		else
-			log_action_begin_msg " detecting monitor settings"
-		fi
-		
-		# legacy style config, we need to probe for optimal X settings
-		#     XID XRES XHFREQ XVFREQ XDISPTYPE
-		eval $(x_res_probe ${XMODULE})
-
-		# probed
-		if [ "${XID}" ]; then
-			# too long: log_progress_msg "id: ${XID}"
-			XCFG_OPTS="${XCFG_OPTS} --modelname '${XID}'"
-		fi
+		log_action_begin_msg " default monitor settings"
 		
 		if [ "${XMODES}" ]; then
 			# cheatcode
 			log_progress_msg "res(*): ${XMODES}"
 			XCFG_OPTS="${XCFG_OPTS} --modes '${XMODES}'"
-		elif [ "${XRES}" ]; then
-			# just announce the highest res detected
-			log_progress_msg "res: ${XRES%%\ *}"
-			# probed
-			XCFG_OPTS="${XCFG_OPTS} --modes '${XRES}'"
 		fi
 		
 		if [ "${XHORIZSYNC}" ]; then
@@ -336,10 +294,6 @@ do_start() {
 
 			log_progress_msg "hfreq(*): ${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX} kHz"
 			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHORIZSYNC_MIN}-${XHORIZSYNC_MAX}'"
-		elif [ "${XHFREQ}" ]; then
-			log_progress_msg "hfreq: ${XHFREQ} kHz"
-			# probed
-			XCFG_OPTS="${XCFG_OPTS} --horizsync '${XHFREQ}'"
 		fi
 
 		# warn about override semantic difference
@@ -358,20 +312,6 @@ do_start() {
 
 			log_progress_msg "vfreq(*): ${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz"
 			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'"
-		elif [ "${XVFREQ}" ]; then
-			# probed
-			XVERTREFRESH_MIN="${XVFREQ%%-*}"
-			XVERTREFRESH_MAX="${XVFREQ##*-}"
-
-			if [ "${XVERTREFRESH_MAX}" -ge "85" ]; then
-				# raise minimum vertical refresh threshold
-				XVERTREFRESH_MIN="73"
-				log_progress_msg "vfreq(+): ${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz"
-			else
-				log_progress_msg "vfreq: ${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX} Hz"
-			fi
-
-			XCFG_OPTS="${XCFG_OPTS} --vertrefresh '${XVERTREFRESH_MIN}-${XVERTREFRESH_MAX}'"
 		fi
 
 		# cheatcode
@@ -382,7 +322,6 @@ do_start() {
 		log_end_msg 0
 	fi
 
-	# x_res_probe() may also export this variable
 	# force colordepth of 16 for vesa, this helps with antiquated
 	# graphics chipsets.
 	if [ "${XDEPTH}" ]; then
