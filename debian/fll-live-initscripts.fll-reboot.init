@@ -78,58 +78,14 @@ if [ -f /proc/cmdline ]; then
 fi
 
 ###############################################################################
-# Adapted from initscripts: /etc/init.d/umountfs (2.86.ds1-38)
+# Adapted from initscripts: /etc/init.d/umountfs (2.86.ds1-62)
 ###############################################################################
-# Print in order of decreasing length
-#
-# Algorithm: Find and print longest argument, then call self
-# to print remaining arguments in order of decreasing length
-#
-# This function runs at one tenth the speed of the sort program
-# but we use the function because we don't want to rely on any
-# programs in /usr/.
-#
-# N.B.: Arguments must not be null and must not contain whitespace
-#
-pioodl() {
-	[ "$1" ] || return 0
-	
-	ARGNUM=1
-	ARGNUM_LONGEST=0
-	ARGLENGTH_LONGEST=0
-	for ARG in "$@"
-	do
-		ARGLENGTH="${#ARG}"
-		if [ "$ARGLENGTH" -gt "$ARGLENGTH_LONGEST" ]
-		then
-			ARGLENGTH_LONGEST="$ARGLENGTH"
-			ARGNUM_LONGEST="$ARGNUM"
-		fi
-		ARGNUM=$(($ARGNUM + 1))
-	done
-	
-	# The method of passing prevargs assumes that args can be
-	# delimited with spaces
-	ARGNUM=1
-	PREVARGS=""
-	while [ "$ARGNUM" -lt "$ARGNUM_LONGEST" ]
-	do
-		PREVARGS="$PREVARGS $1"
-		shift
-		ARGNUM=$(($ARGNUM + 1))
-	done
-	echo "$1"
-	shift
-	
-	pioodl $PREVARGS "$@"
-}
-
 do_umount() {
 	exec 9<&0 < /proc/mounts
 
 	REG_MTPTS=""
 	TMPFS_MTPTS=""
-	while read DEV MTPT FSTYPE OPTS REST
+	while read -r DEV MTPT FSTYPE OPTS REST
 	do
 		case "$MTPT" in
 			#
@@ -138,10 +94,10 @@ do_umount() {
 			/fll/*)
 				case "$FSTYPE" in
 					iso9660)
-						[ "$MTPT" = /fll/fromiso ] && LIVE_MTPTS="$LIVE_MTPTS $MTPT"
+						[ "$MTPT" = /fll/fromiso ] && LIVE_MTPTS="$MTPT $LIVE_MTPTS"
 						;;
 					*)
-						LIVE_MTPTS="$LIVE_MTPTS $MTPT"
+						LIVE_MTPTS="$MTPT $LIVE_MTPTS"
 						;;
 				esac
 				continue
@@ -171,19 +127,19 @@ do_umount() {
 			# live hack
 			#
 			aufs|unionfs)
-				UNION_MTPTS="$UNION_MTPTS $MTPT"
+				UNION_MTPTS="$MTPT $UNION_MTPTS"
 				;;
 			squashfs)
-				SQUSH_MTPTS="$SQUSH_MTPTS $MTPT"
+				SQUSH_MTPTS="$MTPT $SQUSH_MTPTS"
 				;;
 			#
 			# live hack
 			#
 			tmpfs)
-				TMPFS_MTPTS="$TMPFS_MTPTS $MTPT"
+				TMPFS_MTPTS="$MTPT $TMPFS_MTPTS"
 				;;
 			*)
-				REG_MTPTS="$REG_MTPTS $MTPT"
+				REG_MTPTS="$MTPT $REG_MTPTS"
 				;;
 		esac
 	done
@@ -197,15 +153,14 @@ do_umount() {
 	#
 	if [ "$TMPFS_MTPTS" ]
 	then
-		TMPFS_MTPTS="$(pioodl $TMPFS_MTPTS)"
 		if [ "$VERBOSE" = no ]
 		then
 			log_action_begin_msg "Unmounting temporary filesystems"
-			umount $TMPFS_MTPTS
+			fstab-decode umount $TMPFS_MTPTS
 			log_action_end_msg $?
 		else
 			log_daemon_msg "Will now unmount temporary filesystems"
-			umount -v $TMPFS_MTPTS
+			fstab-decode umount -v $TMPFS_MTPTS
 			log_end_msg $?
 		fi
 	fi
@@ -229,15 +184,14 @@ do_umount() {
 	#
 	if [ "$REG_MTPTS" ]
 	then
-		REG_MTPTS="$(pioodl $REG_MTPTS)"
 		if [ "$VERBOSE" = no ]
 		then
 			log_action_begin_msg "Unmounting local filesystems"
-			umount -n -f -r -d $REG_MTPTS
+			fstab-decode umount -n -f -r -d $REG_MTPTS
 			log_action_end_msg $?
 		else
 			log_daemon_msg "Will now unmount local filesystems"
-			umount -n -f -v -r -d $REG_MTPTS
+			fstab-decode umount -n -f -v -r -d $REG_MTPTS
 			log_end_msg $?
 		fi
 	fi
@@ -247,7 +201,6 @@ do_umount() {
 	#
 	if [ "$UNION_MTPTS" ]
 	then
-		UNION_MTPTS="$(pioodl $UNION_MTPTS)"
 		if [ "$VERBOSE" = no ]
 		then
 			log_action_begin_msg "Unmounting union filesystems"
@@ -262,7 +215,6 @@ do_umount() {
 
 	if [ "$SQSH_MTPTS" ]
 	then
-		SQSH_MTPTS="$(pioodl $SQSH_MTPTS)"
 		if [ "$VERBOSE" = no ]
 		then
 			log_action_begin_msg "Unmounting squashfs filesystems"
@@ -277,7 +229,6 @@ do_umount() {
 
 	if [ "$LIVE_MTPTS" ]
 	then
-		LIVE_MTPTS="$(pioodl $LIVE_MTPTS)"
 		if [ "$VERBOSE" = no ]
 		then
 			log_action_begin_msg "Unmounting live filesystems"

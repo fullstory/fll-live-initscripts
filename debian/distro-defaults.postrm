@@ -1,4 +1,7 @@
-#!/bin/sh -e
+#!/bin/sh
+
+set -e
+
 # This script can be called in the following ways:
 #
 # After the package was removed:
@@ -45,7 +48,7 @@ case "$1" in
 	purge)
 		purge_conffile /etc/default/distro
 
-		for file in gdm kdm xdm hwclock.sh hwclockfirst.sh
+		for file in gdm kdm xdm slim hwclock.sh hwclockfirst.sh
 		do
 			purge_conffile /etc/insserv/overrides/${file}
 		done

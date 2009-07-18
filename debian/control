@@ -31,6 +31,7 @@ Package: fll-live-initscripts
 Architecture: all
 Depends: ${misc:Depends}, 
  lsb-base (>= 3.0-6),
+ sysvinit-utils (>= 2.86.ds1-64),
  distro-defaults,
  fll-live-utils,
  adduser,
