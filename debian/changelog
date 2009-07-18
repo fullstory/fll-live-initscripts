@@ -1,8 +1,9 @@
-fll-live-initscripts (3.6.3) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.3) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * revert --nocheat handling introduced in r23542, we don't create any 
+    xorg.conf on default anymore.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 15:38:22 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 15:49:10 +0200
 
 fll-live-initscripts (3.6.2) unstable; urgency=low
 

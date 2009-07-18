@@ -222,7 +222,6 @@ GetOptions(
 
 	# xrandr
 	'xrandr',
-	'nocheat',
 	'mode=s',
 	'rate=s',
 	'virtual=s',
@@ -338,23 +337,15 @@ my $x_o = tie(@x, "Tie::File", $xorg_conf)
 $x_o->flock;
 
 # write the config
-if ($x{'nocheat'}) {
-	@x = (
-		@heading,
-		@device,
-	);
-}
-else {
-	@x = (
-		@heading,
-		@serverlayout,
-		@serverflags,
-		@device,
-		@monitor,
-		@screen,
-		@extensions,
-	);
-}
+@x = (
+	@heading,
+	@serverlayout,
+	@serverflags,
+	@device,
+	@monitor,
+	@screen,
+	@extensions,
+);
 
 ###########################################################
 # post-process xorg.conf, substitute markers
