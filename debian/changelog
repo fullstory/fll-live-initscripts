@@ -1,4 +1,4 @@
-fll-live-initscripts (3.6.1) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.1) unstable; urgency=low
 
   * fll-reboot: simplify a bit by removing pioodl() function for string
     length sorting and instead parsing mounts in reverse order as done in
