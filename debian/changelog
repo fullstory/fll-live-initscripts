@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.4) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 15:49:57 +0200
+
 fll-live-initscripts (3.6.3) unstable; urgency=low
 
   * revert --nocheat handling introduced in r23542, we don't create any 
