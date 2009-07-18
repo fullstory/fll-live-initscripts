@@ -40,7 +40,7 @@ if [ "${FLL_DISTRO_MODE}" != "live" ]; then
 	exit 0
 fi
 
-if [ ! -x /usr/sbin/fll_xorgconfig ] || true; then
+if [ ! -x /usr/sbin/fll_xorgconfig ]; then
 	exit 0
 fi
 
@@ -64,9 +64,6 @@ if [ -f /proc/cmdline ]; then
 				if [ "${param#flldebug=}" = "${NAME#fll-}" ] || [ "${param#flldebug=}" = "all" ]; then
 					fll_redirect
 				fi
-				;;
-			noxorgconfig|xorgconfig=no)
-				exit 0
 				;;
 			noxrandr)
 				XNOXRANDR="1"
@@ -166,6 +163,24 @@ xserver_has_xrandr() {
 
 do_start() {
 	log_daemon_msg "${NAME}"
+
+	# if there are no cheatcodes, we have nothing to do
+	if [ -z "${XNOXRANDR}" ] && \
+	   [ -z "${XNOMODELINES}" ] && \
+	   [ -z "${XDEPTH}" ] && \
+	   [ -z "${XHORIZSYNC}" ] && \
+	   [ -z "${XNEWMODULE}" ] && \
+	   [ -z "${XRATE}" ] && \
+	   [ -z "${XFORCERANDR}" ] && \
+	   [ -z "${XMODES}" ] && \
+	   [ -z "${XVERTREFRESH}" ] && \
+	   [ -z "${XNEWMODULE}" ]; then
+		log_action_begin_msg " no cheatcodes detected, dereferring X detection to X.org"
+		log_end_msg 0
+
+		exit 0
+	fi
+
 	log_action_begin_msg " detecting video hardware"
 	
 	if [ "${VERBOSE}" = "yes" ]; then
