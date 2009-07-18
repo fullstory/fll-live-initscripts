@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 14:05:41 +0200
+
 fll-live-initscripts (3.6.1) unstable; urgency=low
 
   * fll-reboot: simplify a bit by removing pioodl() function for string
