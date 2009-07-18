@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.5) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 23:16:44 +0200
+
 fll-live-initscripts (3.6.4) unstable; urgency=low
 
   * remove dead code, fll_xserver_discover doesn't exist anymore and xresprobe
