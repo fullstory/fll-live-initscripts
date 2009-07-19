@@ -161,8 +161,6 @@ do_start() {
 		exit 0
 	fi
 
-	log_action_begin_msg " detecting video hardware"
-	
 	if [ "${VERBOSE}" = "yes" ]; then
 		XCFG_OPTS="${XCFG_OPTS} --verbose"
 	fi
@@ -175,21 +173,12 @@ do_start() {
 		XMODULE="fbdev"
 	fi
 
-	log_end_msg 0
-	
 	log_daemon_msg "${NAME}"
 
 	if [ "${XMODULE}" ]; then
 		log_progress_msg "driver: ${XMODULE}"
 		XCFG_OPTS="${XCFG_OPTS} --driver '${XMODULE}'"
 	fi
-
-	# turn composite on for modules that support it well
-	case "${XMODULE}" in
-		intel)
-			XCFG_OPTS="${XCFG_OPTS} --composite"
-			;;
-	esac
 
 	log_end_msg 0
 	

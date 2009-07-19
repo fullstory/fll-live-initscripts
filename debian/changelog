@@ -1,8 +1,9 @@
-fll-live-initscripts (3.6.6) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.6) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * X.org has good composite heuristics by now, don't set this explicitly.
+  * we cannot detect X.org anymore, don't claim otherwise.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 23:59:46 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 19 Jul 2009 04:19:33 +0200
 
 fll-live-initscripts (3.6.5) unstable; urgency=low
 
