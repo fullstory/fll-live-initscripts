@@ -168,11 +168,6 @@ do_start() {
 	#FIXME: detect non-vbox environments
 	#remove_initscript virtualbox-ose-guest-utils
 
-	if [ -z "${XMODULE}" ] && [ "${DPKG_ARCH}" = "powerpc" ]; then
-		# fallback to fbdev on powerpc
-		XMODULE="fbdev"
-	fi
-
 	log_daemon_msg "${NAME}"
 
 	if [ "${XMODULE}" ]; then
