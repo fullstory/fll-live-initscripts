@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.8) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 21 Jul 2009 23:14:03 +0200
+
 fll-live-initscripts (3.6.7) unstable; urgency=low
 
   * Remove hardcoded fbdev fallback on powerpc
