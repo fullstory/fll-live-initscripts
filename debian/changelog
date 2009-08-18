@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.9) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 19 Aug 2009 00:28:07 +0200
+
 fll-live-initscripts (3.6.8) unstable; urgency=low
 
   * RM: slim -- RoM (#538921).
