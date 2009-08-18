@@ -1,4 +1,3 @@
 interest /etc/init.d/kdm
 interest /etc/init.d/gdm
 interest /etc/init.d/xdm
-interest /etc/init.d/slim

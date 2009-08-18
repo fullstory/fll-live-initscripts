@@ -71,7 +71,7 @@ case "$1" in
 		# claim owership of the conffile at installation time ...
 		ucfr distro-defaults /etc/default/distro
 
-		for dm in gdm kdm xdm slim
+		for dm in gdm kdm xdm
 		do			
 			ucfr distro-defaults /etc/insserv/overrides/${dm}
 			do_override "${dm}" "${runlevel:-0}"

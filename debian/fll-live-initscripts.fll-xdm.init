@@ -153,36 +153,6 @@ setup_gdm() {
 	fi
 }
 
-setup_slim() {
-	# set autologin for $FLL_LIVE_USER to yes
-	sed -i	-e "s/^default_user.*/\#FLL\#&/" \
-		-e "s/^\#FLL\#\(default_user[ \t]*${FLL_LIVE_USER}$\)/\1/" \
-		-e "s/^auto_login.*/\#FLL\#&/" \
-		-e "s/^\#FLL\#\(auto_login[ \t]*yes$\)/\1/" \
-			/etc/slim.conf
-	grep -q ^default_user /etc/slim.conf || \
-		printf "default_user\t${FLL_LIVE_USER}\n" >> /etc/slim.conf
-	grep -q ^auto_login /etc/slim.conf || \
-		printf "auto_login\tyes\n" >> /etc/slim.conf
-
-	if [ "${CUSTOM_DPI}" ]; then
-		sed -i	-e "s/\(^xserver_arguments.*\)\ \-dpi[ \t]*[0-9]*\(.*$\)/\1\2/" \
-			-e "s/\(^xserver_arguments.*\)\-dpi[ \t]*[0-9]*\(.*$\)/\1\2/" \
-			-e "s/\(^xserver_arguments.*\)/& \-dpi ${CUSTOM_DPI}/" \
-				/etc/slim.conf
-	fi
-	
-	unset START STOP
-	eval $(get_init_seq_num slim ${FLL_MOUNTPOINT} 2>/dev/null)
-	if [ "${START}" ] && [ "${STOP}" ]; then
-		update-rc.d slim start "${START}" 5 . stop "${STOP}" 0 1 2 3 4 6 . >/dev/null
-		return "${?}"
-	else
-		insert_initscript slim
-		return "${?}"
-	fi
-}
-
 setup_x_cursor_theme() {
 	if [ -e /usr/share/icons/DMZ-Black/cursor.theme ]; then
 		update-alternatives --set x-cursor-theme /usr/share/icons/DMZ-Black/cursor.theme >/dev/null
@@ -193,14 +163,6 @@ setup_x_cursor_theme() {
 
 case "${1}" in
 	start)
-
-		SLIM="$(which slim 2>/dev/null)"
-		if [ "${SLIM}" ]; then
-			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring slim"
-			setup_slim && echo "${SLIM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
-			log_end_msg "${?}"
-		fi
-
 		GDM="$(which gdm 2>/dev/null)"
 		if [ "${GDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm"
@@ -222,22 +184,22 @@ case "${1}" in
 		case "${DESKTOP}" in
 			kde)
 				if [ -n "${KDM}" ]; then
-					if [ -n "${GDM}" ] || [ -n "${SLIM}" ]; then
+					if [ -n "${GDM}" ]; then
 						echo "${KDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			gnome)
 				if [ -n "${GDM}" ]; then
-					if [ -n "${KDM}" ] || [ -n "${SLIM}" ]; then
+					if [ -n "${KDM}" ]; then
 						echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			xfce*|lxde)
-				if [ -n "${SLIM}" ]; then
-					if [ -n "${KDM}" ] || [ -n "${GDM}" ]; then
-						echo "${SLIM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+				if [ -n "${GDM}" ]; then
+					if [ -n "${KDM}" ]; then
+						echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
