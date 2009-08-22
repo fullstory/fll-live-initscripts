@@ -126,15 +126,10 @@ if ! ${ROOT}; then
 	{
 		return
 	}
-elif which vol_id >/dev/null; then
-	volumeid()
-	{
-		vol_id "/dev/${1}"
-	}
 else
 	volumeid()
 	{
-		/lib/udev/vol_id "/dev/${1}"
+		blkid -p -o udev "/dev/${1}"
 	}
 fi
 

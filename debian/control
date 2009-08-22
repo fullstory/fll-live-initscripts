@@ -14,7 +14,7 @@ Build-Depends: debhelper (>= 7),
  docbook-xsl,
  devscripts,
  dash
-Standards-Version: 3.8.2
+Standards-Version: 3.8.3
 Vcs-Svn: svn://svn.berlios.de/fullstory/fll-live-initscripts/trunk
 Vcs-Browser: http://svn.berlios.de/wsvn/fullstory/fll-live-initscripts/trunk/
 
