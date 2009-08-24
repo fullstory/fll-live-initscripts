@@ -1,0 +1,53 @@
+#!/bin/sh
+# fll-hwclockdev
+#	Wait for the hwclock device when udev is in use
+#
+# Version:	@(#)hwclockdev  0.01  24-Aug-2009  niallwalsh@users.berlios.de
+#
+
+### BEGIN INIT INFO
+# Provides:          fll-hwclockdev
+# Required-Start:    udev
+# Required-Stop:
+# Default-Start:     S
+# X-Start-Before:    checkroot
+# Default-Stop:
+### END INIT INFO
+
+# Set this to the hardware clock device you want to use, it should
+# probably match the CONFIG_RTC_HCTOSYS_DEVICE kernel config option.
+HCTOSYS_DEVICE=rtc0
+
+# Set this to the seonds to wait for the hardware clock device to appear
+HCTOSYS_WAIT=60
+
+# Do nothing if udev is not present
+if ! [ -d /dev/.udev ]; then
+	return 0
+fi
+
+. /etc/default/rcS
+
+. /lib/lsb/init-functions
+verbose_log_action_msg() { [ "$VERBOSE" = no ] || log_action_msg "$@"; }
+
+case "$1" in
+	start)
+		LOOP=0
+		while [ $LOOP -lt $HCTOSYS_WAIT ] && ! [ -e /dev/$HCTOSYS_DEVICE ] ; do
+			LOOP=$(( $LOOP + 1 ))
+			sleep 1
+		done
+		if ! [ -e /dev/$HCTOSYS_DEVICE ]; then
+			log_warning_msg "System Clock $HCTOSYS_DEVICE not found"
+			return 1
+		fi
+		verbose_log_action_msg \
+		    "System Clock $HCTOSYS_DEVICE present after $LOOP seconds"
+	;;
+	*)
+		log_success_msg "Usage: fll-hwclockdev start"
+		log_success_msg "       waits for udev to suppy hardware (RTC) clock"
+		return 1
+	;;
+esac
