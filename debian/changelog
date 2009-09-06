@@ -1,12 +1,8 @@
 fll-live-initscripts (3.6.10) UNRELEASED; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
-  [ Niall Walsh ]
-  * Add fll-hwclockdev to make checkroot wait for udev to supply rtc
-
- -- Niall Walsh <niallwalsh@users.berlios.de>  Mon, 24 Aug 2009 18:29:44 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 22 Aug 2009 16:26:51 +0200
 
 fll-live-initscripts (3.6.9) unstable; urgency=low
 
