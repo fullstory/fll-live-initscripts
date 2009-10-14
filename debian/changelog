@@ -1,8 +1,9 @@
-fll-live-initscripts (3.6.11) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.11) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * hide update-rc.d overrides while setting up display managers.
+  * don't add LSB overrides for hwclock.sh/ hwclockfirst.sh anymore.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 08 Sep 2009 12:01:50 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 14 Oct 2009 21:11:01 +0200
 
 fll-live-initscripts (3.6.10) unstable; urgency=low
 

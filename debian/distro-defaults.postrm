@@ -32,8 +32,7 @@ set -e
 purge_conffile() {
 	rm -f ${1}
 
-	for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist
-	do
+	for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist; do
 		rm -f ${1}${ext}
 	done
 
@@ -48,8 +47,7 @@ case "$1" in
 	purge)
 		purge_conffile /etc/default/distro
 
-		for file in gdm kdm xdm slim hwclock.sh hwclockfirst.sh
-		do
+		for file in gdm kdm xdm slim; do
 			purge_conffile /etc/insserv/overrides/${file}
 		done
 		;;

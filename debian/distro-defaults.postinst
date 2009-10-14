@@ -63,6 +63,18 @@ do_override() {
 	fi
 }
 
+purge_conffile() {
+	rm -f ${1}
+
+	for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist; do
+		rm -f ${1}${ext}
+	done
+
+	if which ucfr >/dev/null; then
+		ucfr --purge distro-defaults ${1}
+	fi
+}
+
 case "$1" in
 	configure)
 		runlevel=$(default_runlevel)
@@ -71,42 +83,19 @@ case "$1" in
 		# claim owership of the conffile at installation time ...
 		ucfr distro-defaults /etc/default/distro
 
-		for dm in gdm kdm xdm slim
-		do			
+		for dm in gdm kdm xdm slim; do			
 			ucfr distro-defaults /etc/insserv/overrides/${dm}
 			do_override "${dm}" "${runlevel:-0}"
 		done
 
-		# Override these until #487196 is addressed by the util-linux
-		# maintainer one way or another ...
-		if [ ! -f /etc/insserv/overrides/hwclock.sh ]; then
-			echo "distro-defaults: overriding LSB init info for hwclock.sh ..."
-			ucfr distro-defaults /etc/insserv/overrides/hwclock.sh
-			cat > /etc/insserv/overrides/hwclock.sh \
-<<EOF
-### BEGIN INIT INFO
-# Provides:          hwclock
-# Required-Start:    \$local_fs
-# Required-Stop:     \$local_fs
-# Default-Start:     S
-# Default-Stop:      0 6
-### END INIT INFO
-EOF
+		# Bug #487196 has been fixed in util-linux, remove now 
+		# obsolete LSB overrides
+		if [ -f /etc/insserv/overrides/hwclock.sh ]; then
+			purge_conffile /etc/insserv/overrides/hwclock.sh
 		fi
 
-		if [ ! -f /etc/insserv/overrides/hwclockfirst.sh ]; then
-			echo "distro-defaults: overriding LSB init info for hwclockfirst.sh ..."
-			ucfr distro-defaults /etc/insserv/overrides/hwclockfirst.sh
-			cat > /etc/insserv/overrides/hwclockfirst.sh \
-<<EOF
-### BEGIN INIT INFO
-# Provides:          hwclockfirst
-# Required-Start:    mountdevsubfs
-# Required-Stop:     umountroot
-# Default-Start:     S
-# Default-Stop:
-### END INIT INFO
-EOF
+		if [ -f /etc/insserv/overrides/hwclockfirst.sh ]; then
+			purge_conffile /etc/insserv/overrides/hwclockfirst.sh
 		fi
 
 		# We don't register this conffile with ucf, or purge it in postrm
@@ -131,8 +120,7 @@ EOF
 		runlevel=$(default_runlevel)
 
 		shift
-		for interest in "${@}"
-		do
+		for interest in "${@}"; do
 			do_override "${interest#/etc/init.d/}" "${runlevel:-0}"
 		done
 		;;
