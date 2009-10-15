@@ -1,8 +1,12 @@
 fll-live-initscripts (3.6.12) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 14 Oct 2009 21:12:38 +0200
+  [ Niall Walsh ]
+  * replace hack to run /etc/init.d/hwclock.sh, run /sbin/hwclock like udev
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Thu, 15 Oct 2009 12:12:26 +0100
 
 fll-live-initscripts (3.6.11) unstable; urgency=low
 
