@@ -54,14 +54,8 @@ case "$1" in
 		for script in halt reboot
 		do
 			purge_conffile "/etc/insserv/overrides/${script}"
-
-			# If insserv is present and configured, call it to
 			# replace halt and reboot facility runlevel links
-			case "$(readlink -f /usr/sbin/update-rc.d)" in
-				*-insserv)
-					insserv "/etc/init.d/${script}"
-					;;
-			esac
+			insserv "/etc/init.d/${script}"
 		done
 
 		# fll-live-initramfs may have created this file

@@ -1,8 +1,13 @@
 fll-live-initscripts (3.6.13) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 15 Oct 2009 13:53:07 +0200
+  [ Niall Walsh ]
+  * Always run insserv to restore halt/reboot services
+  * fll-analyze-initscripts also should assume insserv
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Sat, 17 Oct 2009 14:31:08 +0100
 
 fll-live-initscripts (3.6.12) unstable; urgency=low
 

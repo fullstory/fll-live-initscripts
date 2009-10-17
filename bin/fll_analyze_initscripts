@@ -49,9 +49,11 @@ if ($chroot) {
 	$etc = $chroot . $etc;
 }
 
-if (realpath('/usr/sbin/update-rc.d') =~ /insserv$/) {
+# should this not test under $chroot?
+# should this test just be dropped?
+#if (realpath('/usr/sbin/update-rc.d') =~ /insserv$/) {
 	$lvl or $insserv++;
-}
+#}
 
 for my $svc (@ARGV) {
 	push(@glob, glob($etc . '/rc[0-6S].d/[KS][0-9][0-9]' . $svc));
