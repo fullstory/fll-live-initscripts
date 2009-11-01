@@ -165,9 +165,6 @@ do_start() {
 		XCFG_OPTS="${XCFG_OPTS} --verbose"
 	fi
 
-	#FIXME: detect non-vbox environments
-	#remove_initscript virtualbox-ose-guest-utils
-
 	log_daemon_msg "${NAME}"
 
 	if [ "${XMODULE}" ]; then

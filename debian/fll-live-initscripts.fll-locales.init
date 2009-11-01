@@ -294,9 +294,7 @@ case "${DEMO_CODE}" in
 		MIRROR="ftp.cz.debian.org"
 		;;
 	de)	### DE Germany kb:de ###
-		#KEYTABLE="de-latin1-nodeadkeys"	# breaks virtualbox and X.org 7.3
 		XKBLAYOUT="de,us"
-		#XKBVARIANT="nodeadkeys,"		# breaks virtualbox and X.org 7.3
 		TZ="Europe/Berlin"
 		MIRROR="ftp.de.debian.org"
 		;;
