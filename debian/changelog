@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.15) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 01 Nov 2009 16:59:54 +0100
+
 fll-live-initscripts (3.6.14) unstable; urgency=low
 
   * remove special handling for virtualbox-ose, there are no 
