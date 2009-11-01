@@ -205,8 +205,7 @@ case "${LANG_CODE}" in
 			*)	LANG="nl_NL.UTF-8" ;;
 		esac
 		;;
-	no)	LANG="nn_NO.UTF-8" ;;
-	no)	LANG="no_NO.UTF-8" ;;
+	nn|no)	LANG="nn_NO.UTF-8" ;;
 	pl)	LANG="pl_PL.UTF-8" ;;
 	pt)
 		case "${DEMO_CODE}" in
@@ -218,6 +217,7 @@ case "${LANG_CODE}" in
 	ru)	LANG="ru_RU.UTF-8" ;;
 	si|sl)	LANG="sl_SI.UTF-8" ;;
 	sk)	LANG="sk_SK.UTF-8" ;;
+	sv)	LANG="sv_SE.UTF-8" ;;
 	tr)	LANG="tr_TR.UTF-8" ;;
 	tw)	LANG="zh_TW.UTF-8" ;;
 	us)	LANG="en_US.UTF-8" ;;
@@ -387,6 +387,11 @@ case "${DEMO_CODE}" in
 		XKBLAYOUT="ru,us"
 		TZ="Europe/Moscow"
 		MIRROR="ftp.ru.debian.org"
+		;;
+	se)     ### SE Sweden kb:se ###
+		XKBLAYOUT="se,us"
+		TZ="Europe/Stockholm"
+		MIRROR="ftp.se.debian.org"
 		;;
 	si|sl)	### SI Slovenia kb:si ###
 		XKBLAYOUT="si,us"

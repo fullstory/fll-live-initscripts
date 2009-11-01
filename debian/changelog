@@ -1,8 +1,14 @@
 fll-live-initscripts (3.6.15) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 01 Nov 2009 16:59:54 +0100
+  [ Niall Walsh ]
+  * fll-locales:
+    - no_NO doesn't exist, it's nn_NO
+    - add Swedish (sv_SE) locale support
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Sun, 01 Nov 2009 16:50:54 +0000
 
 fll-live-initscripts (3.6.14) unstable; urgency=low
 
