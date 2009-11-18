@@ -1,8 +1,9 @@
-fll-live-initscripts (3.6.17) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.17) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * adapt for the configuration split between console-setup and
+    keyboard-configuration.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Nov 2009 23:14:13 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 18 Nov 2009 15:07:12 +0000
 
 fll-live-initscripts (3.6.16) unstable; urgency=low
 

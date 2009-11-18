@@ -72,10 +72,13 @@ FONTFACE="VGA"
 # bootup sequence
 FONTSIZE="16"
 
-XKBLAYOUT="us"
+###
+# some keyboard-configuration defaults
+###
 XKBMODEL=""
-XKBOPTIONS="lv3:ralt_switch,compose:lwin,grp:alt_shift_toggle"
+XKBLAYOUT="us"
 XKBVARIANT=""
+XKBOPTIONS="lv3:ralt_switch,compose:lwin,grp:alt_shift_toggle"
 
 ###
 # cheatcode handling
@@ -474,20 +477,24 @@ set_locale()
 
 set_console()
 {
-	# write configuration
-	# if multiple layouts are given in XKBLAYOUT, the user can switch between
-	# them with the toggle combination defined in XKBOPTIONS
+	# write configuration: console-setup
  	cat > /etc/default/console-setup <<EOF
 ACTIVE_CONSOLES="/dev/tty[1-6]"
 CHARMAP="${CHARMAP}"
 CODESET="${CODESET}"
 FONTFACE="${FONTFACE}"
 FONTSIZE="${FONTSIZE}"
-XKBMODEL="${XKBMODEL}"
-XKBLAYOUT="${XKBLAYOUT}"
-XKBVARIANT="${XKBVARIANT}"
-XKBOPTIONS="${XKBOPTIONS}"
 EOF
+
+	# write configuration: keyboard-configuration
+	# if multiple layouts are given in XKBLAYOUT, the user can switch between
+	# them with the toggle combination defined in XKBOPTIONS
+	# FIXME: investigate debconfsettings!
+	sed -i	-e "s/^\(XKBMODEL\=\).*/\1\"${XKBMODEL}\"/" \
+		-e "s/^\(XKBLAYOUT\=\).*/\1\"${XKBLAYOUT}\"/" \
+		-e "s/^\(XKBVARIANT\=\).*/\1\"${XKBVARIANT}\"/" \
+		-e "s/^\(XKBOPTIONS\=\).*/\1\"${XKBOPTIONS}\"/" \
+			/etc/default/keyboard
 
 	setupcon --save-only
 }
