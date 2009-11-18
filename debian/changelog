@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.18) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 18 Nov 2009 16:11:55 +0100
+
 fll-live-initscripts (3.6.17) unstable; urgency=low
 
   * adapt for the configuration split between console-setup and
