@@ -1,8 +1,9 @@
-fll-live-initscripts (3.6.18) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.18) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fll-adduser must have run before fll-xdm, otherwise FLL_LIVE_USER isn't
+    set and $HOME not necessarily populated.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 18 Nov 2009 16:11:55 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 15 Dec 2009 10:20:48 +0100
 
 fll-live-initscripts (3.6.17) unstable; urgency=low
 
