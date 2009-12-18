@@ -61,6 +61,11 @@ fi
 . /lib/init/fll
 
 ###
+# source LANG functions
+###
+. /usr/share/fll-live-initscripts/locales
+
+###
 # some console-setup defaults
 ###
 CHARMAP="UTF-8"
@@ -115,7 +120,16 @@ if [ -f /proc/cmdline ]; then
 				FLL_IMAGE_LOCATION="${FLL_IMAGE_DIR}/${FLL_IMAGE_FILE}"
 				;;
 			xkboptions=*)
-				FLL_XKBOPTIONS="${param#xkboptions=}"
+				KBOPTIONS="${param#xkboptions=}"
+				;;
+			keytable=*)
+				KEYTABLE="${param#keytable=}"
+				;;
+			xkbmodel=*)
+				KBMODEL="${param#xkbmodel=}"
+				;;
+			xkbvariant=*)
+				KBVARIANT="${param#xkbvariant=}"
 				;;
 		esac
 	done
@@ -134,105 +148,42 @@ fi
 # cc -> demographic code
 ###
 LANG_CODE=${LANGUAGE%%[-_]*}
-DEMO_CODE=${LANGUAGE##*[-_]}
+DEMO_CODE="$(echo ${LANGUAGE##*[-_]} | awk '{print toupper($1)}')"
 
-###
-# language, timezone and keyboard related locale settings
-# (good reference: http://www.debian.org/mirror/list)
-###
-case "${LANG_CODE}" in
-#	ar)	LANG="es_AR.UTF-8" ;; # locale not generated
-	au)	LANG="en_AU.UTF-8" ;;
-	be)	LANG="be_BY.UTF-8" ;;
-	bg)	LANG="bg_BG.UTF-8" ;;
-	br)
-		case "${DEMO_CODE}" in
-#			fr)	LANG="br_FR.UTF-8" ;; # locale not generated
-			*)	LANG="pt_BR.UTF-8" ;;
-		esac
-		;;
-#	ca)	LANG="en_CA.UTF-8" ;; # locale not generated
-	ch)	LANG="de_CH.UTF-8" ;;
-#	cl)	LANG="es_CL.UTF-8" ;; # locale not generated
-	cn)	LANG="zh_CN.UTF-8" ;;
-#	cy)	LANG="cy_GB.UTF-8" ;; # locale not generated
-	cz|cs)	LANG="cs_CZ.UTF-8" ;;
-	de)
-		case "${DEMO_CODE}" in
-			ch)	LANG="de_CH.UTF-8" ;;
-			*)	LANG="de_DE.UTF-8" ;;
-		esac
-		;;
-	dk|da)	LANG="da_DK.UTF-8" ;;
-	en)
-		case "${DEMO_CODE}" in
-			au)	LANG="en_AU.UTF-8" ;;
-#			ca)	LANG="en_CA.UTF-8" ;; # locale not generated
-			gb|uk)	LANG="en_GB.UTF-8" ;;
-			ie)	LANG="en_IE.UTF-8" ;;
-			*)	LANG="en_US.UTF-8" ;;
-		esac
-		;;
-	es)
-		case "${DEMO_CODE}" in
-#			ar)	LANG="es_AR.UTF-8" ;; # locale not generated
-#			cl)	LANG="es_CL.UTF-8" ;; # locale not generated
-			*)	LANG="es_ES.UTF-8" ;;
-		esac
-		;;
-	fi)	LANG="fi_FI.UTF-8" ;;
-	fr)
-		case "${DEMO_CODE}" in
-#			ca)	LANG="fr_CA.UTF-8" ;; # locale not generated
-			be)	LANG="fr_BE.UTF-8" ;;
-			*)	LANG="fr_FR.UTF-8" ;;
-		esac
-		;;
-	gr|el)	LANG="el_GR.UTF-8" ;;
-	gb|uk)	LANG="en_GB.UTF-8" ;;
-	il|he)	LANG="he_IL.UTF-8" ;;
-	hr) 	LANG="hr_HR.UTF-8" ;;
-	ie)	LANG="en_IE.UTF-8" ;;
-	ga)	LANG="ga_IE.UTF-8" ;;
-#	gd)	LANG="gd_GB.UTF-8" ;; # locale not generated
-#	gv)	LANG="gv_GB.UTF-8" ;; # locale not generated
-	hu)	LANG="hu_HU.UTF-8" ;;
-	it)	LANG="it_IT.UTF-8" ;;
-	jp|ja)	LANG="ja_JP.UTF-8" ;;
-	ko|kr)	LANG="ko_KR.UTF-8" ;;
-#	kw)	LANG="kw_GB.UTF-8" ;; # locale not generated
-	nb)	LANG="nb_NO.UTF-8" ;;
-	nl)
-		case "${DEMO_CODE}" in
-			be)	LANG="nl_BE.UTF-8" ;;
-			*)	LANG="nl_NL.UTF-8" ;;
-		esac
-		;;
-	nn|no)	LANG="nn_NO.UTF-8" ;;
-	pl)	LANG="pl_PL.UTF-8" ;;
-	pt)
-		case "${DEMO_CODE}" in
-			pt)	LANG="pt_PT.UTF-8" ;;
-			*)	LANG="pt_BR.UTF-8" ;;
-		esac
-		;;
-	ro)	LANG="ro_RO.UTF-8" ;;
-	ru)	LANG="ru_RU.UTF-8" ;;
-	si|sl)	LANG="sl_SI.UTF-8" ;;
-	sk)	LANG="sk_SK.UTF-8" ;;
-	sv)	LANG="sv_SE.UTF-8" ;;
-	tr)	LANG="tr_TR.UTF-8" ;;
-	tw)	LANG="zh_TW.UTF-8" ;;
-	us)	LANG="en_US.UTF-8" ;;
-	zh)
-		case "${DEMO_CODE}" in
-			tw)	LANG="zh_TW.UTF-8" ;;
-			*)	LANG="zh_CN.UTF-8" ;;
-		esac
-		;;
-	*)	LANG="en_US.UTF-8" ;;
-esac
+LANGS=$(locale -a)
+LANG=""
 
+# First check if they entered a built in lang
+for LOCALE in ${LANGS}; do
+    [ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ] && LANG="${LOCALE}" && break
+    # match the language to find the default and possible locales
+    case "${LOCALE}" in
+        ${LANG_CODE}_*)
+            [ -z "${LANG_POSS}" ] && LANG_POSS="${LOCALE}"
+            fll_locale_default ${LOCALE} && LANG_DEF="${LOCALE}"
+            ;;
+    esac
+done
+# See if we have some knowledge on how to setup the requested locale
+if [ -z "${LANG}" ]; then
+    for LOCALE in fll_locale_cheats; do
+        [ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ] && \
+            fll_locale_lang ${LOCALE} && break
+    done
+fi
+# Ok just fallback to the default language, or whatever we know about or en_US
+if [ -z "$LANG" ]; then
+    if [ -n "${LANG_DEF}" ]; then
+        LANG="${LANG_DEF}"
+    else
+        if [ -n "${LANG_POSS}" ]; then
+            LANG="${LANG_POSS}"
+        else
+            LANG="en_US.utf8"
+        fi
+    fi
+fi
+export LANG
 ###
 # if demographic code was ommitted, extract default demo_code from LANG
 ###
@@ -241,188 +192,33 @@ if [ -z "${DEMO_CODE}" ]; then
 	DEMO_CODE="${LANG_CHECK##*_}"
 fi
 
-###
-# country/territory-related locale settings
-###
-case "${DEMO_CODE}" in
-	au)	### AU Australia kb:us ###
-		XKBLAYOUT="us"
-		TZ="Australia/Sydney"
-		MIRROR="mirror.linux.org.au"
-		;;
-	be) 	### BE Belgium kb:be ###
-		XKBLAYOUT="be,fr,us"
-		TZ="Europe/Brussels"
-		MIRROR="ftp.belnet.be"
-		;;
-	bg)	### BG Bulgaria kb:bg ###
-		XKBLAYOUT="bg,us"
-		TZ="Europe/Sofia"
-		MIRROR="ftp.bg.debian.org"
-		;;
-	br)	### BR Brazil kb:br ###
-		XKBLAYOUT="br,us"
-		TZ="America/Sao_Paulo"
-		MIRROR="ftp.br.debian.org"
-		;;
-	by)	### BY Belarus kb:by ###
-		XKBLAYOUT="by,us"
-		TZ="Europe/Minsk"
-		MIRROR="linux.org.by"
-		;;
-	ca)	### CA Canadian kb:us ###
-		case "${LANG_CODE}" in
-			en)	XKBLAYOUT="us,ca" ;;
-			fr)	XKBLAYOUT="ca,us" ;;
-		esac
-		TZ="America/Toronto"
-		MIRROR="ftp.ca.debian.org"
-		;;
-	ch)	### CH Switzerland kb:ch ###
-		# The de variant seems to be identical with the German layouts. Some Swiss users
-		# were missing a correct layout. The fr variant seems to be the standard Swiss one.
-		XKBLAYOUT="ch,us"
-		XKBVARIANT="fr"
-		TZ="Europe/Zurich"
-		MIRROR="ftp.ch.debian.org"
-		;;
-	cn)	### CN Chinese (Simplified) kb:us ###
-		XKBLAYOUT="us"
-		TZ="Asia/Shanghai"
-		MIRROR="ftp.hk.debian.org" # no primary mirror
-		;;
-	cz|cs)	### CZ CzechRepublic kb:cs ###
-		XKBLAYOUT="cs,us"
-		TZ="Europe/Prague"
-		MIRROR="ftp.cz.debian.org"
-		;;
-	de)	### DE Germany kb:de ###
-		XKBLAYOUT="de,us"
-		TZ="Europe/Berlin"
-		MIRROR="ftp.de.debian.org"
-		;;
-	dk|da)	### DK Denmark kb:dk ###
-		XKBLAYOUT="dk,us"
-		TZ="Europe/Copenhagen"
-		MIRROR="ftp.dk.debian.org"
-		;;
-	es)	### ES Spain kb:es ###
-		XKBLAYOUT="es,us"
-		TZ="Europe/Madrid"
-		MIRROR="ftp.es.debian.org"
-		;;
-	fi)	### FI Finland kb:fi ### 
-		XKBLAYOUT="fi,us"
-		TZ="Europe/Helsinki"
-		MIRROR="ftp.fi.debian.org"
-		;;
-	fr)	### FR France kb:fr ###
-		XKBLAYOUT="fr,us"
-		TZ="Europe/Paris"
-		MIRROR="ftp.fr.debian.org"
-		;;
-	gr|el)	### GR Greece kb:gr ###
-		XKBLAYOUT="gr,us"
-		TZ="Europe/Athens"
-		MIRROR="ftp.es.debian.org" # no primary mirror
-		;;
-	gb|uk)	### GB GreatBritain kb:gb ###
-		XKBLAYOUT="gb,us"
-		TZ="Europe/London"
-		MIRROR="ftp.uk.debian.org"
-		;;
-	il|he)	### IL Israel (Hebrew) kb:il ###
-		XKBLAYOUT="il,us"
-		TZ="Asia/Jerusalem"
-		MIRROR="ftp.us.debian.org"
-		;;
-	hr) 	### HR Croatia kb:hr ###
-		XKBLAYOUT="hr,us"
-		TZ="Europe/Zagreb" 
-		MIRROR="ftp.hr.debian.org" # no primary mirror
-		;;
-	ie)	### IE Ireland kb:ie ###
-		XKBLAYOUT="ie,gb,us"
-		TZ="Europe/Dublin"
-		MIRROR="ftp.ie.debian.org"
-		;;
-	it)	### IT Italy kb:it ###
-		XKBLAYOUT="it,us"
-		TZ="Europe/Rome"
-		MIRROR="ftp.it.debian.org"
-		;;
-	jp|ja)	### JP Japanese (Limited) kb:jp ###
-		XKBLAYOUT="jp,us"
-		TZ="Asia/Tokyo"
-		MIRROR="ftp.jp.debian.org"
-		;;
-	ko|kr)	### KR Korean kb:kr ###
-		XKBLAYOUT="kr,us"
-		TZ="Asia/Seoul"
-		MIRROR="ftp.kr.debian.org"
-		;;
-	nl)	### NL Netherlands kb:nl ###
-		XKBLAYOUT="us,nl"
-		TZ="Europe/Amsterdam"
-		MIRROR="ftp.nl.debian.org"
-		;;
-	no)	### NO Norway kb:no ###
-		XKBLAYOUT="no,us"
-		TZ="Europe/Oslo"
-		MIRROR="ftp.no.debian.org"
-		;;
-	pl)	### PL Poland kb:pl ###
-		XKBLAYOUT="pl,us"
-		TZ="Europe/Warsaw"
-		MIRROR="ftp.pl.debian.org"
-		;;
-	pt)	### PT Portugal kb:pt ###
-		XKBLAYOUT="pt,us"
-		TZ="Europe/Lisbon"
-		MIRROR="ftp.pt.debian.org"
-		;;
-	ro)	### RO Romania kb:ro ###
-		XKBLAYOUT="ro,us"
-		TZ="Europe/Bucharest"
-		MIRROR="ftp.ro.debian.org"
-		;;
-	ru)	### RU Russia kb:ru ###
-		XKBLAYOUT="ru,us"
-		TZ="Europe/Moscow"
-		MIRROR="ftp.ru.debian.org"
-		;;
-	se)     ### SE Sweden kb:se ###
-		XKBLAYOUT="se,us"
-		TZ="Europe/Stockholm"
-		MIRROR="ftp.se.debian.org"
-		;;
-	si|sl)	### SI Slovenia kb:si ###
-		XKBLAYOUT="si,us"
-		TZ="Europe/Ljubljana"
-		#CONSOLEFONT="iso02g"
-		MIRROR="ftp.si.debian.org"
-		;;
-	sk)	### SK Slovakia kb:sk ###
-		XKBLAYOUT="sk,us"
-		TZ="Europe/Bratislava"
-		MIRROR="ftp.sk.debian.org"
-		;;
-	tr)	### TR Turkey kb:tr ###
-		XKBLAYOUT="tr,us"
-		TZ="Europe/Istanbul"
-		MIRROR="ftp.tr.debian.org"
-		;;
-	tw)	### TW Taiwan (TraditionalChinese) kb:us ###
-		XKBLAYOUT="us"
-		TZ="Asia/Taipei"
-		MIRROR="ftp.tw.debian.org"
-		;;
-	us|*)	### US UnitedStates kb:us ###
-		XKBLAYOUT="us,ca"
-		TZ="America/New_York"
-		MIRROR="ftp.us.debian.org"
-		;;
-esac
+#set tz, mirror, xkb via fll_locale_demo
+if [ "${LANG}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ]; then
+    fll_locale_demo ${LANG}
+else
+    # We've altered their LANG
+    fll_locale_cheats
+    for LOCALE in ${FLL_LOCALE_CHEATS} ; do
+        # if we have their locale
+        if [ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ] ; then
+            DEMO="${LOCALE}"
+            break
+        fi
+        # if we have a locale in their country
+        if [ "${LOCALE#*_}" = "${DEMO_CODE}.utf8" ] ; then
+            [ -z "${DEMO_POSS}" ] && DEMO_POSS="${LOCALE}"
+        fi
+    done
+    # if it's not a country we know about fallback to default 00_00
+    if [ -z "${DEMO}" ]; then
+        if [ -n "${DEMO_POSS}" ]; then
+            DEMO="${DEMO_POSS}"
+        else
+            DEMO="00_00.utf8"
+        fi
+    fi
+    fll_locale_demo ${DEMO}
+fi
 
 ###
 # allow CUSTOM_TZ to override above TZ definitions
@@ -434,6 +230,35 @@ if [ -n "${CUSTOM_TZ}" ]; then
 			;;
 	esac
 	[ -f "/usr/share/zoneinfo/${CUSTOM_TZ}" ] && TZ="${CUSTOM_TZ}"
+fi
+
+###
+# allow KEYTABLE to update above XKBLAYOUT settings
+###
+if [ -n "${KEYTABLE}" ]; then
+
+	XKBLAYOUT="${KEYTABLE},${XKBLAYOUT}"
+fi
+
+###
+# allow KBOPTIONS to update above XKBOPTIONS settings
+###
+if [ -n "${KBOPTIONS}" ]; then
+	XKBOPTIONS="${KBOPTIONS}"
+fi
+
+###
+# allow KBMODEL to update above XKBMODEL settings
+###
+if [ -n "${KBMODEL}" ]; then
+	XKBMODEL="${KBMODEL}"
+fi
+
+###
+# allow KBVARIANT to update above XKBVARIANT settings
+###
+if [ -n "${KBVARIANT}" ]; then
+	XKBVARIANT="${KBVARIANT}"
 fi
 
 set_timezone()
@@ -518,6 +343,7 @@ apt_install_lang() {
 		# we have the variant requested
 		LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
 	elif [ "${LANG%%[_]*}" != 'en' ]; then
+		# try fll-locales to find one
 		for lf in ${LIVEAPT}/${APTARCH}/${LANG%[_]*}*; do
 			if [ -f "${lf}" ]; then
 				# we have a file for the language
