@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.20) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 18 Dec 2009 13:27:49 +0100
+
 fll-live-initscripts (3.6.19) unstable; urgency=low
 
   * fll-locale overhaul to use locales and locales.csv in /usr/share/
