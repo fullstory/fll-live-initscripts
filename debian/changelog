@@ -1,9 +1,5 @@
-fll-live-initscripts (3.6.20) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.20) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
   * fixup locales.csv
     - "en US" typo
     - add debian primary mirrors
