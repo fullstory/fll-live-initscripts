@@ -1,85 +1,93 @@
-locale	default	model	layout	variant	options	tz	mirror	locales	notes
-00_00.utf8	0		us			Etc/UTC	ftp.ie.debian.org	en_US.utf8	what mirror is sane?
-be_BY.utf8	0		by,us			Europe/Minsk	linux.org.by	en_US.utf8
-bg_BG.utf8	0		bg,us			Europe/Sofia	ftp.bg.debian.org	en_US.utf8
-C	0		us			Etc/UTC	ftp.ie.debian.org	en_US.utf8	what mirror is sane?
-cs_CZ.utf8	0		cs,us			Europe/Prague	ftp.cz.debian.org	en_US.utf8
-da_DK.utf8	0		dk,us			Europe/Copenhagen	ftp.dk.debian.org	en_US.utf8
-de_BE.utf8			be,de, fr,us			Europe/Brussels	ftp.belnet.be	de_DE.utf8 fr_FR.utf8 en US.utf8	whats sensible?
-de_CH.utf8			ch,us	fr		Europe/Zurich	ftp.ch.debian.org	de_DE.utf8 en_US.utf8	is the fr variant sane?
-de_DE.utf8	0		de,us			Europe/Berlin	ftp.de.debian.org	US.utf8	would germans be better off with nl then en if such were available?
-de_LI.utf8			de,us			Europe/Vaduz	ftp.de.debian.org	de_DE.utf8 US.utf8
-de_LU.utf8			de,us			Europe/Luxembourg	ftp.de.debian.org	de_DE.utf8 US.utf8
-el_CY.utf8			gr,us			Europe/Athens	ftp.es.debian.org	en_US.utf8
-el_GR.utf8	0		gr,us			Europe/Athens	ftp.es.debian.org	en_US.utf8
-en_AG.utf8			us			America/Antigua	ftp.br.debian.org	en_US.utf8
-en_AU.utf8			us			Australia/Sydney	mirror.linux.org.au	en_US.utf8
-en_BW.utf8			us			Africa/Gaborone	ftp.us.debian.org	en_US.utf8
-en_CA.utf8			us,ca			America/Toronto	ftp.ca.debian.org	en_US.utf8
-en_DK.utf8			dk,us			Europe/Copenhagen	ftp.dk.debian.org	en_US.utf8
-en_GB.utf8			gb,us			Europe/London	ftp.uk.debian.org	en_US.utf8
-en_HK.utf8			us			Asia/Hong_Kong	ftp.hk.debian.org	en_US.utf8
-en_IE.utf8			ie,gb,us			Europe/Dublin	ftp.ie.debian.org	en_GB.utf8 en_US.utf8
-en_IN.utf8			us			Asia/Kolkata	ftp.kr.debian.org	en_US.utf8
-en_NG.utf8			us			Africa/Lagos	ftp2.jp.debian.org	en_US.utf8
-en_NZ.utf8			us			Pacific/Auckland	ftp.nz.debian.org	en_US.utf8
-en_PH.utf8			us			Asia/Manila	ftp2.jp.debian.org	en_US.utf8
-en_SG.utf8			us			Asia/Singapore	ftp2.jp.debian.org	en_US.utf8
-en_US.utf8	0		us			US/NewYork	ftp.us.debian.org	C
-en_ZA.utf8			us			Africa/Johannesburg	ftp.us.debian.org	en_US.utf8
-en_ZW.utf8			us			Africa/Harare	ftp.us.debian.org	en_US.utf8
-es_AR.utf8			es,us			America/Argentina/Buenos_Aires	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_BO.utf8			es,us			America/La_Paz	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_CL.utf8			es,us			America/Santiago	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_CO.utf8			es,us			America/Bogota	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_CR.utf8			es,us			America/Costa_Rica	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_DO.utf8			es,us			America/Santo_Domingo	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_EC.utf8			es,us			America/Guayaquil	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_ES.utf8	0		es,us			Europe/Madrid	ftp.es.debian.org	en_US.utf8	no primary mirror
-es_GT.utf8			es,us			America/Guatemala	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_HN.utf8			es,us			America/Tegucigalpa	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_MX.utf8			es,us			America/Mexico_City	ftp.mx.debian.org	es_ES.utf8 en_US.utf8
-es_NI.utf8			es,us			America/Managua	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_PA.utf8			es,us			America/Panama	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_PE.utf8			es,us			America/Lima	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_PR.utf8			es,us			America/Puerto_Rico	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_PY.utf8			es,us			America/Asuncion	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_SV.utf8			es,us			America/El_Salvador	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_US.utf8			es,us			America/New_York	ftp.us.debian.org	es_ES.utf8 en_US.utf8
-es_UY.utf8			es,us			America/Montevideo	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-es_VE.utf8			es,us			America/Caracas	ftp.br.debian.org	es_ES.utf8 en_US.utf8
-fi_FI.utf8	0		fi,us			Europe/Helsinki	ftp.fi.debian.org	en_US.utf8
-fr_BE.utf8			be,fr,us			Europe/Brussels	ftp.belnet.be	fr_FR.utf8 en US.utf8	should this be fr first?
-fr_CA.utf8			ca,us			America/Toronto	ftp.ca.debian.org	fr_FR.utf8 en_US.utf8	should this offer fr keyboards? Fallback to nl before en?
-fr_CH.utf8			ch,us	fr		Europe/Zurich	ftp.ch.debian.org	en_US.utf8
-fr_FR.utf8	0		fr,us			Europe/Paris	ftp.fr.debian.org	en_US.utf8
-fr_LU.utf8			fr,us			Europe/Luxembourg	ftp.fr.debian.org	fr_FR.utf8 en US.utf8
-ga_IE.utf8	0		ie,gb,us			Europe/Dublin	ftp.ie.debian.org	en_IE.utf8 en_GB.utf8 en_US.utf8
-he_IL.utf8	0		il,us			Asia/Jerusalem	ftp.us.debian.org	en_US.utf8	no primary mirror
-hr_HR.utf8	0		hr,us			Europe/Zagreb	ftp.hr.debian.org	en_US.utf8	no primary mirror
-hu_HU.utf8	0		hu,us			Europe/Budapest	ftp.hu.debian.org	en_US.utf8	missing, guessed
-it_CH.utf8			it,de,fr,us			Europe/Zurich	ftp.ch.debian.org	it_IT.utf8 en_US.utf8
-it_IT.utf8	0		it,us			Europe/Rome	ftp.it.debian.org	en_US.utf8
-ja_JP.utf8	0		jp,us			Asia/Tokyo	ftp.jp.debian.org	en_US.utf8
-ko_KR.utf8	0		kr,us			Asia/Seoul	ftp.kr.debian.org	en_US.utf8
-nb_NO.utf8	0		no,us			Europe/Oslo	ftp.no.debian.org	nb_NO.utf8 en_US.utf8
-nl_AW.utf8			us,nl			America/Aruba	ftp.us.debian.org	nl_NL.utf8 en_US.utf8
-nl_BE.utf8	0		be,fr,us			Europe/Brussels	ftp.belnet.be	nl_NL.utf8 en_US.utf8
-nl_NL.utf8	0		us,nl			Europe/Amsterdam	ftp.nl.debian.org	en_US.utf8
-nn_NO.utf8	0		no,us			Europe/Oslo	ftp.no.debian.org	nn_NO.utf8 en_US.utf8
-pl_PL.utf8	0		pl,us			Europe/Warsaw	ftp.pl.debian.org	en_US.utf8
-pt_BR.utf8	0		br,us			America/Sao_Paulo	ftp.br.debian.org	pt_PT.utf8 en_US.utf8
-pt_PT.utf8			pt,us			Europe/Lisbon	ftp.pt.debian.org	pt_BR.utf8 en_US.utf8
-ro_RO.utf8	0		ro,us			Europe/Bucharest	ftp.ro.debian.org	en_US.utf8
-ru_RU.utf8	0		ru,us			Europe/Moscow	ftp.ru.debian.org	en_US.utf8
-ru_UA.utf8			ru,us			Europe/Kiev	ftp.ua.debian.org	en_US.utf8
-sk_SK.utf8	0		sk,us			Europe/Bratislava	ftp.sk.debian.org	en_US.utf8
-sl_SI.utf8	0		si,us			Europe/Ljubljana	ftp.si.debian.org	en_US.utf8	#CONSOLEFONT="iso02g"
-sv_FI.utf8			fi,us			Europe/Helsinki	ftp.fi.debian.org	en_US.utf8
-sv_SE.utf8	0		se,us			Europe/Stockholm	ftp.se.debian.org	en_US.utf8	not built
-tr_CY.utf8			tr,us			Europe/Istanbul	ftp.tr.debian.org	en_US.utf8
-tr_TR.utf8	0		tr,us			Europe/Istanbul	ftp.tr.debian.org	en_US.utf8
-zh_CN.utf8	0		us			Asia/Shaghai	ftp.hk.debian.org	zh_TW en_US.utf8	no primary mirror
-zh_HK.utf8			us			Asia/Hong_Kong	ftp.hk.debian.org	zh_CH en_US.utf8
-zh_SG.utf8			us			Asia/Singapore	ftp.hk.debian.org	zh_CH en_US.utf8
-zh_TW.utf8			us			Asia/Taipei	ftp.tw.debian.org	zh_CN en_US.utf8
+"locale"	"default"	"model"	"layout"	"variant"	"options"	"tz"	"mirror"	"locales"	"notes"
+"00_00.utf8"	0		"us"			"Etc/UTC"	"ftp.ie.debian.org"	"en_US.utf8"	"what mirror is sane?"
+"be_BY.utf8"	0		"by,us"			"Europe/Minsk"	"linux.org.by"	"en_US.utf8"	
+"bg_BG.utf8"	0		"bg,us"			"Europe/Sofia"	"ftp.bg.debian.org"	"en_US.utf8"	
+"bs_BA.utf8"	0		"ba,us"			"Europe/Sarajevo"	"ftp.ba.debian.org"	"en_US.utf8"	
+"C"	0		"us"			"Etc/UTC"	"ftp.ie.debian.org"	"en_US.utf8"	"what mirror is sane?"
+"cs_CZ.utf8"	0		"cs,us"			"Europe/Prague"	"ftp.cz.debian.org"	"en_US.utf8"	
+"da_DK.utf8"	0		"dk,us"			"Europe/Copenhagen"	"ftp.dk.debian.org"	"en_US.utf8"	
+"de_AT.utf8"			"de,us"			"Europe/Vienna"	"ftp.at.debian.org"	"de_DE.utf8 en_US.utf8"	
+"de_BE.utf8"			"be,de,fr,us"			"Europe/Brussels"	"ftp.belnet.be"	"de_DE.utf8 fr_FR.utf8 en_US.utf8"	"whats sensible?"
+"de_CH.utf8"			"ch,us"	"fr"		"Europe/Zurich"	"ftp.ch.debian.org"	"de_DE.utf8 en_US.utf8"	"is the fr variant sane?"
+"de_DE.utf8"	0		"de,us"			"Europe/Berlin"	"ftp.de.debian.org"	"US.utf8"	"would germans be better off with nl then en if such were available?"
+"de_LI.utf8"			"de,us"			"Europe/Vaduz"	"ftp2.de.debian.org"	"de_DE.utf8 en_US.utf8"	"best li mirror?"
+"de_LU.utf8"			"de,us"			"Europe/Luxembourg"	"ftp2.de.debian.org"	"de_DE.utf8 en_US.utf8"	"best lu mirror?"
+"el_CY.utf8"			"gr,us"			"Europe/Athens"	"ftp.es.debian.org"	"en_US.utf8"	"no primary mirror"
+"el_GR.utf8"	0		"gr,us"			"Europe/Athens"	"ftp.es.debian.org"	"en_US.utf8"	"no primary mirror"
+"en_AG.utf8"			"us"			"America/Antigua"	"ftp.br.debian.org"	"en_US.utf8"	"us seems “sane”"
+"en_AU.utf8"			"us"			"Australia/Sydney"	"mirror.linux.org.au"	"en_US.utf8"	
+"en_BW.utf8"			"us"			"Africa/Gaborone"	"ftp.us.debian.org"	"en_US.utf8"	"what african mirrors?"
+"en_CA.utf8"			"us,ca"			"America/Toronto"	"ftp.ca.debian.org"	"en_US.utf8"	
+"en_DK.utf8"			"dk,us"			"Europe/Copenhagen"	"ftp.dk.debian.org"	"en_US.utf8"	
+"en_GB.utf8"			"gb,us"			"Europe/London"	"ftp.uk.debian.org"	"en_US.utf8"	
+"en_HK.utf8"			"us"			"Asia/Hong_Kong"	"ftp.hk.debian.org"	"en_US.utf8"	
+"en_IE.utf8"			"ie,gb,us"			"Europe/Dublin"	"ftp.ie.debian.org"	"en_GB.utf8 en_US.utf8"	
+"en_IN.utf8"			"us"			"Asia/Kolkata"	"ftp.kr.debian.org"	"en_US.utf8"	"what mirror for india?"
+"en_NG.utf8"			"us"			"Africa/Lagos"	"ftp2.jp.debian.org"	"en_US.utf8"	"what african mirrors?"
+"en_NZ.utf8"			"us"			"Pacific/Auckland"	"ftp.nz.debian.org"	"en_US.utf8"	
+"en_PH.utf8"			"us"			"Asia/Manila"	"ftp2.jp.debian.org"	"en_US.utf8"	"japan may be sane?"
+"en_SG.utf8"			"us"			"Asia/Singapore"	"ftp2.jp.debian.org"	"en_US.utf8"	"signapore again, mirror?"
+"en_US.utf8"	0		"us"			"US/NewYork"	"ftp.us.debian.org"	"C"	
+"en_ZA.utf8"			"us"			"Africa/Johannesburg"	"ftp.us.debian.org"	"en_US.utf8"	"what african mirrors?"
+"en_ZW.utf8"			"us"			"Africa/Harare"	"ftp.us.debian.org"	"en_US.utf8"	"what african mirrors?"
+"es_AR.utf8"			"latam,es,us"			"America/Argentina/Buenos_Aires"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_BO.utf8"			"latam,es,us"			"America/La_Paz"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_CL.utf8"			"latam,es,us"			"America/Santiago"	"ftp.cl.debian.org"	"es_ES.utf8 en_US.utf8"	
+"es_CO.utf8"			"latam,es,us"			"America/Bogota"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_CR.utf8"			"latam,es,us"			"America/Costa_Rica"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_DO.utf8"			"latam,es,us"			"America/Santo_Domingo"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_EC.utf8"			"latam,es,us"			"America/Guayaquil"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_ES.utf8"	0		"es,us"			"Europe/Madrid"	"ftp.es.debian.org"	"en_US.utf8"	"no primary mirror (old comment?)"
+"es_GT.utf8"			"latam,es,us"			"America/Guatemala"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_HN.utf8"			"latam,es,us"			"America/Tegucigalpa"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_MX.utf8"			"latam,es,us"			"America/Mexico_City"	"ftp.mx.debian.org"	"es_ES.utf8 en_US.utf8"	
+"es_NI.utf8"			"latam,es,us"			"America/Managua"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_PA.utf8"			"latam,es,us"			"America/Panama"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_PE.utf8"			"latam,es,us"			"America/Lima"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_PR.utf8"			"latam,es,us"			"America/Puerto_Rico"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_PY.utf8"			"latam,es,us"			"America/Asuncion"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_SV.utf8"			"latam,es,us"			"America/El_Salvador"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_US.utf8"			"latam,es,us"			"America/New_York"	"ftp.us.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_UY.utf8"			"latam,es,us"			"America/Montevideo"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"es_VE.utf8"			"latam,es,us"			"America/Caracas"	"ftp.br.debian.org"	"es_ES.utf8 en_US.utf8"	"no primary mirror"
+"et_EE.utf8"	0		"et,us"			"Europe/Tallinn"	"ftp.ee.debian.org"	"en_US.utf8"	
+"fi_FI.utf8"	0		"fi,us"			"Europe/Helsinki"	"ftp.fi.debian.org"	"en_US.utf8"	
+"fr_BE.utf8"			"be,fr,us"			"Europe/Brussels"	"ftp.belnet.be"	"fr_FR.utf8 en_US.utf8"	"should this be fr first?"
+"fr_CA.utf8"			"ca,us"			"America/Toronto"	"ftp.ca.debian.org"	"fr_FR.utf8 en_US.utf8"	"should this offer fr keyboards? Fallback to nl before en?"
+"fr_CH.utf8"			"ch,us"	"fr"		"Europe/Zurich"	"ftp.ch.debian.org"	"en_US.utf8"	
+"fr_FR.utf8"	0		"fr,us"			"Europe/Paris"	"ftp.fr.debian.org"	"en_US.utf8"	
+"fr_LU.utf8"			"fr,us"			"Europe/Luxembourg"	"ftp.fr.debian.org"	"fr_FR.utf8 en_US.utf8"	"best lu mirror?"
+"fr_NC.utf8"			"fr,us"			"Pacific/Noumea"	"ftp.nd.debian.org"	"fr_FR.utf8 en_US.utf8"	"not a real locale"
+"ga_IE.utf8"	0		"ie,gb,us"			"Europe/Dublin"	"ftp.ie.debian.org"	"en_IE.utf8 en_GB.utf8 en_US.utf8"	
+"he_IL.utf8"	0		"il,us"			"Asia/Jerusalem"	"ftp.us.debian.org"	"en_US.utf8"	"no primary mirror, must be saner then us?"
+"hr_HR.utf8"	0		"hr,us"			"Europe/Zagreb"	"ftp.hr.debian.org"	"en_US.utf8"	"no primary mirror"
+"hu_HU.utf8"	0		"hu,us"			"Europe/Budapest"	"ftp.hu.debian.org"	"en_US.utf8"	
+"is_IS"	0		"is,us"			"Atlantic/Reykjavik"	"ftp.is.debian.org"	"en_US.utf8"	
+"it_CH.utf8"			"it,de,fr,us"			"Europe/Zurich"	"ftp.ch.debian.org"	"it_IT.utf8 en_US.utf8"	
+"it_IT.utf8"	0		"it,us"			"Europe/Rome"	"ftp.it.debian.org"	"en_US.utf8"	
+"ja_JP.utf8"	0		"jp,us"			"Asia/Tokyo"	"ftp.jp.debian.org"	"en_US.utf8"	
+"ko_KR.utf8"	0		"kr,us"			"Asia/Seoul"	"ftp.kr.debian.org"	"en_US.utf8"	
+"nb_NO.utf8"	0		"no,us"			"Europe/Oslo"	"ftp.no.debian.org"	"nb_NO.utf8 en_US.utf8"	
+"nl_AW.utf8"			"us,nl"			"America/Aruba"	"ftp.us.debian.org"	"nl_NL.utf8 en_US.utf8"	"us seems “sane”"
+"nl_BE.utf8"	0		"be,fr,us"			"Europe/Brussels"	"ftp.belnet.be"	"nl_NL.utf8 en_US.utf8"	
+"nl_NL.utf8"	0		"us,nl"			"Europe/Amsterdam"	"ftp.nl.debian.org"	"en_US.utf8"	
+"nn_NO.utf8"	0		"no,us"			"Europe/Oslo"	"ftp.no.debian.org"	"nn_NO.utf8 en_US.utf8"	
+"pl_PL.utf8"	0		"pl,us"			"Europe/Warsaw"	"ftp.pl.debian.org"	"en_US.utf8"	
+"pt_BR.utf8"	0		"br,us"			"America/Sao_Paulo"	"ftp.br.debian.org"	"pt_PT.utf8 en_US.utf8"	
+"pt_PT.utf8"			"pt,us"			"Europe/Lisbon"	"ftp.pt.debian.org"	"pt_BR.utf8 en_US.utf8"	
+"ro_RO.utf8"	0		"ro,us"			"Europe/Bucharest"	"ftp.ro.debian.org"	"en_US.utf8"	
+"ru_RU.utf8"	0		"ru,us"			"Europe/Moscow"	"ftp.ru.debian.org"	"en_US.utf8"	
+"ru_UA.utf8"			"ru,us"			"Europe/Kiev"	"ftp.ua.debian.org"	"en_US.utf8"	
+"se_FI.utf8"			"fi,no,se,us"	"fi"		"Europe/Helsinki"	"ftp.fi.debian.org"	"fi_FI.utf8 en_US.utf8"	
+"se_NO.utf8"			"no,fi,se,us"	"smi"		"Europe/Oslo"	"ftp.no.debian.org"	"nn_NO.utf8 en_US.utf8"	
+"se_SE.utf8"			"se,fi,no,us"	"smi"		"Europe/Stockholm"	"ftp.se.debian.org"	"sv_SE.utf8 en_US.utf8"	
+"sk_SK.utf8"	0		"sk,us"			"Europe/Bratislava"	"ftp.sk.debian.org"	"en_US.utf8"	
+"sl_SI.utf8"	0		"si,us"			"Europe/Ljubljana"	"ftp.si.debian.org"	"en_US.utf8"	"#CONSOLEFONT="iso02g"
+"sv_FI.utf8"			"se,fi,us"	"basic"		"Europe/Helsinki"	"ftp.fi.debian.org"	"en_US.utf8"	
+"sv_SE.utf8"	0		"se,us"	"basic"		"Europe/Stockholm"	"ftp.se.debian.org"	"en_US.utf8"	"not built"
+"tr_CY.utf8"			"tr,us"			"Europe/Istanbul"	"ftp.tr.debian.org"	"en_US.utf8"	"where is best mirror for cypress"
+"tr_TR.utf8"	0		"tr,us"			"Europe/Istanbul"	"ftp.tr.debian.org"	"en_US.utf8"	
+"zh_CN.utf8"	0		"us"			"Asia/Shaghai"	"ftp.hk.debian.org"	"zh_TW en_US.utf8"	"no primary mirror"
+"zh_HK.utf8"			"us"			"Asia/Hong_Kong"	"ftp.hk.debian.org"	"zh_CH en_US.utf8"	
+"zh_SG.utf8"			"us"			"Asia/Singapore"	"ftp.hk.debian.org"	"zh_CH en_US.utf8"	"signapore again, mirror?"
+"zh_TW.utf8"			"us"			"Asia/Taipei"	"ftp.tw.debian.org"	"zh_CN en_US.utf8"	
