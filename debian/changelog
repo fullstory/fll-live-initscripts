@@ -1,8 +1,8 @@
-fll-live-initscripts (3.6.21) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.21) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * remove spurious qutation marks, break the awk parser.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 18 Dec 2009 19:05:16 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 19 Dec 2009 02:21:24 +0100
 
 fll-live-initscripts (3.6.20) unstable; urgency=low
 
