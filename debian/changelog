@@ -1,8 +1,8 @@
-fll-live-initscripts (3.6.23) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.23) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fix sequence between fll-adduser and fll-shell.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 23 Dec 2009 00:29:55 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 23 Dec 2009 00:53:27 +0100
 
 fll-live-initscripts (3.6.22) unstable; urgency=low
 
