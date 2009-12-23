@@ -1,8 +1,8 @@
-fll-live-initscripts (3.6.24) UNRELEASED; urgency=low
+fll-live-initscripts (3.6.24) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * make fll-adduser depend on console-setup.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 23 Dec 2009 00:54:34 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 23 Dec 2009 01:19:48 +0100
 
 fll-live-initscripts (3.6.23) unstable; urgency=low
 

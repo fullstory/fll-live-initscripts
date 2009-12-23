@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-adduser
-# Required-Start:    $remote_fs keyboard-setup
+# Required-Start:    $remote_fs keyboard-setup console-setup
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:
