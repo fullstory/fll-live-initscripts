@@ -1,8 +1,12 @@
 fll-live-initscripts (3.6.25) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 23 Dec 2009 01:56:22 +0100
+  [ Nikolas Poniros ]
+  * Added lxdm to distro-defaults to create/remove needed insserv overrides 
+
+ -- Nikolas Poniros <edhunter@sidux.com>  Thu, 04 Mar 2010 02:48:25 +0100
 
 fll-live-initscripts (3.6.24) unstable; urgency=low
 
