@@ -1,3 +1,9 @@
+fll-live-initscripts (3.6.27) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 10 Mar 2010 23:30:05 +0100
+
 fll-live-initscripts (3.6.26) unstable; urgency=low
 
   * drop depends on $remote_fs from fll-locales, to break dependency circle,
