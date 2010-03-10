@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-locales
-# Required-Start:    mountdevsubfs
+# Required-Start:    $remote_fs mountdevsubfs
 # Required-Stop:
 # X-Start-Before:    keymap keyboard-setup
 # Default-Start:     S
@@ -37,7 +37,7 @@ fi
 ###
 FLL_DISTRO_MODE="installed"
 
-if [ -s /etc/default/distro ]; then
+if [ -r /etc/default/distro ]; then
 	. /etc/default/distro
 fi
 

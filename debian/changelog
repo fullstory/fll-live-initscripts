@@ -1,12 +1,24 @@
-fll-live-initscripts (3.6.25) UNRELEASED; urgency=low
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (3.6.25) unstable; urgency=low
 
   [ Nikolas Poniros ]
   * Added lxdm to distro-defaults to create/remove needed insserv overrides 
 
- -- Nikolas Poniros <edhunter@sidux.com>  Thu, 04 Mar 2010 02:48:25 +0100
+  [ Stefan Lippers-Hollmann ]
+  * drop build-depends on dash, it's now essential. Thanks to edhunter.
+  * bump standards version to 3.8.4, no changes necessary.
+  * switch to dpkg-source 3.0 (native) format.
+  * fix lintian warnings:
+    - init.d-script-sourcing-without-test, by replacing unrecognized -s checks
+      with -r.
+    - init.d-script-missing-dependency-on-remote_fs, while (guaranteed) not an
+      issue in our environment, this is correct.
+    - fll_xorgconfig.8: spelling-error-in-manpage s/seperated/separated/.
+    - fll-reboot: init.d-script-does-not-provide-itself
+    - locales: script-not-executable
+  * re-indent locales.
+  * update and harmonize debian/copyright.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 10 Mar 2010 03:09:14 +0100
 
 fll-live-initscripts (3.6.24) unstable; urgency=low
 

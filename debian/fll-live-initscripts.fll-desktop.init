@@ -29,7 +29,7 @@ NAME="fll-desktop"
 ###
 FLL_DISTRO_MODE="installed"
 
-if [ -s /etc/default/distro ]; then
+if [ -r /etc/default/distro ]; then
 	. /etc/default/distro
 fi
 
