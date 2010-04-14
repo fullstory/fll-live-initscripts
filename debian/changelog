@@ -7,8 +7,11 @@ fll-live-initscripts (3.7.2) UNRELEASED; urgency=low
   * fll-live-initscripts: do not create template /etc/default/fll-init
     /etc/default/fll-locales. Do not remove /etc/default/fll-init, its
     now not created.
+  * fll-reboot: declare a X-Stop-After dependency to fix startpar
+    makefile style shutdown. This is a fragile workaround which is
+    required due to our replacing of umountroot/halt/reboot scripts.
 
- -- Kel Modderman <kel@otaku42.de>  Wed, 14 Apr 2010 23:06:44 +1000
+ -- Kel Modderman <kel@otaku42.de>  Wed, 14 Apr 2010 23:39:35 +1000
 
 fll-live-initscripts (3.7.1) unstable; urgency=low
 
