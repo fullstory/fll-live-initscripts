@@ -33,7 +33,7 @@ override_lsb_provides() {
 
 case "$1" in
 	configure)
-		for script in halt reboot
+		for script in halt reboot umountfs umountroot
 		do
 			echo "fll-live-initscripts: overriding LSB init info for ${script} ..."
 			override_lsb_provides "/etc/init.d/${script}" \
