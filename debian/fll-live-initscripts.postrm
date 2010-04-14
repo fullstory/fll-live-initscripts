@@ -29,18 +29,11 @@ set -e
 # If preinst fails during upgrade:
 #       <new-postrm> abort-upgrade <old-version>
 
-purge_conffile() {
-	rm -f ${1}
-}
-
 #DEBHELPER#
 
 case "$1" in
 	remove|purge)
-		for filename in /etc/default/fll-init /etc/default/fll-locales
-		do
-			purge_conffile "${filename}"
-		done
+		rm -f /etc/default/fll-locales
 
 		# Ensure removal, as it declares duplicate provision of core
 		# dependency boot facilities
