@@ -74,9 +74,6 @@ if [ -f /proc/cmdline ]; then
 			hostname=*)
 				CUSTOM_HOSTNAME="${param#hostname=}"
 				;;
-			nocpufreq|cpufreq=no)
-				NOCPUFREQ=1
-				;;
 		esac
 	done
 fi
@@ -116,15 +113,6 @@ do_start() {
 		if ! grep -s -q -w capability /etc/modules; then
 			echo capability >> /etc/modules
 		fi
-	fi
-
-	###
-	# disable cpufreq as per cheatcode
-	###
-	if [ "${NOCPUFREQ}" ]; then
-		remove_initscript loadcpufreq
-	else
-		insert_initscript loadcpufreq
 	fi
 }
 

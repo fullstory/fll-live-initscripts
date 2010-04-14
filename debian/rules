@@ -17,7 +17,6 @@ install: build
 	dh_installinit --no-start --name=fll-shell      -- start 91 S .
 	dh_installinit --no-start --name=fll-xdm        -- start 95 S .
 	dh_installinit --no-start --name=fll-desktop    -- start 95 S .
-	dh_installinit --no-start --name=fll-bluez      -- start 96 S .
 	dh_installinit --no-start --name=fll-reboot     -- start 90 0 6 .
 	dh $@ --remaining
 

@@ -1,41 +1,5 @@
 # Common functions for fll-live-initscripts
 
-insert_initscript() {
-	local CMD
-
-	if [ "${#}" -lt 1 ]; then
-		return 1
-	fi
-
-	if [ -z "${FLL_MOUNTPOINT}" ] && [ ! -d "${2}" ]; then
-		return 1
-	fi
-
-	CMD=$(fll_analyze_initscripts "${1}" --chroot "${2:-${FLL_MOUNTPOINT}}")
-	if [ "${CMD}" ]; then
-		${CMD} >/dev/null
-		return "${?}"
-	fi
-
-	return 1
-}
-
-remove_initscript() {
-	local CMD
-
-	if [ "${#}" -ne 1 ]; then
-		return 1
-	fi
-
-	CMD=$(fll_analyze_initscripts --force --remove "${1}")
-	if [ "${CMD}" ]; then
-		${CMD} >/dev/null
-		return "${?}"
-	fi
-
-	return 1
-}
-
 fll_get_mnt() {
 	local FLL
 	local DEVS
