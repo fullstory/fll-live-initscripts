@@ -1,3 +1,9 @@
+fll-live-initscripts (3.7.2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 14 Apr 2010 14:34:45 +0200
+
 fll-live-initscripts (3.7.1) unstable; urgency=low
 
   * Remove all ucf crap, it is unused until now.
