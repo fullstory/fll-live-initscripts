@@ -1,9 +1,5 @@
-fll-live-initscripts (3.7.2) UNRELEASED; urgency=low
+fll-live-initscripts (3.7.2) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll-live-initscripts: do not create template /etc/default/fll-init
     /etc/default/fll-locales. Do not remove /etc/default/fll-init, its
     now not created.
