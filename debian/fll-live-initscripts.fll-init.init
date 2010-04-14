@@ -79,6 +79,9 @@ if [ -f /proc/cmdline ]; then
 fi
 
 do_start() {
+	# disable checkroot/checkfs
+	touch /fastboot
+
 	###
 	# custom hostname given on cmdline
 	###
