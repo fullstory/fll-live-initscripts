@@ -49,7 +49,6 @@ Description: fll live media sysv initscripts
 Package: fll-live-xorgconfig
 Architecture: all
 Depends: ${misc:Depends}, 
- ${shlibs:Depends},
  distro-defaults,
  perl,
  lsb-base (>= 3.0-6),
@@ -65,8 +64,6 @@ Description: fll live media xorg related tools
 Package: fll-live-utils
 Architecture: all
 Depends: ${misc:Depends}, 
- perl,
- libfile-slurp-perl,
  udev
 Description: fll live utilities
  A set of tools for use by fll-live-initscripts.
