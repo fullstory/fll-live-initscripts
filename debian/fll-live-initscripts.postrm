@@ -39,9 +39,9 @@ case "$1" in
 		# dependency boot facilities
 		rm -f /etc/init.d/fll-reboot
 
-		for script in umountfs umountroot halt reboot
+		for script in halt reboot
 		do
-			purge_conffile "/etc/insserv/overrides/${script}"
+			rm -f "/etc/insserv/overrides/${script}"
 			# replace halt and reboot facility runlevel links
 			insserv "/etc/init.d/${script}"
 		done

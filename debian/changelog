@@ -6,8 +6,9 @@ fll-live-initscripts (3.7.4) UNRELEASED; urgency=low
   [ Kel Modderman ]
   * Drop invalid dependencies of perl,libfile-slurp-perl for fll-live-
     utils and shlibs for fll-live-xorgconfig.
+  * Fix fll-live-initscripts.postrm.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 15 Apr 2010 07:14:03 +1000
+ -- Kel Modderman <kel@otaku42.de>  Thu, 15 Apr 2010 07:30:44 +1000
 
 fll-live-initscripts (3.7.3) unstable; urgency=low
 
