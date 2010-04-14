@@ -31,14 +31,6 @@ set -e
 
 purge_conffile() {
 	rm -f ${1}
-
-	for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist; do
-		rm -f ${1}${ext}
-	done
-
-	if which ucfr >/dev/null; then
-		ucfr --purge distro-defaults ${1}
-	fi
 }
 
 case "$1" in

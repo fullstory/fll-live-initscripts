@@ -20,8 +20,7 @@ Vcs-Browser: http://svn.berlios.de/wsvn/fullstory/fll-live-initscripts/trunk/
 
 Package: distro-defaults
 Architecture: all
-Depends: ${misc:Depends},
- ucf
+Depends: ${misc:Depends}
 Description: set various default options
  This package has much influence on the system and update behaviour of
  customized live Linux utilities. It is dynamically created at distro build

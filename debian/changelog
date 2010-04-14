@@ -1,8 +1,13 @@
 fll-live-initscripts (3.7.1) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 14 Apr 2010 13:36:49 +0200
+  [ Kel Modderman ]
+  * Remove all ucf crap, it is unused until now.
+  * insserv is now pseudo-essential so do not special case it.
+
+ -- Kel Modderman <kel@otaku42.de>  Wed, 14 Apr 2010 22:25:50 +1000
 
 fll-live-initscripts (3.7.0) unstable; urgency=low
 

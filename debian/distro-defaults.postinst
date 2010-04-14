@@ -65,26 +65,13 @@ do_override() {
 
 purge_conffile() {
 	rm -f ${1}
-
-	for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist; do
-		rm -f ${1}${ext}
-	done
-
-	if which ucfr >/dev/null; then
-		ucfr --purge distro-defaults ${1}
-	fi
 }
 
 case "$1" in
 	configure)
 		runlevel=$(default_runlevel)
 
-		# /etc/default/distro is written at distro build time, we
-		# claim owership of the conffile at installation time ...
-		ucfr distro-defaults /etc/default/distro
-
 		for dm in gdm kdm xdm slim lxdm; do			
-			ucfr distro-defaults /etc/insserv/overrides/${dm}
 			do_override "${dm}" "${runlevel:-0}"
 		done
 
@@ -98,7 +85,6 @@ case "$1" in
 			purge_conffile /etc/insserv/overrides/hwclockfirst.sh
 		fi
 
-		# We don't register this conffile with ucf, or purge it in postrm
 		if [ ! -f /etc/apt/sources.list ] && chrooted; then
 			echo 'distro-defaults: creating /etc/apt/sources.list ...'
 			cat > /etc/apt/sources.list \

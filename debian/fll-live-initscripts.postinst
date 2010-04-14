@@ -52,13 +52,7 @@ EOF
 			override_lsb_provides "/etc/init.d/${script}" \
 				"/etc/insserv/overrides/${script}"
 
-                        # Remove the links only if insserv is present,
-                        # or else we have no reference to replace them
-                        # (We assume insserv is used if present, but it
-                        # may be unconfigured when we are run)
-                        if which insserv >/dev/null; then
-				rm -fv /etc/rc[0-6S]\.d/[SK]??${script}
-                        fi
+			rm -fv /etc/rc[0-6S]\.d/[SK]??${script}
 		done
 		;;
 	abort-upgrade|abort-deconfigure|abort-remove)
