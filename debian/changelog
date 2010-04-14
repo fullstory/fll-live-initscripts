@@ -1,9 +1,5 @@
-fll-live-initscripts (3.7.1) UNRELEASED; urgency=low
+fll-live-initscripts (3.7.1) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * Remove all ucf crap, it is unused until now.
   * insserv is now pseudo-essential so do not special case it.
   * fll-init: touch /fastboot to avoid checkfs/checkroot while allowing
