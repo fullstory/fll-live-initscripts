@@ -1,3 +1,9 @@
+fll-live-initscripts (3.7.5) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 15 Apr 2010 01:12:03 +0200
+
 fll-live-initscripts (3.7.4) unstable; urgency=low
 
   * Drop invalid dependencies of perl,libfile-slurp-perl for fll-live-
