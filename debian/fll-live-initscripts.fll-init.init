@@ -105,15 +105,6 @@ do_start() {
 		done
 		log_end_msg 0
 	fi
-
-	###
-	# make sure capability module is loaded if present
-	###
-	if modprobe --ignore-install capability 2>/dev/null; then
-		if ! grep -s -q -w capability /etc/modules; then
-			echo capability >> /etc/modules
-		fi
-	fi
 }
 
 case "${1}" in
