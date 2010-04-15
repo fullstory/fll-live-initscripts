@@ -34,18 +34,6 @@ set -e
 case "$1" in
 	remove|purge)
 		rm -f /etc/default/fll-locales
-
-		# Ensure removal, as it declares duplicate provision of core
-		# dependency boot facilities
-		rm -f /etc/init.d/fll-reboot
-
-		for script in halt reboot
-		do
-			rm -f "/etc/insserv/overrides/${script}"
-			# replace halt and reboot facility runlevel links
-			insserv "/etc/init.d/${script}"
-		done
-
 		# fll-live-initramfs may have created this file
 		rm -f /etc/udev/rules.d/70-fll-live.rules
 		;;

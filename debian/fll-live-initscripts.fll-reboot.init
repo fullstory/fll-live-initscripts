@@ -1,10 +1,10 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          halt reboot fll-reboot
+# Provides:          fll-reboot
 # Required-Start:
-# Required-Stop:
-# X-Stop-After:      lvm2 networking ifupdown umountfs umountroot
+# Required-Stop:     umountroot
+# X-Stop-After:      umountfs lvm2
 # Default-Start:
 # Default-Stop:      0 6
 # Short-Description: shutdown and eject live media
