@@ -1,9 +1,5 @@
-fll-live-initscripts (3.7.7) UNRELEASED; urgency=low
+fll-live-initscripts (3.7.7) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll-reboot: mark as interactive.
   * fll-reboot: remove everything which umountfs takes care of.
 
