@@ -1,9 +1,5 @@
-fll-live-initscripts (3.7.6) UNRELEASED; urgency=low
+fll-live-initscripts (3.7.6) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll-reboot: do not provide reboot & halt, adjust dependencies to
     sequence script after unountfs but before umountroot, halt and
     reboot. Do not override halt/reboot lsb info.
