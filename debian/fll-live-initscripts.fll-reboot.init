@@ -4,7 +4,7 @@
 # Provides:          halt reboot fll-reboot
 # Required-Start:
 # Required-Stop:
-# X-Stop-After:      lvm2 networking ifupdown
+# X-Stop-After:      lvm2 networking ifupdown umountfs umountroot
 # Default-Start:
 # Default-Stop:      0 6
 # Short-Description: shutdown and eject live media

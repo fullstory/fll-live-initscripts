@@ -1,8 +1,8 @@
-fll-live-initscripts (3.7.5) UNRELEASED; urgency=low
+fll-live-initscripts (3.7.5) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * add umountfs and umountroot to X-Stop-After of fll-reboot, thanks to kelmo.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 15 Apr 2010 01:12:03 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 15 Apr 2010 02:17:14 +0200
 
 fll-live-initscripts (3.7.4) unstable; urgency=low
 
