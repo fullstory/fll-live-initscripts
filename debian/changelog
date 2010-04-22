@@ -1,9 +1,5 @@
-fll-live-initscripts (3.7.8) UNRELEASED; urgency=low
+fll-live-initscripts (3.7.8) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_fstab_generator: port to C program which uses libudev to
     enumerate block devices.
     - build-depend on gengetopt, pkg-config and libudev-dev
