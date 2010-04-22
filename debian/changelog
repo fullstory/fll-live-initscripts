@@ -1,9 +1,5 @@
-fll-live-initscripts (3.7.9) UNRELEASED; urgency=low
+fll-live-initscripts (3.8.1) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_fstab_generator: add -b --blkid option to use libblkid to probde
     for filesystem type.
   * fll_fstab_generator: fold mountpoint detection function into
@@ -16,7 +12,7 @@ fll-live-initscripts (3.7.9) UNRELEASED; urgency=low
 
  -- Kel Modderman <kel@otaku42.de>  Fri, 23 Apr 2010 00:15:58 +1000
 
-fll-live-initscripts (3.7.8) unstable; urgency=low
+fll-live-initscripts (3.8.0) unstable; urgency=low
 
   * fll_fstab_generator: port to C program which uses libudev to
     enumerate block devices.
