@@ -148,7 +148,7 @@ static int linux_filesystem(const char *fstype)
 	return 0;
 }
 
-static const char* parse_mounts(struct udev_device *device)
+static const char* parse_mounts(struct udev_device *device, const char *fs_type)
 {
 	struct udev_list_entry *u_list_ent;
 	struct udev_list_entry *u_first_list_ent;
@@ -156,12 +156,7 @@ static const char* parse_mounts(struct udev_device *device)
 	FILE *fp;
 	const char *fs_spec;
 	const char *fs_file;
-	const char *fs_type;
 	const char *devnode;
-
-	fs_type = udev_device_get_property_value(device, "ID_FS_TYPE");
-	if (fs_type == NULL)
-		return NULL;
 
 	fp = setmntent ("/proc/mounts", "r");
 	if (fp == NULL)
@@ -254,7 +249,7 @@ static void process_disk(struct udev_device *device, int disk)
 		return;
 	}
 
-	mntpnt = args.nomounts_flag ? NULL : parse_mounts(device);
+	mntpnt = args.nomounts_flag ? NULL : parse_mounts(device, fstype);
 
 	if (mntpnt != NULL && linux_fstype) {
 		snprintf(dir, sizeof(dir), mntpnt);
