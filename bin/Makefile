@@ -1,5 +1,6 @@
 CFLAGS ?= -O2 -g -Wall
-LIBS = $(shell pkg-config --libs libudev)
+LIBS =  $(shell pkg-config --libs blkid)
+LIBS += $(shell pkg-config --libs libudev)
 
 all: fll_fstab_generator
 

@@ -28,10 +28,13 @@
 #include <getopt.h>
 #include <fcntl.h>
 #include <mntent.h>
+#include <sys/ioctl.h>
+#include <sys/mount.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <libudev.h>
+#include <blkid/blkid.h>
 
 #include "cmdline.h"
 
@@ -148,97 +151,89 @@ static int linux_filesystem(const char *fstype)
 	return 0;
 }
 
-static const char* parse_mounts(struct udev_device *device, const char *fs_type)
-{
-	struct udev_list_entry *u_list_ent;
-	struct udev_list_entry *u_first_list_ent;
-	struct mntent *mnt;
-	FILE *fp;
-	const char *fs_spec;
-	const char *fs_file;
-	const char *devnode;
-
-	fp = setmntent ("/proc/mounts", "r");
-	if (fp == NULL)
-		return NULL;
-	
-	devnode = udev_device_get_devnode(device);
-	u_first_list_ent = udev_device_get_devlinks_list_entry(device);
-
-	for (;;) {
-		mnt = getmntent(fp);
-		if (mnt == NULL)
-			break;
-
-		if (strcmp(fs_type, mnt->mnt_type) != 0)
-			continue;
-
-		if (strcmp(devnode, mnt->mnt_fsname) == 0) {
-			fs_file = mnt->mnt_dir;
-			break;
-		}
-
-		udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
-			fs_spec = udev_list_entry_get_name(u_list_ent);
-			if (strcmp(fs_spec, mnt->mnt_fsname) == 0) {
-				fs_file = mnt->mnt_dir;
-				break;
-			}
-		}
-
-		if (fs_file != NULL)
-			break;
-	}
-	endmntent(fp);
-
-	return fs_file;
-}
-
 static void process_disk(struct udev_device *device, int disk)
 {
 	struct udev_list_entry *u_list_ent;
 	struct udev_list_entry *u_first_list_ent;
-	const char *devnode;
-	const char *symlink;
-	const char *part;
-	const char *fstype;
-	const char *mntpnt;
-	const char *defops;
-	char ops[256];
-	char dir[256];
+	const char *devnode = NULL;
+	const char *symlink = NULL;
+	const char *part = NULL;
+	const char *fstype = NULL;
+	char mntops[256];
+	char mntpnt[256];
 	int freq = 0;
 	int pass = 0;
-	int linux_fstype;
+	int linux_fstype = 0;
+	int mounted = 0;
+	blkid_probe pr = NULL;
+	uint64_t size;
+	int fd = -1;
+	FILE *fp;
+	struct mntent *mnt;
 
 	devnode = udev_device_get_devnode(device);
-	if (devnode == NULL)
-		return;
+	u_first_list_ent = udev_device_get_devlinks_list_entry(device);
+	
+	if (args.blkid_flag) {
+		fd = open(devnode, O_RDONLY);
+		if (fd < 0)
+			return;
+		
+		pr = blkid_new_probe();
+		if (pr == NULL) {
+			close(fd);
+			return;
+		}
+		
+		blkid_probe_set_request(pr, BLKID_PROBREQ_TYPE);
+		
+		if (ioctl(fd, BLKGETSIZE64, &size) != 0)
+			size = 0;
+		
+		if (blkid_probe_set_device(pr, fd, 0, size) != 0 ||
+		    blkid_do_safeprobe(pr) != 0 ||
+		    blkid_probe_lookup_value(pr, "TYPE", &fstype, NULL) != 0) {
+			blkid_free_probe(pr);
+			close(fd);
+			return;
+		}
+	}
+	else
+		fstype = udev_device_get_property_value(device, "ID_FS_TYPE");
 
-	fstype = udev_device_get_property_value(device, "ID_FS_TYPE");
 	if (fstype == NULL)
 		return;
 
 	linux_fstype = linux_filesystem(fstype);
 
 	if ((args.labels_flag || args.uuids_flag) && disk) {
-		u_first_list_ent = udev_device_get_devlinks_list_entry(device);
 		udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
 			symlink = udev_list_entry_get_name(u_list_ent);
 			if (args.labels_flag &&
 			    strncmp(symlink, "/dev/disk/by-label",
 			    	    strlen("/dev/disk/by-label")) == 0) {
-				char label[256];
-				snprintf(label, sizeof(label), "LABEL=%s",
-					 basename(symlink));
-				devnode = label;
+				if (linux_fstype) {
+					char label[256];
+					snprintf(label, sizeof(label),
+						 "LABEL=%s",
+						 basename(symlink));
+					devnode = label;
+				}
+				else
+					devnode = symlink;
 			}
 			if (args.uuids_flag &&
 			    strncmp(symlink, "/dev/disk/by-uuid",
 				    strlen("/dev/disk/by-uuid")) == 0) {
-				char uuid[256];
-				snprintf(uuid, sizeof(uuid), "UUID=%s",
-					 basename(symlink));
-				devnode = uuid;
+				if (linux_fstype) {
+					char uuid[256];
+					snprintf(uuid, sizeof(uuid),
+						 "UUID=%s",
+						 basename(symlink));
+					devnode = uuid;
+				}
+				else
+					devnode = symlink;
 			}
 		}
 	}
@@ -249,21 +244,54 @@ static void process_disk(struct udev_device *device, int disk)
 		return;
 	}
 
-	mntpnt = args.nomounts_flag ? NULL : parse_mounts(device, fstype);
+	if (!args.nomounts_flag) {
+		fp = setmntent("/proc/mounts", "r");
+		for (;;) {
+			if (fp == NULL)
+				break;
 
-	if (mntpnt != NULL && linux_fstype) {
-		snprintf(dir, sizeof(dir), mntpnt);
+			mnt = getmntent(fp);
+			if (mnt == NULL)
+				break;
 
+			if (strcmp(fstype, mnt->mnt_type) != 0)
+				continue;
+
+			if (strcmp(udev_device_get_devnode(device),
+				   mnt->mnt_fsname) == 0) {
+				snprintf(mntpnt, sizeof(mntpnt), mnt->mnt_dir);
+				mounted = 1;
+				break;
+			}
+
+			udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
+				symlink = udev_list_entry_get_name(u_list_ent);
+				if (strcmp(symlink, mnt->mnt_fsname) == 0) {
+					snprintf(mntpnt, sizeof(mntpnt),
+						 mnt->mnt_dir);
+					mounted = 1;
+					break;
+				}
+			}
+
+			if (mounted)
+				break;
+		}
+		if (fp != NULL)
+			endmntent(fp);
+	}
+	
+	if (mounted && linux_fstype) {
 		if (strcmp(fstype, "ext4") == 0)
-			snprintf(ops, sizeof(ops), "%s,%s",
-				"defaults,errors=remount-ro",
-				"noatime,barrier=0");
-		else if (strncmp(fstype, "ext", 3) == 0)
-			snprintf(ops, sizeof(ops), "%s,%s",
-				"defaults,errors=remount-ro",
-				"noatime");
+			snprintf(mntops, sizeof(mntops), "%s,%s",
+				"defaults,errors=remount-ro,noatime",
+				"barrier=0");
+		else if (strcmp(fstype, "ext3") == 0 ||
+			 strcmp(fstype, "ext2") == 0)
+			snprintf(mntops, sizeof(mntops), "%s",
+				"defaults,errors=remount-ro,noatime");
 		else
-			snprintf(ops, sizeof(ops), "%s",
+			snprintf(mntops, sizeof(mntops), "%s",
 				"defaults,noatime");
 		
 		if (strcmp(mntpnt, "/") == 0)
@@ -273,52 +301,57 @@ static void process_disk(struct udev_device *device, int disk)
 	}
 	else {
 		if (!disk) {
-			snprintf(dir, sizeof(dir), "/media/%s",
+			snprintf(mntpnt, sizeof(mntpnt), "/media/%s",
 				 basename(devnode));
 		}
 		else {
 			part = udev_device_get_sysattr_value(device,
 							     "partition");
 			if (part != NULL)
-				snprintf(dir, sizeof(dir),
+				snprintf(mntpnt, sizeof(mntpnt),
 					 "/media/disk%dpart%s", disk, part);
 			else
-				snprintf(dir, sizeof(dir),
+				snprintf(mntpnt, sizeof(mntpnt),
 					 "/media/disk%d", disk);
 		}
 
-		defops = args.auto_flag ? "auto" : "noauto";
-
-		if (strcmp(fstype, "ext4") == 0)
-			snprintf(ops, sizeof(ops), "%s,%s", defops,
-				 "users,rw,exec,noatime,barrier=0");
-		else if (linux_fstype)
-			snprintf(ops, sizeof(ops), "%s,%s", defops,
+		if (linux_fstype)
+			snprintf(mntops, sizeof(mntops), "%s,%s",
+				 args.auto_flag ? "auto" : "noauto",
 				 "users,rw,exec,noatime");
 		else if (strcmp(fstype, "ntfs") == 0)
-			snprintf(ops, sizeof(ops), "%s,%s", defops,
+			snprintf(mntops, sizeof(mntops), "%s,%s",
+				 args.auto_flag ? "auto" : "noauto",
 				 "users,ro,dmask=0022,fmask=0133,nls=utf8");
 		else if (strcmp(fstype, "msdos") == 0)
-			snprintf(ops, sizeof(ops), "%s,%s", defops,
+			snprintf(mntops, sizeof(mntops), "%s,%s",
+				 args.auto_flag ? "auto" : "noauto",
 				 "users,rw,quiet,umask=000,iocharset=utf8");
 		else if (strcmp(fstype, "vfat") == 0)
-			snprintf(ops, sizeof(ops), "%s,%s", defops,
+			snprintf(mntops, sizeof(mntops), "%s,%s",
+				 args.auto_flag ? "auto" : "noauto",
 				 "users,rw,quiet,umask=000,shortname=lower");
 		else if (strcmp(fstype, "hfsplus") == 0)
-			snprintf(ops, sizeof(ops), "%s,%s", defops,
+			snprintf(mntops, sizeof(mntops), "%s,%s",
+				 args.auto_flag ? "auto" : "noauto",
 				 "users,ro,exec");
 		else
 			return;
 	}
 
 	if (args.mkdir_flag && 
-	    mkdir(dir, S_IRWXU | S_IRWXG | S_IRWXO) == -1) {
+	    mkdir(mntpnt, S_IRWXU | S_IRWXG | S_IRWXO) == -1) {
 		if (errno != EEXIST)
-			fprintf(stderr, "Error: mkdir(%s): %s\n", dir,
+			fprintf(stderr, "Error: mkdir(%s): %s\n", mntpnt,
 				strerror(errno));
 	}
 
-	print_mntent(devnode, dir, fstype, ops, freq, pass);
+	print_mntent(devnode, mntpnt, fstype, mntops, freq, pass);
+
+	if (args.blkid_flag) {
+		blkid_free_probe(pr);
+		close(fd);
+	}
 }
 
 int main(int argc, char **argv)

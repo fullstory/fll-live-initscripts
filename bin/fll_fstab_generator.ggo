@@ -4,6 +4,9 @@ version "1.0"
 option	"auto" a
 	"add \"auto\" to default mount options"
 	flag off
+option	"blkid" b
+	"use blkid to query filesystem information"
+	flag off
 option	"file" f
 	"write output to file"
 	typestr="FILE"

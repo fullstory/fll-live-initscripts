@@ -15,6 +15,7 @@ Build-Depends: debhelper (>= 7),
  docbook-xsl,
  devscripts,
  pkg-config,
+ libblkid-dev,
  libudev-dev,
  libxml2-utils
 Standards-Version: 3.8.4
