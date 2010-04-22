@@ -86,8 +86,8 @@ fi
 
 do_start() {
 	# This is a workaround for http://bugs.debian.org/571438
-	/sbin/udevadm trigger --action=change --subsystem-match=block --sysname-match=dm-0
-	/sbin/udevadm settle
+	#/sbin/udevadm trigger --action=change --subsystem-match=block --sysname-match=dm-0
+	#/sbin/udevadm settle
 
 	log_daemon_msg "${NAME}"; log_action_begin_msg " generating /etc/fstab"
 	/usr/sbin/fll_fstab_generator --file /etc/fstab --mkdir --nomounts ${NOSWAP}
