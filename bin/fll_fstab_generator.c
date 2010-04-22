@@ -108,10 +108,8 @@ static int device_devtype_disk(struct udev_device *device)
 
 static int device_devmapper(struct udev_device *device)
 {
-	const char *dm_name;
-
-	dm_name = udev_device_get_property_value(device, "DM_NAME");
-	if (dm_name != NULL)
+	if (strncmp(udev_device_get_devnode(device),
+		    "/dev/mapper/", strlen("/dev/mapper/")) == 0)
 		return 1;
 	else
 		return 0;

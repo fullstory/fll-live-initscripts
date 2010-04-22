@@ -8,8 +8,10 @@ fll-live-initscripts (3.7.9) UNRELEASED; urgency=low
     for filesystem type.
   * fll_fstab_generator: fold mountpoint detection function into
     process_disk().
+  * fll_fstab_generator: do not rely on DM_NAME udev property to
+    identify devmapper devices.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 22 Apr 2010 23:54:56 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 23 Apr 2010 00:03:13 +1000
 
 fll-live-initscripts (3.7.8) unstable; urgency=low
 
