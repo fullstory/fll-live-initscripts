@@ -1,3 +1,9 @@
+fll-live-initscripts (3.8.2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 22 Apr 2010 16:33:05 +0200
+
 fll-live-initscripts (3.8.1) unstable; urgency=low
 
   * fll_fstab_generator: add -b --blkid option to use libblkid to probde
