@@ -10,8 +10,11 @@ fll-live-initscripts (3.7.9) UNRELEASED; urgency=low
     process_disk().
   * fll_fstab_generator: do not rely on DM_NAME udev property to
     identify devmapper devices.
+  * fll_fstab_generator: enumerate for DEVTYPE disk or partition, do not
+    explicitly set a match for DEVNAME /dev/mapper/*, they are DEVTYPE
+    disk.
 
- -- Kel Modderman <kel@otaku42.de>  Fri, 23 Apr 2010 00:03:13 +1000
+ -- Kel Modderman <kel@otaku42.de>  Fri, 23 Apr 2010 00:15:58 +1000
 
 fll-live-initscripts (3.7.8) unstable; urgency=low
 

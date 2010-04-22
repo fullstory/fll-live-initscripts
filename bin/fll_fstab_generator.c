@@ -395,8 +395,8 @@ int main(int argc, char **argv)
 	}
 
 	udev_enumerate_add_match_subsystem(u_enum, "block");
-	udev_enumerate_add_match_property(u_enum, "ID_TYPE", "disk");
-	udev_enumerate_add_match_property(u_enum, "DEVNAME", "/dev/mapper/*");
+	udev_enumerate_add_match_property(u_enum, "DEVTYPE", "disk");
+	udev_enumerate_add_match_property(u_enum, "DEVTYPE", "partition");
 	udev_enumerate_scan_devices(u_enum);
 
 	u_first_list_ent = udev_enumerate_get_list_entry(u_enum);
