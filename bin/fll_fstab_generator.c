@@ -333,17 +333,19 @@ int main(int argc, char **argv)
         struct udev_list_entry *u_list_ent;
         struct udev_list_entry *u_first_list_ent;
 	int disk = 0;
-	int ret = 1;
 
-	if (cmdline_parser(argc, argv, &args) != 0)
-		goto out;
+	if (cmdline_parser(argc, argv, &args) != 0) {
+		fprintf(stderr, "Error: cmdline_parser(argc, argv, &args)\n");
+		return 1;
+	}
 
 	if (args.file_given) {
 		fstab = fopen(args.file_arg, "w");
 		if (fstab == NULL) {
 			fprintf(stderr, "Error: fpopen(%s): %s\n",
 				args.file_arg, strerror(errno));
-			goto out1;
+			cmdline_parser_free(&args);
+			return 1;
 		}
 	}
 	else
@@ -352,13 +354,18 @@ int main(int argc, char **argv)
 	udev = udev_new();
 	if (udev == NULL) {
 		fprintf(stderr, "Error: udev_new()\n");
-		goto out2;
+		cmdline_parser_free(&args);
+		fclose(fstab);
+		return 1;
 	}
 
 	u_enum = udev_enumerate_new(udev);
 	if (u_enum == NULL) {
 		fprintf(stderr, "Error: udev_enumerate_new(udev)\n");
-		goto out3;
+		cmdline_parser_free(&args);
+		fclose(fstab);
+		udev_unref(udev);
+		return 1;
 	}
 
 	udev_enumerate_add_match_subsystem(u_enum, "block");
@@ -398,13 +405,8 @@ int main(int argc, char **argv)
 			process_disk(device, disk);
 	}
 	udev_enumerate_unref(u_enum);
-	ret = 0;
-out3:
 	udev_unref(udev);
-out2:
 	fclose(fstab);
-out1:
 	cmdline_parser_free(&args);
-out:
-	return ret;
+	return 0;
 }
