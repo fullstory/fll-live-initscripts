@@ -1,8 +1,17 @@
 fll-live-initscripts (3.7.8) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 15 Apr 2010 15:02:53 +0200
+  [ Kel Modderman ]
+  * fll_fstab_generator: port to C program which uses libudev to
+    enumerate block devices.
+    - build-depend on gengetopt, pkg-config and libudev-dev
+    - fll-live-utils is now arch: any
+  * fll_resume_validate: removed.
+  * fll-fstab: s/swapless/noswap/;s/nomnt/nomounts/.
+
+ -- Kel Modderman <kel@otaku42.de>  Thu, 22 Apr 2010 20:01:18 +1000
 
 fll-live-initscripts (3.7.7) unstable; urgency=low
 

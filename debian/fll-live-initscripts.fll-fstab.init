@@ -78,7 +78,7 @@ if [ -f /proc/cmdline ]; then
 				exit 0
 				;;
 			noswap|swap=no)
-				NOSWAP="--swapless"
+				NOSWAP="--noswap"
 				;;
 		esac
 	done
@@ -86,7 +86,7 @@ fi
 
 do_start() {
 	log_daemon_msg "${NAME}"; log_action_begin_msg " generating /etc/fstab"
-	/usr/sbin/fll_fstab_generator --file /etc/fstab --mkdir --nomnt ${NOSWAP}
+	/usr/sbin/fll_fstab_generator --file /etc/fstab --mkdir --nomounts ${NOSWAP}
 	log_end_msg "${?}"
 }
 

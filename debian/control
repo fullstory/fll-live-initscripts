@@ -9,10 +9,13 @@ Uploaders: Stefan Lippers-Hollmann <s.l-h@gmx.de>,
 Build-Depends: debhelper (>= 7),
  asciidoc,
  docbook,
+ gengetopt,
  xsltproc,
  docbook-xml,
  docbook-xsl,
  devscripts,
+ pkg-config,
+ libudev-dev,
  libxml2-utils
 Standards-Version: 3.8.4
 Vcs-Svn: svn://svn.berlios.de/fullstory/fll-live-initscripts/trunk
@@ -62,8 +65,8 @@ Description: fll live media xorg related tools
  A set of scripts to generate a Xorg configuration.
 
 Package: fll-live-utils
-Architecture: all
-Depends: ${misc:Depends}, 
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
  udev
 Description: fll live utilities
  A set of tools for use by fll-live-initscripts.

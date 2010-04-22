@@ -1,3 +1,2 @@
 bin/fll_fstab_generator     usr/sbin
 bin/fll_login               usr/bin
-bin/fll_resume_validate     usr/sbin
