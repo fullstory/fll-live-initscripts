@@ -125,11 +125,11 @@ static void print_mntent(const char *fs_spec, const char *fs_file,
 			 const char *fs_vfstype, const char *fs_mntops,
 			 int fs_freq, int fs_passno)
 {
-	if (args.uuids_flag)
-		fprintf(fstab, "%-45s %-20s %-10s %-45s %d %d\n", fs_spec,
+	if (args.uuids_flag || args.labels_flag)
+		fprintf(fstab, "%-45s %-20s %-10s %s %d %d\n", fs_spec,
 			fs_file, fs_vfstype, fs_mntops, fs_freq, fs_passno);
 	else
-		fprintf(fstab, "%-20s %-20s %-10s %-45s %d %d\n", fs_spec,
+		fprintf(fstab, "%-15s %-20s %-10s %s %d %d\n", fs_spec,
 			fs_file, fs_vfstype, fs_mntops, fs_freq, fs_passno);
 }
 
