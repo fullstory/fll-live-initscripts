@@ -1,8 +1,14 @@
 fll-live-initscripts (3.8.2) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 22 Apr 2010 16:33:05 +0200
+  [ Kel Modderman ]
+  * fll_fstab_generator: rename gengetopt generated filename from
+    cmdline.[ch] to fll_fstab_cmdline.[ch].
+  * fll-fstab: remove reference to workaround.
+
+ -- Kel Modderman <kel@otaku42.de>  Fri, 23 Apr 2010 21:40:19 +1000
 
 fll-live-initscripts (3.8.1) unstable; urgency=low
 

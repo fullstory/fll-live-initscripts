@@ -36,7 +36,7 @@
 #include <libudev.h>
 #include <blkid/blkid.h>
 
-#include "cmdline.h"
+#include "fll_fstab_cmdline.h"
 
 struct gengetopt_args_info args;
 FILE *fstab;
@@ -55,6 +55,9 @@ static int device_wanted(struct udev_device *device, unsigned int wanted,
 
 	do {
 		devnode = udev_device_get_devnode(parent);
+		if (devnode == NULL)
+			break;
+
 		for (i = 0; i < wanted; ++i)
 			if (strcmp(devnode, w[i]) == 0)
 				return 1;
@@ -173,8 +176,11 @@ static void process_disk(struct udev_device *device, int disk)
 	struct mntent *mnt;
 
 	devnode = udev_device_get_devnode(device);
+	if (devnode == NULL)
+		return;
+
 	u_first_list_ent = udev_device_get_devlinks_list_entry(device);
-	
+
 	if (args.blkid_flag) {
 		fd = open(devnode, O_RDONLY);
 		if (fd < 0)
@@ -182,6 +188,7 @@ static void process_disk(struct udev_device *device, int disk)
 		
 		pr = blkid_new_probe();
 		if (pr == NULL) {
+			fprintf(stderr, "Error: blkid_new_probe()\n");
 			close(fd);
 			return;
 		}
@@ -349,10 +356,10 @@ static void process_disk(struct udev_device *device, int disk)
 
 	print_mntent(devnode, mntpnt, fstype, mntops, freq, pass);
 
-	if (args.blkid_flag) {
+	if (pr != NULL)
 		blkid_free_probe(pr);
+	if (fd != -1)
 		close(fd);
-	}
 }
 
 int main(int argc, char **argv)
