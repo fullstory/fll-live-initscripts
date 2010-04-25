@@ -423,13 +423,17 @@ int main(int argc, char **argv)
 
 		if (args.inputs_num) {
 			if (!device_wanted(device, args.inputs_num,
-					   args.inputs))
+					   args.inputs)) {
+				udev_device_unref(device);
 				continue;
+			}
 		}
 		else if (device_removable(device)) {
 			if (!device_wanted(device, args.wanted_given,
-					   args.wanted_arg))
+					   args.wanted_arg)) {
+				udev_device_unref(device);
 				continue;
+			}
 		}
 
 		if (device_devtype_disk(device))
@@ -439,6 +443,8 @@ int main(int argc, char **argv)
 			process_disk(device, 0);
 		else
 			process_disk(device, disk);
+
+		udev_device_unref(device);
 	}
 	udev_enumerate_unref(u_enum);
 	udev_unref(udev);
