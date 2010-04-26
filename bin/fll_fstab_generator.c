@@ -38,8 +38,31 @@
 
 #include "fll_fstab_cmdline.h"
 
-struct gengetopt_args_info args;
+struct gengetopt_args_info opts;
 FILE *fstab;
+int mounted;
+
+static int linux_filesystem(const char *fstype)
+{
+	if (strcmp(fstype, "swap") == 0)
+		return 1;
+	if (strcmp(fstype, "ext4") == 0)
+		return 1;
+	if (strcmp(fstype, "ext3") == 0)
+		return 1;
+	if (strcmp(fstype, "ext2") == 0)
+		return 1;
+	if (strcmp(fstype, "xfs") == 0)
+		return 1;
+	if (strcmp(fstype, "jfs") == 0)
+		return 1;
+	if (strcmp(fstype, "reiserfs") == 0)
+		return 1;
+	if (strcmp(fstype, "reiser4") == 0)
+		return 1;
+	
+	return 0;
+}
 
 static int device_wanted(struct udev_device *device, unsigned int wanted,
 			 char **w)
@@ -82,7 +105,7 @@ static int device_removable(struct udev_device *device)
 	struct udev_device *parent = device;
 	const char *removable;
 
-	if (args.removable_flag)
+	if (opts.removable_flag)
 		return 0;
 
 	do {
@@ -121,76 +144,28 @@ static int device_devmapper(struct udev_device *device)
 		return 0;
 }
 
-static void print_mntent(const char *fs_spec, const char *fs_file,
-			 const char *fs_vfstype, const char *fs_mntops,
-			 int fs_freq, int fs_passno)
+static char* device_fstype(struct udev_device *device)
 {
-	if (args.uuids_flag || args.labels_flag)
-		fprintf(fstab, "%-45s %-20s %-10s %s %d %d\n", fs_spec,
-			fs_file, fs_vfstype, fs_mntops, fs_freq, fs_passno);
-	else
-		fprintf(fstab, "%-15s %-20s %-10s %s %d %d\n", fs_spec,
-			fs_file, fs_vfstype, fs_mntops, fs_freq, fs_passno);
-}
-
-static int linux_filesystem(const char *fstype)
-{
-	if (strcmp(fstype, "swap") == 0)
-		return 1;
-	if (strcmp(fstype, "ext4") == 0)
-		return 1;
-	if (strcmp(fstype, "ext3") == 0)
-		return 1;
-	if (strcmp(fstype, "ext2") == 0)
-		return 1;
-	if (strcmp(fstype, "xfs") == 0)
-		return 1;
-	if (strcmp(fstype, "jfs") == 0)
-		return 1;
-	if (strcmp(fstype, "reiserfs") == 0)
-		return 1;
-	if (strcmp(fstype, "reiser4") == 0)
-		return 1;
-	
-	return 0;
-}
-
-static void process_disk(struct udev_device *device, int disk)
-{
-	struct udev_list_entry *u_list_ent;
-	struct udev_list_entry *u_first_list_ent;
-	const char *devnode = NULL;
-	const char *symlink = NULL;
-	const char *part = NULL;
-	const char *fstype = NULL;
-	char mntops[256];
-	char mntpnt[256];
-	int freq = 0;
-	int pass = 0;
-	int linux_fstype = 0;
-	int mounted = 0;
-	blkid_probe pr = NULL;
+	const char *fstype;
+	char *value;
+	blkid_probe pr;
 	uint64_t size;
-	int fd = -1;
-	FILE *fp;
-	struct mntent *mnt;
+	int fd;
+	size_t len;
+	int res;
 
-	devnode = udev_device_get_devnode(device);
-	if (devnode == NULL)
-		return;
+	value = NULL;
 
-	u_first_list_ent = udev_device_get_devlinks_list_entry(device);
-
-	if (args.blkid_flag) {
-		fd = open(devnode, O_RDONLY);
+	if (opts.blkid_flag) {
+		fd = open(udev_device_get_devnode(device), O_RDONLY);
 		if (fd < 0)
-			return;
+			return NULL;
 		
 		pr = blkid_new_probe();
 		if (pr == NULL) {
 			fprintf(stderr, "Error: blkid_new_probe()\n");
 			close(fd);
-			return;
+			return NULL;
 		}
 		
 		blkid_probe_set_request(pr, BLKID_PROBREQ_TYPE);
@@ -203,59 +178,160 @@ static void process_disk(struct udev_device *device, int disk)
 		    blkid_probe_lookup_value(pr, "TYPE", &fstype, NULL) != 0) {
 			blkid_free_probe(pr);
 			close(fd);
-			return;
+			return NULL;
 		}
+
+		len = strlen(value) + 1;
+		value = malloc(len);
+		if (value == NULL) {
+			blkid_free_probe(pr);
+			close(fd);
+			return NULL;
+		}
+		res = snprintf(value, len, "%s", fstype);
+		if (res < 0 || (size_t) res >= len) {
+			blkid_free_probe(pr);
+			close(fd);
+			return NULL;
+		}
+		else
+			value[len - 1] = '\0';
+
+		blkid_free_probe(pr);
+		close(fd);
 	}
-	else
+	else {
 		fstype = udev_device_get_property_value(device, "ID_FS_TYPE");
+		if (fstype == NULL)
+			return NULL;
+		len = strlen(fstype) + 1;
+		value = malloc(len);
+		if (value == NULL)
+			return NULL;
+		res = snprintf(value, len, "%s", fstype);
+		if (res < 0 || (size_t) res >= len)
+			return NULL;
+		else
+			value[len - 1] = '\0';
+	}
 
-	if (fstype == NULL)
-		return;
+	return value;
+}
 
-	linux_fstype = linux_filesystem(fstype);
+static char* device_devnode(struct udev_device *device, char *fstype, int disk)
+{
+	struct udev_list_entry *u_list_ent;
+	struct udev_list_entry *u_first_list_ent;
+	const char *devnode;
+	char *value;
+	size_t len;
+	int res;
 
-	if ((args.labels_flag || args.uuids_flag) && disk) {
+	value = NULL;
+	u_first_list_ent = udev_device_get_devlinks_list_entry(device);
+
+	if (disk && (opts.labels_flag || opts.uuids_flag)) {
 		udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
-			symlink = udev_list_entry_get_name(u_list_ent);
-			if (args.labels_flag &&
-			    strncmp(symlink, "/dev/disk/by-label",
+			devnode = udev_list_entry_get_name(u_list_ent);
+			if (opts.labels_flag &&
+			    strncmp(devnode, "/dev/disk/by-label",
 			    	    strlen("/dev/disk/by-label")) == 0) {
-				if (linux_fstype) {
-					char label[256];
-					snprintf(label, sizeof(label),
-						 "LABEL=%s",
-						 basename(symlink));
-					devnode = label;
+				if (value != NULL)
+					free(value);
+				if (linux_filesystem(fstype)) {
+					len = strlen("LABEL=") + 1;
+					len += strlen(basename(devnode));
+					value = malloc(len);
+					if (value == NULL)
+						return NULL;
+					res = snprintf(value, len,
+						       "LABEL=%s",
+						       basename(devnode));
 				}
+				else {
+					len = strlen(devnode) + 1;
+					value = malloc(len);
+					if (value == NULL)
+						return NULL;
+					res = snprintf(value, len, "%s",
+						       devnode);
+				}
+				if (res < 0 || (size_t) res >= len)
+					return NULL;
 				else
-					devnode = symlink;
+					value[len - 1] = '\0';
 			}
-			if (args.uuids_flag &&
-			    strncmp(symlink, "/dev/disk/by-uuid",
+			if (opts.uuids_flag &&
+			    strncmp(devnode, "/dev/disk/by-uuid",
 				    strlen("/dev/disk/by-uuid")) == 0) {
-				if (linux_fstype) {
-					char uuid[256];
-					snprintf(uuid, sizeof(uuid),
-						 "UUID=%s",
-						 basename(symlink));
-					devnode = uuid;
+				if (value != NULL)
+					free(value);
+				if (linux_filesystem(fstype)) {
+					len = strlen("UUID=") + 1;
+					len += strlen(basename(devnode));
+					value = malloc(len);
+					if (value == NULL)
+						return NULL;
+					res = snprintf(value, len,
+						       "UUID=%s",
+						       basename(devnode));
 				}
+				else {
+					len = strlen(devnode) + 1;
+					value = malloc(len);
+					if (value == NULL)
+						return NULL;
+					res = snprintf(value, len, "%s",
+						       devnode);
+				}
+				if (res < 0 || (size_t) res >= len)
+					return NULL;
 				else
-					devnode = symlink;
+					value[len - 1] = '\0';
 			}
 		}
 	}
 
-	if (strcmp(fstype, "swap") == 0) {
-		if (!args.noswap_flag)
-			print_mntent(devnode, "none", fstype, "sw", 0, 0);
-		return;
+	if (!disk || value == NULL) {
+		devnode = udev_device_get_devnode(device);
+		if (devnode == NULL)
+			return NULL;
+		len = strlen(devnode) + 1;
+		value = malloc(len);
+		if (value == NULL)
+			return NULL;
+		res = snprintf(value, len, "%s", devnode);
+		if (res < 0 || (size_t) res >= len)
+			return NULL;
+		else
+			value[len - 1] = '\0';
 	}
 
-	if (!args.nomounts_flag) {
+	return value;
+}
+
+static char* device_mntpnt(struct udev_device *device, int disk)
+{
+	struct udev_list_entry *u_list_ent;
+	struct udev_list_entry *u_first_list_ent;
+	FILE *fp;
+	struct mntent *mnt;
+	const char *devnode;
+	const char *fstype;
+	const char *partition;
+	char *value;
+	size_t len;
+	int res;
+
+	value = NULL;
+	u_first_list_ent = udev_device_get_devlinks_list_entry(device);
+
+	if (!opts.nomounts_flag) {
+		fstype = udev_device_get_property_value(device, "ID_FS_TYPE");
 		fp = setmntent("/proc/mounts", "r");
+
 		for (;;) {
-			if (fp == NULL)
+			if (fp == NULL || fstype == NULL)
 				break;
 
 			mnt = getmntent(fp);
@@ -267,99 +343,236 @@ static void process_disk(struct udev_device *device, int disk)
 
 			if (strcmp(udev_device_get_devnode(device),
 				   mnt->mnt_fsname) == 0) {
-				snprintf(mntpnt, sizeof(mntpnt), mnt->mnt_dir);
+				len = strlen(mnt->mnt_dir) + 1;
+				value = malloc(len);
+				if (value == NULL)
+					return NULL;
+				res = snprintf(value, len, "%s", mnt->mnt_dir);
+				if (res < 0 || (size_t) res >= len)
+					return NULL;
+				else
+					value[len - 1] = '\0';
 				mounted = 1;
 				break;
 			}
 
 			udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
-				symlink = udev_list_entry_get_name(u_list_ent);
-				if (strcmp(symlink, mnt->mnt_fsname) == 0) {
-					snprintf(mntpnt, sizeof(mntpnt),
-						 mnt->mnt_dir);
-					mounted = 1;
-					break;
-				}
-			}
-
-			if (mounted)
+				devnode = udev_list_entry_get_name(u_list_ent);
+				if (strcmp(devnode, mnt->mnt_fsname) != 0)
+					continue;
+				len = strlen(mnt->mnt_dir) + 1;
+				value = malloc(len);
+				if (value == NULL)
+					return NULL;
+				res = snprintf(value, len, "%s", mnt->mnt_dir);
+				if (res < 0 || (size_t) res >= len)
+					return NULL;
+				else
+					value[len - 1] = '\0';
+				mounted = 1;
 				break;
+			}
 		}
 		if (fp != NULL)
 			endmntent(fp);
 	}
-	
-	if (mounted && linux_fstype) {
-		if (strcmp(fstype, "ext4") == 0)
-			snprintf(mntops, sizeof(mntops), "%s,%s",
-				"defaults,errors=remount-ro,noatime",
-				"barrier=0");
-		else if (strcmp(fstype, "ext3") == 0 ||
-			 strcmp(fstype, "ext2") == 0)
-			snprintf(mntops, sizeof(mntops), "%s",
-				"defaults,errors=remount-ro,noatime");
-		else
-			snprintf(mntops, sizeof(mntops), "%s",
-				"defaults,noatime");
-		
-		if (strcmp(mntpnt, "/") == 0)
-			pass = 1;
-		else
-			pass = 2;
-	}
-	else {
+
+	if (value == NULL) {
 		if (!disk) {
-			snprintf(mntpnt, sizeof(mntpnt), "/media/%s",
-				 basename(devnode));
+			devnode = udev_device_get_devnode(device);
+			len = strlen("/media/");
+			len += strlen(basename(devnode)) + 1;
+			value = malloc(len);
+			if (value == NULL)
+				return NULL;
+			res = snprintf(value, len, "/media/%s",
+				       basename(devnode));
+			if (res < 0 || (size_t) res >= len)
+				return NULL;
+			else
+				value[len - 1] = '\0';
 		}
 		else {
-			part = udev_device_get_sysattr_value(device,
-							     "partition");
-			if (part != NULL)
-				snprintf(mntpnt, sizeof(mntpnt),
-					 "/media/disk%dpart%s", disk, part);
-			else
-				snprintf(mntpnt, sizeof(mntpnt),
-					 "/media/disk%d", disk);
+			partition = udev_device_get_sysattr_value(device,
+								  "partition");
+			if (partition != NULL) {
+				len = strlen("/media/disk");
+				if (disk < 10)
+					len += 1;
+				else if (disk < 100)
+					len += 2;
+				else
+					len += 3;
+				len += strlen("part") + strlen(partition) + 1;
+				value = malloc(len);
+				if (value == NULL)
+					return NULL;
+				res = snprintf(value, len,
+					       "/media/disk%dpart%s",
+					       disk, partition);
+				if (res < 0 || (size_t) res >= len)
+					return NULL;
+				else
+					value[len - 1] = '\0';
+			}
+			else {
+				len = strlen("/media/disk");
+				if (disk < 10)
+					len += 1;
+				else if (disk < 100)
+					len += 2;
+				else
+					len += 3;
+				len += 1;
+				value = malloc(len);
+				if (value == NULL)
+					return NULL;
+				res = snprintf(value, len, "/media/disk%d",
+					       disk);
+				if (res < 0 || (size_t) res >= len)
+					return NULL;
+				else
+					value[len - 1] = '\0';
+			}
 		}
+	}
 
-		if (linux_fstype)
-			snprintf(mntops, sizeof(mntops), "%s,%s",
-				 args.auto_flag ? "auto" : "noauto",
-				 "users,rw,exec,noatime");
-		else if (strcmp(fstype, "ntfs") == 0)
-			snprintf(mntops, sizeof(mntops), "%s,%s",
-				 args.auto_flag ? "auto" : "noauto",
-				 "users,ro,dmask=0022,fmask=0133,nls=utf8");
-		else if (strcmp(fstype, "msdos") == 0)
-			snprintf(mntops, sizeof(mntops), "%s,%s",
-				 args.auto_flag ? "auto" : "noauto",
-				 "users,rw,quiet,umask=000,iocharset=utf8");
-		else if (strcmp(fstype, "vfat") == 0)
-			snprintf(mntops, sizeof(mntops), "%s,%s",
-				 args.auto_flag ? "auto" : "noauto",
-				 "users,rw,quiet,umask=000,shortname=lower");
-		else if (strcmp(fstype, "hfsplus") == 0)
-			snprintf(mntops, sizeof(mntops), "%s,%s",
-				 args.auto_flag ? "auto" : "noauto",
-				 "users,ro,exec");
+	return value;
+}
+
+static char* device_mntops(struct udev_device *device, char *fstype, char *dir)
+{
+	const char *str;
+	char *value;
+	size_t len;
+	int res;
+
+	value = NULL;
+
+	if (mounted && linux_filesystem(fstype)) {
+		if (strcmp(fstype, "ext4") == 0)
+			str = "defaults,noatime,errors=remount-ro,barrier=0";
+		else if (strcmp(fstype, "ext3") == 0 ||
+			 strcmp(fstype, "ext2") == 0)
+			str = "defaults,noatime,errors=remount-ro";
 		else
-			return;
+			str = "defaults,noatime";
+
+		len = strlen(str) + 1;
+		value = malloc(len);
+		if (value == NULL)
+			return NULL;
+		res = snprintf(value, len, "%s", str);
+		if (res < 0 || (size_t) res >= len)
+			return NULL;
+		else
+			value[len - 1] = '\0';
+		
+	}
+	else {
+		if (linux_filesystem(fstype))
+			str = "users,rw,exec,noatime";
+		else if (strcmp(fstype, "ntfs") == 0)
+			str = "users,ro,dmask=0022,fmask=0133,nls=utf8";
+		else if (strcmp(fstype, "msdos") == 0)
+			str = "users,rw,quiet,umask=000,iocharset=utf8";
+		else if (strcmp(fstype, "vfat") == 0)
+			str = "users,rw,quiet,umask=000,shortname=lower";
+		else if (strcmp(fstype, "hfsplus") == 0)
+			str = "users,ro,exec";
+		else
+			return NULL;
+
+		len = strlen(str) + 1;
+		if (opts.auto_flag)
+			len += strlen("auto") + 1;
+		else
+			len += strlen("noauto") + 1;
+		value = malloc(len);
+		if (value == NULL)
+			return NULL;
+		res = snprintf(value, len, "%s,%s",
+			       opts.auto_flag ? "auto" : "noauto", str);
+		if (res < 0 || (size_t) res >= len)
+			return NULL;
+		else
+			value[len - 1] = '\0';
 	}
 
-	if (args.mkdir_flag && 
-	    mkdir(mntpnt, S_IRWXU | S_IRWXG | S_IRWXO) == -1) {
-		if (errno != EEXIST)
-			fprintf(stderr, "Error: mkdir(%s): %s\n", mntpnt,
+	return value;
+}
+
+static void print_mntent(const char *fs_spec, const char *fs_file,
+			 const char *fs_vfstype, const char *fs_mntops,
+			 int fs_freq, int fs_passno)
+{
+	if (opts.uuids_flag)
+		fprintf(fstab, "%-45s %-20s %-10s %s %d %d\n", fs_spec,
+			fs_file, fs_vfstype, fs_mntops, fs_freq, fs_passno);
+	else
+		fprintf(fstab, "%-20s %-20s %-10s %s %d %d\n", fs_spec,
+			fs_file, fs_vfstype, fs_mntops, fs_freq, fs_passno);
+}
+
+static void process_disk(struct udev_device *device, int disk)
+{
+	char *fs_spec = NULL;
+	char *fs_file = NULL;
+	char *fs_vfstype = NULL;
+	char *fs_mntops = NULL;
+	int fs_pass = 0;
+
+	mounted = 0;
+
+	fs_vfstype = device_fstype(device);
+	if (fs_vfstype == NULL)
+		goto end_process_disk;
+	
+	fs_spec = device_devnode(device, fs_vfstype, disk);
+	if (fs_spec == NULL)
+		goto end_process_disk;
+	
+	if (strcmp(fs_vfstype, "swap") == 0) {
+		if (!opts.noswap_flag)
+			print_mntent(fs_spec, "none", fs_vfstype, "sw", 0, 0);
+		goto end_process_disk;
+	}
+
+	fs_file = device_mntpnt(device, disk);
+	if (fs_file == NULL)
+		goto end_process_disk;
+	
+	fs_mntops = device_mntops(device, fs_vfstype, fs_file);
+	if (fs_mntops == NULL)
+		goto end_process_disk;
+	
+	if (mounted) {
+		if (strcmp(fs_file, "/") == 0)
+			fs_pass = 1;
+		else if (linux_filesystem(fs_vfstype))
+			fs_pass = 2;
+	}
+	
+	if (opts.mkdir_flag && 
+	    mkdir(fs_file, S_IRWXU | S_IRWXG | S_IRWXO) == -1) {
+		if (errno != EEXIST) {
+			fprintf(stderr, "Error: mkdir(%s): %s\n", fs_file,
 				strerror(errno));
+			goto end_process_disk;
+		}
 	}
 
-	print_mntent(devnode, mntpnt, fstype, mntops, freq, pass);
+	print_mntent(fs_spec, fs_file, fs_vfstype, fs_mntops, 0, fs_pass);
 
-	if (pr != NULL)
-		blkid_free_probe(pr);
-	if (fd != -1)
-		close(fd);
+end_process_disk:
+	if (fs_spec != NULL)
+		free(fs_spec);
+	if (fs_vfstype != NULL)
+		free(fs_vfstype);
+	if (fs_file != NULL)
+		free(fs_file);
+	if (fs_mntops != NULL)
+		free(fs_mntops);
 }
 
 int main(int argc, char **argv)
@@ -370,17 +583,17 @@ int main(int argc, char **argv)
         struct udev_list_entry *u_first_list_ent;
 	int disk = 0;
 
-	if (cmdline_parser(argc, argv, &args) != 0) {
-		fprintf(stderr, "Error: cmdline_parser(argc, argv, &args)\n");
+	if (cmdline_parser(argc, argv, &opts) != 0) {
+		fprintf(stderr, "Error: cmdline_parser(argc, argv, &opts)\n");
 		return 1;
 	}
 
-	if (args.file_given) {
-		fstab = fopen(args.file_arg, "w");
+	if (opts.file_given) {
+		fstab = fopen(opts.file_arg, "w");
 		if (fstab == NULL) {
 			fprintf(stderr, "Error: fpopen(%s): %s\n",
-				args.file_arg, strerror(errno));
-			cmdline_parser_free(&args);
+				opts.file_arg, strerror(errno));
+			cmdline_parser_free(&opts);
 			return 1;
 		}
 	}
@@ -390,7 +603,7 @@ int main(int argc, char **argv)
 	udev = udev_new();
 	if (udev == NULL) {
 		fprintf(stderr, "Error: udev_new()\n");
-		cmdline_parser_free(&args);
+		cmdline_parser_free(&opts);
 		fclose(fstab);
 		return 1;
 	}
@@ -398,7 +611,7 @@ int main(int argc, char **argv)
 	u_enum = udev_enumerate_new(udev);
 	if (u_enum == NULL) {
 		fprintf(stderr, "Error: udev_enumerate_new(udev)\n");
-		cmdline_parser_free(&args);
+		cmdline_parser_free(&opts);
 		fclose(fstab);
 		udev_unref(udev);
 		return 1;
@@ -421,16 +634,16 @@ int main(int argc, char **argv)
 		if (device == NULL)
 			continue;
 
-		if (args.inputs_num) {
-			if (!device_wanted(device, args.inputs_num,
-					   args.inputs)) {
+		if (opts.inputs_num) {
+			if (!device_wanted(device, opts.inputs_num,
+					   opts.inputs)) {
 				udev_device_unref(device);
 				continue;
 			}
 		}
 		else if (device_removable(device)) {
-			if (!device_wanted(device, args.wanted_given,
-					   args.wanted_arg)) {
+			if (!device_wanted(device, opts.wanted_given,
+					   opts.wanted_arg)) {
 				udev_device_unref(device);
 				continue;
 			}
@@ -449,6 +662,6 @@ int main(int argc, char **argv)
 	udev_enumerate_unref(u_enum);
 	udev_unref(udev);
 	fclose(fstab);
-	cmdline_parser_free(&args);
+	cmdline_parser_free(&opts);
 	return 0;
 }
