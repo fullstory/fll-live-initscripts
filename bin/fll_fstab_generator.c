@@ -144,7 +144,7 @@ static int device_devmapper(struct udev_device *device)
 		return 0;
 }
 
-static char* device_fstype(struct udev_device *device)
+static char* device_vfstype(struct udev_device *device)
 {
 	const char *fstype;
 	char *value;
@@ -218,7 +218,7 @@ static char* device_fstype(struct udev_device *device)
 	return value;
 }
 
-static char* device_devnode(struct udev_device *device, char *fstype, int disk)
+static char* device_spec(struct udev_device *device, char *fstype, int disk)
 {
 	struct udev_list_entry *u_list_ent;
 	struct udev_list_entry *u_first_list_ent;
@@ -310,7 +310,7 @@ static char* device_devnode(struct udev_device *device, char *fstype, int disk)
 	return value;
 }
 
-static char* device_mntpnt(struct udev_device *device, int disk)
+static char* device_file(struct udev_device *device, int disk)
 {
 	struct udev_list_entry *u_list_ent;
 	struct udev_list_entry *u_first_list_ent;
@@ -506,12 +506,26 @@ static void print_mntent(const char *fs_spec, const char *fs_file,
 			 const char *fs_vfstype, const char *fs_mntops,
 			 int fs_freq, int fs_passno)
 {
-	if (opts.uuids_flag)
-		fprintf(fstab, "%-45s %-20s %-10s %s %d %d\n", fs_spec,
-			fs_file, fs_vfstype, fs_mntops, fs_freq, fs_passno);
+	size_t len;
+
+	len = strlen(fs_spec);
+	if (len >= 30)
+		fprintf(fstab, "%-45s ", fs_spec);
+	else if (len >= 20)
+		fprintf(fstab, "%-30s ", fs_spec);
 	else
-		fprintf(fstab, "%-20s %-20s %-10s %s %d %d\n", fs_spec,
-			fs_file, fs_vfstype, fs_mntops, fs_freq, fs_passno);
+		fprintf(fstab, "%-20s ", fs_spec);
+
+	len = strlen(fs_file);
+	if (len >= 30)
+		fprintf(fstab, "%-45s ", fs_file);
+	else if (len >= 20)
+		fprintf(fstab, "%-30s ", fs_file);
+	else
+		fprintf(fstab, "%-20s ", fs_file);
+
+	fprintf(fstab, "%-10s %s %d %d\n", fs_vfstype, fs_mntops, fs_freq,
+		fs_passno);
 }
 
 static void process_disk(struct udev_device *device, int disk)
@@ -524,11 +538,11 @@ static void process_disk(struct udev_device *device, int disk)
 
 	mounted = 0;
 
-	fs_vfstype = device_fstype(device);
+	fs_vfstype = device_vfstype(device);
 	if (fs_vfstype == NULL)
 		goto end_process_disk;
 	
-	fs_spec = device_devnode(device, fs_vfstype, disk);
+	fs_spec = device_spec(device, fs_vfstype, disk);
 	if (fs_spec == NULL)
 		goto end_process_disk;
 	
@@ -538,7 +552,7 @@ static void process_disk(struct udev_device *device, int disk)
 		goto end_process_disk;
 	}
 
-	fs_file = device_mntpnt(device, disk);
+	fs_file = device_file(device, disk);
 	if (fs_file == NULL)
 		goto end_process_disk;
 	
