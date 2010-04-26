@@ -1,9 +1,5 @@
-fll-live-initscripts (3.8.4) UNRELEASED; urgency=low
+fll-live-initscripts (3.8.4) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_fstab_generator: split out process_disk() into functions and
     improve string type handling.
   * fll_fstab_generator: tweak output a little bit.
