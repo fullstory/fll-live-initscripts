@@ -322,6 +322,7 @@ EOF
 			/etc/default/keyboard
 
 	setupcon --save-only
+	udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
 }
 
 apt_install_lang() {

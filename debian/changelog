@@ -5,8 +5,9 @@ fll-live-initscripts (3.8.6) UNRELEASED; urgency=low
 
   [ Niall Walsh ]
   * Add fll-nbdclient to debian/rules so it gets installed
+  * Have fll-locales call udevadm trigger for keyboards after setup
 
- -- Niall Walsh <niallwalsh@users.berlios.de>  Tue, 27 Apr 2010 02:25:46 +0100
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Wed, 28 Apr 2010 00:06:23 +0100
 
 fll-live-initscripts (3.8.5) unstable; urgency=low
 
