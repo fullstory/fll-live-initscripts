@@ -1,8 +1,9 @@
-fll-live-initscripts (3.8.7) UNRELEASED; urgency=low
+fll-live-initscripts (3.8.7) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * drop all dependencies on $remote_fs for testing. Given that all init
+    scripts are guaranteed to be live only, /usr/ is mounted by definition.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 28 Apr 2010 03:03:39 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 11 May 2010 20:32:45 +0200
 
 fll-live-initscripts (3.8.6) unstable; urgency=low
 
