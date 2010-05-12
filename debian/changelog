@@ -1,9 +1,5 @@
-fll-live-initscripts (3.8.8) UNRELEASED; urgency=low
+fll-live-initscripts (3.8.8) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
   * remove extraneous X-Start-Before and Should-Start from fll-nbdclient
 
  -- Niall Walsh <niallwalsh@users.berlios.de>  Wed, 12 May 2010 01:16:37 +0100
