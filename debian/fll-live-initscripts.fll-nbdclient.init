@@ -4,8 +4,6 @@
 # Provides:          fll-nbdclient
 # Required-Start:    mountdevsubfs
 # Required-Stop:
-# Should-Start:
-# X-Start-Before:
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: fix nbd-client handling of nbdroot=dhcp
