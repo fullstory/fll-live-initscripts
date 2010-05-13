@@ -11,7 +11,6 @@ fll-live-initscripts (3.8.10) unstable; urgency=low
     dependency nightmare in S.
   * fll-xorgconfig doesn't need to depend on fll-xorgconfig anymore, thanks to
     keyboard-setup taking care of that.
-  * NOT RELEASED YET
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 13 May 2010 14:30:02 +0200
 
