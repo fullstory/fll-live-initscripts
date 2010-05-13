@@ -32,6 +32,7 @@
 #include <sys/mount.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/swap.h>
 #include <unistd.h>
 #include <libudev.h>
 #include <blkid/blkid.h>
@@ -549,6 +550,15 @@ static void process_disk(struct udev_device *device, int disk)
 	if (strcmp(fs_vfstype, "swap") == 0) {
 		if (!opts.noswap_flag)
 			print_mntent(fs_spec, "none", fs_vfstype, "sw", 0, 0);
+		if (opts.swapon_flag &&
+		    swapon(udev_device_get_devnode(device), 0) == -1) {
+		    	if (errno != EBUSY) {
+				fprintf(stderr, "Error: swapon(%s): %s\n",
+					udev_device_get_devnode(device),
+					strerror(errno));
+					goto end_process_disk;
+			}
+		}
 		goto end_process_disk;
 	}
 
