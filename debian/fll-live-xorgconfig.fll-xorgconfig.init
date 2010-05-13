@@ -4,9 +4,8 @@
 # Provides:          fll-xorgconfig
 # Required-Start:
 # Required-Stop:
-# Should-Start:      fll-locales
-# X-Start-Before:    x11-common
-# Default-Start:     S
+# X-Start-Before:    gdm gdm3 kdm lxdm slim
+# Default-Start:     2 3 4 5
 # Default-Stop:
 # Short-Description: configure Xorg xserver
 # Description:       The script is intended to configure the

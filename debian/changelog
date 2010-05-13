@@ -1,7 +1,4 @@
-fll-live-initscripts (3.8.10) UNRELEASED; urgency=low
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (3.8.10) unstable; urgency=low
 
   [ Kel Modderman ]
   * fll_fstab_generator: fix type causing segfault when using blkid
@@ -9,7 +6,14 @@ fll-live-initscripts (3.8.10) UNRELEASED; urgency=low
   * fll_fstab_generator: devices given as direct arguments undergo the
     removable filter.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 13 May 2010 22:22:15 +1000
+  [ Stefan Lippers-Hollmann ]
+  * start fll-xorgconfig and fll-desktop later (runlevel 2+), to ease the 
+    dependency nightmare in S.
+  * fll-xorgconfig doesn't need to depend on fll-xorgconfig anymore, thanks to
+    keyboard-setup taking care of that.
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 13 May 2010 14:30:02 +0200
 
 fll-live-initscripts (3.8.9) unstable; urgency=low
 

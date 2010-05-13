@@ -4,7 +4,8 @@
 # Provides:          fll-desktop
 # Required-Start:    fll-adduser
 # Required-Stop:
-# Default-Start:     S
+# X-Start-Before:    gdm gdm3 kdm lxdm slim
+# Default-Start:     2 3 4 5
 # Default-Stop:
 # Short-Description: configure window manager to be used on live system
 # Description:       The purpose of this script is to configure a X window
