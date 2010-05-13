@@ -1,13 +1,14 @@
-fll-live-initscripts (3.8.11) UNRELEASED; urgency=low
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (3.8.11) unstable; urgency=low
 
   [ Kel Modderman ]
   * fll_fstab_generator: add a --swapon option which causes program to
     mount detected swap filesystems.
 
- -- Kel Modderman <kel@otaku42.de>  Thu, 13 May 2010 22:59:04 +1000
+  [ Stefan Lippers-Hollmann ]
+  * fix dh_installinit calls as well.
+  * move fll-xdm into runlevel 2-5 as well.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 13 May 2010 15:10:10 +0200
 
 fll-live-initscripts (3.8.10) unstable; urgency=low
 
