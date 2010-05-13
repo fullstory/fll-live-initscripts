@@ -649,7 +649,8 @@ int main(int argc, char **argv)
 			continue;
 
 		if (opts.inputs_num) {
-			if (!device_wanted(device, opts.inputs_num,
+			if (device_removable(device) ||
+			    !device_wanted(device, opts.inputs_num,
 					   opts.inputs)) {
 				udev_device_unref(device);
 				continue;
