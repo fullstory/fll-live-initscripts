@@ -181,7 +181,7 @@ static char* device_vfstype(struct udev_device *device)
 			return NULL;
 		}
 
-		len = strlen(value) + 1;
+		len = strlen(fstype) + 1;
 		value = malloc(len);
 		if (value == NULL) {
 			blkid_free_probe(pr);
