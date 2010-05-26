@@ -44,23 +44,12 @@ override_dm_lsb_defaults() {
 	echo '# Managed by the distro-defaults package.' >> ${2}
 }
 
-default_runlevel() {
-	if [ -r /etc/inittab ]; then
-		sed -n 's/^id:\([2-5]\):initdefault:.*/\1/p' /etc/inittab
-	fi
-}
-
 do_override() {
 	# Usage: do_override kdm 5
 	[ -s /etc/init.d/${1} ] || return 0
 
-	if [ "${2}" -eq 5 ]; then
-		echo "distro-defaults: overriding LSB init info for ${1} ..."
-		override_dm_lsb_defaults /etc/init.d/${1} /etc/insserv/overrides/${1}
-	elif [ -s /etc/insserv/overrides/${1} ]; then
-		echo "distro-defaults: removing LSB override for ${1} ..."
-		rm -fv /etc/insserv/overrides/${1}
-	fi
+	echo "distro-defaults: overriding LSB init info for ${1} ..."
+	override_dm_lsb_defaults /etc/init.d/${1} /etc/insserv/overrides/${1}
 }
 
 purge_conffile() {
@@ -69,10 +58,8 @@ purge_conffile() {
 
 case "$1" in
 	configure)
-		runlevel=$(default_runlevel)
-
 		for dm in gdm gdm3 kdm slim lxdm wdm xdm; do			
-			do_override "${dm}" "${runlevel:-0}"
+			do_override "${dm}"
 		done
 
 		# Bug #487196 has been fixed in util-linux, remove now 
@@ -103,11 +90,9 @@ EOF
 		fi
 		;;
 	triggered)
-		runlevel=$(default_runlevel)
-
 		shift
 		for interest in "${@}"; do
-			do_override "${interest#/etc/init.d/}" "${runlevel:-0}"
+			do_override "${interest#/etc/init.d/}"
 		done
 		;;
 	abort-upgrade|abort-deconfigure|abort-remove)

@@ -1,8 +1,9 @@
-fll-live-initscripts (3.8.13) UNRELEASED; urgency=low
+fll-live-initscripts (3.8.13) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * distro-defaults: drop runlevel safety check, the default runlevel doesn't
+    matter for the LSB overrides.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 26 May 2010 15:09:04 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 26 May 2010 16:16:12 +0200
 
 fll-live-initscripts (3.8.12) unstable; urgency=low
 
