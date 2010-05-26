@@ -1,8 +1,10 @@
 fll-live-initscripts (3.8.12) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * don't stop display managers in runlevel 0 and 6 anymore, sendsigs will
+    take care of that anyways.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 13 May 2010 15:14:39 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 26 May 2010 14:01:47 +0200
 
 fll-live-initscripts (3.8.11) unstable; urgency=low
 

@@ -31,7 +31,7 @@ chrooted() {
 
 override_dm_lsb_defaults() {
 	dmstart='5'
-	dmstop='0 1 2 3 4 6'
+	dmstop='1 2 3 4'
 
 	# Dump the LSB header to insserv override file
 	sed -n '/^### BEGIN INIT INFO/,/^### END INIT INFO/p' ${1} > ${2}
