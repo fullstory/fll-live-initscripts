@@ -71,7 +71,7 @@ case "$1" in
 	configure)
 		runlevel=$(default_runlevel)
 
-		for dm in gdm kdm xdm slim lxdm; do			
+		for dm in gdm gdm3 kdm slim lxdm wdm xdm; do			
 			do_override "${dm}" "${runlevel:-0}"
 		done
 
