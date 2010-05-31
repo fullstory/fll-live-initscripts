@@ -154,7 +154,7 @@ do_start() {
 	   [ -z "${XFORCERANDR}" ] && \
 	   [ -z "${XMODES}" ] && \
 	   [ -z "${XVERTREFRESH}" ]; then
-		log_action_begin_msg " no cheatcodes detected, dereferring X detection to X.org"
+		log_action_begin_msg " no cheatcodes detected, deferring X detection to X.org"
 		log_end_msg 0
 
 		exit 0
