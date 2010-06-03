@@ -1,7 +1,4 @@
-fll-live-initscripts (3.8.14) UNRELEASED; urgency=low
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (3.8.14) unstable; urgency=low
 
   [ Bernard Gray ]
   * fix typo in xorg detection 
