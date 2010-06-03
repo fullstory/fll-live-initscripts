@@ -4,7 +4,7 @@ be_BY.utf8	0		by,us			Europe/Minsk	linux.org.by	en_US.utf8
 bg_BG.utf8	0		bg,us			Europe/Sofia	ftp.bg.debian.org	en_US.utf8	
 bs_BA.utf8	0		ba,us			Europe/Sarajevo	ftp.ba.debian.org	en_US.utf8	
 C	0		us			Etc/UTC	ftp.ie.debian.org	en_US.utf8	what mirror is sane?
-cs_CZ.utf8	0		cs,us			Europe/Prague	ftp.cz.debian.org	en_US.utf8	
+cs_CZ.utf8	0		cz,us			Europe/Prague	ftp.cz.debian.org	en_US.utf8	
 da_DK.utf8	0		dk,us			Europe/Copenhagen	ftp.dk.debian.org	en_US.utf8	
 de_AT.utf8			de,us			Europe/Vienna	ftp.at.debian.org	de_DE.utf8 en_US.utf8	
 de_BE.utf8			be,de,fr,us			Europe/Brussels	ftp.belnet.be	de_DE.utf8 fr_FR.utf8 en_US.utf8	whats sensible?

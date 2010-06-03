@@ -6,7 +6,10 @@ fll-live-initscripts (3.8.14) UNRELEASED; urgency=low
   [ Bernard Gray ]
   * fix typo in xorg detection 
 
- -- Bernard Gray <bernard.gray@gmail.com>  Mon, 31 May 2010 15:20:15 +1000
+  [ Niall Walsh ]
+  * fix keyboard layout for cs (keyboard is cz not cs)
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Thu, 03 Jun 2010 15:50:05 +0100
 
 fll-live-initscripts (3.8.13) unstable; urgency=low
 
