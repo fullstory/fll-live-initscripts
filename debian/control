@@ -60,7 +60,6 @@ Depends: ${misc:Depends},
 Recommends: kdm | gdm, xserver-xorg-input-vmmouse (>> 12.6.3)
 Conflicts: libdrm-nouveau1,
  xserver-xorg-video-all,
- xserver-xorg-video-cirrus,
  xserver-xorg-video-nouveau
 Description: fll live media xorg related tools
  A set of scripts to generate a Xorg configuration.
