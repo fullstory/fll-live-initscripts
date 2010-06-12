@@ -1,3 +1,9 @@
+fll-live-initscripts (3.8.17) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 13 Jun 2010 01:48:13 +0200
+
 fll-live-initscripts (3.8.16) unstable; urgency=low
 
   * no longer conflict with xserver-xorg-video-cirrus.
