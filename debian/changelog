@@ -1,8 +1,12 @@
 fll-live-initscripts (3.8.17) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 13 Jun 2010 01:48:13 +0200
+  [ Niall Walsh ]
+  * Have liveapt mkdir preferences.d/ (otherwise it hangs)
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Mon, 14 Jun 2010 18:40:56 +0100
 
 fll-live-initscripts (3.8.16) unstable; urgency=low
 

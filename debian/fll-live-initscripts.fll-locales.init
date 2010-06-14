@@ -370,6 +370,7 @@ apt_install_lang() {
 	LIVEAPTSOURCES=$(mktemp -d -t liveapt.XXXXXX)
 	APTGETBASE="apt-get -o Dir::Etc=$LIVEAPTSOURCES"
 	echo 'deb file://'${LIVEAPT}' sid main' > ${LIVEAPTSOURCES}/sources.list
+	mkdir ${LIVEAPTSOURCES}/preferences.d
 	if ! ${APTGETBASE} update > /dev/null; then
 		log_failure_msg " apt-get update for i18n packages from cd failed"
 		apt_install_lang_clean
