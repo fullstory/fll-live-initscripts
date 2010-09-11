@@ -1,3 +1,9 @@
+fll-live-initscripts (3.8.24) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 20 Aug 2010 02:09:30 +0200
+
 fll-live-initscripts (3.8.23) unstable; urgency=low
 
   * add lintian overrides.
