@@ -1,8 +1,9 @@
-fll-live-initscripts (3.8.18) UNRELEASED; urgency=low
+fll-live-initscripts (3.8.18) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * bump standards version to 3.9.1, no changes necessary.
+  * elaborate long description a bit further, to make lintian happy.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 15 Jun 2010 01:51:42 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 03 Aug 2010 18:30:00 +0200
 
 fll-live-initscripts (3.8.17) unstable; urgency=low
 
