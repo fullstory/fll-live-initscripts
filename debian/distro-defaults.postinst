@@ -48,7 +48,7 @@ do_override() {
 	# Usage: do_override kdm 5
 	[ -s /etc/init.d/${1} ] || return 0
 
-	echo "distro-defaults: overriding LSB init info for ${1} ..."
+	echo "distro-defaults: overriding LSB init info for ${1} ..." 1>&2
 	override_dm_lsb_defaults /etc/init.d/${1} /etc/insserv/overrides/${1}
 }
 
@@ -73,7 +73,7 @@ case "$1" in
 		fi
 
 		if [ ! -f /etc/apt/sources.list ] && chrooted; then
-			echo 'distro-defaults: creating /etc/apt/sources.list ...'
+			echo 'distro-defaults: creating /etc/apt/sources.list ...' 1>&2
 			cat > /etc/apt/sources.list \
 <<EOF
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
