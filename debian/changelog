@@ -1,3 +1,9 @@
+fll-live-initscripts (3.9.1) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 29 Aug 2010 20:34:47 +0200
+
 fll-live-initscripts (3.9.0) unstable; urgency=low
 
   * drop ModetUser from Uploaders
