@@ -144,6 +144,19 @@ xserver_has_xrandr() {
 do_start() {
 	log_daemon_msg "${NAME}"
 
+	# prefer vesa for kvm, cirrus is broken (false colours, broken EDID)
+	if [ -z "${XMODULE}" ] && \
+	   [ -r /sys/devices/virtual/dmi/id/bios_vendor ] && \
+	   [ -r /sys/devices/virtual/dmi/id/bios_version ] && \
+	   [ -r /sys/devices/virtual/dmi/id/bios_date ] && \
+	   [ "x$(cat /sys/devices/virtual/dmi/id/bios_vendor)" = "xBochs" ] && \
+	   [ "x$(cat /sys/devices/virtual/dmi/id/bios_version)" = "xBochs" ] && \
+	   [ "x$(cat /sys/devices/virtual/dmi/id/bios_date)" = "x01/01/2007" ] && \
+	   [ -x "$(which lspci)" ] && \
+	   [ -n "$(lspci -d 1013:00b8)" ]; then
+		XMODULE="vesa"
+	fi
+
 	# if there are no cheatcodes, we have nothing to do
 	if [ -z "${XNOXRANDR}" ] && \
 	   [ -z "${XNOMODELINES}" ] && \
