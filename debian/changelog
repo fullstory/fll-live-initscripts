@@ -1,3 +1,9 @@
+fll-live-initscripts (3.8.21) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 13 Aug 2010 19:07:34 +0200
+
 fll-live-initscripts (3.8.20) unstable; urgency=low
 
   * the Debian GeoMirror (http://cdn.debian.net/debian/) is used now, therefore
