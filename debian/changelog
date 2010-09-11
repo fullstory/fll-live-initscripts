@@ -34,7 +34,7 @@ fll-live-initscripts (3.8.15) unstable; urgency=low
 fll-live-initscripts (3.8.14) unstable; urgency=low
 
   [ Bernard Gray ]
-  * fix typo in xorg detection 
+  * fix typo in xorg detection
 
   [ Niall Walsh ]
   * fix keyboard layout for cs (keyboard is cz not cs)
@@ -82,7 +82,7 @@ fll-live-initscripts (3.8.10) unstable; urgency=low
     removable filter.
 
   [ Stefan Lippers-Hollmann ]
-  * start fll-xorgconfig and fll-desktop later (runlevel 2+), to ease the 
+  * start fll-xorgconfig and fll-desktop later (runlevel 2+), to ease the
     dependency nightmare in S.
   * fll-xorgconfig doesn't need to depend on fll-xorgconfig anymore, thanks to
     keyboard-setup taking care of that.
@@ -91,7 +91,7 @@ fll-live-initscripts (3.8.10) unstable; urgency=low
 
 fll-live-initscripts (3.8.9) unstable; urgency=low
 
-  * drop keymap from X-Start-Before: keymap keyboard-setup, keyboard-setup 
+  * drop keymap from X-Start-Before: keymap keyboard-setup, keyboard-setup
     takes care of it itself, thanks a lot to bfree.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 12 May 2010 23:52:11 +0200
@@ -245,7 +245,7 @@ fll-live-initscripts (3.6.26) unstable; urgency=low
 fll-live-initscripts (3.6.25) unstable; urgency=low
 
   [ Nikolas Poniros ]
-  * Added lxdm to distro-defaults to create/remove needed insserv overrides 
+  * Added lxdm to distro-defaults to create/remove needed insserv overrides
 
   [ Stefan Lippers-Hollmann ]
   * drop build-depends on dash, it's now essential. Thanks to edhunter.
@@ -338,7 +338,7 @@ fll-live-initscripts (3.6.15) unstable; urgency=low
 
 fll-live-initscripts (3.6.14) unstable; urgency=low
 
-  * remove special handling for virtualbox-ose, there are no 
+  * remove special handling for virtualbox-ose, there are no
     redistributable kernel modules anymore.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 01 Nov 2009 16:58:53 +0100
@@ -410,7 +410,7 @@ fll-live-initscripts (3.6.4) unstable; urgency=low
 
 fll-live-initscripts (3.6.3) unstable; urgency=low
 
-  * revert --nocheat handling introduced in r23542, we don't create any 
+  * revert --nocheat handling introduced in r23542, we don't create any
     xorg.conf on default anymore.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 18 Jul 2009 15:49:10 +0200
@@ -437,7 +437,7 @@ fll-live-initscripts (3.6.1) unstable; urgency=low
 
 fll-live-initscripts (3.6.0) unstable; urgency=low
 
-  * X-org 7.4 doesn't evaluate /usr/share/xserver-xorg/pci/ to determine the 
+  * X-org 7.4 doesn't evaluate /usr/share/xserver-xorg/pci/ to determine the
     installed graphics cards anymore:
     - drop temporarily shipped PCI IDs in contrib/
     - drop fll_xserver_discover
@@ -459,7 +459,7 @@ fll-live-initscripts (3.5.9) unstable; urgency=low
 
   * remove special handling for KDE3, it's obsolete.
   * make dpi handling for kdm more robust.
-  * conflict with too old kdm versions (including experimental ones with 
+  * conflict with too old kdm versions (including experimental ones with
     broken timeouts).
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 08 Jul 2009 21:18:28 +0200
@@ -482,8 +482,8 @@ fll-live-initscripts (3.5.7) unstable; urgency=low
     xserver-xorg-video-* packages, conflict with older versions still providing
     them.
   * bump standards version to 3.8.2, no changes necessary.
-  * contrib/*/Makefile inherited by the work for 
-    xserver-xorg-video-{ati,intel,radeonhd} by Brice Goglin 
+  * contrib/*/Makefile inherited by the work for
+    xserver-xorg-video-{ati,intel,radeonhd} by Brice Goglin
     <bgoglin@debian.org> and Julien Cristau <jcristau@debian.org>.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 21 Jun 2009 02:43:13 +0200
@@ -538,7 +538,7 @@ fll-live-initscripts (3.5.1) unstable; urgency=low
 
 fll-live-initscripts (3.5.0) unstable; urgency=low
 
-  * drop our own vmmouse_detect copy, it's now part of 
+  * drop our own vmmouse_detect copy, it's now part of
     xserver-xorg-input-vmmouse (>> 12.6.3), recommend it appropriately.
   * drop input templates and detection.
 
@@ -555,9 +555,9 @@ fll-live-initscripts (3.4.8) unstable; urgency=low
 
   * parse all files in /etc/modprobe.d/* for potential blacklist entries;
     this does not filter out conffile backups and other cruft.
-  * don't append blacklists to udev conffile, but create new 
-    /etc/modprobe.d/fll-blacklist.conf, if unavoidable. Treat 
-    fll-blacklist.conf as configuration file under the responsibility of the 
+  * don't append blacklists to udev conffile, but create new
+    /etc/modprobe.d/fll-blacklist.conf, if unavoidable. Treat
+    fll-blacklist.conf as configuration file under the responsibility of the
     local admin and do not remove it on purge.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 05 Mar 2009 22:41:30 +0100
@@ -635,7 +635,7 @@ fll-live-initscripts (3.3.41) unstable; urgency=low
 
 fll-live-initscripts (3.3.40) unstable; urgency=low
 
-  * add support for the "ETPS/2 Elantech Touchpad", as found in Asus EeePC 
+  * add support for the "ETPS/2 Elantech Touchpad", as found in Asus EeePC
     901/ 1000.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 27 Oct 2008 00:28:36 +0100
@@ -662,8 +662,8 @@ fll-live-initscripts (3.3.38) unstable; urgency=low
     - Set XKBLAYOUT=ch, XKBVARIANT=fr for Swiss demographic code.
 
   [ Stefan Lippers-Hollmann ]
-  * prefer ati/ radeon over radeonhd, it's now the only driver shipped by 
-    upstream X.org and supports recent cards (in sid and experimental) better 
+  * prefer ati/ radeon over radeonhd, it's now the only driver shipped by
+    upstream X.org and supports recent cards (in sid and experimental) better
     than radeonhd.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 25 Oct 2008 02:45:35 +0200
@@ -740,7 +740,7 @@ fll-live-initscripts (3.3.33) unstable; urgency=low
 
   * partially revert r20333: drop the language selection, but keep the kdmrc
     detection for KDE3 and KDE4. This avoids changing a Debian Conffile (kdmrc)
-    proactively on every system, while still leaving the same problem for 
+    proactively on every system, while still leaving the same problem for
     setting specific dpi values.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 08 Oct 2008 23:07:15 +0200
@@ -1698,7 +1698,7 @@ fll-live-initscripts (3.0.7) unstable; urgency=low
 
 fll-live-initscripts (3.0.6) unstable; urgency=low
 
-  * relax fll-hwsetup rc start index 
+  * relax fll-hwsetup rc start index
 
  -- Bernard Gray <bernard.gray@gmail.com>  Fri, 07 Mar 2008 15:46:18 +1100
 
