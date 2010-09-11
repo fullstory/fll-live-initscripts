@@ -146,14 +146,7 @@ do_start() {
 
 	# prefer vesa for kvm, cirrus is broken (false colours, broken EDID)
 	if [ -z "${XMODULE}" ] && \
-	   [ -r /sys/devices/virtual/dmi/id/bios_vendor ] && \
-	   [ -r /sys/devices/virtual/dmi/id/bios_version ] && \
-	   [ -r /sys/devices/virtual/dmi/id/bios_date ] && \
-	   [ "x$(cat /sys/devices/virtual/dmi/id/bios_vendor)" = "xBochs" ] && \
-	   [ "x$(cat /sys/devices/virtual/dmi/id/bios_version)" = "xBochs" ] && \
-	   [ "x$(cat /sys/devices/virtual/dmi/id/bios_date)" = "x01/01/2007" ] && \
-	   [ -x "$(which lspci)" ] && \
-	   [ -n "$(lspci -d 1013:00b8)" ]; then
+	   lspci -mn | grep -q '\"0300\" \"1013\" \"00b8\" \"1af4\" \"1100\"$'; then
 		XMODULE="vesa"
 	fi
 

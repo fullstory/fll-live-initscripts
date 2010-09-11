@@ -1,8 +1,9 @@
-fll-live-initscripts (3.8.24) UNRELEASED; urgency=low
+fll-live-initscripts (3.8.24) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * don't parse for the DMI info, but for the graphics card subsystem ID, to
+    detect kvm.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 20 Aug 2010 02:09:30 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 22 Aug 2010 02:57:43 +0200
 
 fll-live-initscripts (3.8.23) unstable; urgency=low
 
