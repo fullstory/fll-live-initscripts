@@ -1,8 +1,9 @@
 fll-live-initscripts (3.8.25) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * drop ModetUser from Uploaders
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 22 Aug 2010 02:59:01 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 29 Aug 2010 04:08:33 +0200
 
 fll-live-initscripts (3.8.24) unstable; urgency=low
 
