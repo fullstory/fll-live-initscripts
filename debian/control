@@ -43,7 +43,6 @@ Depends: ${misc:Depends},
  keyboard-configuration (>= 1.47),
  lsb-base (>= 3.0-6),
  sysvinit-utils (>= 2.86.ds1-64)
-Recommends: tzdata
 Breaks: kdm (<< 4:4.2.2-2),
  slim (<< 1.3.1)
 Description: fll live media sysv initscripts
@@ -72,7 +71,8 @@ Description: fll live media xorg related tools
 
 Package: fll-live-utils
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, 
+Depends: ${shlibs:Depends},
+ ${misc:Depends}, 
  udev
 Description: fll live utilities
  A set of tools for use by fll-live-initscripts.
