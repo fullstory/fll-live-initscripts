@@ -1,3 +1,9 @@
+fll-live-initscripts (3.8.25) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 22 Aug 2010 02:59:01 +0200
+
 fll-live-initscripts (3.8.24) unstable; urgency=low
 
   * don't parse for the DMI info, but for the graphics card subsystem ID, to
