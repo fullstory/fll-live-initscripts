@@ -21,12 +21,12 @@ fll_locale_cheats() {
 fll_locale_lang() {
 	# set LANG to use for given cheat
 	# get the list of locales the requested one lists
-	locale_list=$(awk 'BEGIN{FS="\t"} /^'$1'\t/{print $6}' ${LOCALE_FILE})
+	locale_list=$(awk 'BEGIN{FS="\t"} /^'$1'\t/{print $5}' ${LOCALE_FILE})
 
 	# starting with the given one, check each of those in turn
 	for locale_temp in "$1 ${locale_list}"; do
 		# get the list for the current locale
-		locale_list2=$(awk 'BEGIN{FS="\t"} /^'$locale_temp'\t/{print $6}' ${LOCALE_FILE})
+		locale_list2=$(awk 'BEGIN{FS="\t"} /^'$locale_temp'\t/{print $5}' ${LOCALE_FILE})
 
 		# stop on first available locale
 		for locale_temp2 in ${locale_list2}; do
@@ -38,10 +38,10 @@ fll_locale_lang() {
 }
 
 fll_locale_demo() {
-	# set KB{M|L|V|O}, TZ, MIRROR for LANG
+	# set KB{M|L|V|O}, TZ for LANG
 	c=3
 
-	for optname in XKBMODEL XKBLAYOUT XKBVARIANT XKBOPTIONS TZ MIRROR ; do
+	for optname in XKBMODEL XKBLAYOUT XKBVARIANT XKBOPTIONS TZ; do
 		# extract value from file
 		v=$(awk 'BEGIN{FS="\t"} /^'$1'\t/{print $'${c}'}' ${LOCALE_FILE})
 

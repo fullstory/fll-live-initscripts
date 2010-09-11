@@ -422,15 +422,6 @@ apt_install_lang_clean() {
 }
 
 localize_sources_list() {
-	###
-	# localise /etc/apt/sources.list
-	###
-	if [ -n "${MIRROR}" ] && [ -f /etc/apt/sources.list ]; then
-		sed -i 's|/ftp\.\(..\.\)\?debian\.org/|/'"${MIRROR}"'/|' \
-			/etc/apt/sources.list \
-			/etc/apt/sources.list.d/debian.list
-	fi
-
 	# deploy load balancing for first generation sidux push mirrors
 	if [ -w /etc/apt/sources.list.d/sidux.list ]; then
 		case "$(mawk 'BEGIN{print int(8 * rand())}')" in
@@ -463,7 +454,7 @@ localize_sources_list() {
 }
 
 save_locale_variables() {
-	for var in MIRROR FLL_MIRROR CHARMAP CODESET FONTFACE FONTSIZE \
+	for var in FLL_MIRROR CHARMAP CODESET FONTFACE FONTSIZE \
 		   XKBMODEL XKBLAYOUT XKBVARIANT XKBOPTIONS; do
 		val=$(eval echo \$${var})
 		echo "${var}=\"${val}\""
