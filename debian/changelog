@@ -1,3 +1,9 @@
+fll-live-initscripts (3.9.2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 30 Aug 2010 00:17:15 +0200
+
 fll-live-initscripts (3.9.1) unstable; urgency=low
 
   * no longer recommend tzdata, it's a dependency of util-linux anyways.
