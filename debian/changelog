@@ -1,3 +1,9 @@
+fll-live-initscripts (3.9.3) unstable; urgency=low
+
+  * unregister distro-defaults/switch2aptosid, it's not needed anymore.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 01 Sep 2010 23:02:23 +0200
+
 fll-live-initscripts (3.9.2) unstable; urgency=low
 
   * return to recommend tzdata, we use it directly.
