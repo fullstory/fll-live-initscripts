@@ -1,3 +1,9 @@
+fll-live-initscripts (3.8.20) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 08 Aug 2010 04:00:21 +0200
+
 fll-live-initscripts (3.8.19) unstable; urgency=low
 
   * switch to compat level 8.
