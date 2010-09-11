@@ -37,6 +37,7 @@ fi
 # source distro-defaults, no-op unless in live mode
 ###
 FLL_DISTRO_MODE="installed"
+FLL_DISTRO_NAME="aptosid"
 
 if [ -r /etc/default/distro ]; then
 	. /etc/default/distro
@@ -423,34 +424,17 @@ apt_install_lang_clean() {
 }
 
 localize_sources_list() {
-	# deploy load balancing for first generation sidux push mirrors
-	if [ -w /etc/apt/sources.list.d/sidux.list ]; then
+	# deploy load balancing for first generation aptosid push mirrors
+	if [ -w /etc/apt/sources.list.d/${FLL_DISTRO_NAME}.list ]; then
 		case "$(mawk 'BEGIN{print int(8 * rand())}')" in
-			0)
-				# sidux.com
-				FLL_MIRROR="http://sidux.com/debian/"
-				;;
-			1)
-				# sidux.net
-				FLL_MIRROR="http://sidux.net/debian/"
-				;;
-			3|4)
-				# debian.tu-bs.de
-				FLL_MIRROR="http://debian.tu-bs.de/project/sidux/debian/"
-				;;
-			5|6)
-				# sidux.office-vienna.at
-				FLL_MIRROR="http://sidux.office-vienna.at/sidux/debian/"
-				;;
 			*)
-				# spline.de
-				FLL_MIRROR="ftp://ftp.spline.de/pub/sidux/debian/"
+				# aptosid.com
+				FLL_MIRROR="http://aptosid.com/debian/"
 				;;
 		esac
 
-		sed -i "s|\(deb.*[ \t]\)http://sidux.com/debian/|\1 ${FLL_MIRROR}|" \
-			/etc/apt/sources.list \
-			/etc/apt/sources.list.d/sidux.list
+		printf "deb ${FLL_MIRROR} sid main fix.main\n#deb-src ${FLL_MIRROR} sid main fix.main" \
+			> /etc/apt/sources.list.d/${FLL_DISTRO_NAME}.list
 	fi
 }
 
