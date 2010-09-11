@@ -1,0 +1,3 @@
+# all content gets created by maintainerscripts, as it must not be changed on
+# upgrades - while still allowing customization at the build phase.
+distro-defaults: empty-binary-package
