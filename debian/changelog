@@ -1,3 +1,9 @@
+fll-live-initscripts (3.8.22) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 17 Aug 2010 20:39:25 +0200
+
 fll-live-initscripts (3.8.21) unstable; urgency=medium
 
   * make fll-locales X-Interactive, otherwise apt-get install locks up.
