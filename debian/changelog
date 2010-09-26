@@ -1,8 +1,8 @@
-fll-live-initscripts (3.9.5) UNRELEASED; urgency=low
+fll-live-initscripts (3.9.5) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * ensure that fll-xdm succeeds before gdm gdm3 kdm lxdm slim wdm xdm.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 03 Sep 2010 14:17:17 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 26 Sep 2010 21:10:14 +0200
 
 fll-live-initscripts (3.9.4) unstable; urgency=low
 
