@@ -160,6 +160,7 @@ do_start() {
 	   [ -z "${XFORCERANDR}" ] && \
 	   [ -z "${XMODES}" ] && \
 	   [ -z "${XVERTREFRESH}" ]; then
+		[ -f /etc/X11/xorg.conf ] && rm /etc/X11/xorg.conf
 		log_action_begin_msg " no cheatcodes detected, deferring X detection to X.org"
 		log_end_msg 0
 

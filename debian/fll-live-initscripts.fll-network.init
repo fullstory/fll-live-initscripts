@@ -68,7 +68,7 @@ if [ -f /proc/cmdline ]; then
 			ifplugd)
 				IFPLUGD="yes"
 				;;
-			nodhcp|dhcp=no)
+			nodhcp|dhcp=no|ip=*|BOOTIF=*|nbdroot=*)
 				NODHCP="yes"
 				;;
 			nonetwork*)

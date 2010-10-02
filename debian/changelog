@@ -1,8 +1,13 @@
 fll-live-initscripts (3.9.6) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 26 Sep 2010 21:11:01 +0200
+  [ Niall Walsh ]
+  * xorgconfig: rm /etc/X11/xorg.conf if it's not wanted (e.g. persist)
+  * act as if nodhcp is set (just loop in eni) if ip, bootif or nbdroot are set
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Sat, 02 Oct 2010 15:03:14 +0100
 
 fll-live-initscripts (3.9.5) unstable; urgency=low
 
