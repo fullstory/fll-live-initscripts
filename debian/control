@@ -3,7 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Kel Modderman <kel@otaku42.de>
 Uploaders: Stefan Lippers-Hollmann <s.l-h@gmx.de>,
- Joaquim Boura <x-un-i@sidux.com>,
+ Joaquim Boura <x-un-i@berlios.de>,
  Niall Walsh <niallwalsh@users.berlios.de>
 Build-Depends: debhelper (>= 7.9.3),
  asciidoc,
