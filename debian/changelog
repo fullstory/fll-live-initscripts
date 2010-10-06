@@ -1,13 +1,13 @@
-fll-live-initscripts (3.9.6) UNRELEASED; urgency=low
+fll-live-initscripts (3.9.6) unstable; urgency=low
 
   [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+  * fix x-un-i's mail address.
 
   [ Niall Walsh ]
   * xorgconfig: rm /etc/X11/xorg.conf if it's not wanted (e.g. persist)
   * act as if nodhcp is set (just loop in eni) if ip, bootif or nbdroot are set
 
- -- Niall Walsh <niallwalsh@users.berlios.de>  Sat, 02 Oct 2010 15:03:14 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 06 Oct 2010 14:46:09 +0200
 
 fll-live-initscripts (3.9.5) unstable; urgency=low
 
@@ -593,7 +593,7 @@ fll-live-initscripts (3.5.3) unstable; urgency=low
 
   * somehow last cleary fix was gone. redoing it.
 
- -- Joaquim Boura <x-un-i@sidux.com>  Sun, 17 May 2009 15:25:32 +0200
+ -- Joaquim Boura <x-un-i@berlios.de>  Sun, 17 May 2009 15:25:32 +0200
 
 fll-live-initscripts (3.5.2) unstable; urgency=low
 
@@ -652,7 +652,7 @@ fll-live-initscripts (3.4.6) unstable; urgency=low
 
   * added recognition of virtio block devices (thks kelmo).
 
- -- Joaquim Boura <x-un-i@sidux.com>  Sun, 11 Jan 2009 02:35:17 +0100
+ -- Joaquim Boura <x-un-i@berlios.de>  Sun, 11 Jan 2009 02:35:17 +0100
 
 fll-live-initscripts (3.4.5) unstable; urgency=low
 
@@ -924,13 +924,13 @@ fll-live-initscripts (3.3.24) unstable; urgency=low
 
   * removed spurious $ that was creating troubles on the previous change.
 
- -- Joaquim Boura <x-un-i@sidux.com>  Sun, 14 Sep 2008 16:37:26 +0200
+ -- Joaquim Boura <x-un-i@berlios.de>  Sun, 14 Sep 2008 16:37:26 +0200
 
 fll-live-initscripts (3.3.23) unstable; urgency=low
 
   * fixed set custom dpi for xfce/gdm
 
- -- Joaquim Boura <x-un-i@sidux.com>  Sun, 14 Sep 2008 14:20:02 +0200
+ -- Joaquim Boura <x-un-i@berlios.de>  Sun, 14 Sep 2008 14:20:02 +0200
 
 fll-live-initscripts (3.3.22) unstable; urgency=low
 
@@ -1583,7 +1583,7 @@ fll-live-initscripts (3.0.24) unstable; urgency=low
 
   * fixed another glitch on fll-xdm
 
- -- Joaquim Boura <x-un-i@sidux.com>  Sat, 05 Apr 2008 14:40:33 +0200
+ -- Joaquim Boura <x-un-i@berlios.de>  Sat, 05 Apr 2008 14:40:33 +0200
 
 fll-live-initscripts (3.0.23) unstable; urgency=low
 
@@ -2259,7 +2259,7 @@ fll-live-initscripts (2.0.51) unstable; urgency=low
 
   * use also param xdriver with the same meaning as xmodule
 
- -- Joaquim Boura <x-un-i@sidux.com>  Sun, 11 Nov 2007 11:43:56 +0100
+ -- Joaquim Boura <x-un-i@berlios.de>  Sun, 11 Nov 2007 11:43:56 +0100
 
 fll-live-initscripts (2.0.50) unstable; urgency=low
 
@@ -2547,7 +2547,7 @@ fll-live-initscripts (2.0.24) unstable; urgency=low
 
   * fixed typo
 
- -- Joaquim Boura <x-un-i@sidux.com>  Sat, 13 Oct 2007 00:08:18 +0200
+ -- Joaquim Boura <x-un-i@berlios.de>  Sat, 13 Oct 2007 00:08:18 +0200
 
 fll-live-initscripts (2.0.23) unstable; urgency=low
 
@@ -3044,7 +3044,7 @@ fll-live-initscripts (1.2.2) unstable; urgency=low
 
   * fll-fshelper was renamed...
 
- -- Joaquim Boura <x-un-i@sidux.com>  Fri, 24 Aug 2007 20:41:37 +0200
+ -- Joaquim Boura <x-un-i@berlios.de>  Fri, 24 Aug 2007 20:41:37 +0200
 
 fll-live-initscripts (1.2.1) unstable; urgency=low
 
