@@ -546,7 +546,10 @@ static void process_disk(struct udev_device *device, int disk)
 	fs_spec = device_spec(device, fs_vfstype, disk);
 	if (fs_spec == NULL)
 		goto end_process_disk;
-	
+
+	if (opts.ignore_given && !strcmp(fs_spec, opts.ignore_arg))
+		goto end_process_disk;
+
 	if (strcmp(fs_vfstype, "swap") == 0) {
 		if (opts.noswap_flag)
 			goto end_process_disk;

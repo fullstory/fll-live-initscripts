@@ -11,6 +11,10 @@ option	"file" f
 	"write output to file"
 	typestr="FILE"
 	string optional
+option	"ignore" i
+	"ignore devices with the given UUID"
+	typestr="UUID"
+	string optional
 option	"labels" l
 	"use volume labels to represent device"
 	flag off
