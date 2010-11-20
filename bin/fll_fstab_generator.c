@@ -67,8 +67,8 @@ static int linux_filesystem(const char *fstype)
 	return 0;
 }
 
-static int device_ignore(struct udev_device *device, unsigned int ignored,
-			 char **ig)
+static int device_flagged(struct udev_device *device, unsigned int flagged,
+			  char **a)
 {
 	struct udev_device *parent = device;
 	struct udev_list_entry *u_list_ent;
@@ -76,7 +76,7 @@ static int device_ignore(struct udev_device *device, unsigned int ignored,
 	const char *devnode;
 	int i;
 
-	if (!ignored)
+	if (!flagged)
 		return 0;
 
 	do {
@@ -84,62 +84,20 @@ static int device_ignore(struct udev_device *device, unsigned int ignored,
 		if (devnode == NULL)
 			break;
 
-		for (i = 0; i < ignored; ++i) {
-			if (strcmp(devnode, ig[i]) == 0)
+		for (i = 0; i < flagged; ++i) {
+			if (strcmp(devnode, a[i]) == 0)
 				return 1;
-			else if (strcmp(basename(devnode), ig[i]) == 0)
-				return 1;
-		}
-
-		u_first_list_ent = udev_device_get_devlinks_list_entry(parent);
-		udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
-			devnode = udev_list_entry_get_name(u_list_ent);
-			for (i = 0; i < ignored; ++i) {
-				if (strcmp(devnode, ig[i]) == 0)
-					return 1;
-				else if (strcmp(basename(devnode), ig[i]) == 0)
-					return 1;
-			}
-		}
-		parent = udev_device_get_parent_with_subsystem_devtype(parent,
-								       "block",
-								       "disk");
-	} while (parent != NULL);
-
-	return 0;
-}
-
-static int device_wanted(struct udev_device *device, unsigned int wanted,
-			 char **w)
-{
-	struct udev_device *parent = device;
-	struct udev_list_entry *u_list_ent;
-	struct udev_list_entry *u_first_list_ent;
-	const char *devnode;
-	int i;
-
-	if (!wanted)
-		return 0;
-
-	do {
-		devnode = udev_device_get_devnode(parent);
-		if (devnode == NULL)
-			break;
-
-		for (i = 0; i < wanted; ++i) {
-			if (strcmp(devnode, w[i]) == 0)
-				return 1;
-			if (strcmp(basename(devnode), w[i]) == 0)
+			else if (strcmp(basename(devnode), a[i]) == 0)
 				return 1;
 		}
 
 		u_first_list_ent = udev_device_get_devlinks_list_entry(parent);
 		udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
 			devnode = udev_list_entry_get_name(u_list_ent);
-			for (i = 0; i < wanted; ++i) {
-				if (strcmp(devnode, w[i]) == 0)
+			for (i = 0; i < flagged; ++i) {
+				if (strcmp(devnode, a[i]) == 0)
 					return 1;
-				if (strcmp(basename(devnode), w[i]) == 0)
+				else if (strcmp(basename(devnode), a[i]) == 0)
 					return 1;
 			}
 		}
@@ -692,22 +650,22 @@ int main(int argc, char **argv)
 		if (device == NULL)
 			continue;
 
-		if (device_ignore(device, opts.ignore_given,
-				  opts.ignore_arg)) {
+		if (device_flagged(device, opts.ignore_given,
+				   opts.ignore_arg)) {
 			udev_device_unref(device);
 			continue;
 		}
 		else if (opts.inputs_num) {
 			if (device_removable(device) ||
-			    !device_wanted(device, opts.inputs_num,
-					   opts.inputs)) {
+			    !device_flagged(device, opts.inputs_num,
+					    opts.inputs)) {
 				udev_device_unref(device);
 				continue;
 			}
 		}
 		else if (device_removable(device)) {
-			if (!device_wanted(device, opts.wanted_given,
-					   opts.wanted_arg)) {
+			if (!device_flagged(device, opts.wanted_given,
+					    opts.wanted_arg)) {
 				udev_device_unref(device);
 				continue;
 			}

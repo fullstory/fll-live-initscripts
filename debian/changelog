@@ -14,8 +14,9 @@ fll-live-initscripts (3.9.8) UNRELEASED; urgency=low
     device node or parent block device node by absolute path or basename.
   * Allow the device_wanted() function of fll_fstab_generator to use basename
     like the new device_ignore function.
+  * Merge device_wanted and device_ignore functions into device_flagged.
 
- -- Kel Modderman <kel@otaku42.de>  Sat, 20 Nov 2010 15:47:53 +1000
+ -- Kel Modderman <kel@otaku42.de>  Sat, 20 Nov 2010 16:07:51 +1000
 
 fll-live-initscripts (3.9.7) unstable; urgency=low
 
