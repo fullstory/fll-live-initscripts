@@ -12,9 +12,9 @@ option	"file" f
 	typestr="FILE"
 	string optional
 option	"ignore" i
-	"ignore devices with the given UUID"
-	typestr="UUID"
-	string optional
+	"ignore device(s) (may be specified multiple times)"
+	typestr="DEVICE"
+	string optional multiple
 option	"labels" l
 	"use volume labels to represent device"
 	flag off

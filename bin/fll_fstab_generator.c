@@ -61,7 +61,51 @@ static int linux_filesystem(const char *fstype)
 		return 1;
 	if (strcmp(fstype, "reiser4") == 0)
 		return 1;
+	if (strcmp(fstype, "btrfs") == 0)
+		return 1;
 	
+	return 0;
+}
+
+static int device_ignore(struct udev_device *device, unsigned int ignored,
+			 char **ig)
+{
+	struct udev_device *parent = device;
+	struct udev_list_entry *u_list_ent;
+	struct udev_list_entry *u_first_list_ent;
+	const char *devnode;
+	int i;
+
+	if (!ignored)
+		return 0;
+
+	do {
+		devnode = udev_device_get_devnode(parent);
+		if (devnode == NULL)
+			break;
+
+		for (i = 0; i < ignored; ++i) {
+			if (strcmp(devnode, ig[i]) == 0)
+				return 1;
+			else if (strcmp(basename(devnode), ig[i]) == 0)
+				return 1;
+		}
+
+		u_first_list_ent = udev_device_get_devlinks_list_entry(parent);
+		udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
+			devnode = udev_list_entry_get_name(u_list_ent);
+			for (i = 0; i < ignored; ++i) {
+				if (strcmp(devnode, ig[i]) == 0)
+					return 1;
+				else if (strcmp(basename(devnode), ig[i]) == 0)
+					return 1;
+			}
+		}
+		parent = udev_device_get_parent_with_subsystem_devtype(parent,
+								       "block",
+								       "disk");
+	} while (parent != NULL);
+
 	return 0;
 }
 
@@ -82,16 +126,22 @@ static int device_wanted(struct udev_device *device, unsigned int wanted,
 		if (devnode == NULL)
 			break;
 
-		for (i = 0; i < wanted; ++i)
+		for (i = 0; i < wanted; ++i) {
 			if (strcmp(devnode, w[i]) == 0)
 				return 1;
+			if (strcmp(basename(devnode), w[i]) == 0)
+				return 1;
+		}
 
 		u_first_list_ent = udev_device_get_devlinks_list_entry(parent);
 		udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
 			devnode = udev_list_entry_get_name(u_list_ent);
-			for (i = 0; i < wanted; ++i)
+			for (i = 0; i < wanted; ++i) {
 				if (strcmp(devnode, w[i]) == 0)
 					return 1;
+				if (strcmp(basename(devnode), w[i]) == 0)
+					return 1;
+			}
 		}
 		parent = udev_device_get_parent_with_subsystem_devtype(parent,
 								       "block",
@@ -507,26 +557,8 @@ static void print_mntent(const char *fs_spec, const char *fs_file,
 			 const char *fs_vfstype, const char *fs_mntops,
 			 int fs_freq, int fs_passno)
 {
-	size_t len;
-
-	len = strlen(fs_spec);
-	if (len >= 30)
-		fprintf(fstab, "%-45s ", fs_spec);
-	else if (len >= 20)
-		fprintf(fstab, "%-30s ", fs_spec);
-	else
-		fprintf(fstab, "%-20s ", fs_spec);
-
-	len = strlen(fs_file);
-	if (len >= 30)
-		fprintf(fstab, "%-45s ", fs_file);
-	else if (len >= 20)
-		fprintf(fstab, "%-30s ", fs_file);
-	else
-		fprintf(fstab, "%-20s ", fs_file);
-
-	fprintf(fstab, "%-10s %s %d %d\n", fs_vfstype, fs_mntops, fs_freq,
-		fs_passno);
+	fprintf(fstab, "%s %s %s %s %d %d\n", fs_spec, fs_file, fs_vfstype,
+		fs_mntops, fs_freq, fs_passno);
 }
 
 static void process_disk(struct udev_device *device, int disk)
@@ -545,9 +577,6 @@ static void process_disk(struct udev_device *device, int disk)
 	
 	fs_spec = device_spec(device, fs_vfstype, disk);
 	if (fs_spec == NULL)
-		goto end_process_disk;
-
-	if (opts.ignore_given && !strcmp(fs_spec, opts.ignore_arg))
 		goto end_process_disk;
 
 	if (strcmp(fs_vfstype, "swap") == 0) {
@@ -663,7 +692,12 @@ int main(int argc, char **argv)
 		if (device == NULL)
 			continue;
 
-		if (opts.inputs_num) {
+		if (device_ignore(device, opts.ignore_given,
+				  opts.ignore_arg)) {
+			udev_device_unref(device);
+			continue;
+		}
+		else if (opts.inputs_num) {
 			if (device_removable(device) ||
 			    !device_wanted(device, opts.inputs_num,
 					   opts.inputs)) {

@@ -1,10 +1,21 @@
 fll-live-initscripts (3.9.8) UNRELEASED; urgency=low
 
+  [ Joaquim Boura ]
   * NOT RELEASED YET
   * new option "--ignore" for fll_fstab_generator to ignore the partition 
   * with the given UUID.
 
- -- Joaquim Boura <x-un-i@sidux.com>  Fri, 19 Nov 2010 17:34:15 +0100
+  [ Kel Modderman ]
+  * Use column(1) to prettify fstab instead of internally attempting to
+    do it. The same probably needs to be done at some stage in fll-
+    installer.
+  * Add btrfs to linux_filesystem() function of fll_fstab_generator.
+  * Extend Joaquim Boura's --ignore feature to allow ignoring by block
+    device node or parent block device node by absolute path or basename.
+  * Allow the device_wanted() function of fll_fstab_generator to use basename
+    like the new device_ignore function.
+
+ -- Kel Modderman <kel@otaku42.de>  Sat, 20 Nov 2010 15:47:53 +1000
 
 fll-live-initscripts (3.9.7) unstable; urgency=low
 

@@ -16,7 +16,7 @@
 ###
 # F.U.L.L.S.T.O.R.Y init script
 #
-# Copyright: (C) 2007 - 2008 Kel Modderman <kel@otaku42.de>
+# Copyright: (C) 2007 - 2010 Kel Modderman <kel@otaku42.de>
 # License:   GPLv2
 #
 # F.U.L.L.S.T.O.R.Y Project Homepage:
@@ -88,6 +88,11 @@ do_start() {
 	log_daemon_msg "${NAME}"; log_action_begin_msg " generating /etc/fstab"
 	/usr/sbin/fll_fstab_generator --file /etc/fstab --mkdir --nomounts ${NOSWAP}
 	log_end_msg "${?}"
+
+	if which column >/dev/null; then
+		column -t < /etc/fstab > /etc/fstab.pretty &&
+			mv -f /etc/fstab.pretty /etc/fstab
+	fi
 }
 
 case "${1}" in
