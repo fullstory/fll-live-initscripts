@@ -1,7 +1,6 @@
-fll-live-initscripts (3.9.8) UNRELEASED; urgency=low
+fll-live-initscripts (3.9.8) unstable; urgency=low
 
   [ Joaquim Boura ]
-  * NOT RELEASED YET
   * new option "--ignore" for fll_fstab_generator to ignore the partition 
   * with the given UUID.
 
