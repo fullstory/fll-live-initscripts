@@ -5,7 +5,7 @@ Maintainer: Kel Modderman <kel@otaku42.de>
 Uploaders: Stefan Lippers-Hollmann <s.l-h@gmx.de>,
  Joaquim Boura <x-un-i@berlios.de>,
  Niall Walsh <niallwalsh@users.berlios.de>
-Build-Depends: debhelper (>= 7.9.3),
+Build-Depends: debhelper (>= 8),
  asciidoc,
  docbook,
  gengetopt,
@@ -25,9 +25,9 @@ Package: distro-defaults
 Architecture: all
 Depends: ${misc:Depends}
 Description: set various default options
- This package has much influence on the system and update behaviour of
- customized live Linux utilities. It is dynamically created at distro build
- time.
+ This seemingly empty package has much influence on the system and update
+ behaviour of the fll live Linux utilities. It's configuration data is
+ dynamically created at distro build time.
 
 Package: fll-live-initscripts
 Architecture: all

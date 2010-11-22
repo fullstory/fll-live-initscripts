@@ -247,24 +247,13 @@ static char* device_spec(struct udev_device *device, char *fstype, int disk)
 			    	    strlen("/dev/disk/by-label")) == 0) {
 				if (value != NULL)
 					free(value);
-				if (linux_filesystem(fstype)) {
-					len = strlen("LABEL=") + 1;
-					len += strlen(basename(devnode));
-					value = malloc(len);
-					if (value == NULL)
-						return NULL;
-					res = snprintf(value, len,
-						       "LABEL=%s",
-						       basename(devnode));
-				}
-				else {
-					len = strlen(devnode) + 1;
-					value = malloc(len);
-					if (value == NULL)
-						return NULL;
-					res = snprintf(value, len, "%s",
-						       devnode);
-				}
+				len = strlen("LABEL=") + 1;
+				len += strlen(basename(devnode));
+				value = malloc(len);
+				if (value == NULL)
+					return NULL;
+				res = snprintf(value, len, "LABEL=%s",
+					       basename(devnode));
 				if (res < 0 || (size_t) res >= len)
 					return NULL;
 				else
@@ -275,24 +264,13 @@ static char* device_spec(struct udev_device *device, char *fstype, int disk)
 				    strlen("/dev/disk/by-uuid")) == 0) {
 				if (value != NULL)
 					free(value);
-				if (linux_filesystem(fstype)) {
-					len = strlen("UUID=") + 1;
-					len += strlen(basename(devnode));
-					value = malloc(len);
-					if (value == NULL)
-						return NULL;
-					res = snprintf(value, len,
-						       "UUID=%s",
-						       basename(devnode));
-				}
-				else {
-					len = strlen(devnode) + 1;
-					value = malloc(len);
-					if (value == NULL)
-						return NULL;
-					res = snprintf(value, len, "%s",
-						       devnode);
-				}
+				len = strlen("UUID=") + 1;
+				len += strlen(basename(devnode));
+				value = malloc(len);
+				if (value == NULL)
+					return NULL;
+				res = snprintf(value, len, "UUID=%s",
+					       basename(devnode));
 				if (res < 0 || (size_t) res >= len)
 					return NULL;
 				else

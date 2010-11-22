@@ -5,7 +5,7 @@ Kel Modderman <kel@otaku42.de>
 
 NAME
 ----
-fll_fstab_generator - a shell script for generating the /etc/fstab file
+fll_fstab_generator - a program for generating the /etc/fstab file
 
 
 SYNOPSIS
@@ -27,7 +27,7 @@ OPTIONS
 -d, --debug::
 	Enable debug output. Use twice to see shell execution (set -x).
 
--f <file>, --file <file>::
+-f <file>, --file=<file>::
 	File to write fstab configuration output to.
 
 -l, --labels::
@@ -45,9 +45,13 @@ OPTIONS
 -u, --uuids::
 	Use UUID tokens for mount names when possible.
 
--w <device>, --wanted <device>::
+-w <device>, --wanted=<device>::
 	Specify devices to include in fstab configuration when they would
-	usually not qualify for inclusion. For example, usb devices.
+	otherwise not qualify for inclusion. For example, usb devices.
+
+-i <device>, --ignore=<device>::
+	Specify devices to ignore and not include in fstab configuration when
+	they would otherwise qualify for inclusion.
 
 
 SEE ALSO

@@ -1,8 +1,16 @@
 fll-live-initscripts (3.9.9) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Bump version build-depends on debhelper to >= 8.
+  * Enhance note in distro-default's package description about it being
+    more than just an empty package.
+  * fll_fstab_generator uses UUID=/LABEL= descriptors for non-linuxy
+    filesystems, which previously used convenience symlink pathname.
+  * Update fll_fstab_generator.8 for new --ignore option.
+  * Add fll_blockdev_detect, an experimental utility which could be used
+    by fll-live-initramfs to detect block devices and execute aa script
+    to probe them for live filesystem.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 20 Nov 2010 14:15:59 +0100
+ -- Kel Modderman <kel@otaku42.de>  Tue, 23 Nov 2010 00:04:28 +1000
 
 fll-live-initscripts (3.9.8) unstable; urgency=low
 
