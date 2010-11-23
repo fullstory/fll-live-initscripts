@@ -1,4 +1,4 @@
-fll-live-initscripts (3.9.9) UNRELEASED; urgency=low
+fll-live-initscripts (3.10.0) unstable; urgency=low
 
   * Bump version build-depends on debhelper to >= 8.
   * Enhance note in distro-default's package description about it being
