@@ -1,3 +1,9 @@
+fll-live-initscripts (3.10.1) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 23 Nov 2010 13:24:51 +0100
+
 fll-live-initscripts (3.10.0) unstable; urgency=low
 
   * Bump version build-depends on debhelper to >= 8.
