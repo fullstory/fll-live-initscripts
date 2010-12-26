@@ -1,3 +1,9 @@
+fll-live-initscripts (3.10.2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 26 Dec 2010 14:59:57 +0100
+
 fll-live-initscripts (3.10.1) unstable; urgency=low
 
   * update load balancing for push mirrors.
