@@ -119,6 +119,64 @@ setup_gdm() {
 	fi
 }
 
+setup_gdm3() {
+	# autologin + greeter theme
+	# timed login required for login after x restart
+	sed -i	-e "/^AutomaticLogin\=.*/d" \
+		-e "/^AutomaticLoginEnable\=.*/d" \
+		-e "/^TimedLoginEnable\=.*/d" \
+		-e "/^TimedLogin\=.*/d" \
+		-e "/^TimedLoginDelay\=.*/d" \
+		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true \
+			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=0/" /etc/gdm3/daemon.conf
+
+# handle gdm3 to automatically detect and set wallpaper neded resolution
+cat > /etc/gdm3/PreSession/Default << "EOF"
+#!/bin/sh
+#
+# Note that any setup should come before the sessreg command as
+# that must be 'exec'ed for the pid to be correct (sessreg uses the parent
+# pid)
+#
+# Note that output goes into the .xsession-errors file for easy debugging
+#
+PATH=$PATH
+
+###
+# source distro-defaults no-op unless in live mode
+###
+FLL_DISTRO_MODE="live"
+
+if [ -r /etc/default/distro ] ; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}"  != "live" ]; then
+	exit 0
+fi
+
+###
+# read in variables from our default conffile
+###
+if [ -r /etc/default/fll-gnome-desktop ]; then
+        . /etc/default/fll-gnome-desktop
+fi
+
+if [ "${AUTODETECT_RESOLUTION}" = "true" ] ; then
+###
+# finds actual screen resolution and according that try to make new symlink for ${FLL_WALLPAPER}
+###
+    resn=`xrandr -q | head -n 1 | awk '{ print $8.$9.$10}' | cut -d , -f1`
+    wallpaper_res=${wallpaper_dir}${resn}.png
+	if [ -f "${wallpaper_res}" ] ; then
+	    rm -f ${FLL_WALLPAPER} >/dev/null 
+	    ln -s ${wallpaper_res} ${FLL_WALLPAPER}
+	fi
+fi
+EOF
+chmod 755 /etc/gdm3/PreSession/Default
+}
+
 setup_slim() {
 	# set autologin for $FLL_LIVE_USER to yes
 	sed -i	-e "s/^default_user.*/\#FLL\#&/" \
@@ -162,6 +220,13 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
+		GDM3="$(which gdm3 2>/dev/null)"
+		if [ "${GDM3}" ]; then
+			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm3"
+			setup_gdm3 && echo "${GDM3}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+			log_end_msg "${?}"
+		fi
+
 		# Handle kdm last, making it the default display manager
 		# ...unless overriden below
 		KDM="$(which kdm 2>/dev/null)"
@@ -171,26 +236,26 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
-		# Two desktop-managers installed, override default display manager
+		# Three desktop-managers installed, override default display manager
 		# based on desktop choice cheatcode
 		case "${DESKTOP}" in
 			kde)
 				if [ -n "${KDM}" ]; then
-					if [ -n "${GDM}" ] || [ -n "${SLIM}" ]; then
+					if [ -n "${GDM3}" ] || [ -n "${GDM}" ] || [ -n "${SLIM}" ]; then
 						echo "${KDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			gnome)
-				if [ -n "${GDM}" ]; then
-					if [ -n "${KDM}" ] || [ -n "${SLIM}" ]; then
-						echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+				if [ -n "${GDM3}" ]; then
+					if [ -n "${GDM}" ] || [ -n "${KDM}" ] || [ -n "${SLIM}" ]; then
+						echo "${GDM3}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			xfce*|lxde)
 				if [ -n "${SLIM}" ]; then
-					if [ -n "${KDM}" ] || [ -n "${GDM}" ]; then
+					if [ -n "${KDM}" ] || [ -n "${GDM}" ] || [ -n "${GDM3}" ]; then
 						echo "${SLIM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
