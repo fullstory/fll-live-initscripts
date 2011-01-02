@@ -6,6 +6,23 @@ fll-live-initscripts (3.10.2) UNRELEASED; urgency=low
   [ Joaquim Boura ]
   * Patch for an aptosid-gnome from Angelescu Ovidiu <mrhsaacdoh@gmail.com> aka convbsd
     and William J. Henderson <tornado@tjtag.com> aka tjtag
+  * modified control 
+  * modified fll-xdm to remove default session=gnome in gdm3 (see aptosid-irc changes)
+  * removed unsued code from gdm3 entry 
+  * modified code to fix file permisions
+  * added suport for enable/disable autodetect wallpaper resolution for gnome
+  * bumped version for aptosid-gnome
+  * added last fullstorry modifications
+  * removed "EOF" from bootom and replaced with EOF
+  * removed escape chars using tjtag's idea "EOF"
+  * modified missing -f in test condition   from fll-xdm.init
+  * modified fll-xdm.init to introduce escape chars and minor changes  
+  * modified fll-xdm.init replace ticks with quotes  
+  * added fullstory 28231 modifications 
+  * added to gdm3 capability to choose the wallpaper resolution according to actual screen resolution 
+  * add x-un-i's fstab patch
+  * rearanged code to simplify it 
+  * modified fll-xdm to start gnome session instead of default and modified some permissions
 
  -- Joaquim Boura <x-un-i@berlios.de>  Thu, 30 Dec 2010 00:47:07 +0100
 
