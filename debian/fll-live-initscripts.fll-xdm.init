@@ -107,14 +107,14 @@ setup_gdm() {
 	# timed login required for login after x restart
 	sed -i	-e "/^AutomaticLogin\=.*/d" \
 		-e "/^AutomaticLoginEnable\=.*/d" \
-		-e "/^TimedLoginEnable\=.*/d" \
 		-e "/^TimedLogin\=.*/d" \
 		-e "/^TimedLoginDelay\=.*/d" \
-		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true \
-			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=0/" /etc/gdm/gdm.conf
+		-e "/^TimedLoginEnable\=.*/d" \
+		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=0/" \
+			/etc/gdm/gdm.conf
 
 	if [ "${CUSTOM_DPI}" ]; then
-		sed -i -e "s/\(command\=.*audit [0-9]*\)/\1 \-dpi ${CUSTOM_DPI}/" \
+		sed -i "s/\(command\=.*audit [0-9]*\)/\1 \-dpi ${CUSTOM_DPI}/" \
 			/usr/share/gdm/defaults.conf
 	fi
 }
@@ -129,52 +129,6 @@ setup_gdm3() {
 		-e "/^TimedLoginDelay\=.*/d" \
 		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true \
 			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=0/" /etc/gdm3/daemon.conf
-
-# handle gdm3 to automatically detect and set wallpaper neded resolution
-cat > /etc/gdm3/PreSession/Default << "EOF"
-#!/bin/sh
-#
-# Note that any setup should come before the sessreg command as
-# that must be 'exec'ed for the pid to be correct (sessreg uses the parent
-# pid)
-#
-# Note that output goes into the .xsession-errors file for easy debugging
-#
-PATH=$PATH
-
-###
-# source distro-defaults no-op unless in live mode
-###
-FLL_DISTRO_MODE="live"
-
-if [ -r /etc/default/distro ] ; then
-	. /etc/default/distro
-fi
-
-if [ "${FLL_DISTRO_MODE}"  != "live" ]; then
-	exit 0
-fi
-
-###
-# read in variables from our default conffile
-###
-if [ -r /etc/default/fll-gnome-desktop ]; then
-        . /etc/default/fll-gnome-desktop
-fi
-
-if [ "${AUTODETECT_RESOLUTION}" = "true" ] ; then
-###
-# finds actual screen resolution and according that try to make new symlink for ${FLL_WALLPAPER}
-###
-    resn=`xrandr -q | head -n 1 | awk '{ print $8.$9.$10}' | cut -d , -f1`
-    wallpaper_res=${wallpaper_dir}${resn}.png
-	if [ -f "${wallpaper_res}" ] ; then
-	    rm -f ${FLL_WALLPAPER} >/dev/null 
-	    ln -s ${wallpaper_res} ${FLL_WALLPAPER}
-	fi
-fi
-EOF
-chmod 755 /etc/gdm3/PreSession/Default
 }
 
 setup_slim() {
