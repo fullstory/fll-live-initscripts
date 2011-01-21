@@ -83,18 +83,19 @@ add_live_user() {
 }
 
 hack_sudoers() {
-	grep -q -w "${FLL_LIVE_USER}" /etc/sudoers && return 0
+	if [ -e "/etc/sudoers.d/15_${FLL_LIVE_USER}" ]; then
+		return 0
+	fi
 	
 	# append sudoers entry
-	cat >> /etc/sudoers \
+	cat >> "/etc/sudoers.d/15_${FLL_LIVE_USER}" \
 <<EOF
-
 # WARNING: This allows the unprivileged ${FLL_LIVE_USER} user to start commands as root
 # WARNING: This is totally insecure and (almost) makes ${FLL_LIVE_USER} a second root account.
 # WARNING: Never allow external access to the ${FLL_LIVE_USER} user!!!
-${FLL_LIVE_USER} ALL=NOPASSWD: ALL
+${FLL_LIVE_USER} ALL=(ALL:ALL) NOPASSWD: ALL
 EOF
-		chmod 0440 /etc/sudoers
+		chmod 0440 "/etc/sudoers.d/15_${FLL_LIVE_USER}"
 }
 
 hack_bashrc() {
