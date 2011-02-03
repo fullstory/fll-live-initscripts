@@ -437,13 +437,12 @@ static char* device_mntops(struct udev_device *device, char *fstype, char *dir)
 	value = NULL;
 
 	if (mounted && linux_filesystem(fstype)) {
-		if (strcmp(fstype, "ext4") == 0)
-			str = "defaults,noatime,errors=remount-ro,barrier=0";
-		else if (strcmp(fstype, "ext3") == 0 ||
-			 strcmp(fstype, "ext2") == 0)
-			str = "defaults,noatime,errors=remount-ro";
+		if ((strcmp(fstype, "ext4") == 0) ||
+		    (strcmp(fstype, "ext3") == 0) ||
+		    (strcmp(fstype, "ext2") == 0))
+			str = "defaults,relatime,errors=remount-ro";
 		else
-			str = "defaults,noatime";
+			str = "defaults,relatime";
 
 		len = strlen(str) + 1;
 		value = malloc(len);
@@ -458,7 +457,7 @@ static char* device_mntops(struct udev_device *device, char *fstype, char *dir)
 	}
 	else {
 		if (linux_filesystem(fstype))
-			str = "users,rw,exec,noatime";
+			str = "users,rw,exec,relatime";
 		else if (strcmp(fstype, "ntfs") == 0)
 			str = "users,ro,dmask=0022,fmask=0133,nls=utf8";
 		else if (strcmp(fstype, "msdos") == 0)
