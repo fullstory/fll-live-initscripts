@@ -1,3 +1,9 @@
+fll-live-initscripts (3.10.6) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 03 Feb 2011 19:08:15 +0100
+
 fll-live-initscripts (3.10.5) unstable; urgency=low
 
   * harmonize ext2/3 and ext4 mount options and drop barrier=0.
