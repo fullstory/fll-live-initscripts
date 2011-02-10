@@ -55,12 +55,9 @@ Architecture: all
 Depends: ${misc:Depends}, 
  distro-defaults,
  perl,
- lsb-base (>= 3.0-6),
- xserver-xorg-core (>= 2:1.6.1)
+ lsb-base,
+ xserver-xorg-core
 Recommends: kdm | gdm, xserver-xorg-input-vmmouse (>> 12.6.3)
-Conflicts: libdrm-nouveau1,
- xserver-xorg-video-all,
- xserver-xorg-video-nouveau
 Description: fll live media xorg related tools
  A set of scripts to generate a Xorg configuration.
  .
