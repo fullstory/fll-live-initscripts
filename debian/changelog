@@ -1,3 +1,9 @@
+fll-live-initscripts (3.10.8) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 14 Feb 2011 22:00:40 +0100
+
 fll-live-initscripts (3.10.7) unstable; urgency=low
 
   * drop pre-aptosid cleanup procedures.
