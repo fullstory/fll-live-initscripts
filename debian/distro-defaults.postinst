@@ -88,15 +88,6 @@ case "$1" in
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 EOF
 		fi
-
-		if [ -n "$2" ] && [ -r /usr/share/debconf/confmodule ]; then
-			if dpkg --compare-versions "$2" lt 3.9.0; then
-				. /usr/share/debconf/confmodule
-				db_version 2.0
-
-				db_unregister distro-defaults/switch2aptosid || :
-			fi
-		fi
 		;;
 	triggered)
 		shift
