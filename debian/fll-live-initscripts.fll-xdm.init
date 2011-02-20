@@ -4,12 +4,12 @@
 # Provides:          fll-xdm
 # Required-Start:    fll-adduser
 # Required-Stop:
-# X-Start-Before:    gdm gdm3 kdm lxdm slim wdm xdm
+# X-Start-Before:    gdm3 kdm lxdm slim wdm xdm
 # Default-Start:     2 3 4 5
 # Default-Stop:
 # Short-Description: detect and setup X desktop manager
 # Description:       The purpose of this script is to detect and configure an
-#                    installed X desktop manager (i.e. kdm, gdm etc.).
+#                    installed X desktop manager (i.e. kdm, gdm3 etc.).
 ### END INIT INFO
 
 ###
@@ -102,23 +102,6 @@ setup_kdm() {
 	fi
 }
 
-setup_gdm() {
-	# autologin + greeter theme
-	# timed login required for login after x restart
-	sed -i	-e "/^AutomaticLogin\=.*/d" \
-		-e "/^AutomaticLoginEnable\=.*/d" \
-		-e "/^TimedLogin\=.*/d" \
-		-e "/^TimedLoginDelay\=.*/d" \
-		-e "/^TimedLoginEnable\=.*/d" \
-		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=0/" \
-			/etc/gdm/gdm.conf
-
-	if [ "${CUSTOM_DPI}" ]; then
-		sed -i "s/\(command\=.*audit [0-9]*\)/\1 \-dpi ${CUSTOM_DPI}/" \
-			/usr/share/gdm/defaults.conf
-	fi
-}
-
 setup_gdm3() {
 	# autologin + greeter theme
 	# timed login required for login after x restart
@@ -167,13 +150,6 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
-		GDM="$(which gdm 2>/dev/null)"
-		if [ "${GDM}" ]; then
-			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm"
-			setup_gdm && echo "${GDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
-			log_end_msg "${?}"
-		fi
-
 		GDM3="$(which gdm3 2>/dev/null)"
 		if [ "${GDM3}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm3"
@@ -195,21 +171,21 @@ case "${1}" in
 		case "${DESKTOP}" in
 			kde)
 				if [ -n "${KDM}" ]; then
-					if [ -n "${GDM3}" ] || [ -n "${GDM}" ] || [ -n "${SLIM}" ]; then
+					if [ -n "${GDM3}" ] || [ -n "${SLIM}" ]; then
 						echo "${KDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			gnome)
 				if [ -n "${GDM3}" ]; then
-					if [ -n "${GDM}" ] || [ -n "${KDM}" ] || [ -n "${SLIM}" ]; then
+					if [ -n "${KDM}" ] || [ -n "${SLIM}" ]; then
 						echo "${GDM3}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			xfce*|lxde)
 				if [ -n "${SLIM}" ]; then
-					if [ -n "${KDM}" ] || [ -n "${GDM}" ] || [ -n "${GDM3}" ]; then
+					if [ -n "${KDM}" ] || [ -n "${GDM3}" ]; then
 						echo "${SLIM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi

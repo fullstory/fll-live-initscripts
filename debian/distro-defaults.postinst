@@ -58,9 +58,14 @@ purge_conffile() {
 
 case "$1" in
 	configure)
-		for dm in gdm gdm3 kdm slim lxdm wdm xdm; do			
+		for dm in gdm3 kdm slim lxdm wdm xdm; do			
 			do_override "${dm}"
 		done
+
+		# gdm is no more
+		if [ -f /etc/insserv/overrides/gdm ]; then
+			purge_conffile /etc/insserv/overrides/gdm
+		fi
 
 		# Bug #487196 has been fixed in util-linux, remove now 
 		# obsolete LSB overrides
