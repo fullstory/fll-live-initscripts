@@ -4,7 +4,7 @@
 # Provides:          fll-xorgconfig
 # Required-Start:
 # Required-Stop:
-# X-Start-Before:    gdm gdm3 kdm lxdm slim wdm xdm
+# X-Start-Before:    gdm3 kdm lxdm slim wdm xdm
 # Default-Start:     2 3 4 5
 # Default-Stop:
 # Short-Description: configure Xorg xserver
