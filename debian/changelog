@@ -1,8 +1,8 @@
-fll-live-initscripts (3.10.9) UNRELEASED; urgency=low
+fll-live-initscripts (3.10.9) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * update for new sponsor.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 20 Feb 2011 02:28:40 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 26 Feb 2011 18:34:14 +0100
 
 fll-live-initscripts (3.10.8) unstable; urgency=low
 
