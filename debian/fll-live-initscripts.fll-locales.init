@@ -444,7 +444,7 @@ localize_sources_list() {
 				FLL_MIRROR="http://oscar.aptosid.com/debian/"
 				;;
 			*)
-				# aptosid.com, Hetzner Online AG, Frankfurt, Germany
+				# aptosid.com, webtropia.com, Düsseldorf, Germany
 				FLL_MIRROR="http://aptosid.com/debian/"
 				;;
 		esac
