@@ -1,8 +1,11 @@
-fll-live-initscripts (3.10.10) UNRELEASED; urgency=low
+fll-live-initscripts (3.10.10) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * give the newly developed "simple modesetting-only KMS driver for the 
+    hardware emulated in qemu-kvm" a chance and avoid overriding cirrus by
+    vesa.
+  * bump standards version to 3.9.2, no changes necessary.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 26 Feb 2011 18:34:34 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 22 Apr 2011 19:29:07 +0200
 
 fll-live-initscripts (3.10.9) unstable; urgency=low
 
