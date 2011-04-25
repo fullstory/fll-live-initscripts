@@ -1,8 +1,13 @@
 fll-live-initscripts (3.10.11) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 22 Apr 2011 19:29:55 +0200
+  [ Joaquim Boura ]
+  * set waittime for automatic login to 1 second ( when using 0 gdm3 falls out
+    to the default)
+
+ -- Joaquim Boura <x-un-i@berlios.de>  Mon, 25 Apr 2011 18:27:00 +0200
 
 fll-live-initscripts (3.10.10) unstable; urgency=low
 

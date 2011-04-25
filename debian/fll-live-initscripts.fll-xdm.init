@@ -111,7 +111,7 @@ setup_gdm3() {
 		-e "/^TimedLogin\=.*/d" \
 		-e "/^TimedLoginDelay\=.*/d" \
 		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true \
-			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=0/" /etc/gdm3/daemon.conf
+			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=1/" /etc/gdm3/daemon.conf
 }
 
 setup_slim() {
