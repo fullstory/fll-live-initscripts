@@ -120,7 +120,12 @@ do_start() {
 	if [ -x "${WM}" ]; then
 		case "${WM}" in 
 			"/usr/bin/kwin")
-				XSESSION="kde"
+				if [   -r /usr/share/xsessions/kde.desktop ] && \
+				   [ ! -r /usr/share/xsessions/kde-plasma.desktop ]; then
+					XSESSION="kde"
+				else
+					XSESSION="kde-plasma"
+				fi
 				;;
 			"/usr/bin/metacity")
 				XSESSION="gnome"
