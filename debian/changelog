@@ -1,13 +1,13 @@
-fll-live-initscripts (3.10.11) UNRELEASED; urgency=low
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (3.11.1) unstable; urgency=low
 
   [ Joaquim Boura ]
   * set waittime for automatic login to 1 second ( when using 0 gdm3 falls out
     to the default)
 
- -- Joaquim Boura <x-un-i@berlios.de>  Mon, 25 Apr 2011 18:27:00 +0200
+  [ Stefan Lippers-Hollmann ]
+  * adapt for new KDE xsession name in 4.6.x, kde --> kde-plasma.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 28 Apr 2011 23:07:34 +0200
 
 fll-live-initscripts (3.10.10) unstable; urgency=low
 
