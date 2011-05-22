@@ -1,3 +1,9 @@
+fll-live-initscripts (3.12.1) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 22 May 2011 14:25:35 +0200
+
 fll-live-initscripts (3.12.0) unstable; urgency=low
 
   * fll-reboot: refactor the reboot hack a bit by attempting to define functions
