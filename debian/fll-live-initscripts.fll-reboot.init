@@ -51,11 +51,6 @@ fi
 ###
 . /lib/lsb/init-functions
 
-###
-# define this for copy_exec
-###
-DESTDIR="/live-hack"
-
 if [ -f /proc/cmdline ]; then
 	for param in $(cat /proc/cmdline); do
 		case "${param}" in
@@ -115,11 +110,11 @@ do_umount() {
 		if [ "$VERBOSE" = no ]
 		then
 			log_action_begin_msg "Unmounting union filesystems"
-			${BINDIR}umount -l -n -f -d $UNION_MTPTS
+			umount -l -n -f -d $UNION_MTPTS
 			log_action_end_msg $?
 		else
 			log_daemon_msg "Will now unmount union filesystems"
-			${BINDIR}umount -l -n -f -v -d $UNION_MTPTS
+			umount -l -n -f -v -d $UNION_MTPTS
 			log_end_msg $?
 		fi
 	fi
@@ -129,11 +124,11 @@ do_umount() {
 		if [ "$VERBOSE" = no ]
 		then
 			log_action_begin_msg "Unmounting squashfs filesystems"
-			${BINDIR}umount -l -n -f -d $SQSH_MTPTS
+			umount -l -n -f -d $SQSH_MTPTS
 			log_action_end_msg $?
 		else
 			log_daemon_msg "Will now unmount squashfs filesystems"
-			${BINDIR}umount -l -n -f -v -d $SQSH_MTPTS
+			umount -l -n -f -v -d $SQSH_MTPTS
 			log_end_msg $?
 		fi
 	fi
@@ -143,11 +138,11 @@ do_umount() {
 		if [ "$VERBOSE" = no ]
 		then
 			log_action_begin_msg "Unmounting live filesystems"
-			${BINDIR}umount -l -n -f -d $LIVE_MTPTS
+			umount -l -n -f -d $LIVE_MTPTS
 			log_action_end_msg $?
 		else
 			log_daemon_msg "Will now unmount live filesystems"
-			${BINDIR}umount -l -n -f -v -d $LIVE_MTPTS
+			umount -l -n -f -v -d $LIVE_MTPTS
 			log_end_msg $?
 		fi
 	fi
@@ -203,11 +198,21 @@ copy_exec() {
 # End adapted functions
 ###############################################################################
 
-live_hack() {
+do_stop() {
+	# calculate runlevel
+	runlevel_pair="$(runlevel)"
+	runlevel="${runlevel_pair#* }"
+
+	# set sane defaults for /dev/console
+	stty sane < /dev/console
+
+	# prepare binaries for post-umount of live media
+	DESTDIR="$(mktemp -d -p / fll.XXXXX)"
 	mkdir -p ${DESTDIR}/bin
 	
 	# cache utilities required for the final stages of shutdown
-	for path in $(which umount) $(which halt) $(which reboot) $(which eject); do
+	for path in $(which echo) $(which umount) $(which halt) \
+		$(which reboot) $(which eject); do
 		copy_exec "${path}" /bin
 	done
 	
@@ -228,23 +233,9 @@ live_hack() {
 	fi
 	export LD_LINUX
 
-	PATH="${DESTDIR}/bin:${PATH}"
-	export PATH
-
-	BINDIR="${LD_LINUX} ${DESTDIR}/bin/"
-	export BINDIR
-}
-
-do_stop() {
-	# calculate runlevel
-	runlevel="$(runlevel)"
-	runlevel="${runlevel#* }"
-
-	# set sane defaults for /dev/console
-	stty sane < /dev/console
-
-	# prepare binaries for post-umount of live media
-	live_hack
+	echo() { ${LD_LINUX} ${DESTDIR}/bin/echo "$@"; }
+	umount() { ${LD_LINUX} ${DESTDIR}/bin/umount "$@"; }
+	eject() { ${LD_LINUX} ${DESTDIR}/bin/eject "$@"; }
 
 	# umount the live media and other mount points
 	do_umount
@@ -252,12 +243,12 @@ do_stop() {
 	case "${runlevel}" in
 		0)
 			echo "System halted." > /dev/console
-			command="halt"
+			command="${LD_LINUX} ${DESTDIR}/bin/halt"
 			options="-h -n -p -i -f"
 			;;
 		6)
 			echo "Preparing for reboot..." > /dev/console
-			command="reboot"
+			command="${LD_LINUX} ${DESTDIR}/bin/reboot"
 			options="-n -i -f"
 			;;
 		*)
@@ -270,18 +261,18 @@ do_stop() {
 		# disable kernel messages while ejecting cdrom (libata noise)
 		echo "0" > /proc/sys/kernel/printk
 
-		${BINDIR}eject -m -p /dev/fll-cdrom
+		eject -m -p /dev/fll-cdrom
 
 		if [ -z "${NOPROMPT}" ]; then
-			echo ""
+			echo "" > /dev/console
 			echo "Please remove CD, close cdrom drive then press enter." > /dev/console
-			echo ""
+			echo "" > /dev/console
 			read x < /dev/console
 		fi
 	fi
 
 	# shutdown/reboot	
-	exec ${BINDIR}${command} ${options} > /dev/console 2>&1 < /dev/console
+	exec ${command} ${options} > /dev/console 2>&1 < /dev/console
 }
 
 case "${1}" in
