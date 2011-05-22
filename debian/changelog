@@ -1,3 +1,9 @@
+fll-live-initscripts (3.12.2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 22 May 2011 22:16:59 +0200
+
 fll-live-initscripts (3.12.1) unstable; urgency=low
 
   * Make linux default xmkmodel and only set one keyboard.
