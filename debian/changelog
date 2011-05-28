@@ -1,8 +1,9 @@
-fll-live-initscripts (3.12.2) UNRELEASED; urgency=low
+fll-live-initscripts (3.12.2) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * add libswitch-perl to dependencies for fll-live-xorgconfig, upcoming perl
+    versions won't provide Switch() in the core distribution anymore.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 22 May 2011 22:16:59 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 28 May 2011 15:00:35 +0200
 
 fll-live-initscripts (3.12.1) unstable; urgency=low
 
