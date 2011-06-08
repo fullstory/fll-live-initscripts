@@ -1,3 +1,9 @@
+fll-live-initscripts (3.12.4) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 08 Jun 2011 13:23:26 +0200
+
 fll-live-initscripts (3.12.3) unstable; urgency=low
 
   * Use /etc/ld.so.conf.d/* for extra paths in LD_LIBRARY_PATH for fll-reboot
