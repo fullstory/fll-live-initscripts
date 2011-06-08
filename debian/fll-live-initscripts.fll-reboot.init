@@ -220,6 +220,11 @@ do_stop() {
 	if [ -e "${DESTDIR}/lib64" ]; then
 		LD_LIBRARY_PATH="${DESTDIR}/lib64:${LD_LIBRARY_PATH}"
 	fi
+	for path in $(awk '/^\/lib/ {print $1}' /etc/ld.so.conf.d/*) ; do
+		if [ -e "${DESTDIR}${path}" ] ; then
+			LD_LIBRARY_PATH="${DESTDIR}${path}:${LD_LIBRARY_PATH}"
+		fi
+	done
 	export LD_LIBRARY_PATH
 
 	LD_LINUX="${DESTDIR}/lib/ld-linux.so.2"
