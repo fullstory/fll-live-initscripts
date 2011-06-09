@@ -109,13 +109,13 @@ do_umount() {
 	then
 		if [ "$VERBOSE" = no ]
 		then
-			log_action_begin_msg "Unmounting union filesystems"
+			echo "Unmounting union filesystems."
 			umount -l -n -f -d $UNION_MTPTS
-			log_action_end_msg $?
+			[ "$?" -eq 0 ] || echo "\"umount -l -n -f -d $UNION_MTPTS\" returned $?"
 		else
-			log_daemon_msg "Will now unmount union filesystems"
+			echo "Will now unmount union filesystems."
 			umount -l -n -f -v -d $UNION_MTPTS
-			log_end_msg $?
+			[ "$?" -eq 0 ] || echo "\"umount -l -n -f -v -d $UNION_MTPTS\" returned $?"
 		fi
 	fi
 
@@ -123,13 +123,13 @@ do_umount() {
 	then
 		if [ "$VERBOSE" = no ]
 		then
-			log_action_begin_msg "Unmounting squashfs filesystems"
+			echo "Unmounting squashfs filesystems."
 			umount -l -n -f -d $SQSH_MTPTS
-			log_action_end_msg $?
+			[ "$?" -eq 0 ] || echo "\"umount -l -n -f -d $SQSH_MTPTS\" returned $?"
 		else
-			log_daemon_msg "Will now unmount squashfs filesystems"
+			echo "Will now unmount squashfs filesystems."
 			umount -l -n -f -v -d $SQSH_MTPTS
-			log_end_msg $?
+			[ "$?" -eq 0 ] || echo "\"umount -l -n -f -v -d $SQSH_MTPTS\" returned $?"
 		fi
 	fi
 
@@ -137,13 +137,13 @@ do_umount() {
 	then
 		if [ "$VERBOSE" = no ]
 		then
-			log_action_begin_msg "Unmounting live filesystems"
+			echo "Unmounting live filesystems."
 			umount -l -n -f -d $LIVE_MTPTS
-			log_action_end_msg $?
+			[ "$?" -eq 0 ] || echo "\"umount -l -n -f -d $LIVE_MTPTS\" returned $?"
 		else
-			log_daemon_msg "Will now unmount live filesystems"
+			echo "Will now unmount live filesystems."
 			umount -l -n -f -v -d $LIVE_MTPTS
-			log_end_msg $?
+			[ "$?" -eq 0 ] || echo "\"umount -l -n -f -v -d $LIVE_MTPTS\" returned $?"
 		fi
 	fi
 }
