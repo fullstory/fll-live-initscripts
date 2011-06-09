@@ -1,3 +1,9 @@
+fll-live-initscripts (3.12.5) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 09 Jun 2011 02:38:44 +0200
+
 fll-live-initscripts (3.12.4) unstable; urgency=low
 
   * avoid LSB logging functions, as those depend on /bin/echo to remain present
