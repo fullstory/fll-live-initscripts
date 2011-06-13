@@ -1,10 +1,6 @@
-fll-live-initscripts (3.12.5) UNRELEASED; urgency=low
+fll-live-initscripts (3.13.0) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
-  * Add read prompt to fll_login to avoid logging in VTs automatically
+  * Add read prompt to fll_login to avoid logging in VTs automatically.
 
  -- Niall Walsh <niallwalsh@users.berlios.de>  Mon, 13 Jun 2011 02:36:00 +0100
 
