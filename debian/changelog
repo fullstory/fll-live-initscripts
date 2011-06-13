@@ -6,7 +6,7 @@ fll-live-initscripts (3.13.2) UNRELEASED; urgency=low
 
 fll-live-initscripts (3.13.1) unstable; urgency=low
 
-  * steal "Please press Enter to activate this console. " string from d-i.
+  * steal "Please press Enter to activate this console. " string from busybox.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 13 Jun 2011 03:47:03 +0200
 
