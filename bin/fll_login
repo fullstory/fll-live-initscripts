@@ -2,6 +2,8 @@
 
 [ -s /etc/default/distro ] && . /etc/default/distro
 
+read -p "Press enter to login " nothing
+
 if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
 	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
 	if [ ! -e "${FLL_LIVE_USER_HOME}/.hushlogin" ]; then
