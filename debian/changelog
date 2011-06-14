@@ -1,8 +1,13 @@
 fll-live-initscripts (3.13.2) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 13 Jun 2011 03:47:37 +0200
+  [ Niall Walsh ]
+  * initial translations of prompt thanks to: bluewater and the manual team,
+    x-un-i and slh. includes cs, da, de, es, it, ja, nl, pl, pt, ro, ru
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Wed, 15 Jun 2011 00:10:23 +0100
 
 fll-live-initscripts (3.13.1) unstable; urgency=low
 
