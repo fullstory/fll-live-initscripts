@@ -1,8 +1,12 @@
 fll-live-initscripts (3.13.3) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 15 Jun 2011 01:58:25 +0200
+  [ Niall Walsh ]
+  * fll_login: trap TERM to inform user console is no longer activatable
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Fri, 17 Jun 2011 17:30:48 +0100
 
 fll-live-initscripts (3.13.2) unstable; urgency=low
 

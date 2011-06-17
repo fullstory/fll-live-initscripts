@@ -17,6 +17,9 @@ case "${LANG}" in
 	*)    p="Please press Enter to activate this console." ;;
 esac
 
+# Let user know this shell is no longer activatable when fll_login exits
+trap "echo ; echo ${0##*/} Terminated ; exit" TERM
+
 read -p "${p} " nothing
 
 if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
