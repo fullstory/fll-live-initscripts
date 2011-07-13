@@ -1,9 +1,5 @@
-fll-live-initscripts (3.13.4) UNRELEASED; urgency=low
+fll-live-initscripts (3.13.4) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
   * fll: parse /proc/mounts instead of mount in fll_get_mount
   * fll-login: change case to pick message to ${lang} instead of ${LANG}
 
