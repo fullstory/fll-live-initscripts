@@ -14,7 +14,8 @@ fll_get_mnt() {
 		done
 
 		for dev in ${FLL} ${DEVS}; do
-			mount | awk -v fll="${dev}" '$1 == fll { print $3 }'
+			#mount | awk -v fll="${dev}" '$1 == fll { print $3 }'
+			awk -v fll="${dev}" '$1 == fll { print $2 }' /proc/mounts
 		done
 	fi
 }
