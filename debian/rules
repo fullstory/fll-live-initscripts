@@ -1,13 +1,10 @@
 #!/usr/bin/make -f
 
-build:
-	dh $@
+%:
+	dh ${@}
 
-clean:
-	dh $@
-
-install: build
-	dh $@ --until dh_installinit
+override_dh_installinit:
+	dh_installinit
 	dh_installinit --no-start --name=fll-init       -- start 00 S .
 	dh_installinit --no-start --name=fll-locales    -- start 05 S .
 	dh_installinit --no-start --name=fll-fstab      -- start 30 S .
@@ -19,12 +16,3 @@ install: build
 	dh_installinit --no-start --name=fll-xdm        -- start 95 2 3 4 5 .
 	dh_installinit --no-start --name=fll-desktop    -- start 95 2 3 4 5 .
 	dh_installinit --no-start --name=fll-reboot     -- start 90 0 6 .
-	dh $@ --remaining
-
-binary-indep: install
-	dh $@
-
-binary-arch: install
-	dh $@
-
-binary: binary-indep binary-arch
