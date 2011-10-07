@@ -139,11 +139,6 @@ setup_lightdm() {
 	sed -i  -e "s/^\#autologin-user=/autologin-user=${FLL_LIVE_USER}/" \
 		-e "s/^\#autologin-user-timeout=0/autologin-user-timeout=0/" \
 			/etc/lightdm/lightdm.conf
-
-	# set lightdm to not start in init 2,3,4
-	mv /etc/rc2.d/S03lightdm /etc/rc2.d/K03lightdm
-	mv /etc/rc3.d/S03lightdm /etc/rc3.d/K03lightdm
-	mv /etc/rc4.d/S03lightdm /etc/rc4.d/K03lightdm
 }
 
 setup_x_cursor_theme() {

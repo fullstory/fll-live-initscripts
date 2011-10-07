@@ -58,7 +58,7 @@ purge_conffile() {
 
 case "$1" in
 	configure)
-		for dm in gdm3 kdm slim lxdm wdm xdm; do			
+		for dm in gdm3 kdm slim lightdm lxdm wdm xdm; do			
 			do_override "${dm}"
 		done
 

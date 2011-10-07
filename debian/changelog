@@ -6,7 +6,10 @@ fll-live-initscripts (3.13.6) UNRELEASED; urgency=low
   [ Rick Battle ]
   * added support for lightdm and made it the default for xfce*|lxde, replacing slim
 
- -- Rick Battle <rick.battle@solmera.com>  Thu, 06 Oct 2011 19:42:01 -0700
+  [ Niall Walsh ]
+  * Fixup lightdm support to use disto-defaults.postinst to setup runlevels
+
+ -- Niall Walsh <niallwalsh@users.berlios.de>  Fri, 07 Oct 2011 14:24:06 +0100
 
 fll-live-initscripts (3.13.5) unstable; urgency=low
 
