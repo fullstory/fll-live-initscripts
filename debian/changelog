@@ -6,7 +6,7 @@ fll-live-initscripts (3.13.6) UNRELEASED; urgency=low
   [ Rick Battle ]
   * added support for lightdm and made it the default for xfce*|lxde, replacing slim
 
- -- Rick Battle <detaos@core>  Thu, 06 Oct 2011 19:42:01 -0700
+ -- Rick Battle <rick.battle@solmera.com>  Thu, 06 Oct 2011 19:42:01 -0700
 
 fll-live-initscripts (3.13.5) unstable; urgency=low
 
