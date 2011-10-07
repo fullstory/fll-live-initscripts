@@ -4,7 +4,7 @@
 # Provides:          fll-xdm
 # Required-Start:    fll-adduser
 # Required-Stop:
-# X-Start-Before:    gdm3 kdm lxdm slim wdm xdm
+# X-Start-Before:    gdm3 kdm lightdm lxdm slim wdm xdm
 # Default-Start:     2 3 4 5
 # Default-Stop:
 # Short-Description: detect and setup X desktop manager
@@ -134,6 +134,18 @@ setup_slim() {
 	fi
 }
 
+setup_lightdm() {
+	# set autologin user and set timeout to zero
+	sed -i  -e "s/^\#autologin-user=/autologin-user=${FLL_LIVE_USER}/" \
+		-e "s/^\#autologin-user-timeout=0/autologin-user-timeout=0/" \
+			/etc/lightdm/lightdm.conf
+
+	# set lightdm to not start in init 2,3,4
+	mv /etc/rc2.d/S03lightdm /etc/rc2.d/K03lightdm
+	mv /etc/rc3.d/S03lightdm /etc/rc3.d/K03lightdm
+	mv /etc/rc4.d/S03lightdm /etc/rc4.d/K03lightdm
+}
+
 setup_x_cursor_theme() {
 	if [ -e /usr/share/icons/DMZ-Black/cursor.theme ]; then
 		update-alternatives --set x-cursor-theme /usr/share/icons/DMZ-Black/cursor.theme >/dev/null
@@ -157,6 +169,13 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
+		LIGHTDM="$(which lightdm 2>/dev/null)"
+		if [ "${LIGHTDM}" ]; then
+			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring lightdm"
+			setup_lightdm && echo "${LIGHTDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+			log_end_msg "${?}"
+		fi
+
 		# Handle kdm last, making it the default display manager
 		# ...unless overriden below
 		KDM="$(which kdm 2>/dev/null)"
@@ -166,27 +185,27 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
-		# Three desktop-managers installed, override default display manager
+		# Four desktop-managers installed, override default display manager
 		# based on desktop choice cheatcode
 		case "${DESKTOP}" in
 			kde)
 				if [ -n "${KDM}" ]; then
-					if [ -n "${GDM3}" ] || [ -n "${SLIM}" ]; then
+					if [ -n "${GDM3}" ] || [ -n "${SLIM}" ] || [ -n "${LIGHTDM}" ]; then
 						echo "${KDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			gnome)
 				if [ -n "${GDM3}" ]; then
-					if [ -n "${KDM}" ] || [ -n "${SLIM}" ]; then
+					if [ -n "${KDM}" ] || [ -n "${SLIM}" ] || [ -n "${LIGHTDM}" ]; then
 						echo "${GDM3}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			xfce*|lxde)
-				if [ -n "${SLIM}" ]; then
-					if [ -n "${KDM}" ] || [ -n "${GDM3}" ]; then
-						echo "${SLIM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+				if [ -n "${LIGHTDM}" ]; then
+					if [ -n "${KDM}" ] || [ -n "${GDM3}" ] || [ -n "${SLIM}" ]; then
+						echo "${LIGHTDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
