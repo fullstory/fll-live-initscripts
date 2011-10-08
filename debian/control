@@ -58,7 +58,8 @@ Depends: ${misc:Depends},
  perl,
  libswitch-perl,
  xserver-xorg-core
-Recommends: kdm | gdm3 | slim, xserver-xorg-input-vmmouse (>> 12.6.3)
+Recommends: kdm | gdm3 | lightdm (>= 1.0.2) | slim,
+ xserver-xorg-input-vmmouse (>> 12.6.3)
 Description: fll live media xorg related tools
  A set of scripts to generate a Xorg configuration.
  .
