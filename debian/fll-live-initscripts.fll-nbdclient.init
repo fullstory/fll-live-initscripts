@@ -93,7 +93,7 @@ case "${1}" in
 		FLL_MOUNT=$(fll_get_mnt)
 		FLL_DEV=$(mount | awk '$3 == "'${FLL_MOUNT}'" { print $1 }')
 		FLL_DEV=${FLL_DEV#/dev/}
-		/sbin/nbd-client -c ${FLL_DEV%p*} >> /lib/init/rw/sendsigs.omit.d/fll-live-initscripts
+		/sbin/nbd-client -c ${FLL_DEV%p*} >> /run/sendsigs.omit.d/fll-live-initscripts
 		log_end_msg "${?}"
 		;;
 	stop)
