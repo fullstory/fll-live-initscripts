@@ -1,10 +1,6 @@
-fll-live-initscripts (3.13.9) UNRELEASED; urgency=low
+fll-live-initscripts (3.13.9) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
-  * keyboard for uk_UA should be ua not uk
+  * keyboard for uk_UA should be ua not uk.
 
  -- Niall Walsh <niallwalsh@users.berlios.de>  Fri, 30 Dec 2011 15:27:29 +0000
 
