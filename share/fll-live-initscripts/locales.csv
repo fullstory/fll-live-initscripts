@@ -87,7 +87,7 @@ sv_FI.utf8			se,fi,us	basic		Europe/Helsinki	en_US.utf8
 sv_SE.utf8	0		se,us	basic		Europe/Stockholm	en_US.utf8	not built
 tr_CY.utf8			tr,us			Europe/Istanbul	en_US.utf8	
 tr_TR.utf8	0		tr,us			Europe/Istanbul	en_US.utf8	
-uk_UA.utf8	0		uk,ru,us			Europe/Kiev	en_US.utf8
+uk_UA.utf8	0		ua,ru,us			Europe/Kiev	en_US.utf8
 zh_CN.utf8	0		us			Asia/Shaghai	zh_TW en_US.utf8	
 zh_HK.utf8			us			Asia/Hong_Kong	zh_CH en_US.utf8	
 zh_SG.utf8			us			Asia/Singapore	zh_CH en_US.utf8	
