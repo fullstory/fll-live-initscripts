@@ -489,6 +489,10 @@ case "${1}" in
 		localize_sources_list
 		save_locale_variables
 		;;
+	status)
+		log_success_msg "${0} is no dæmon."
+		exit 0
+		;;
 	*)
 		echo "Usage: ${NAME} {start|stop|list|localize}" >&2
 		exit 3

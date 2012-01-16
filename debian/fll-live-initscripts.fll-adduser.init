@@ -122,6 +122,10 @@ case "${1}" in
 		echo "Error: argument '${1}' not supported" >&2
 		exit 3
 		;;
+	status)
+		log_success_msg "${0} is no dæmon."
+		exit 0
+		;;
 	*)
 		echo "Usage: ${NAME} {start|stop}" >&2
 		exit 3
