@@ -5,7 +5,7 @@ Maintainer: Kel Modderman <kel@otaku42.de>
 Uploaders: Stefan Lippers-Hollmann <s.l-h@gmx.de>,
  Joaquim Boura <x-un-i@berlios.de>,
  Niall Walsh <niallwalsh@users.berlios.de>
-Build-Depends: debhelper (>= 8),
+Build-Depends: debhelper (>= 9.20120115),
  asciidoc,
  docbook,
  gengetopt,
