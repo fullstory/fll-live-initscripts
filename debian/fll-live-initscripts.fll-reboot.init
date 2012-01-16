@@ -292,6 +292,10 @@ case "${1}" in
 		# live-hack, umount and eject
 		do_stop
 		;;
+	status)
+		log_success_msg "${0} is no dæmon."
+		exit 0
+		;;
 	*)
 		echo "Usage: ${NAME} {start|stop}" >&2
 		exit 3
