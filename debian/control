@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 9.20120115),
  libblkid-dev,
  libudev-dev,
  libxml2-utils
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Vcs-Svn: svn://svn.berlios.de/fullstory/fll-live-initscripts/trunk
 Vcs-Browser: http://svn.berlios.de/wsvn/fullstory/fll-live-initscripts/trunk/
 
