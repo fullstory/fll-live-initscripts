@@ -64,6 +64,8 @@ if [ -f /proc/cmdline ]; then
 	done
 fi
 
+[ -b /dev/cdrom ] && CDROM="1"
+
 ###############################################################################
 # Adapted from initscripts: /etc/init.d/umountfs (2.86.ds1-62)
 ###############################################################################
@@ -207,7 +209,7 @@ do_stop() {
 	stty sane < /dev/console
 
 	# prepare binaries for post-umount of live media
-	DESTDIR="$(mktemp -d -p /run/ fll-reboot.XXXXX)"
+	DESTDIR="$(mktemp -d -p / fll.XXXXX)"
 	mkdir -p ${DESTDIR}/bin
 	
 	# cache utilities required for the final stages of shutdown
@@ -262,17 +264,17 @@ do_stop() {
 			;;
 	esac
 
-	if [ -b /dev/fll-cdrom ] && [ -z "${NOEJECT}" ]; then
+	if [ -n "${CDROM}" ] && [ -z "${NOEJECT}" ]; then
 		# disable kernel messages while ejecting cdrom (libata noise)
 		echo "0" > /proc/sys/kernel/printk
 
 		eject -m -p /dev/fll-cdrom
 
 		if [ -z "${NOPROMPT}" ]; then
-			echo "" > /dev/console
-			echo "Please remove CD, close cdrom drive then press enter." > /dev/console
-			echo "" > /dev/console
-			read x < /dev/console
+			echo ""
+			echo "Please remove CD, close cdrom drive then press enter."
+			echo ""
+			read x
 		fi
 	fi
 
