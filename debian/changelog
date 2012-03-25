@@ -1,8 +1,8 @@
-fll-live-initscripts (3.13.13) UNRELEASED; urgency=low
+fll-live-initscripts (3.13.13) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * use random /run/fll-reboot.XXXXX to store reboot helpers on tmpfs.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 23 Feb 2012 16:20:33 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 25 Mar 2012 23:09:45 +0200
 
 fll-live-initscripts (3.13.12) unstable; urgency=low
 
