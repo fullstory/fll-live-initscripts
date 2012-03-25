@@ -1,9 +1,5 @@
-fll-live-initscripts (3.13.14) UNRELEASED; urgency=low
+fll-live-initscripts (3.13.14) unstable; urgency=low
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
   * Revert 3.13.13 change to use random /run/fll-reboot.XXXXX
   * check for /fll-cdrom early when we actually might have it
   * remove call to eject and update prompt text
