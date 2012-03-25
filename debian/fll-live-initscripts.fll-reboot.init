@@ -207,7 +207,7 @@ do_stop() {
 	stty sane < /dev/console
 
 	# prepare binaries for post-umount of live media
-	DESTDIR="$(mktemp -d -p / fll.XXXXX)"
+	DESTDIR="$(mktemp -d -p /run/ fll-reboot.XXXXX)"
 	mkdir -p ${DESTDIR}/bin
 	
 	# cache utilities required for the final stages of shutdown
