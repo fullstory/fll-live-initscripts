@@ -249,12 +249,12 @@ do_stop() {
 
 	case "${runlevel}" in
 		0)
-			echo "System halted." > /dev/console
+			echo "System halted." # > /dev/console
 			command="${LD_LINUX} ${DESTDIR}/bin/halt"
 			options="-h -n -p -i -f"
 			;;
 		6)
-			echo "Preparing for reboot..." > /dev/console
+			echo "Preparing for reboot..." # > /dev/console
 			command="${LD_LINUX} ${DESTDIR}/bin/reboot"
 			options="-n -i -f"
 			;;
@@ -266,9 +266,9 @@ do_stop() {
 
 	if [ -n "${CDROM}" ] && [ -z "${NOEJECT}" ]; then
 		# disable kernel messages while ejecting cdrom (libata noise)
-		echo "0" > /proc/sys/kernel/printk
+		#echo "0" > /proc/sys/kernel/printk
 
-		eject -m -p /dev/fll-cdrom
+		#eject -m -p /dev/fll-cdrom
 
 		if [ -z "${NOPROMPT}" ]; then
 			echo ""
@@ -279,7 +279,7 @@ do_stop() {
 	fi
 
 	# shutdown/reboot	
-	exec ${command} ${options} > /dev/console 2>&1 < /dev/console
+	exec ${command} ${options} #> /dev/console 2>&1 < /dev/console
 }
 
 case "${1}" in
