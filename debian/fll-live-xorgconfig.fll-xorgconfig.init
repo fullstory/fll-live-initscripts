@@ -144,12 +144,6 @@ xserver_has_xrandr() {
 do_start() {
 	log_daemon_msg "${NAME}"
 
-	# prefer vesa for kvm, cirrus is broken (false colours, broken EDID)
-	if [ -z "${XMODULE}" ] && \
-	   lspci -mn | grep -q '\"0300\" \"1013\" \"00b8\" \"1af4\" \"1100\"$'; then
-		XMODULE="vesa"
-	fi
-
 	# if there are no cheatcodes, we have nothing to do
 	if [ -z "${XNOXRANDR}" ] && \
 	   [ -z "${XNOMODELINES}" ] && \
