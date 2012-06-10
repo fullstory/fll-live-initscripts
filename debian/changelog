@@ -1,12 +1,13 @@
-fll-live-initscripts (3.13.16) UNRELEASED; urgency=low
+fll-live-initscripts (3.13.16) unstable; urgency=low
 
   [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+  * drop cirrus-kvm overrides.
+  * add ifupdown and iproute to dependencies.
 
   [ Niall Walsh ]
   * drop fll-network, replace with fll.net.agent for udev and if-up.d/000fll
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Apr 2012 01:36:45 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 11 Jun 2012 00:35:05 +0200
 
 fll-live-initscripts (3.13.15) unstable; urgency=low
 
