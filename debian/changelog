@@ -1,6 +1,10 @@
 fll-live-initscripts (3.13.16) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Niall Walsh ]
+  * drop fll-network, replace with fll.net.agent for udev and if-up.d/000fll
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Apr 2012 01:36:45 +0200
 
