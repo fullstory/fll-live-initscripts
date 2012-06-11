@@ -57,18 +57,15 @@ net_ifup() {
 	fi
 
 	if [ ! -e /etc/network/interfaces ]; then
-		echo 'auto lo
-iface lo inet loopback
-' > /etc/network/interfaces
+		printf "auto lo\niface lo inet loopback\n" > /etc/network/interfaces
 	fi
 
 	# don't create anything if we have "iface $iface" or "mapping $iface"
 	if ! grep -q -e 'iface[[:space::]\+$INTERFACE[[:space::]\+' \
 	             -e 'mapping[[:space::]\+$INTERFACE[[:space:]]*$' \
 			/etc/network/interfaces; then
-		echo fll > "/run/fll/ifup.${INTERFACE}"
-		echo "
-iface $INTERFACE inet dhcp" >> /etc/network/interfaces
+		printf "fll\n" > "/run/fll/ifup.${INTERFACE}"
+		printf "\niface $INTERFACE inet dhcp\n" >> /etc/network/interfaces
 	else
 		touch "/run/fll/ifup.${INTERFACE}"
 	fi
