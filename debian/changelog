@@ -1,3 +1,9 @@
+fll-live-initscripts (4.0.4) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Jul 2012 22:30:32 +0200
+
 fll-live-initscripts (4.0.3) unstable; urgency=low
 
   * restore dev/console redirects and drop early test of /dev/cdrom.
