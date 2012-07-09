@@ -1,6 +1,12 @@
 fll-live-initscripts (4.0.3) UNRELEASED; urgency=low
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Niall Walsh ]
+  * restore dev/console redirects and drop early test of /dev/cdrom
+  * don't umount the aufs on /, just remount it ro
+  * drop the duplicated VERBOSE stuff and just use a verbose var to add the -v
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 02 Jul 2012 21:35:20 +0200
 
