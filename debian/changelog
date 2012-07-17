@@ -1,3 +1,9 @@
+fll-live-initscripts (4.0.5) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 17 Jul 2012 14:46:00 +0200
+
 fll-live-initscripts (4.0.4) unstable; urgency=low
 
   * support kvm modesetting.
