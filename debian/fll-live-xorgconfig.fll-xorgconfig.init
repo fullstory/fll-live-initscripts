@@ -144,6 +144,17 @@ xserver_has_xrandr() {
 do_start() {
 	log_daemon_msg "${NAME}"
 
+	# kvm overrride
+	if [ -z "${XMODULE}" ]; then
+		BusID="$(lspci -mn | awk '/"0300" "1013" "00b8" "1af4" "1100"/{print $1}')"
+		if [ -n "${BusID}" ]; then
+			mkdir -p /etc/X11/xorg.conf.d
+			printf "Section \"Device\"\n\tIdentifier\t\"Device 0\"\n\tDriver\t\t\"modesetting\"\n\tBusId\t\t\"${BusId}\"\nEndSection\n" > /etc/X11/xorg.conf.d/20-device.conf
+		fi
+
+		exit 0
+	fi
+
 	# if there are no cheatcodes, we have nothing to do
 	if [ -z "${XNOXRANDR}" ] && \
 	   [ -z "${XNOMODELINES}" ] && \
