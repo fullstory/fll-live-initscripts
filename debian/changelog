@@ -1,3 +1,9 @@
+fll-live-initscripts (4.0.7) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 06 Aug 2012 00:26:31 +0200
+
 fll-live-initscripts (4.0.6) unstable; urgency=low
 
   * drop versioned breaks on initscripts.
