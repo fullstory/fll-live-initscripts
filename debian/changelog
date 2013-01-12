@@ -1,8 +1,9 @@
-fll-live-initscripts (4.0.7) UNRELEASED; urgency=low
+fll-live-initscripts (4.0.7) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * bump standards version to 3.9.4, no changes necessary.
+  * update FSF postal address to be URLs.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 06 Aug 2012 00:26:31 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Jan 2013 02:36:41 +0100
 
 fll-live-initscripts (4.0.6) unstable; urgency=low
 
