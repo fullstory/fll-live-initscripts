@@ -1,3 +1,9 @@
+fll-live-initscripts (4.0.9) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Jan 2013 02:51:38 +0100
+
 fll-live-initscripts (4.0.8) unstable; urgency=low
 
   * make lintian a little happier and enable hardening:
