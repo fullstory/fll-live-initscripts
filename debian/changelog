@@ -1,3 +1,13 @@
+fll-live-initscripts (4.0.8) unstable; urgency=low
+
+  * make lintian a little happier and enable hardening:
+    - W: hardening-no-fortify-functions usr/sbin/fll_blockdev_detect
+    - W: hardening-no-fortify-functions usr/sbin/fll_fstab_generator
+    - W: hardening-no-relro usr/sbin/fll_blockdev_detect
+    - W: hardening-no-relro usr/sbin/fll_fstab_generator
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Jan 2013 02:49:22 +0100
+
 fll-live-initscripts (4.0.7) unstable; urgency=low
 
   * bump standards version to 3.9.4, no changes necessary.
