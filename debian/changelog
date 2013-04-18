@@ -1,8 +1,13 @@
-fll-live-initscripts (4.0.9) UNRELEASED; urgency=low
+fll-live-initscripts (4.1.0) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fll-fstab.init: unconditionally clean up pstore when booting in efi mode.
+    efivars storage pressure (more than 50% full), due to stale boot- or 
+    crashlogs, created by previous kernels breaks further changes (efibootmgr).
+  * fll-init.init: drop noagp|agp=no cheatcodes, those shouldn't apply anymore
+    and tend to break more than they might have fixed (normal blacklists remain
+    available).
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Jan 2013 02:51:38 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 18 Apr 2013 22:07:26 +0200
 
 fll-live-initscripts (4.0.8) unstable; urgency=low
 

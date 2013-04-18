@@ -65,9 +65,6 @@ if [ -f /proc/cmdline ]; then
 					fll_redirect
 				fi
 				;;
-			noagp|agp=no)
-				BLACKLIST="${BLACKLIST} agp agpgart"
-				;;
 			blacklist=*)
 				BLACKLIST="${BLACKLIST} ${param#blacklist=}"
 				;;
