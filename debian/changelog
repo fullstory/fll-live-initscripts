@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.1) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 18 Apr 2013 22:18:40 +0200
+
 fll-live-initscripts (4.1.0) unstable; urgency=low
 
   * fll-fstab.init: unconditionally clean up pstore when booting in efi mode.
