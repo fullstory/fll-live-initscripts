@@ -462,7 +462,7 @@ static char* device_mntops(struct udev_device *device, char *fstype, char *dir)
 		else if (strcmp(fstype, "msdos") == 0)
 			str = "users,rw,quiet,umask=000,iocharset=utf8";
 		else if (strcmp(fstype, "vfat") == 0)
-			str = "users,rw,quiet,umask=000,shortname=lower";
+			str = "users,rw,quiet,umask=000";
 		else if (strcmp(fstype, "hfsplus") == 0)
 			str = "users,ro,exec";
 		else
