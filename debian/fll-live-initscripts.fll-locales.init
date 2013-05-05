@@ -428,11 +428,11 @@ localize_sources_list() {
 		case "$(mawk 'BEGIN{print int(5 * rand())}')" in
 			0|1)
 				# Office-Vienna, Vienna, Austria
-				FLL_MIRROR="http://oscar.aptosid.com/debian/"
+				FLL_MIRROR="http://aptosid.office-vienna.at/aptosid/debian/"
 				;;
 			2|3)
 				# Technical University Carolo-Wilhelmina at Brunswick, Germany
-				FLL_MIRROR="http://oscar.aptosid.com/debian/"
+				FLL_MIRROR="http://debian.tu-bs.de/project/aptosid/debian/"
 				;;
 			*)
 				# aptosid.com, webtropia.com, Düsseldorf, Germany
