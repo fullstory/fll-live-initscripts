@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.7) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 01 Oct 2013 01:43:02 +0200
+
 fll-live-initscripts (4.1.6) unstable; urgency=low
 
   * drop kvm override for xserver-xorg-video-modesetting, it's no longer
