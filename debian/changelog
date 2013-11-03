@@ -1,8 +1,12 @@
-fll-live-initscripts (4.1.8) UNRELEASED; urgency=low
+fll-live-initscripts (4.1.8) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fix distro-defaults triggers:
+    - drop duplicate xdm trigger.
+    - add trigger for lightdm.
+  * make lintian a little happier:
+    - W: init.d-script-does-not-source-init-functions fll-shell
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Nov 2013 14:12:49 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Nov 2013 14:22:24 +0100
 
 fll-live-initscripts (4.1.7) unstable; urgency=low
 
