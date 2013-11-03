@@ -46,7 +46,7 @@ fi
 # source lsb functions
 
 ###
-#. /lib/lsb/init-functions
+. /lib/lsb/init-functions
 
 ###
 # source fll functions

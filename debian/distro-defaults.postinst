@@ -52,30 +52,11 @@ do_override() {
 	override_dm_lsb_defaults /etc/init.d/${1} /etc/insserv/overrides/${1}
 }
 
-purge_conffile() {
-	rm -f ${1}
-}
-
 case "$1" in
 	configure)
 		for dm in gdm3 kdm slim lightdm lxdm wdm xdm; do			
 			do_override "${dm}"
 		done
-
-		# gdm is no more
-		if [ -f /etc/insserv/overrides/gdm ]; then
-			purge_conffile /etc/insserv/overrides/gdm
-		fi
-
-		# Bug #487196 has been fixed in util-linux, remove now 
-		# obsolete LSB overrides
-		if [ -f /etc/insserv/overrides/hwclock.sh ]; then
-			purge_conffile /etc/insserv/overrides/hwclock.sh
-		fi
-
-		if [ -f /etc/insserv/overrides/hwclockfirst.sh ]; then
-			purge_conffile /etc/insserv/overrides/hwclockfirst.sh
-		fi
 
 		if [ ! -f /etc/apt/sources.list ] && chrooted; then
 			echo 'distro-defaults: creating /etc/apt/sources.list ...' 1>&2

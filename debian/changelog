@@ -1,8 +1,20 @@
-fll-live-initscripts (4.1.7) UNRELEASED; urgency=low
+fll-live-initscripts (4.1.8) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fix distro-defaults triggers:
+    - drop duplicate xdm trigger.
+    - add trigger for lightdm.
+  * make lintian a little happier:
+    - W: init.d-script-does-not-source-init-functions fll-shell
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 01 Oct 2013 01:43:02 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Nov 2013 14:22:24 +0100
+
+fll-live-initscripts (4.1.7) unstable; urgency=low
+
+  * drop obsolete upgrade compatibility code:
+    - hwclockfirst.sh is fixed since 2009.
+    - gdm (v2) is no more.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Nov 2013 14:11:37 +0100
 
 fll-live-initscripts (4.1.6) unstable; urgency=low
 
