@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.9) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Nov 2013 14:23:02 +0100
+
 fll-live-initscripts (4.1.8) unstable; urgency=low
 
   * fix distro-defaults triggers:
