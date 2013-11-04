@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.10) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 05 Nov 2013 00:30:56 +0100
+
 fll-live-initscripts (4.1.9) unstable; urgency=low
 
   * drop obsolete hal configuration (10-disable-swsusp.fdi).
