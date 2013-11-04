@@ -1,8 +1,8 @@
-fll-live-initscripts (4.1.9) UNRELEASED; urgency=low
+fll-live-initscripts (4.1.9) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * drop obsolete hal configuration (10-disable-swsusp.fdi).
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Nov 2013 14:23:02 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 05 Nov 2013 00:30:39 +0100
 
 fll-live-initscripts (4.1.8) unstable; urgency=low
 
