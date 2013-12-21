@@ -140,6 +140,11 @@ setup_lightdm() {
 	sed -i  -e "s/^\#autologin-user=/autologin-user=${FLL_LIVE_USER}/" \
 		-e "s/^\#autologin-user-timeout=0/autologin-user-timeout=0/" \
 			/etc/lightdm/lightdm.conf
+	
+	# set greeter
+	if [ -x /usr/bin/razor-desktop ] && [ -r /usr/share/xgreeters/lightdm-razor-greeter.desktop ]; then
+		update-alternatives --set lightdm-greeter /usr/share/xgreeters/lightdm-razor-greeter.desktop
+	fi
 }
 
 setup_x_cursor_theme() {
