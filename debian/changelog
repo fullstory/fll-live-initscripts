@@ -1,8 +1,8 @@
-fll-live-initscripts (4.1.13) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.13) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * guard sysfs check for virtual machines.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 11 Feb 2014 22:03:15 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 11 Feb 2014 23:11:36 +0100
 
 fll-live-initscripts (4.1.12) unstable; urgency=low
 

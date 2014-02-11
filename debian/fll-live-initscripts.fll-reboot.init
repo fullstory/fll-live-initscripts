@@ -55,16 +55,18 @@ fi
 ###
 # don't prompt for ejecting in a virtual machine, unless overriden
 ###
-case "$(head -n1 /sys/devices/virtual/dmi/id/bios_vendor)" in
-	"Bochs")
-		# qemu/ kvm
-		NOPROMPT="1"
-		;;
-	"innotek GmbH")
-		# VirtualBox
-		NOPROMPT="1"
-		;;
-esac
+if [ -r /sys/devices/virtual/dmi/id/bios_vendor ]; then
+	case "$(head -n1 /sys/devices/virtual/dmi/id/bios_vendor)" in
+		"Bochs")
+			# qemu/ kvm
+			NOPROMPT="1"
+			;;
+		"innotek GmbH")
+			# VirtualBox
+			NOPROMPT="1"
+			;;
+	esac
+fi
 
 if [ -f /proc/cmdline ]; then
 	for param in $(cat /proc/cmdline); do
