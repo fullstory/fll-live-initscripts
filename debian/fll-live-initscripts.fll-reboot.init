@@ -18,7 +18,8 @@
 ###
 # F.U.L.L.S.T.O.R.Y init script
 #
-# Copyright: (C) 2007 - 2008 Kel Modderman <kel@otaku42.de>
+# Copyright: (C) 2007-2008, Kel Modderman <kel@otaku42.de>
+# Copyright: (C) 2008-2014, Stefan Lippers-Hollmann <s.l-h@gmx.de>
 # License:   GPLv2
 #
 # F.U.L.L.S.T.O.R.Y Project Homepage:
@@ -51,11 +52,30 @@ fi
 ###
 . /lib/lsb/init-functions
 
+###
+# don't prompt for ejecting in a virtual machine, unless overriden
+###
+if [ -r /sys/devices/virtual/dmi/id/bios_vendor ]; then
+	case "$(head -n1 /sys/devices/virtual/dmi/id/bios_vendor)" in
+		"Bochs")
+			# qemu/ kvm
+			NOPROMPT="1"
+			;;
+		"innotek GmbH")
+			# VirtualBox
+			NOPROMPT="1"
+			;;
+	esac
+fi
+
 if [ -f /proc/cmdline ]; then
 	for param in $(cat /proc/cmdline); do
 		case "${param}" in
 			noeject|toram)
 				NOEJECT="1"
+				;;
+			doprompt)
+				unset NOPROMPT
 				;;
 			noprompt)
 				NOPROMPT="1"
