@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.12) unstable; urgency=medium
+
+  * bump standards version to 3.9.5, no changes necessary.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 11 Feb 2014 22:02:24 +0100
+
 fll-live-initscripts (4.1.11) unstable; urgency=low
 
   * don't prompt for ejecting in a virtual machine, unless explicitly
