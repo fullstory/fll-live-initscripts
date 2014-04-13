@@ -1,8 +1,9 @@
 fll-live-initscripts (4.1.15) unstable; urgency=medium
 
   * debian/control: switch Vcs tags to github.
+  * fix typo triggering init.d-script-does-not-provide-itself.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 13 Apr 2014 22:29:18 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 13 Apr 2014 22:32:39 +0200
 
 fll-live-initscripts (4.1.14) unstable; urgency=medium
 
