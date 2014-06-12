@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.17) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 12 Jun 2014 02:55:05 +0200
+
 fll-live-initscripts (4.1.16) unstable; urgency=medium
 
   * rebuild with gcc-4.9.
