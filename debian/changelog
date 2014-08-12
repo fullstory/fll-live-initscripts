@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.18) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Aug 2014 19:59:01 +0200
+
 fll-live-initscripts (4.1.17) unstable; urgency=medium
 
   * rework networking
