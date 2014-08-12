@@ -1,8 +1,16 @@
 fll-live-initscripts (4.1.17) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 12 Jun 2014 02:55:05 +0200
+  [ Niall Walsh ]
+  * rework networking
+    - do not exec from fll.net.agent
+    - add fll-network init to create flag when networking has run and
+      re-run fll.net.agent directly on previously seen interfaces
+    - 000fll ends with : so teardown tests do not make it appear to fail
+
+ -- Niall Walsh <niallwalsh@celtux.org>  Tue, 12 Aug 2014 14:21:32 +0100
 
 fll-live-initscripts (4.1.16) unstable; urgency=medium
 

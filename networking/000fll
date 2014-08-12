@@ -43,3 +43,6 @@ sed -i -e 's|iface '${IFACE}' inet dhcp|allow-hotplug '${IFACE}'\n&|' /etc/netwo
 for d in /run/fll/ifup.* ; do
 	[ -e "${d}" ] && [ "${d}" != "/run/fll/ifup.${IFACE}" ] && ifdel ${d##*/ifup\.}
 done
+
+:
+

@@ -10,6 +10,8 @@
 # Copyright (C) 2004,2005 Kay Sievers <kay.sievers@vrfy.org>
 # udev is licensed under the GNU GPL version 2 or newer.
 
+[ -e /run/fll/netup ] || exit 0
+
 grep -q nonetwork /proc/cmdline && exit 0
 
 . /lib/udev/hotplug.functions
@@ -71,11 +73,10 @@ net_ifup() {
 	fi
 
 	wait_for_interface lo
-	if [ -e /sys/fs/cgroup/systemd ]; then
-		exec systemctl start ifup@${INTERFACE}.service
-	else
-		exec ifup $INTERFACE
+	if [ -d /run/systemd/system ]; then
+		systemctl start ifup@${INTERFACE}.service
 	fi
+	ifup $INTERFACE
 }
 
 net_ifdown() {
