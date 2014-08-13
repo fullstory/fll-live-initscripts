@@ -1,8 +1,11 @@
 fll-live-initscripts (4.1.18) unstable; urgency=medium
 
   * drop fll-xorgconfig.
+  * fix lintian problems with the new fll-network initscript:
+    - init.d-script-missing-dependency-on-remote_fs
+    - init.d-script-should-depend-on-virtual-facility ($network)
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 13 Aug 2014 04:18:19 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 13 Aug 2014 04:23:39 +0200
 
 fll-live-initscripts (4.1.17) unstable; urgency=medium
 

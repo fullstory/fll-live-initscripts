@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-network
-# Required-Start:    mountdevsubfs networking
+# Required-Start:    mountdevsubfs $network
 # Required-Stop:
 # Should-Start:      
 # Should-Stop:
