@@ -1,8 +1,8 @@
-fll-live-initscripts (4.1.18) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.18) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * drop fll-xorgconfig.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Aug 2014 19:59:01 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 13 Aug 2014 04:18:19 +0200
 
 fll-live-initscripts (4.1.17) unstable; urgency=medium
 

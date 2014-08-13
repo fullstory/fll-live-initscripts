@@ -53,23 +53,6 @@ Description: fll live media sysv initscripts
  This is a FULLSTORY live-only package and must not be installed to an
  ordinary system.
 
-Package: fll-live-xorgconfig
-Architecture: all
-Depends: ${misc:Depends}, 
- distro-defaults,
- lsb-base,
- perl,
- libswitch-perl,
- xserver-xorg-core
-Recommends: kdm | gdm3 | lightdm (>= 1.0.2) | slim,
- xserver-xorg-input-vmmouse (>> 12.6.3),
- xserver-xorg-video-modesetting (>> 0.8~)
-Description: fll live media xorg related tools
- A set of scripts to generate a Xorg configuration.
- .
- This is a FULLSTORY live-only package and must not be installed to an
- ordinary system.
-
 Package: fll-live-utils
 Architecture: any
 Depends: ${shlibs:Depends},
