@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.20) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 13 Aug 2014 04:38:33 +0200
+
 fll-live-initscripts (4.1.19) unstable; urgency=medium
 
   * drop insserv overrides for various display managers, this isn't functional
