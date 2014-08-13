@@ -1,8 +1,9 @@
-fll-live-initscripts (4.1.19) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.19) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * drop insserv overrides for various display managers, this isn't functional
+    under system; clean up dpkg-triggers.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 13 Aug 2014 04:26:00 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 13 Aug 2014 04:37:27 +0200
 
 fll-live-initscripts (4.1.18) unstable; urgency=medium
 
