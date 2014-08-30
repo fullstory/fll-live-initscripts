@@ -3,7 +3,6 @@
 fll-live-initscripts: init.d-script-missing-dependency-on-remote_fs etc/init.d/fll-adduser: required-start
 fll-live-initscripts: init.d-script-missing-dependency-on-remote_fs etc/init.d/fll-desktop: required-start
 fll-live-initscripts: init.d-script-missing-dependency-on-remote_fs etc/init.d/fll-fstab: required-start
-fll-live-initscripts: init.d-script-missing-dependency-on-remote_fs etc/init.d/fll-init: required-start
 fll-live-initscripts: init.d-script-missing-dependency-on-remote_fs etc/init.d/fll-locales: required-start
 fll-live-initscripts: init.d-script-missing-dependency-on-remote_fs etc/init.d/fll-nbdclient: required-start
 fll-live-initscripts: init.d-script-missing-dependency-on-remote_fs etc/init.d/fll-network: required-start

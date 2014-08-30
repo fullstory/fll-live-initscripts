@@ -6,7 +6,6 @@
 override_dh_installinit:
 	dh_installinit --no-start --name=fll-adduser
 	dh_installinit --no-start --name=fll-desktop
-	dh_installinit --no-start --name=fll-init
 	dh_installinit --no-start --name=fll-fstab
 	dh_installinit --no-start --name=fll-locales
 	dh_installinit --no-start --name=fll-nbdclient
