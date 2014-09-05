@@ -1,8 +1,12 @@
 fll-live-initscripts (4.1.21) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 30 Aug 2014 23:04:19 +0200
+  [ Niall Walsh ]
+  * generate fstab mounts in /disks instead of /media
+
+ -- Niall Walsh <niallwalsh@celtux.org>  Fri, 05 Sep 2014 02:04:44 +0100
 
 fll-live-initscripts (4.1.20) unstable; urgency=medium
 

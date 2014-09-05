@@ -366,12 +366,12 @@ static char* device_file(struct udev_device *device, int disk)
 	if (value == NULL) {
 		if (!disk) {
 			devnode = udev_device_get_devnode(device);
-			len = strlen("/media/");
+			len = strlen("/disks/");
 			len += strlen(basename(devnode)) + 1;
 			value = malloc(len);
 			if (value == NULL)
 				return NULL;
-			res = snprintf(value, len, "/media/%s",
+			res = snprintf(value, len, "/disks/%s",
 				       basename(devnode));
 			if (res < 0 || (size_t) res >= len)
 				return NULL;
@@ -382,7 +382,7 @@ static char* device_file(struct udev_device *device, int disk)
 			partition = udev_device_get_sysattr_value(device,
 								  "partition");
 			if (partition != NULL) {
-				len = strlen("/media/disk");
+				len = strlen("/disks/disk");
 				if (disk < 10)
 					len += 1;
 				else if (disk < 100)
@@ -394,7 +394,7 @@ static char* device_file(struct udev_device *device, int disk)
 				if (value == NULL)
 					return NULL;
 				res = snprintf(value, len,
-					       "/media/disk%dpart%s",
+					       "/disks/disk%dpart%s",
 					       disk, partition);
 				if (res < 0 || (size_t) res >= len)
 					return NULL;
@@ -402,7 +402,7 @@ static char* device_file(struct udev_device *device, int disk)
 					value[len - 1] = '\0';
 			}
 			else {
-				len = strlen("/media/disk");
+				len = strlen("/disks/disk");
 				if (disk < 10)
 					len += 1;
 				else if (disk < 100)
@@ -413,7 +413,7 @@ static char* device_file(struct udev_device *device, int disk)
 				value = malloc(len);
 				if (value == NULL)
 					return NULL;
-				res = snprintf(value, len, "/media/disk%d",
+				res = snprintf(value, len, "/disks/disk%d",
 					       disk);
 				if (res < 0 || (size_t) res >= len)
 					return NULL;
