@@ -1,0 +1,6 @@
+[Match]
+KernelCommandLine=!nodhcp
+
+[Network]
+DHCP=both
+

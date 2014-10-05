@@ -6,6 +6,7 @@ Uploaders: Stefan Lippers-Hollmann <s.l-h@gmx.de>,
  Joaquim Boura <x-un-i@berlios.de>,
  Niall Walsh <niallwalsh@users.berlios.de>
 Build-Depends: debhelper (>= 9.20120115),
+ dh-systemd (>= 1.4),
  asciidoc,
  docbook,
  gengetopt,

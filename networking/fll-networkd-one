@@ -1,0 +1,52 @@
+#!/usr/bin/perl
+use strict;
+
+my $network='/etc/systemd/network/dhcp.network';
+
+# just bail silently instantly if network does not exist
+-e $network || exit;
+unlink($network);
+
+# open pipe from journalctl for networkd dhcp_lease_acquired
+open(JRNL, '-|', '/bin/journalctl',
+  '-o', 'verbose',
+  '_SYSTEMD_UNIT=systemd-networkd.service',
+  'CODE_FUNCTION=dhcp_lease_acquired'
+)|| die "failed to open journalctl: $!";
+
+# process the pipe output to get the last interface seen
+# the interfaces in order first seen
+my $last;
+my @seen;
+LINE: while (my $line=<JRNL>)
+{
+  chomp($line);
+  next LINE unless ($line =~ s/^\s*INTERFACE=(.+?)\s*$/$1/);
+  my @found=grep(/^$line$/,@seen);
+  push(@seen,$line) if (@found == 0);
+  $last=$line;
+}
+close(JRNL);
+
+# we didn't see anything we acquired a lease for
+length($last) || exit;
+
+# ip flush all seen except last
+LINE: foreach my $line (@seen) {
+  next LINE if $line =~ /^${last}$/;
+  print STDERR "flush address for $line\n";
+  system('/sbin/ip','address','flush','dev', "$line");
+}
+
+# write the networkd config for last
+my $path = '/run/systemd/network';
+mkdir $path unless -d $path;
+$network="${path}/${last}.network";
+open('NETW', '>', $network) || die "failed to open $network for writing: $!";
+print NETW "[Match]\nName=${last}\n\n[Network]\nDHCP=both\n";
+close(NETW);
+print STDERR "wrote $network\n";
+
+# stop networkd, restart triggers a re-dhcp anyway
+#print STDERR "start networkd failed returning $? ($!)\n" unless (system('systemctl','stop','systemd-networkd')==0);
+

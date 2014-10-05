@@ -1,0 +1,19 @@
+[Unit]
+Description=Only leave last configured network up once online
+DefaultDependencies=no
+Conflicts=shutdown.target
+Requisite=systemd-networkd.service
+After=systemd-networkd.service
+ConditionPathExists=/etc/systemd/network/dhcp.network
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/systemd-networkd-wait-online
+ExecStart=/usr/sbin/fll-networkd-one
+ExecStart=/bin/systemctl stop systemd-networkd.service
+RemainAfterExit=yes
+
+[Install]
+WantedBy=network.target
+Also=systemd-networkd.service
+

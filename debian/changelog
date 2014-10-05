@@ -1,8 +1,12 @@
 fll-live-initscripts (4.1.22) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 05 Sep 2014 18:29:06 +0200
+  [ Niall Walsh ]
+  * replace udev/ifup networking code with networkd based setup
+
+ -- Niall Walsh <niallwalsh@celtux.org>  Sun, 05 Oct 2014 17:21:37 +0100
 
 fll-live-initscripts (4.1.21) unstable; urgency=medium
 
