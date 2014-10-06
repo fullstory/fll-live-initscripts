@@ -1,8 +1,12 @@
 fll-live-initscripts (4.1.23) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 05 Oct 2014 18:37:51 +0200
+  [ Niall Walsh ]
+  * stop stopping or enabling networkd
+
+ -- Niall Walsh <niallwalsh@celtux.org>  Tue, 07 Oct 2014 00:05:55 +0100
 
 fll-live-initscripts (4.1.22) unstable; urgency=medium
 

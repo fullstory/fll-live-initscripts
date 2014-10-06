@@ -10,10 +10,8 @@ ConditionPathExists=/etc/systemd/network/dhcp.network
 Type=oneshot
 ExecStart=/lib/systemd/systemd-networkd-wait-online
 ExecStart=/usr/sbin/fll-networkd-one
-ExecStart=/bin/systemctl stop systemd-networkd.service
 RemainAfterExit=yes
 
 [Install]
 WantedBy=network.target
-Also=systemd-networkd.service
 
