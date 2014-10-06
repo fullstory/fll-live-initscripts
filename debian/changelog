@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.24) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 07 Oct 2014 01:37:02 +0200
+
 fll-live-initscripts (4.1.23) unstable; urgency=medium
 
   * stop stopping or enabling networkd.
