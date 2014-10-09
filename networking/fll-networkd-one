@@ -1,7 +1,8 @@
 #!/usr/bin/perl
 use strict;
 
-my $network='/etc/systemd/network/dhcp.network';
+my $path = '/etc/systemd/network';
+my $network = "${path}/dhcp.network";
 
 # just bail silently instantly if network does not exist
 -e $network || exit;
@@ -39,8 +40,6 @@ LINE: foreach my $line (@seen) {
 }
 
 # write the networkd config for last
-my $path = '/run/systemd/network';
-mkdir $path unless -d $path;
 $network="${path}/${last}.network";
 open('NETW', '>', $network) || die "failed to open $network for writing: $!";
 print NETW "[Match]\nName=${last}\n\n[Network]\nDHCP=both\n";

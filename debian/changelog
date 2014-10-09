@@ -1,8 +1,12 @@
 fll-live-initscripts (4.1.24) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 07 Oct 2014 01:37:02 +0200
+  [ Niall Walsh ]
+  * write networkd config in /etc not /run so it carries to install
+
+ -- Niall Walsh <niallwalsh@celtux.org>  Thu, 09 Oct 2014 16:05:51 +0100
 
 fll-live-initscripts (4.1.23) unstable; urgency=medium
 
