@@ -1,11 +1,7 @@
-fll-live-initscripts (4.1.24) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.24) unstable; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
-  * write networkd config in /etc not /run so it carries to install
-  * some style/comment improvements for the perl fll-networkd-one program
+  * write networkd config in /etc not /run so it carries to install.
+  * some style/comment improvements for the perl fll-networkd-one program.
 
  -- Niall Walsh <niallwalsh@celtux.org>  Thu, 09 Oct 2014 16:13:48 +0100
 
