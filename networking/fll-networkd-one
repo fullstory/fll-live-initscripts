@@ -15,17 +15,18 @@ open(JRNL, '-|', '/bin/journalctl',
   'CODE_FUNCTION=dhcp_lease_acquired'
 )|| die "failed to open journalctl: $!";
 
-# process the pipe output to get the last interface seen
-# the interfaces in order first seen
+# process the pipe output to get
+#   the last interface seen
+#   the interfaces in order first seen
 my $last;
 my @seen;
-LINE: while (my $line=<JRNL>)
+LINE: while (my $line = <JRNL>)
 {
   chomp($line);
   next LINE unless ($line =~ s/^\s*INTERFACE=(.+?)\s*$/$1/);
-  my @found=grep(/^$line$/,@seen);
-  push(@seen,$line) if (@found == 0);
-  $last=$line;
+  my @found = grep(/^${line}$/, @seen);
+  push(@seen, $line) if (@found == 0);
+  $last = $line;
 }
 close(JRNL);
 
@@ -36,16 +37,12 @@ length($last) || exit;
 LINE: foreach my $line (@seen) {
   next LINE if $line =~ /^${last}$/;
   print STDERR "flush address for $line\n";
-  system('/sbin/ip','address','flush','dev', "$line");
+  system('/sbin/ip', 'address', 'flush', 'dev', $line);
 }
 
 # write the networkd config for last
-$network="${path}/${last}.network";
-open('NETW', '>', $network) || die "failed to open $network for writing: $!";
+$network = "${path}/${last}.network";
+open('NETW', '>', $network) || die "failed to open ${network} for writing: $!";
 print NETW "[Match]\nName=${last}\n\n[Network]\nDHCP=both\n";
 close(NETW);
-print STDERR "wrote $network\n";
-
-# stop networkd, restart triggers a re-dhcp anyway
-#print STDERR "start networkd failed returning $? ($!)\n" unless (system('systemctl','stop','systemd-networkd')==0);
-
+print STDERR "wrote ${network}\n";
