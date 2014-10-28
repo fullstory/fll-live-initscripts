@@ -1,3 +1,9 @@
+fll-live-initscripts (4.1.26) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 28 Oct 2014 18:46:52 +0100
+
 fll-live-initscripts (4.1.25) unstable; urgency=medium
 
   * change hwclock calls to match /lib/udev/hwclock
