@@ -1,8 +1,12 @@
 fll-live-initscripts (4.1.25) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 09 Oct 2014 18:35:48 +0200
+  [ Niall Walsh ]
+  * change hwclock calls to match /lib/udev/hwclock
+
+ -- Niall Walsh <niallwalsh@celtux.org>  Tue, 28 Oct 2014 17:18:58 +0000
 
 fll-live-initscripts (4.1.24) unstable; urgency=medium
 

@@ -284,7 +284,8 @@ set_timezone()
 		printf "0.000000 0 0.000000\n0\nLOCAL\n" > /etc/adjtime
 
 		# update the system clock a'la /lib/udev/rules.d/85-hwclock.rules
-		/sbin/hwclock --rtc=dev/rtc0 --systz --localtime
+		/sbin/hwclock --rtc=/dev/rtc0 --systz
+		/sbin/hwclock --rtc=/dev/rtc0 --hctosys
 	fi
 }
 
