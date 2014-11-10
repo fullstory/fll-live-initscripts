@@ -142,14 +142,14 @@ static int device_devtype_disk(struct udev_device *device)
 
 static int device_devmapper(struct udev_device *device)
 {
-	const char *devnode;
+	struct udev_list_entry *props;
+	struct udev_list_entry *prop;
 
-	devnode = udev_device_get_devnode(device);
-	if (devnode != NULL)
-		return strncmp(devnode, "/dev/mapper/",
-			       strlen("/dev/mapper/")) == 0;
-	else
-		return 0;
+	props = udev_device_get_properties_list_entry(device);
+	prop = udev_list_entry_get_by_name (props, "DM_UUID");
+	if (prop != NULL)
+ 		return 1;
+	return 0;
 }
 
 static char* device_vfstype(struct udev_device *device)
