@@ -1,8 +1,12 @@
 fll-live-initscripts (4.1.26) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 28 Oct 2014 18:46:52 +0100
+  [ Niall Walsh ]
+  * fstab_generator: fixup devmapper device handling
+
+ -- Niall Walsh <niallwalsh@celtux.org>  Mon, 10 Nov 2014 22:03:14 +0000
 
 fll-live-initscripts (4.1.25) unstable; urgency=medium
 

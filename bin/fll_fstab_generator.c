@@ -278,7 +278,27 @@ static char* device_spec(struct udev_device *device, char *fstype, int disk)
 		}
 	}
 
-	if (!disk || value == NULL) {
+	if (!disk) {
+		udev_list_entry_foreach(u_list_ent, u_first_list_ent) {
+			devnode = udev_list_entry_get_name(u_list_ent);
+			if (strncmp(devnode, "/dev/mapper",
+			    	    strlen("/dev/mapper")) == 0) {
+				if (value != NULL)
+					free(value);
+				len = strlen(devnode) + 1;
+				value = malloc(len);
+				if (value == NULL)
+					return NULL;
+				res = snprintf(value, len, "%s", devnode);
+				if (res < 0 || (size_t) res >= len)
+					return NULL;
+				else
+					value[len - 1] = '\0';
+			}
+		}
+	}
+
+	if (value == NULL) {
 		devnode = udev_device_get_devnode(device);
 		if (devnode == NULL)
 			return NULL;
