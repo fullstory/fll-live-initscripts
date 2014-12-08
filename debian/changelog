@@ -1,8 +1,12 @@
 fll-live-initscripts (4.1.27) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 10 Nov 2014 23:06:24 +0100
+  [ Niall Walsh ]
+  * pickup liveapt i18n from secondary squashfs
+
+ -- Niall Walsh <niallwalsh@celtux.org>  Mon, 08 Dec 2014 03:17:21 +0000
 
 fll-live-initscripts (4.1.26) unstable; urgency=medium
 

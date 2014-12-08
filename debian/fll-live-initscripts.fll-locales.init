@@ -335,7 +335,7 @@ apt_install_lang() {
 		return
 	fi
 
-	LIVEAPT="$(fll_get_mnt)/i18n"
+	LIVEAPT="${FLL_MOUNTPOINT}.2/i18n"
 	if [ ! -d "${LIVEAPT}" ]; then
 		return
 	fi
