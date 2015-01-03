@@ -1,9 +1,8 @@
 Source: fll-live-initscripts
 Section: misc
 Priority: optional
-Maintainer: Kel Modderman <kel@otaku42.de>
-Uploaders: Stefan Lippers-Hollmann <s.l-h@gmx.de>,
- Joaquim Boura <x-un-i@berlios.de>,
+Maintainer: Stefan Lippers-Hollmann <s.l-h@gmx.de>
+Uploaders: Joaquim Boura <x-un-i@sapo.pt>,
  Niall Walsh <niallwalsh@celtux.org>
 Build-Depends: debhelper (>= 9.20120115),
  dh-systemd (>= 1.4),
@@ -18,7 +17,7 @@ Build-Depends: debhelper (>= 9.20120115),
  libblkid-dev,
  libudev-dev,
  libxml2-utils
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Vcs-git: git://github.com/fullstory/fll-live-initscripts.git
 Vcs-Browser: https://github.com/fullstory/fll-live-initscripts
 
