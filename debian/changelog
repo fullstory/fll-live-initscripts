@@ -1,8 +1,9 @@
-fll-live-initscripts (4.1.28) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.28) unstable; urgency=medium
 
-  * NOT RELEASED YET
   * bump standards version to 3.9.6, no changes necessary.
   * convert to machine readable copyright.
+  * move fll-networkd-one to /usr/share/fll-live-initscripts/, it's not meant
+    to be used by hand.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 08 Dec 2014 04:24:08 +0100
 
