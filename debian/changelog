@@ -1,8 +1,8 @@
-fll-live-initscripts (4.1.29) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.29) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * drop versioned dependency on dh-systemd, it's provided in stable.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 03 Jan 2015 22:47:29 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 04 Jan 2015 01:37:15 +0100
 
 fll-live-initscripts (4.1.28) unstable; urgency=medium
 
