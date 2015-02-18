@@ -1,13 +1,13 @@
-fll-live-initscripts (4.1.30) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.30) unstable; urgency=medium
 
-  * NOT RELEASED YET
   * drop explicit dependencies on ifplugd, ifupdown and iproute2, neither are
     (strictly) required anymore.
   * avoid deprecated blkid APIs.
   * allow parallel building.
   * explicitly specify the package debhelper is supposed to work on.
+  * add systemd unit replacing fll-snakeoil-cert.init.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 04 Jan 2015 01:37:41 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 18 Feb 2015 23:43:27 +0100
 
 fll-live-initscripts (4.1.29) unstable; urgency=medium
 
