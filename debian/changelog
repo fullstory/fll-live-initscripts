@@ -1,6 +1,8 @@
 fll-live-initscripts (4.1.30) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
+  * drop explicit dependencies on ifplugd, ifupdown and iproute2, neither are
+    (strictly) required anymore.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 04 Jan 2015 01:37:41 +0100
 
