@@ -4,6 +4,7 @@ fll-live-initscripts (4.1.30) UNRELEASED; urgency=medium
   * drop explicit dependencies on ifplugd, ifupdown and iproute2, neither are
     (strictly) required anymore.
   * avoid deprecated blkid APIs.
+  * allow parallel building.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 04 Jan 2015 01:37:41 +0100
 
