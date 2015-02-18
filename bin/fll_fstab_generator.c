@@ -176,7 +176,7 @@ static char* device_vfstype(struct udev_device *device)
 			return NULL;
 		}
 		
-		blkid_probe_set_request(pr, BLKID_PROBREQ_TYPE);
+		blkid_probe_set_superblocks_flags(pr, BLKID_PROBREQ_TYPE);
 		
 		if (ioctl(fd, BLKGETSIZE64, &size) != 0)
 			size = 0;
