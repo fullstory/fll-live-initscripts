@@ -5,6 +5,7 @@ fll-live-initscripts (4.1.30) UNRELEASED; urgency=medium
     (strictly) required anymore.
   * avoid deprecated blkid APIs.
   * allow parallel building.
+  * explicitly specify the package debhelper is supposed to work on.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 04 Jan 2015 01:37:41 +0100
 
