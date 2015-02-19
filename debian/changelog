@@ -1,12 +1,8 @@
-fll-live-initscripts (4.1.31) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.31) unstable; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
   * run fll-snakeoil before fll-locales to avoid debconf locking
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 18 Feb 2015 23:45:22 +0100
+ -- Niall Walsh <niallwalsh@celtux.org>  Thu, 19 Feb 2015 19:38:06 +0000
 
 fll-live-initscripts (4.1.30) unstable; urgency=medium
 
