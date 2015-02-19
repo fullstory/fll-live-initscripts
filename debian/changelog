@@ -1,6 +1,10 @@
 fll-live-initscripts (4.1.31) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Niall Walsh ]
+  * run fll-snakeoil before fll-locales to avoid debconf locking
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 18 Feb 2015 23:45:22 +0100
 
