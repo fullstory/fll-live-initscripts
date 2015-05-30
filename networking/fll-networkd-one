@@ -43,6 +43,6 @@ LINE: foreach my $line (@seen) {
 # write the networkd config for last
 $network = "${path}/${last}.network";
 open('NETW', '>', $network) || die "failed to open ${network} for writing: $!";
-print NETW "[Match]\nName=${last}\n\n[Network]\nDHCP=both\n";
+print NETW "[Match]\nName=${last}\n\n[Network]\nDHCP=both\n\n[DHCP]\nUseDomains=yes\n";
 close(NETW);
 print STDERR "wrote ${network}\n";

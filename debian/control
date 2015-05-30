@@ -41,7 +41,8 @@ Depends: ${misc:Depends},
  procps,
  ceni,
  keyboard-configuration,
- lsb-base
+ lsb-base,
+ systemd-sysv (>= 217-2~)
 Recommends: tzdata
 Description: fll live media sysv initscripts
  A set of initscripts suitable for managing the SysV-Init boot sequence of the
