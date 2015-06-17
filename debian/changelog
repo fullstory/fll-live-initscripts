@@ -1,10 +1,6 @@
-fll-live-initscripts (4.1.33) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.33) unstable; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
-  * fstab_generator: get DEVTYPE property as match_property seems to be broken
+  * fstab_generator: get DEVTYPE property as match_property seems to be broken.
 
  -- Niall Walsh <niallwalsh@celtux.org>  Wed, 17 Jun 2015 20:17:59 +0100
 
