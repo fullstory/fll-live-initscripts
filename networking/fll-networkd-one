@@ -5,8 +5,8 @@ my $path = '/etc/systemd/network';
 my $network = "${path}/dhcp.network";
 
 # just bail silently instantly if network does not exist
+# this means we have already run successfully
 -e $network || exit;
-unlink($network);
 
 # open pipe from journalctl for networkd dhcp_lease_acquired
 open(JRNL, '-|', '/bin/journalctl',
@@ -30,8 +30,23 @@ LINE: while (my $line = <JRNL>)
 }
 close(JRNL);
 
-# we didn't see anything we acquired a lease for
-length($last) || exit;
+my $route;
+# if we have not aquired a lease
+if (length($last)==0) {
+  open(IP, '-|', '/bin/ip', 'route', 'list')||die "failed to open pipe from /bin/ip: $!";
+  $route=<IP>;
+  close(IP);
+  if (length($route)==0) {
+    # no dhcp or route so just exit 
+    exit(0);
+  }
+}
+
+unlink($network);
+print STDERR "lease or route acquired so removed dhcp.network\n";
+
+# no $last means we got a route elsewhere so we are done
+exit if (length($last)==0);
 
 # ip flush all seen except last
 LINE: foreach my $line (@seen) {
@@ -46,3 +61,4 @@ open('NETW', '>', $network) || die "failed to open ${network} for writing: $!";
 print NETW "[Match]\nName=${last}\n\n[Network]\nDHCP=both\n\n[DHCP]\nUseDomains=yes\n";
 close(NETW);
 print STDERR "wrote ${network}\n";
+
