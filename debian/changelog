@@ -1,10 +1,6 @@
-fll-live-initscripts (4.1.34) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.34) unstable; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Niall Walsh ]
-  * networkd-one: systemd-wait-online is not enough, check route also
+  * networkd-one: systemd-wait-online is not enough, check route also.
 
  -- Niall Walsh <niallwalsh@celtux.org>  Sat, 20 Jun 2015 04:31:04 +0100
 
