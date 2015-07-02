@@ -1,8 +1,9 @@
-fll-live-initscripts (4.1.36) UNRELEASED; urgency=medium
+fll-live-initscripts (4.1.36) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fix brown paper b[au]g when defining setup_sddm().
+  * sort setup_* functions.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 02 Jul 2015 22:04:58 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 02 Jul 2015 22:16:07 +0200
 
 fll-live-initscripts (4.1.35) unstable; urgency=medium
 

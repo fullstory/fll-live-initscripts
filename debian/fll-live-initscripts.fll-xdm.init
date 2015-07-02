@@ -101,6 +101,19 @@ if [ -z "${DESKTOP}" ]; then
 	[ -z "${DESKTOP}" ] && exit 0
 fi
 
+setup_gdm3() {
+	# autologin + greeter theme
+	# timed login required for login after x restart
+	sed -i	-e "/^AutomaticLogin\=.*/d" \
+		-e "/^AutomaticLoginEnable\=.*/d" \
+		-e "/^TimedLoginEnable\=.*/d" \
+		-e "/^TimedLogin\=.*/d" \
+		-e "/^TimedLoginDelay\=.*/d" \
+		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true\n \
+			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=1/" \
+			/etc/gdm3/daemon.conf
+}
+
 setup_kdm() {
 	# wallpaper
 	echo "USEBACKGROUND=true"		>  /etc/default/kdm.d/wallpaper
@@ -119,17 +132,16 @@ setup_kdm() {
 	fi
 }
 
-setup_gdm3() {
-	# autologin + greeter theme
-	# timed login required for login after x restart
-	sed -i	-e "/^AutomaticLogin\=.*/d" \
-		-e "/^AutomaticLoginEnable\=.*/d" \
-		-e "/^TimedLoginEnable\=.*/d" \
-		-e "/^TimedLogin\=.*/d" \
-		-e "/^TimedLoginDelay\=.*/d" \
-		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true\n \
-			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=1/" \
-			/etc/gdm3/daemon.conf
+setup_lightdm() {
+	# set autologin user and set timeout to zero
+	sed -i  -e "s/^\#autologin-user=/autologin-user=${FLL_LIVE_USER}/" \
+		-e "s/^\#autologin-user-timeout=0/autologin-user-timeout=0/" \
+			/etc/lightdm/lightdm.conf
+}
+
+setup_sddm() {
+	printf "[Autologin]\nRelogin=true\nUser=${FLL_LIVE_USER}\n" \
+		>/etc/sddm.conf
 }
 
 setup_slim() {
@@ -150,18 +162,6 @@ setup_slim() {
 			-e "s/\(^xserver_arguments.*\)/& \-dpi ${CUSTOM_DPI}/" \
 				/etc/slim.conf
 	fi
-}
-
-setup_slim() {
-	printf "[Autologin]\nRelogin=true\nUser=${FLL_LIVE_USER}\n" \
-		>/etc/sddm.conf
-}
-
-setup_lightdm() {
-	# set autologin user and set timeout to zero
-	sed -i  -e "s/^\#autologin-user=/autologin-user=${FLL_LIVE_USER}/" \
-		-e "s/^\#autologin-user-timeout=0/autologin-user-timeout=0/" \
-			/etc/lightdm/lightdm.conf
 }
 
 setup_x_cursor_theme() {
