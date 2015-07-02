@@ -4,18 +4,19 @@
 # Provides:          fll-xdm
 # Required-Start:    fll-adduser
 # Required-Stop:
-# X-Start-Before:    gdm3 kdm lightdm lxdm slim wdm xdm
+# X-Start-Before:    gdm3 kdm lightdm lxdm slim sddm wdm xdm
 # Default-Start:     2 3 4 5
 # Default-Stop:
 # Short-Description: detect and setup X desktop manager
 # Description:       The purpose of this script is to detect and configure an
-#                    installed X desktop manager (i.e. kdm, gdm3 etc.).
+#                    installed X desktop manager (i.e. sddm, kdm, gdm3 etc.).
 ### END INIT INFO
 
 ###
 # F.U.L.L.S.T.O.R.Y init script
 #
-# Copyright: (C) 2007 - 2008 Kel Modderman <kel@otaku42.de>
+# Copyright: (C) 2007-2008 Kel Modderman <kel@otaku42.de>
+# Copyright: (C) 2007-2015 Stefan Lippers-Hollmann <s.l-h@gmx.de>
 # License:   GPLv2
 #
 # F.U.L.L.S.T.O.R.Y Project Homepage:
@@ -70,7 +71,9 @@ if [ -f /proc/cmdline ]; then
 				fi
 				;;
 			desktop=*)
-				DESKTOP="${param#desktop=}"
+				if [ -z "${DESKTOP}" ]; then
+					DESKTOP="${param#desktop=}"
+				fi
 				;;
 			dpi=*)
 				CUSTOM_DPI="${param#dpi=}"
@@ -82,6 +85,20 @@ if [ -f /proc/cmdline ]; then
 				;;
 		esac
 	done
+fi
+
+if [ -z "${DESKTOP}" ]; then
+	[ -x "/usr/bin/icewm" ] && DESKTOP="icewm"		# sixth choice
+	[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"	# fifth choice
+	[ -x "/usr/bin/startlxde" ] && \
+		[ -x "/usr/bin/openbox" ] && DESKTOP="lxde"	# fourth choice
+	[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"		# third choice
+	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# second choice
+	[ -x "/usr/bin/kwin" ] && DESKTOP="kde"			# first choice, if installed and desktop= is empty
+
+	# none of the major desktop environments is installed, don't interfere 
+	# with ordinary priorities.
+	[ -z "${DESKTOP}" ] && exit 0
 fi
 
 setup_kdm() {
@@ -135,6 +152,11 @@ setup_slim() {
 	fi
 }
 
+setup_slim() {
+	printf "[Autologin]\nRelogin=true\nUser=${FLL_LIVE_USER}\n" \
+		>/etc/sddm.conf
+}
+
 setup_lightdm() {
 	# set autologin user and set timeout to zero
 	sed -i  -e "s/^\#autologin-user=/autologin-user=${FLL_LIVE_USER}/" \
@@ -145,6 +167,88 @@ setup_lightdm() {
 setup_x_cursor_theme() {
 	if [ -e /usr/share/icons/DMZ-Black/cursor.theme ]; then
 		update-alternatives --set x-cursor-theme /usr/share/icons/DMZ-Black/cursor.theme >/dev/null
+	fi
+}
+
+setup_wm() {
+	FLL_LIVE_USER_GROUP=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 4)
+	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
+
+	log_daemon_msg "${NAME}"
+
+
+	case "${DESKTOP}" in 
+		flux*)
+			WM="/usr/bin/startfluxbox"
+			;;
+		gnome)
+			WM="/usr/bin/metacity"
+			;;
+		icewm)
+			WM="/usr/bin/icewm"
+			;;
+		kde)
+			WM="/usr/bin/kwin"
+			;;
+		lxde)	
+			WM="/usr/bin/openbox"
+			;;
+		xfce*)
+			WM="/usr/bin/xfwm4"
+			;;
+		*)
+			log_action_msg " desktop '${DESKTOP}' is not available"
+			log_end_msg 0
+			return 1
+			;;
+	esac
+
+	if [ -x "${WM}" ]; then
+		case "${WM}" in 
+			"/usr/bin/kwin")
+				if [   -r /usr/share/xsessions/kde.desktop ] && \
+					[ ! -r /usr/share/xsessions/kde-plasma.desktop ]; then
+					XSESSION="kde"
+				else
+					XSESSION="kde-plasma"
+				fi
+				;;
+			"/usr/bin/metacity")
+				XSESSION="gnome"
+				;;
+			"/usr/bin/startfluxbox")
+				XSESSION="fluxbox"
+				;;
+			"/usr/bin/xfwm4")
+				XSESSION="xfce"
+				;;
+			"/usr/bin/icewm")
+				XSESSION="IceWM"
+				;;
+			"/usr/bin/openbox")
+				XSESSION="LXDE"
+				;;
+		esac
+
+		log_action_begin_msg " setting up window manager '${WM}'"
+		echo "[Desktop]"		>  ${FLL_LIVE_USER_HOME}/.dmrc
+		echo "Session=${XSESSION}"	>> ${FLL_LIVE_USER_HOME}/.dmrc
+		chown "${FLL_LIVE_USER}:${FLL_LIVE_USER_GROUP}" "${FLL_LIVE_USER_HOME}/.dmrc"
+			
+		update-alternatives --set x-window-manager "${WM}" >/dev/null
+		log_end_msg "${?}"
+
+		# configure sddm
+		if [ -w /etc/sddm.conf ]; then
+			sed -i "s|^Relogin=.*|&\nSession=${XSESSION}.desktop|" \
+				/etc/sddm.conf
+		fi
+		
+		return 0
+	else
+		log_action_msg " desktop '${DESKTOP}' is not available"
+		log_end_msg 0
+		return 1
 	fi
 }
 
@@ -172,8 +276,6 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
-		# Handle kdm last, making it the default display manager
-		# ...unless overriden below
 		KDM="$(which kdm 2>/dev/null)"
 		if [ "${KDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring kdm"
@@ -181,26 +283,39 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
+		# Handle sddm last, making it the default display manager
+		# ...unless overriden below
+		SDDM="$(which sddm 2>/dev/null)"
+		if [ "${SDDM}" ]; then
+			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring sddm"
+			setup_sddm && echo "${SDDM}" >"${DEFAULT_DISPLAY_MANAGER_FILE}"
+			log_end_msg "${?}"
+		fi
+
 		# Four desktop-managers installed, override default display manager
 		# based on desktop choice cheatcode
 		case "${DESKTOP}" in
 			kde)
-				if [ -n "${KDM}" ]; then
+				if [ -n "${KDM}" ] || [ -n "${SDDM}" ]; then
 					if [ -n "${GDM3}" ] || [ -n "${SLIM}" ] || [ -n "${LIGHTDM}" ]; then
-						echo "${KDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+						if [ -n "${SDDM}" ]; then
+							echo "${SDDM}" >"${DEFAULT_DISPLAY_MANAGER_FILE}"
+						else
+							echo "${KDM}" >"${DEFAULT_DISPLAY_MANAGER_FILE}"
+						fi
 					fi
 				fi
 				;;
 			gnome)
 				if [ -n "${GDM3}" ]; then
-					if [ -n "${KDM}" ] || [ -n "${SLIM}" ] || [ -n "${LIGHTDM}" ]; then
+					if [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${SLIM}" ] || [ -n "${LIGHTDM}" ]; then
 						echo "${GDM3}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			xfce*|lxde)
 				if [ -n "${LIGHTDM}" ]; then
-					if [ -n "${KDM}" ] || [ -n "${GDM3}" ] || [ -n "${SLIM}" ]; then
+					if [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${GDM3}" ] || [ -n "${SLIM}" ]; then
 						echo "${LIGHTDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
@@ -208,12 +323,18 @@ case "${1}" in
 		esac
 
 		setup_x_cursor_theme
+
+		setup_wm
 		;;
 	stop)
 		;;
 	restart|force-reload)
 		echo "Error: argument '${1}' not supported" >&2
 		exit 3
+		;;
+	kde|gnome|flux*|xfce*|icewm|lxde)
+		DESKTOP="${1}"
+		setup_wm
 		;;
 	status)
 		log_success_msg "${0} is no dæmon."
