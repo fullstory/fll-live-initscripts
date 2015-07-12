@@ -1,8 +1,8 @@
-fll-live-initscripts (4.1.37) UNRELEASED; urgency=medium
+fll-live-initscripts (4.2.0) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * update for KDE5.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 02 Jul 2015 22:16:53 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 12 Jul 2015 02:24:09 +0200
 
 fll-live-initscripts (4.1.36) unstable; urgency=medium
 

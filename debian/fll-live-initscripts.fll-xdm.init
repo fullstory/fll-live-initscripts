@@ -94,7 +94,7 @@ if [ -z "${DESKTOP}" ]; then
 		[ -x "/usr/bin/openbox" ] && DESKTOP="lxde"	# fourth choice
 	[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"		# third choice
 	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# second choice
-	[ -x "/usr/bin/kwin" ] && DESKTOP="kde"			# first choice, if installed and desktop= is empty
+	[ -x "/usr/bin/startkde" ] && DESKTOP="kde"			# first choice, if installed and desktop= is empty
 
 	# none of the major desktop environments is installed, don't interfere 
 	# with ordinary priorities.
@@ -188,7 +188,7 @@ setup_wm() {
 			WM="/usr/bin/icewm"
 			;;
 		kde)
-			WM="/usr/bin/kwin"
+			WM="/usr/bin/startkde"
 			;;
 		lxde)	
 			WM="/usr/bin/openbox"
@@ -205,13 +205,8 @@ setup_wm() {
 
 	if [ -x "${WM}" ]; then
 		case "${WM}" in 
-			"/usr/bin/kwin")
-				if [   -r /usr/share/xsessions/kde.desktop ] && \
-					[ ! -r /usr/share/xsessions/kde-plasma.desktop ]; then
-					XSESSION="kde"
-				else
-					XSESSION="kde-plasma"
-				fi
+			"/usr/bin/startkde")
+				XSESSION="plasma"
 				;;
 			"/usr/bin/metacity")
 				XSESSION="gnome"
