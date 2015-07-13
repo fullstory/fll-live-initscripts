@@ -1,3 +1,9 @@
+fll-live-initscripts (4.2.2) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 13 Jul 2015 04:48:17 +0200
+
 fll-live-initscripts (4.2.1) unstable; urgency=medium
 
   * drop pstore nuking, this has been part of our last release already and
