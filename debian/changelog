@@ -1,8 +1,13 @@
-fll-live-initscripts (4.2.1) UNRELEASED; urgency=medium
+fll-live-initscripts (4.2.1) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * drop pstore nuking, this has been part of our last release already and
+    all associated issues should be sorted by now, given that efibootmgr is
+    called semi-regularly. Modern kernels don't dump oopses to pstore anymore,
+    so either the local hardware has no problems with EFI variable garbage
+    collection or it would have blown up ages ago, so avoid potentially risky
+    pstore manipulation on each live boot.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 12 Jul 2015 02:24:29 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 13 Jul 2015 04:43:55 +0200
 
 fll-live-initscripts (4.2.0) unstable; urgency=medium
 
