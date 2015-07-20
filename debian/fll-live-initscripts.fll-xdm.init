@@ -115,9 +115,6 @@ setup_gdm3() {
 }
 
 setup_kdm() {
-	# wallpaper
-	echo "USEBACKGROUND=true"		>  /etc/default/kdm.d/wallpaper
-	echo "WALLPAPER=${FLL_WALLPAPER}"	>> /etc/default/kdm.d/wallpaper
 	# autologin
 	echo "AUTOLOGINUSER=${FLL_LIVE_USER}"	>  /etc/default/kdm.d/autologin
 	echo "AUTOLOGINAGAIN=true"		>> /etc/default/kdm.d/autologin
