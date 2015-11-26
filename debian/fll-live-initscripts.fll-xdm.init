@@ -88,13 +88,15 @@ if [ -f /proc/cmdline ]; then
 fi
 
 if [ -z "${DESKTOP}" ]; then
-	[ -x "/usr/bin/icewm" ] && DESKTOP="icewm"		# sixth choice
-	[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"	# fifth choice
+	[ -x "/usr/bin/icewm" ] && DESKTOP="icewm"		# 7th choice
+	[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"	# 6th choice
 	[ -x "/usr/bin/startlxde" ] && \
-		[ -x "/usr/bin/openbox" ] && DESKTOP="lxde"	# fourth choice
-	[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"		# third choice
-	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# second choice
-	[ -x "/usr/bin/startkde" ] && DESKTOP="kde"			# first choice, if installed and desktop= is empty
+		[ -x "/usr/bin/openbox" ] && DESKTOP="lxde"	# 5th choice
+	[ -x "/usr/bin/startlxqt" ] && \
+		[ -x "/usr/bin/openbox" ] && DESKTOP="lxqt"	# 4th choice
+	[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"		# 3rd choice
+	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# 2nd choice
+	[ -x "/usr/bin/startkde" ] && DESKTOP="kde"		# 1st choice, if installed and desktop= is empty
 
 	# none of the major desktop environments is installed, don't interfere 
 	# with ordinary priorities.
@@ -131,9 +133,25 @@ setup_kdm() {
 
 setup_lightdm() {
 	# set autologin user and set timeout to zero
-	sed -i  -e "s/^\#autologin-user=/autologin-user=${FLL_LIVE_USER}/" \
-		-e "s/^\#autologin-user-timeout=0/autologin-user-timeout=0/" \
-			/etc/lightdm/lightdm.conf
+	mkdir -p /etc/lightdm/lightdm.conf.d
+	if [ ! -e /etc/lightdm/lightdm.conf.d/80_fll-live-initscripts.conf ]; then
+		cat >/etc/lightdm/lightdm.conf.d/80_fll-live-initscripts.conf <<EOF
+[SeatDefaults]
+greeter-hide-users=false
+autologin-user=${FLL_LIVE_USER}
+autologin-user-timeout=0
+EOF
+	fi
+}
+
+setup_lxdm() {
+	# set autologin user
+	if [ -L /etc/lxdm/default.conf ] && [ ! -e /etc/lxdm/live.conf ]; then
+		rm -f /etc/lxdm/default.conf
+		sed "s/^# autologin=.*/&\nautologin=${FLL_LIVE_USER}/" \
+			/etc/lxdm/lxdm.conf >/etc/lxdm/live.conf
+		ln -fs live.conf /etc/lxdm/default.conf
+	fi
 }
 
 setup_sddm() {
@@ -187,7 +205,10 @@ setup_wm() {
 		kde)
 			WM="/usr/bin/startkde"
 			;;
-		lxde)	
+		lxde)
+			WM="/usr/bin/openbox"
+			;;
+		lxqt)
 			WM="/usr/bin/openbox"
 			;;
 		xfce*)
@@ -218,7 +239,11 @@ setup_wm() {
 				XSESSION="IceWM"
 				;;
 			"/usr/bin/openbox")
-				XSESSION="LXDE"
+				if [ "${DESKTOP}" = lxde ]; then
+					XSESSION="LXDE"
+				else
+					XSESSION="LXQT"
+				fi
 				;;
 		esac
 
@@ -261,6 +286,13 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
+		LXDM="$(which lxdm 2>/dev/null)"
+		if [ "${LXDM}" ]; then
+			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring lxdm"
+			setup_lxdm && echo "${LXDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+			log_end_msg "${?}"
+		fi
+
 		LIGHTDM="$(which lightdm 2>/dev/null)"
 		if [ "${LIGHTDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring lightdm"
@@ -289,7 +321,7 @@ case "${1}" in
 		case "${DESKTOP}" in
 			kde)
 				if [ -n "${KDM}" ] || [ -n "${SDDM}" ]; then
-					if [ -n "${GDM3}" ] || [ -n "${SLIM}" ] || [ -n "${LIGHTDM}" ]; then
+					if [ -n "${GDM3}" ] || [ -n "${LIGHTDM}" ] || [ -n "${SLIM}" ] || [ -n "${LXDM}" ]; then
 						if [ -n "${SDDM}" ]; then
 							echo "${SDDM}" >"${DEFAULT_DISPLAY_MANAGER_FILE}"
 						else
@@ -300,14 +332,21 @@ case "${1}" in
 				;;
 			gnome)
 				if [ -n "${GDM3}" ]; then
-					if [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${SLIM}" ] || [ -n "${LIGHTDM}" ]; then
+					if [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${LIGHTDM}" ] || [ -n "${LXDM}" ] || [ -n "${SLIM}" ]; then
 						echo "${GDM3}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
-			xfce*|lxde)
+			lxde|lxqt)
+				if [ -n "${LXDM}" ]; then
+					if [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${LIGHTDM}" ] || [ -n "${GDM3}" ] || [ -n "${LXDM}" ] || [ -n "${SLIM}" ]; then
+						echo "${LXDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
+					fi
+				fi
+				;;
+			xfce*)
 				if [ -n "${LIGHTDM}" ]; then
-					if [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${GDM3}" ] || [ -n "${SLIM}" ]; then
+					if [ -n "${LXDM}" ] || [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${GDM3}" ] || [ -n "${SLIM}" ]; then
 						echo "${LIGHTDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
@@ -324,7 +363,7 @@ case "${1}" in
 		echo "Error: argument '${1}' not supported" >&2
 		exit 3
 		;;
-	kde|gnome|flux*|xfce*|icewm|lxde)
+	kde|gnome|flux*|xfce*|icewm|lxde|lxqt)
 		DESKTOP="${1}"
 		setup_wm
 		;;
