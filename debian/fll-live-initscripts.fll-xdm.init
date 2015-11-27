@@ -273,35 +273,35 @@ case "${1}" in
 	start)
 
 		SLIM="$(which slim 2>/dev/null)"
-		if [ "${SLIM}" ]; then
+		if [ -x "${SLIM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring slim"
 			setup_slim && echo "${SLIM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
 
 		GDM3="$(which gdm3 2>/dev/null)"
-		if [ "${GDM3}" ]; then
+		if [ -x "${GDM3}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring gdm3"
 			setup_gdm3 && echo "${GDM3}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
 
 		LXDM="$(which lxdm 2>/dev/null)"
-		if [ "${LXDM}" ]; then
+		if [ -x "${LXDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring lxdm"
 			setup_lxdm && echo "${LXDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
 
 		LIGHTDM="$(which lightdm 2>/dev/null)"
-		if [ "${LIGHTDM}" ]; then
+		if [ -x "${LIGHTDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring lightdm"
 			setup_lightdm && echo "${LIGHTDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
 		fi
 
 		KDM="$(which kdm 2>/dev/null)"
-		if [ "${KDM}" ]; then
+		if [ -x "${KDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring kdm"
 			setup_kdm && echo "${KDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
@@ -310,7 +310,7 @@ case "${1}" in
 		# Handle sddm last, making it the default display manager
 		# ...unless overriden below
 		SDDM="$(which sddm 2>/dev/null)"
-		if [ "${SDDM}" ]; then
+		if [ -x "${SDDM}" ]; then
 			log_daemon_msg "${NAME}"; log_action_begin_msg " configuring sddm"
 			setup_sddm && echo "${SDDM}" >"${DEFAULT_DISPLAY_MANAGER_FILE}"
 			log_end_msg "${?}"
@@ -320,9 +320,9 @@ case "${1}" in
 		# based on desktop choice cheatcode
 		case "${DESKTOP}" in
 			kde)
-				if [ -n "${KDM}" ] || [ -n "${SDDM}" ]; then
-					if [ -n "${GDM3}" ] || [ -n "${LIGHTDM}" ] || [ -n "${SLIM}" ] || [ -n "${LXDM}" ]; then
-						if [ -n "${SDDM}" ]; then
+				if [ -x "${KDM}" ] || [ -x "${SDDM}" ]; then
+					if [ -x "${GDM3}" ] || [ -x "${LIGHTDM}" ] || [ -x "${SLIM}" ] || [ -x "${LXDM}" ]; then
+						if [ -x "${SDDM}" ]; then
 							echo "${SDDM}" >"${DEFAULT_DISPLAY_MANAGER_FILE}"
 						else
 							echo "${KDM}" >"${DEFAULT_DISPLAY_MANAGER_FILE}"
@@ -331,22 +331,22 @@ case "${1}" in
 				fi
 				;;
 			gnome)
-				if [ -n "${GDM3}" ]; then
-					if [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${LIGHTDM}" ] || [ -n "${LXDM}" ] || [ -n "${SLIM}" ]; then
+				if [ -x "${GDM3}" ]; then
+					if [ -x "${SDDM}" ] || [ -x "${KDM}" ] || [ -x "${LIGHTDM}" ] || [ -x "${LXDM}" ] || [ -x "${SLIM}" ]; then
 						echo "${GDM3}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			lxde|lxqt)
-				if [ -n "${LXDM}" ]; then
-					if [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${LIGHTDM}" ] || [ -n "${GDM3}" ] || [ -n "${LXDM}" ] || [ -n "${SLIM}" ]; then
+				if [ -x "${LXDM}" ]; then
+					if [ -x "${SDDM}" ] || [ -x "${KDM}" ] || [ -x "${LIGHTDM}" ] || [ -x "${GDM3}" ] || [ -x "${LXDM}" ] || [ -x "${SLIM}" ]; then
 						echo "${LXDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi
 				;;
 			xfce*)
-				if [ -n "${LIGHTDM}" ]; then
-					if [ -n "${LXDM}" ] || [ -n "${SDDM}" ] || [ -n "${KDM}" ] || [ -n "${GDM3}" ] || [ -n "${SLIM}" ]; then
+				if [ -x "${LIGHTDM}" ]; then
+					if [ -x "${LXDM}" ] || [ -x "${SDDM}" ] || [ -x "${KDM}" ] || [ -x "${GDM3}" ] || [ -x "${SLIM}" ]; then
 						echo "${LIGHTDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 					fi
 				fi

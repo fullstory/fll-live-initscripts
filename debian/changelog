@@ -1,6 +1,7 @@
 fll-live-initscripts (4.3.1) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
+  * fix if clauses.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 27 Nov 2015 00:44:10 +0100
 
