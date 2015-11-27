@@ -242,7 +242,7 @@ setup_wm() {
 				if [ "${DESKTOP}" = lxde ]; then
 					XSESSION="LXDE"
 				else
-					XSESSION="LXQT"
+					XSESSION="lxqt"
 				fi
 				;;
 		esac

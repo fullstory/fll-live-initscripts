@@ -1,9 +1,9 @@
-fll-live-initscripts (4.3.1) UNRELEASED; urgency=medium
+fll-live-initscripts (4.3.1) unstable; urgency=medium
 
-  * NOT RELEASED YET
   * fix if clauses.
+  * fix case sensitive lxqt XSESSION information.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 27 Nov 2015 00:44:10 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 27 Nov 2015 01:23:47 +0100
 
 fll-live-initscripts (4.3.0) unstable; urgency=medium
 
