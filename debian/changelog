@@ -1,8 +1,9 @@
-fll-live-initscripts (4.3.2) UNRELEASED; urgency=medium
+fll-live-initscripts (4.3.2) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fix fll-live-initscripts removal, by "starting" fll-reboot in runlevels
+    1-5, in order to beat insserv's new heuristics.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 27 Nov 2015 01:24:17 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 Dec 2015 23:33:49 +0100
 
 fll-live-initscripts (4.3.1) unstable; urgency=medium
 

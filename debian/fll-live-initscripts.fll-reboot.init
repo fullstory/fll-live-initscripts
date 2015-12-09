@@ -6,7 +6,7 @@
 # Required-Stop:     umountroot
 # X-Stop-After:      umountfs lvm2
 # X-Interactive:     true
-# Default-Start:
+# Default-Start:     1 2 3 4 5
 # Default-Stop:      0 6
 # Short-Description: shutdown and eject live media
 # Description:       This script provides the equivalent of umountfs,
@@ -297,6 +297,7 @@ do_stop() {
 case "${1}" in
 	start)
 		# no-op
+		exit 0
 		;;
 	restart|reload|force-reload)
 		echo "Error: argument '${1}' not supported" >&2
