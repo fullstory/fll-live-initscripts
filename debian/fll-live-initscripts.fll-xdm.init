@@ -207,14 +207,15 @@ setup_wm() {
 		echo "Session=${XSESSION}"	>> ${FLL_LIVE_USER_HOME}/.dmrc
 		chown "${FLL_LIVE_USER}:${FLL_LIVE_USER_GROUP}" "${FLL_LIVE_USER_HOME}/.dmrc"
 
-		update-alternatives --set x-window-manager "${WM}" >/dev/null
-		log_end_msg "${?}"
-
 		# configure sddm
 		if [ -w /etc/sddm.conf ]; then
 			sed -i "s|^Relogin=.*|&\nSession=${XSESSION}.desktop|" \
 				/etc/sddm.conf
 		fi
+
+		update-alternatives --set x-window-manager "${WM}" >/dev/null
+
+		log_end_msg "${?}"
 
 		return 0
 	else
