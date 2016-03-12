@@ -293,43 +293,6 @@ case "${1}" in
 			log_end_msg "${?}"
 		fi
 
-		# Four desktop-managers installed, override default display manager
-		# based on desktop choice cheatcode
-		case "${DESKTOP}" in
-			kde)
-				if [ -x "${KDM}" ] || [ -x "${SDDM}" ]; then
-					if [ -x "${GDM3}" ] || [ -x "${LIGHTDM}" ] || [ -x "${SLIM}" ] || [ -x "${LXDM}" ]; then
-						if [ -x "${SDDM}" ]; then
-							echo "${SDDM}" >"${DEFAULT_DISPLAY_MANAGER_FILE}"
-						else
-							echo "${KDM}" >"${DEFAULT_DISPLAY_MANAGER_FILE}"
-						fi
-					fi
-				fi
-				;;
-			gnome)
-				if [ -x "${GDM3}" ]; then
-					if [ -x "${SDDM}" ] || [ -x "${KDM}" ] || [ -x "${LIGHTDM}" ] || [ -x "${LXDM}" ] || [ -x "${SLIM}" ]; then
-						echo "${GDM3}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
-					fi
-				fi
-				;;
-			lxde|lxqt)
-				if [ -x "${LXDM}" ]; then
-					if [ -x "${SDDM}" ] || [ -x "${KDM}" ] || [ -x "${LIGHTDM}" ] || [ -x "${GDM3}" ] || [ -x "${LXDM}" ] || [ -x "${SLIM}" ]; then
-						echo "${LXDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
-					fi
-				fi
-				;;
-			xfce*)
-				if [ -x "${LIGHTDM}" ]; then
-					if [ -x "${LXDM}" ] || [ -x "${SDDM}" ] || [ -x "${KDM}" ] || [ -x "${GDM3}" ] || [ -x "${SLIM}" ]; then
-						echo "${LIGHTDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
-					fi
-				fi
-				;;
-		esac
-
 		setup_x_cursor_theme
 
 		setup_wm

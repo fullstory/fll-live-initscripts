@@ -2,6 +2,10 @@ fll-live-initscripts (4.3.3) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
   * drop dpi= cheatcode, it's not supported by any current release DM anyways.
+  * drop explicit display manager selection based on the preferences made by
+    different desktop environments, we have never used this code and even in
+    its absence, any display manager must be able to start any desktop
+    environment or there would be bugs to squash.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 Dec 2015 23:35:34 +0100
 
