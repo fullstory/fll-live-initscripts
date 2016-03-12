@@ -7,6 +7,7 @@ fll-live-initscripts (4.3.5) UNRELEASED; urgency=medium
     function.
   * add overlay/ overlayfs as a known unioning filesystem.
   * fll-reboot: minor coding style fixes.
+  * fll-locales: minor coding style fixes, strictly whitespace-only.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 04:11:44 +0100
 

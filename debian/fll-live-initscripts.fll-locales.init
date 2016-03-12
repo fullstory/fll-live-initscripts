@@ -157,35 +157,39 @@ LANG=""
 
 # First check if they entered a built in lang
 for LOCALE in ${LANGS}; do
-    [ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ] && LANG="${LOCALE}" && break
-    # match the language to find the default and possible locales
-    case "${LOCALE}" in
-        ${LANG_CODE}_*)
-            [ -z "${LANG_POSS}" ] && LANG_POSS="${LOCALE}"
-            fll_locale_default ${LOCALE} && LANG_DEF="${LOCALE}"
-            ;;
-    esac
+	[ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ] && LANG="${LOCALE}" && break
+
+	# match the language to find the default and possible locales
+	case "${LOCALE}" in
+		${LANG_CODE}_*)
+			[ -z "${LANG_POSS}" ] && LANG_POSS="${LOCALE}"
+			fll_locale_default ${LOCALE} && LANG_DEF="${LOCALE}"
+			;;
+	esac
 done
+
 # See if we have some knowledge on how to setup the requested locale
 if [ -z "${LANG}" ]; then
-    for LOCALE in fll_locale_cheats; do
-        [ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ] && \
-            fll_locale_lang ${LOCALE} && break
-    done
+	for LOCALE in fll_locale_cheats; do
+		[ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ] && \
+			fll_locale_lang ${LOCALE} && break
+	done
 fi
+
 # Ok just fallback to the default language, or whatever we know about or en_US
 if [ -z "$LANG" ]; then
-    if [ -n "${LANG_DEF}" ]; then
-        LANG="${LANG_DEF}"
-    else
-        if [ -n "${LANG_POSS}" ]; then
-            LANG="${LANG_POSS}"
-        else
-            LANG="en_US.utf8"
-        fi
-    fi
+	if [ -n "${LANG_DEF}" ]; then
+		LANG="${LANG_DEF}"
+	else
+		if [ -n "${LANG_POSS}" ]; then
+			LANG="${LANG_POSS}"
+		else
+			LANG="en_US.utf8"
+		fi
+	fi
 fi
 export LANG
+
 ###
 # if demographic code was ommitted, extract default demo_code from LANG
 ###
@@ -196,30 +200,33 @@ fi
 
 #set tz, mirror, xkb via fll_locale_demo
 if [ "${LANG}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ]; then
-    fll_locale_demo ${LANG}
+	fll_locale_demo ${LANG}
 else
-    # We've altered their LANG
-    fll_locale_cheats
-    for LOCALE in ${FLL_LOCALE_CHEATS} ; do
-        # if we have their locale
-        if [ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ] ; then
-            DEMO="${LOCALE}"
-            break
-        fi
-        # if we have a locale in their country
-        if [ "${LOCALE#*_}" = "${DEMO_CODE}.utf8" ] ; then
-            [ -z "${DEMO_POSS}" ] && DEMO_POSS="${LOCALE}"
-        fi
-    done
-    # if it's not a country we know about fallback to default 00_00
-    if [ -z "${DEMO}" ]; then
-        if [ -n "${DEMO_POSS}" ]; then
-            DEMO="${DEMO_POSS}"
-        else
-            DEMO="00_00.utf8"
-        fi
-    fi
-    fll_locale_demo ${DEMO}
+	# We've altered their LANG
+	fll_locale_cheats
+	for LOCALE in ${FLL_LOCALE_CHEATS}; do
+		# if we have their locale
+		if [ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ]; then
+			DEMO="${LOCALE}"
+			break
+		fi
+
+		# if we have a locale in their country
+		if [ "${LOCALE#*_}" = "${DEMO_CODE}.utf8" ]; then
+			[ -z "${DEMO_POSS}" ] && DEMO_POSS="${LOCALE}"
+		fi
+	done
+
+	# if it's not a country we know about fallback to default 00_00
+	if [ -z "${DEMO}" ]; then
+		if [ -n "${DEMO_POSS}" ]; then
+			DEMO="${DEMO_POSS}"
+		else
+			DEMO="00_00.utf8"
+		fi
+	fi
+
+	fll_locale_demo ${DEMO}
 fi
 
 ###
@@ -238,7 +245,6 @@ fi
 # allow KEYTABLE to update above XKBLAYOUT settings
 ###
 if [ -n "${KEYTABLE}" ]; then
-
 	XKBLAYOUT="${KEYTABLE}"
 fi
 
@@ -306,7 +312,7 @@ set_locale()
 set_console()
 {
 	# write configuration: console-setup
- 	cat > /etc/default/console-setup <<EOF
+	cat > /etc/default/console-setup <<EOF
 ACTIVE_CONSOLES="/dev/tty[1-6]"
 CHARMAP="${CHARMAP}"
 CODESET="${CODESET}"
@@ -373,6 +379,7 @@ apt_install_lang() {
 	APTGETBASE="apt-get -o Dir::Etc=$LIVEAPTSOURCES"
 	echo 'deb file://'${LIVEAPT}' sid main' > ${LIVEAPTSOURCES}/sources.list
 	mkdir ${LIVEAPTSOURCES}/preferences.d
+
 	if ! ${APTGETBASE} update > /dev/null; then
 		log_failure_msg " apt-get update for i18n packages from cd failed"
 		apt_install_lang_clean
@@ -390,8 +397,10 @@ apt_install_lang() {
 	# lets assume it is <MB and ok if it's not in MB
 	if [ "${APTUSES}" != "${APTUSESRAW}" ]; then
 		APTUSES=$(echo $APTUSES | sed 's|\.[0-9]*$||;')
+
 		# get a free memory figure
 		FREEMEM=$(LANG=C free -m | awk '/\-\/\+\ buffers/{print $4}')
+
 		# check free - used > minspace (256M)
 		MEMAFTER=$(( ${FREEMEM} - ${APTUSES} ))
 		if [ ${MEMAFTER} -lt 256 ]; then
@@ -400,6 +409,7 @@ apt_install_lang() {
 			apt_install_lang_clean
 			return
 		fi
+
 		# check used/free > minratio
 		USESRATIO=$(( ${FREEMEM} / ${APTUSES} ))
 		if [ ${USESRATIO} -lt 5 ]; then
@@ -411,6 +421,7 @@ apt_install_lang() {
 
 	# install the packages
 	${APTGETBASE} install ${LANGPACKS} > /dev/null
+
 	# clean up
 	apt_install_lang_clean
 }
