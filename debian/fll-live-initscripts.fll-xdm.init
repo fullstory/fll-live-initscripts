@@ -79,18 +79,6 @@ if [ -f /proc/cmdline ]; then
 	done
 fi
 
-if [ -z "${DESKTOP}" ]; then
-	[ -x "/usr/bin/icewm" ] && DESKTOP="icewm"		# 7th choice
-	[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"	# 6th choice
-	[ -x "/usr/bin/startlxde" ] && \
-		[ -x "/usr/bin/openbox" ] && DESKTOP="lxde"	# 5th choice
-	[ -x "/usr/bin/startlxqt" ] && \
-		[ -x "/usr/bin/openbox" ] && DESKTOP="lxqt"	# 4th choice
-	[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"		# 3rd choice
-	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# 2nd choice
-	[ -x "/usr/bin/startkde" ] && DESKTOP="kde"		# 1st choice, if installed and desktop= is empty
-fi
-
 setup_gdm3() {
 	# autologin + greeter theme
 	# timed login required for login after x restart
@@ -205,11 +193,24 @@ setup_dm() {
 }
 
 setup_wm() {
+	log_daemon_msg "${NAME}"
+
 	FLL_LIVE_USER_GROUP=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 4)
 	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
 
-	log_daemon_msg "${NAME}"
-
+	if [ -z "${DESKTOP}" ]; then
+		# in the absence of an explicit destop= cheatcode setting,
+		# these defaults are checked in reverse order
+		[ -x "/usr/bin/icewm" ] && DESKTOP="icewm"		# 7th
+		[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"	# 6th
+		[ -x "/usr/bin/startlxde" ] && \
+			[ -x "/usr/bin/openbox" ] && DESKTOP="lxde"	# 5th
+		[ -x "/usr/bin/startlxqt" ] && \
+			[ -x "/usr/bin/openbox" ] && DESKTOP="lxqt"	# 4th
+		[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"		# 3rd
+		[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# 2nd
+		[ -x "/usr/bin/startkde" ] && DESKTOP="kde"		# 1st
+	fi
 
 	case "${DESKTOP}" in
 		flux*)
