@@ -1,6 +1,5 @@
-fll-live-initscripts (4.3.3) UNRELEASED; urgency=medium
+fll-live-initscripts (4.3.3) unstable; urgency=medium
 
-  * NOT RELEASED YET
   * drop dpi= cheatcode, it's not supported by any current release DM anyways.
   * drop explicit display manager selection based on the preferences made by
     different desktop environments, we have never used this code and even in
@@ -10,8 +9,11 @@ fll-live-initscripts (4.3.3) UNRELEASED; urgency=medium
   * drop nbd support for the time being, it hasn't supported by pyfll for a
     while.
   * fix F.U.L.L.S.T.O.R.Y. homepage URL.
+  * fll-adduser: drop fake dependencies on keyboard-setup and console-setup.
+  * simplify boot ordering interdependencies by moving fll-xdm to runlevel S
+    as well.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 Dec 2015 23:35:34 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 03:19:57 +0100
 
 fll-live-initscripts (4.3.2) unstable; urgency=medium
 

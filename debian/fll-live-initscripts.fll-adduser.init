@@ -2,7 +2,7 @@
 
 ### BEGIN INIT INFO
 # Provides:          fll-adduser
-# Required-Start:    keyboard-setup console-setup
+# Required-Start:
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:
