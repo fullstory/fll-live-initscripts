@@ -19,7 +19,7 @@
 # F.U.L.L.S.T.O.R.Y init script
 #
 # Copyright: (C) 2007-2008, Kel Modderman <kel@otaku42.de>
-# Copyright: (C) 2008-2014, Stefan Lippers-Hollmann <s.l-h@gmx.de>
+# Copyright: (C) 2008-2016, Stefan Lippers-Hollmann <s.l-h@gmx.de>
 # License:   GPLv2
 #
 # F.U.L.L.S.T.O.R.Y Project Homepage:
@@ -92,8 +92,7 @@ do_umount() {
 
 	REG_MTPTS=""
 	TMPFS_MTPTS=""
-	while read -r DEV MTPT FSTYPE OPTS REST
-	do
+	while read -r DEV MTPT FSTYPE OPTS REST; do
 		case "$MTPT" in
 			#
 			# live hack
@@ -126,11 +125,11 @@ do_umount() {
 	# live hack: any command after this point must be prefixed with ${BINDIR}
 	#
 	UMOUNT_V=""
-	if [ "$VERBOSE" != no ] ; then
+	if [ "$VERBOSE" != no ]; then
 		UMOUNT_V="-v"
 	fi
-	if [ "$UNION_MTPTS" ]
-	then
+
+	if [ "$UNION_MTPTS" ]; then
 		echo "Unmounting union filesystems."
 		for MTPT in $UNION_MTPTS ; do
 			case "$MTPT" in
@@ -147,15 +146,13 @@ do_umount() {
 		done
 	fi
 
-	if [ "$SQSH_MTPTS" ]
-	then
+	if [ "$SQSH_MTPTS" ]; then
 		echo "Unmounting squashfs filesystems."
 		umount -l -n -f -d $UMOUNT_V $SQSH_MTPTS
 		[ "$?" -eq 0 ] || echo "\"umount -l -n -f -d $UMOUNT_V $SQSH_MTPTS\" returned $?"
 	fi
 
-	if [ "$LIVE_MTPTS" ]
-	then
+	if [ "$LIVE_MTPTS" ]; then
 		echo "Unmounting live filesystems."
 		umount -l -n -f -d $UMOUNT_V $LIVE_MTPTS
 		[ "$?" -eq 0 ] || echo "\"umount -l -n -f -d $UMOUNT_V $LIVE_MTPTS\" returned $?"
@@ -235,7 +232,7 @@ do_stop() {
 		LD_LIBRARY_PATH="${DESTDIR}/lib64:${LD_LIBRARY_PATH}"
 	fi
 	for path in $(awk '/^\/lib/ {print $1}' /etc/ld.so.conf.d/*) ; do
-		if [ -e "${DESTDIR}${path}" ] ; then
+		if [ -e "${DESTDIR}${path}" ]; then
 			LD_LIBRARY_PATH="${DESTDIR}${path}:${LD_LIBRARY_PATH}"
 		fi
 	done
