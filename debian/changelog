@@ -3,8 +3,9 @@ fll-live-initscripts (4.3.4) unstable; urgency=medium
   * drop trailing whitespace.
   * fll-xdm: don't exit prematurely, after fll-desktop and fll-xdm have been
     merged.
+  * drop now obsolete linitian override.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 04:09:31 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 04:11:24 +0100
 
 fll-live-initscripts (4.3.3) unstable; urgency=medium
 
