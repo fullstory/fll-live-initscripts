@@ -7,6 +7,8 @@ fll-live-initscripts (4.3.3) UNRELEASED; urgency=medium
     its absence, any display manager must be able to start any desktop
     environment or there would be bugs to squash.
   * simplify WM/ XSESSION definitions.
+  * drop nbd support for the time being, it hasn't supported by pyfll for a
+    while.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 Dec 2015 23:35:34 +0100
 
