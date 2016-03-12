@@ -1,6 +1,7 @@
 fll-live-initscripts (4.3.3) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
+  * drop dpi= cheatcode, it's not supported by any current release DM anyways.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 Dec 2015 23:35:34 +0100
 

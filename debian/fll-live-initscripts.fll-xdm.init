@@ -75,14 +75,6 @@ if [ -f /proc/cmdline ]; then
 					DESKTOP="${param#desktop=}"
 				fi
 				;;
-			dpi=*)
-				CUSTOM_DPI="${param#dpi=}"
-				case "${CUSTOM_DPI}" in
-					*[!0-9]*)
-						CUSTOM_DPI=""
-						;;
-				esac
-				;;
 		esac
 	done
 fi
@@ -121,14 +113,6 @@ setup_kdm() {
 	echo "AUTOLOGINUSER=${FLL_LIVE_USER}"	>  /etc/default/kdm.d/autologin
 	echo "AUTOLOGINAGAIN=true"		>> /etc/default/kdm.d/autologin
 	echo "AUTOLOGINDELAY=0"			>> /etc/default/kdm.d/autologin
-
-	if [ "${CUSTOM_DPI}" ]; then
-		sed -i	-e "s/\(^ServerArgsLocal\=.*\)\ \-dpi[ \t]*[0-9]*\(.*$\)/\1\2/" \
-			-e "s/\(^ServerArgsLocal\=.*\)\-dpi[ \t]*[0-9]*\(.*$\)/\1\2/" \
-			-e "s/\(^ServerArgsLocal\=.*\) *$/\1/" \
-			-e "s/^ServerArgsLocal\=.*$/& \-dpi ${CUSTOM_DPI}/" \
-				/etc/kde4/kdm/kdmrc
-	fi
 }
 
 setup_lightdm() {
@@ -170,13 +154,6 @@ setup_slim() {
 		printf "default_user\t${FLL_LIVE_USER}\n" >> /etc/slim.conf
 	grep -q ^auto_login /etc/slim.conf || \
 		printf "auto_login\tyes\n" >> /etc/slim.conf
-
-	if [ "${CUSTOM_DPI}" ]; then
-		sed -i	-e "s/\(^xserver_arguments.*\)\ \-dpi[ \t]*[0-9]*\(.*$\)/\1\2/" \
-			-e "s/\(^xserver_arguments.*\)\-dpi[ \t]*[0-9]*\(.*$\)/\1\2/" \
-			-e "s/\(^xserver_arguments.*\)/& \-dpi ${CUSTOM_DPI}/" \
-				/etc/slim.conf
-	fi
 }
 
 setup_x_cursor_theme() {
