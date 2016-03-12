@@ -1,6 +1,7 @@
 fll-live-initscripts (4.3.4) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
+  * drop trailing whitespace.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 03:20:08 +0100
 

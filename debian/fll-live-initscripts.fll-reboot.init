@@ -110,7 +110,7 @@ do_umount() {
 				continue
 				;;
 		esac
-		case "$FSTYPE" in 
+		case "$FSTYPE" in
 			aufs|unionfs)
 				UNION_MTPTS="$MTPT $UNION_MTPTS"
 				;;
@@ -121,7 +121,7 @@ do_umount() {
 	done
 
 	exec 0<&9 9<&-
-	
+
 	#
 	# live hack: any command after this point must be prefixed with ${BINDIR}
 	#
@@ -169,7 +169,7 @@ do_umount() {
 copy_exec() {
 	verbose="${VERBOSE}"
 	final_destination=${DESTDIR}/${2}/$(basename ${1})
-	
+
 	if [ -L "$final_destination" ]; then
 		if ! [ `readlink ${final_destination}` = "${1}" ]; then
 			return
@@ -223,13 +223,13 @@ do_stop() {
 	# prepare binaries for post-umount of live media
 	DESTDIR="$(mktemp -d -p / fll.XXXXX)"
 	mkdir -p ${DESTDIR}/bin
-	
+
 	# cache utilities required for the final stages of shutdown
 	for path in $(which echo) $(which umount) $(which halt) \
 		$(which reboot) $(which eject); do
 		copy_exec "${path}" /bin
 	done
-	
+
 	LD_LIBRARY_PATH="${DESTDIR}/lib"
 	if [ -e "${DESTDIR}/lib64" ]; then
 		LD_LIBRARY_PATH="${DESTDIR}/lib64:${LD_LIBRARY_PATH}"
@@ -290,7 +290,7 @@ do_stop() {
 		fi
 	fi
 
-	# shutdown/reboot	
+	# shutdown/reboot
 	exec ${command} ${options} > /dev/console 2>&1 < /dev/console
 }
 

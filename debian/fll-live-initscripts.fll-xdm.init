@@ -90,7 +90,7 @@ if [ -z "${DESKTOP}" ]; then
 	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# 2nd choice
 	[ -x "/usr/bin/startkde" ] && DESKTOP="kde"		# 1st choice, if installed and desktop= is empty
 
-	# none of the major desktop environments is installed, don't interfere 
+	# none of the major desktop environments is installed, don't interfere
 	# with ordinary priorities.
 	[ -z "${DESKTOP}" ] && exit 0
 fi
@@ -169,7 +169,7 @@ setup_wm() {
 	log_daemon_msg "${NAME}"
 
 
-	case "${DESKTOP}" in 
+	case "${DESKTOP}" in
 		flux*)
 			WM="/usr/bin/startfluxbox"
 			XSESSION="fluxbox"
@@ -210,7 +210,7 @@ setup_wm() {
 		echo "[Desktop]"		>  ${FLL_LIVE_USER_HOME}/.dmrc
 		echo "Session=${XSESSION}"	>> ${FLL_LIVE_USER_HOME}/.dmrc
 		chown "${FLL_LIVE_USER}:${FLL_LIVE_USER_GROUP}" "${FLL_LIVE_USER_HOME}/.dmrc"
-			
+
 		update-alternatives --set x-window-manager "${WM}" >/dev/null
 		log_end_msg "${?}"
 
@@ -219,7 +219,7 @@ setup_wm() {
 			sed -i "s|^Relogin=.*|&\nSession=${XSESSION}.desktop|" \
 				/etc/sddm.conf
 		fi
-		
+
 		return 0
 	else
 		log_action_msg " desktop '${DESKTOP}' is not available"
