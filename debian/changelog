@@ -1,3 +1,9 @@
+fll-live-initscripts (4.3.6) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 06:34:33 +0100
+
 fll-live-initscripts (4.3.5) unstable; urgency=medium
 
   * move sddm hacking above the success message.
