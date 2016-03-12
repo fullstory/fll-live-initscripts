@@ -89,10 +89,6 @@ if [ -z "${DESKTOP}" ]; then
 	[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"		# 3rd choice
 	[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# 2nd choice
 	[ -x "/usr/bin/startkde" ] && DESKTOP="kde"		# 1st choice, if installed and desktop= is empty
-
-	# none of the major desktop environments is installed, don't interfere
-	# with ordinary priorities.
-	[ -z "${DESKTOP}" ] && exit 0
 fi
 
 setup_gdm3() {
