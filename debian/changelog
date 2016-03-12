@@ -1,6 +1,5 @@
-fll-live-initscripts (4.3.5) UNRELEASED; urgency=medium
+fll-live-initscripts (4.3.5) unstable; urgency=medium
 
-  * NOT RELEASED YET
   * move sddm hacking above the success message.
   * move display manager setup into its own function, setup_dm().
   * refactor the selection of the default window manager into the  setup_wm()
@@ -8,8 +7,9 @@ fll-live-initscripts (4.3.5) UNRELEASED; urgency=medium
   * add overlay/ overlayfs as a known unioning filesystem.
   * fll-reboot: minor coding style fixes.
   * fll-locales: minor coding style fixes, strictly whitespace-only.
+  * refactor fll-shell into fll-adduser.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 04:11:44 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 06:34:22 +0100
 
 fll-live-initscripts (4.3.4) unstable; urgency=medium
 

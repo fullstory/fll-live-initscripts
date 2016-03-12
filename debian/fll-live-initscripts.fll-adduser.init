@@ -98,6 +98,20 @@ EOF
 		chmod 0440 "/etc/sudoers.d/15_${FLL_DISTRO_NAME}"
 }
 
+set_user_profile() {
+	for file in '.bash_logout' '.bash_profile' '.bashrc' '.profile'; do
+		if [ -f /etc/skel/${file} ] && [ ! -f /root/${file} ]; then
+			cp /etc/skel/${file} /root/${file}
+		fi
+	done
+
+	:> /root/.hushlogin
+
+	if [ -w /etc/pam.d/login ]; then
+		sed -i '/^[^#].*pam_lastlog\.so/s/^/# /' /etc/pam.d/login
+	fi
+}
+
 hack_bashrc() {
 	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
 	grep -s -q 'alias su' ${FLL_LIVE_USER_HOME}/.bashrc && return 0
@@ -111,6 +125,7 @@ case "${1}" in
 		log_daemon_msg "${NAME}"
 
 		add_live_user
+		set_user_profile
 		hack_sudoers
 		hack_bashrc
 

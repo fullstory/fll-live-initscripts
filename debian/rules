@@ -8,7 +8,6 @@ override_dh_installinit:
 	dh_installinit --package=fll-live-initscripts --no-start --name=fll-fstab
 	dh_installinit --package=fll-live-initscripts --no-start --name=fll-locales
 	dh_installinit --package=fll-live-initscripts --no-start --name=fll-reboot
-	dh_installinit --package=fll-live-initscripts --no-start --name=fll-shell
 	dh_installinit --package=fll-live-initscripts --no-start --name=fll-xdm
 	dh_installinit
 
