@@ -111,7 +111,7 @@ do_umount() {
 				;;
 		esac
 		case "$FSTYPE" in
-			aufs|unionfs)
+			overlay|overlayfs|aufs|unionfs)
 				UNION_MTPTS="$MTPT $UNION_MTPTS"
 				;;
 			squashfs)

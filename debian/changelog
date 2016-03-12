@@ -5,6 +5,7 @@ fll-live-initscripts (4.3.5) UNRELEASED; urgency=medium
   * move display manager setup into its own function, setup_dm().
   * refactor the selection of the default window manager into the  setup_wm()
     function.
+  * add overlay/ overlayfs as a known unioning filesystem.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 04:11:44 +0100
 
