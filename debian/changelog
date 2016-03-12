@@ -9,6 +9,7 @@ fll-live-initscripts (4.3.3) UNRELEASED; urgency=medium
   * simplify WM/ XSESSION definitions.
   * drop nbd support for the time being, it hasn't supported by pyfll for a
     while.
+  * fix F.U.L.L.S.T.O.R.Y. homepage URL.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 Dec 2015 23:35:34 +0100
 
