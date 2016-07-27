@@ -1,8 +1,8 @@
-fll-live-initscripts (4.3.6) UNRELEASED; urgency=medium
+fll-live-initscripts (4.3.6) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * drop support for kdm, it's no longer available in Debian.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2016 06:34:33 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 28 Jul 2016 01:52:54 +0200
 
 fll-live-initscripts (4.3.5) unstable; urgency=medium
 

@@ -4,12 +4,12 @@
 # Provides:          fll-xdm
 # Required-Start:    fll-adduser
 # Required-Stop:
-# X-Start-Before:    gdm3 kdm lightdm lxdm slim sddm wdm xdm
+# X-Start-Before:    gdm3 lightdm lxdm slim sddm wdm xdm
 # Default-Start:     S
 # Default-Stop:
 # Short-Description: detect and setup X desktop manager
 # Description:       The purpose of this script is to detect and configure an
-#                    installed X desktop manager (i.e. sddm, kdm, gdm3 etc.).
+#                    installed X desktop manager (i.e. sddm, lightdm, gdm3 etc.).
 ### END INIT INFO
 
 ###
@@ -92,13 +92,6 @@ setup_gdm3() {
 			/etc/gdm3/daemon.conf
 }
 
-setup_kdm() {
-	# autologin
-	echo "AUTOLOGINUSER=${FLL_LIVE_USER}"	>  /etc/default/kdm.d/autologin
-	echo "AUTOLOGINAGAIN=true"		>> /etc/default/kdm.d/autologin
-	echo "AUTOLOGINDELAY=0"			>> /etc/default/kdm.d/autologin
-}
-
 setup_lightdm() {
 	# set autologin user and set timeout to zero
 	mkdir -p /etc/lightdm/lightdm.conf.d
@@ -172,13 +165,6 @@ setup_dm() {
 	if [ -x "${LIGHTDM}" ]; then
 		log_daemon_msg "${NAME}"; log_action_begin_msg " configuring lightdm"
 		setup_lightdm && echo "${LIGHTDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
-		log_end_msg "${?}"
-	fi
-
-	KDM="$(which kdm 2>/dev/null)"
-	if [ -x "${KDM}" ]; then
-		log_daemon_msg "${NAME}"; log_action_begin_msg " configuring kdm"
-		setup_kdm && echo "${KDM}" > "${DEFAULT_DISPLAY_MANAGER_FILE}"
 		log_end_msg "${?}"
 	fi
 

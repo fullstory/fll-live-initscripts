@@ -32,7 +32,7 @@ chrooted() {
 case "$1" in
 	configure)
 		if dpkg --compare-versions "$2" lt '4.1.19~'; then
-			for file in gdm3 kdm lxdm slim wdm xdm; do
+			for file in gdm3 lxdm slim wdm xdm; do
 				rm -f "/etc/insserv/overrides/${file}"
 			done
 		fi
