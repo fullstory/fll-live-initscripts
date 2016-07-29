@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 9.20120115),
  libblkid-dev,
  libudev-dev,
  libxml2-utils
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Vcs-Browser: https://github.com/fullstory/fll-live-initscripts
 Vcs-Git: git://github.com/fullstory/fll-live-initscripts.git
 

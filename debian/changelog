@@ -1,8 +1,10 @@
 fll-live-initscripts (4.4.1) unstable; urgency=medium
 
-  * drop obsolete linitan overrides.
+  * update linitan overrides.
+  * bump standards version to 3.9.8, no changes necessary.
+  * distro-defaults: no need to ship /etc/insserv/overrides/ anymore.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 29 Jul 2016 21:34:40 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 29 Jul 2016 21:51:43 +0200
 
 fll-live-initscripts (4.4.0) unstable; urgency=medium
 
