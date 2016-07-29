@@ -192,7 +192,7 @@ setup_wm() {
 			XSESSION="IceWM"
 			;;
 		kde)
-			if [ -x "/usr/bin/kwin_x11)" ]; then
+			if [ -x "/usr/bin/kwin_x11" ]; then
 				WM="/usr/bin/kwin_x11"
 			else
 				WM="/usr/bin/kwin_wayland"
@@ -212,7 +212,7 @@ setup_wm() {
 			XSESSION="xfce"
 			;;
 		*)
-			echo "desktop '${DESKTOP}' is not available"
+			echo "unknown desktop: ${DESKTOP}"
 			return 1
 			;;
 	esac
