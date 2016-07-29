@@ -192,7 +192,8 @@ setup_wm() {
 			XSESSION="IceWM"
 			;;
 		kde)
-			WM="/usr/bin/kwin_x11"
+			[ -x "/usr/bin/kwin_wayland" ] && WM="/usr/bin/kwin_wayland" || :
+			[ -x "/usr/bin/kwin_x11)" ] && WM="/usr/bin/kwin_x11" || :
 			XSESSION="plasma"
 			;;
 		lxde)
