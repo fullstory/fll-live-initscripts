@@ -19,7 +19,7 @@ Build-Depends: debhelper (>= 9.20120115),
  libxml2-utils
 Standards-Version: 3.9.8
 Vcs-Browser: https://github.com/fullstory/fll-live-initscripts
-Vcs-Git: git://github.com/fullstory/fll-live-initscripts.git
+Vcs-Git: https://github.com/fullstory/fll-live-initscripts.git
 
 Package: distro-defaults
 Architecture: all
