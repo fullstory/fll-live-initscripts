@@ -1,8 +1,10 @@
 fll-live-initscripts (4.3.7) UNRELEASED; urgency=medium
 
-  * NOT RELEASED YET
+  * make snakeoil-cert service conditional on make-ssl-cert
+  * add fll-live and fll-cmdline services
+  * switch fstab, adduser, xdm and locales to services
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 28 Jul 2016 01:53:17 +0200
+ -- Niall Walsh <niallwalsh@celtux.org>  Fri, 29 Jul 2016 17:20:44 +0100
 
 fll-live-initscripts (4.3.6) unstable; urgency=medium
 
