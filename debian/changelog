@@ -1,3 +1,9 @@
+fll-live-initscripts (4.4.4) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 30 Jul 2016 00:22:47 +0200
+
 fll-live-initscripts (4.4.3) unstable; urgency=medium
 
   * slightly refactor wayland detection.
