@@ -192,7 +192,7 @@ setup_wm() {
 			XSESSION="IceWM"
 			;;
 		kde)
-			WM="/usr/bin/startkde"
+			WM="/usr/bin/kwin_x11"
 			XSESSION="plasma"
 			;;
 		lxde)
