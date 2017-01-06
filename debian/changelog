@@ -14,8 +14,9 @@ fll-live-initscripts (4.4.4) unstable; urgency=medium
       with compat level 10.
     - call the dh_systemd_enable/ dh_systemd_start at the end of their
       corresponding override targets in preparation of compat level 11.
+  * export DEB_BUILD_MAINT_OPTIONS = hardening=+all, to catch bindnow as well.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 06 Jan 2017 05:36:57 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 06 Jan 2017 05:42:49 +0100
 
 fll-live-initscripts (4.4.3) unstable; urgency=medium
 
