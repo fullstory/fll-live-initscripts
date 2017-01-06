@@ -6,7 +6,7 @@ Section: misc
 Priority: optional
 Build-Depends: debhelper (>= 9.20120115),
  dh-systemd,
- asciidoc,
+ asciidoc-base,
  docbook,
  gengetopt,
  xsltproc,
