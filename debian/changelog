@@ -1,3 +1,9 @@
+fll-live-initscripts (4.5.1) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 08 Dec 2017 00:09:42 +0100
+
 fll-live-initscripts (4.5.0) unstable; urgency=medium
 
   * treat local repositories needed by liveapt as trusted.
