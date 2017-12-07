@@ -10,6 +10,7 @@
 # Copyright: (C) 2007 - 2008 Kel Modderman <kel@otaku42.de>
 #            (C) 2008 Michael Deelwater <michael.deelwater@googlemail.com>
 #            (C) 2016 Niall Walsh <niallwalsh@celtux.org>
+#            (C) 2017 Stefan Lippers-Hollmann <s.l-h@gmx.de>
 # License:   GPLv2
 #
 # F.U.L.L.S.T.O.R.Y Project Homepage:
@@ -341,7 +342,7 @@ apt_install_lang() {
 
 	LIVEAPTSOURCES=$(mktemp -d -t liveapt.XXXXXX)
 	APTGETBASE="apt-get -o Dir::Etc=$LIVEAPTSOURCES"
-	echo 'deb file://'${LIVEAPT}' sid main' > ${LIVEAPTSOURCES}/sources.list
+	echo 'deb [trusted=yes] file://'${LIVEAPT}' sid main' > ${LIVEAPTSOURCES}/sources.list
 	mkdir ${LIVEAPTSOURCES}/preferences.d
 
 	if ! ${APTGETBASE} update > /dev/null; then
