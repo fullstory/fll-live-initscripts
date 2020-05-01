@@ -10,7 +10,7 @@
 # Copyright: (C) 2007 - 2008 Kel Modderman <kel@otaku42.de>
 #            (C) 2008 Michael Deelwater <michael.deelwater@googlemail.com>
 #            (C) 2016 Niall Walsh <niallwalsh@celtux.org>
-#            (C) 2017 Stefan Lippers-Hollmann <s.l-h@gmx.de>
+#            (C) 2017 - 2020 Stefan Lippers-Hollmann <s.l-h@gmx.de>
 # License:   GPLv2
 #
 # F.U.L.L.S.T.O.R.Y Project Homepage:
@@ -398,29 +398,6 @@ apt_install_lang_clean() {
 	rm -rf ${LIVEAPTSOURCES}
 }
 
-localize_sources_list() {
-	# deploy load balancing for first generation aptosid push mirrors
-	if [ -w /etc/apt/sources.list.d/${FLL_DISTRO_NAME}.list ]; then
-		case "$(mawk 'BEGIN{print int(5 * rand())}')" in
-			0|1)
-				# Office-Vienna, Vienna, Austria
-				FLL_MIRROR="http://aptosid.office-vienna.at/aptosid/debian/"
-				;;
-			2|3)
-				# Technical University Carolo-Wilhelmina at Brunswick, Germany
-				FLL_MIRROR="http://debian.tu-bs.de/project/aptosid/debian/"
-				;;
-			*)
-				# aptosid.com, webtropia.com, Düsseldorf, Germany
-				FLL_MIRROR="http://aptosid.com/debian/"
-				;;
-		esac
-
-		printf "deb ${FLL_MIRROR} sid main fix.main\n#deb-src ${FLL_MIRROR} sid main fix.main" \
-			> /etc/apt/sources.list.d/${FLL_DISTRO_NAME}.list
-	fi
-}
-
 save_locale_variables() {
 	for var in FLL_MIRROR CHARMAP CODESET FONTFACE FONTSIZE \
 		   XKBMODEL XKBLAYOUT XKBVARIANT XKBOPTIONS; do
@@ -435,7 +412,6 @@ case "${1}" in
 		set_locale
 		set_console
 		apt_install_lang
-		localize_sources_list
 		save_locale_variables
 		;;
 	localize)
@@ -443,7 +419,6 @@ case "${1}" in
 		set_locale
 		set_console
 		apt_install_lang
-		localize_sources_list
 		save_locale_variables
 		;;
 	*)
