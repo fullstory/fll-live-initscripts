@@ -1,11 +1,11 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: fll-live-initscripts
 Upstream-Contact: Stefan Lippers-Hollmann <s.l-h@gmx.de>
-Source: git://github.com/fullstory/fll-live-initscripts.git
+Source: https://github.com/fullstory/fll-live-initscripts.git
 
 Files: *
 Copyright: 2007-2008, Kel Modderman <kel@otaku42.de>
-           2007-2017, Stefan Lippers-Hollmann <s.l-h@gmx.net>
+           2007-2020, Stefan Lippers-Hollmann <s.l-h@gmx.net>
            2008-2016, Niall Walsh <niallwalsh@users.berlios.de>
 License: GPL-2.0
 Comment:
@@ -43,7 +43,7 @@ License: GPL-2.0
  GNU General Public License for more details.
  .
  You should have received a copy of the GNU General Public License
- along with this program. If not, see <http://www.gnu.org/licenses/>
+ along with this program. If not, see <https://www.gnu.org/licenses/>
  .
  On Debian systems, the complete text of the GNU General
  Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".

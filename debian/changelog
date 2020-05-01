@@ -1,8 +1,12 @@
-fll-live-initscripts (4.5.1) UNRELEASED; urgency=medium
+fll-live-initscripts (4.5.1) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * adapt for current KDE sessions.
+  * bump standards version to 4.5.0:
+    - switch to https where possible.
+  * switch to compat level 13.
+  * allow R³=no.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 08 Dec 2017 00:09:42 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 01 May 2020 20:56:06 +0200
 
 fll-live-initscripts (4.5.0) unstable; urgency=medium
 
@@ -411,7 +415,7 @@ fll-live-initscripts (4.1.1) unstable; urgency=low
 fll-live-initscripts (4.1.0) unstable; urgency=low
 
   * fll-fstab.init: unconditionally clean up pstore when booting in efi mode.
-    efivars storage pressure (more than 50% full), due to stale boot- or 
+    efivars storage pressure (more than 50% full), due to stale boot- or
     crashlogs, created by previous kernels breaks further changes (efibootmgr).
   * fll-init.init: drop noagp|agp=no cheatcodes, those shouldn't apply anymore
     and tend to break more than they might have fixed (normal blacklists remain
