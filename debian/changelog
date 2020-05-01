@@ -1,3 +1,9 @@
+fll-live-initscripts (4.5.2) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 01 May 2020 20:56:34 +0200
+
 fll-live-initscripts (4.5.1) unstable; urgency=medium
 
   * adapt for current KDE sessions.
@@ -568,7 +574,7 @@ fll-live-initscripts (3.13.7) unstable; urgency=low
 fll-live-initscripts (3.13.6) unstable; urgency=low
 
   [ Rick Battle ]
-  * added support for lightdm and made it the default for xfce*|lxde, 
+  * added support for lightdm and made it the default for xfce*|lxde,
     replacing slim.
 
   [ Niall Walsh ]
@@ -668,7 +674,7 @@ fll-live-initscripts (3.11.1) unstable; urgency=low
 
 fll-live-initscripts (3.10.10) unstable; urgency=low
 
-  * give the newly developed "simple modesetting-only KMS driver for the 
+  * give the newly developed "simple modesetting-only KMS driver for the
     hardware emulated in qemu-kvm" a chance and avoid overriding cirrus by
     vesa.
   * bump standards version to 3.9.2, no changes necessary.
