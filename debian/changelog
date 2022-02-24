@@ -5,6 +5,9 @@ fll-live-initscripts (4.5.2) unstable; urgency=medium
     do that properly on procfs (and /proc/ is mounted by the initramfs
     already, so no need to check).
   * fix locate for fll_live_cmdline.
+  * fix lintian problems:
+    - fll-live-initscripts: malformed-override Unknown tag init.d-script-
+      missing-dependency-on-remote_fs, no longer relevant anyways.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 24 Feb 2022 05:05:18 +0100
 
