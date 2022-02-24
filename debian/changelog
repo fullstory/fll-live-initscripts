@@ -16,7 +16,7 @@ fll-live-initscripts (4.5.2) unstable; urgency=medium
   * fll-cmdline: don't use ConditionFileNotEmpty=/proc/cmdline, systemd can't
     do that properly on procfs (and /proc/ is mounted by the initramfs
     already, so no need to check).
-  * fix locate for fll_live_cmdline.
+  * fix location of fll_live_cmdline.
   * fix lintian problems:
     - fll-live-initscripts: malformed-override Unknown tag init.d-script-
       missing-dependency-on-remote_fs, no longer relevant anyways.
