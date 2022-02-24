@@ -7,7 +7,7 @@
 # F.U.L.L.S.T.O.R.Y
 #
 # Copyright: (C) 2007-2008 Kel Modderman <kel@otaku42.de>
-# Copyright: (C) 2007-2020 Stefan Lippers-Hollmann <s.l-h@gmx.de>
+# Copyright: (C) 2007-2022 Stefan Lippers-Hollmann <s.l-h@gmx.de>
 # Copyright: (C) 2016 Niall Walsh <niallwalsh@celtux.org>
 # License:   GPLv2
 #
@@ -167,20 +167,16 @@ setup_wm() {
 	if [ -z "${DESKTOP}" ]; then
 		# in the absence of an explicit destop= cheatcode setting,
 		# these defaults are checked in reverse order
-		[ -x "/usr/bin/icewm" ] && DESKTOP="icewm"		# 7th
-		[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"	# 6th
+		[ -x "/usr/bin/icewm" ] && DESKTOP="icewm"			# 8th
+		[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"		# 7th
 		[ -x "/usr/bin/startlxde" ] && \
-			[ -x "/usr/bin/openbox" ] && DESKTOP="lxde"	# 5th
+			[ -x "/usr/bin/openbox" ] && DESKTOP="lxde"		# 6th
 		[ -x "/usr/bin/startlxqt" ] && \
-			[ -x "/usr/bin/openbox" ] && DESKTOP="lxqt"	# 4th
-		[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"		# 3rd
-		[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"		# 2nd
-
-		if [ -x "/usr/bin/startplasma-x11" ] || \
-		   [ -x "/usr/bin/startkde" ] || \
-		   [ -x "/usr/bin/startplasma-wayland" ]; then
-			DESKTOP="kde"					# 1st
-		fi
+			[ -x "/usr/bin/openbox" ] && DESKTOP="lxqt"		# 5th
+		[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"			# 4th
+		[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"			# 3rd
+		[ -x "/usr/bin/startplasma-x11" ] && DESKTOP="kde-wayland"	# 2nd
+		[ -x "/usr/bin/startplasma-wayland" ] && DESKTOP="kde-x11"	# 1st
 	fi
 
 	case "${DESKTOP}" in
@@ -196,12 +192,12 @@ setup_wm() {
 			WM="/usr/bin/icewm"
 			XSESSION="IceWM"
 			;;
-		kde)
-			if [ -x "/usr/bin/kwin_x11" ]; then
-				WM="/usr/bin/kwin_x11"
-			else
-				WM="/usr/bin/kwin_wayland"
-			fi
+		kde-wayland)
+			WM="/usr/bin/kwin_wayland"
+			XSESSION="plasmawayland"
+			;;
+		kde|kde-x11)
+			WM="/usr/bin/kwin_x11"
 			XSESSION="plasma"
 			;;
 		lxde)
@@ -234,7 +230,9 @@ setup_wm() {
 				/etc/sddm.conf
 		fi
 
-		update-alternatives --set x-window-manager "${WM}" >/dev/null
+		if [ ! "x${WM}" = "x/usr/bin/kwin_wayland" ]; then
+			update-alternatives --set x-window-manager "${WM}" >/dev/null
+		fi
 
 		return 0
 	else
