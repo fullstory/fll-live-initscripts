@@ -1,9 +1,12 @@
-fll-live-initscripts (4.5.2) UNRELEASED; urgency=medium
+fll-live-initscripts (4.5.2) unstable; urgency=medium
 
-  * NOT RELEASED YET
   * don't clobber /etc/apt/sources.list.d/*.list.
+  * fll-cmdline: don't use ConditionFileNotEmpty=/proc/cmdline, systemd can't
+    do that properly on procfs (and /proc/ is mounted by the initramfs
+    already, so no need to check).
+  * fix locate for fll_live_cmdline.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 01 May 2020 20:56:34 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 24 Feb 2022 05:05:18 +0100
 
 fll-live-initscripts (4.5.1) unstable; urgency=medium
 
