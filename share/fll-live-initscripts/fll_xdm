@@ -103,7 +103,7 @@ setup_lxdm() {
 }
 
 setup_sddm() {
-	printf "[Autologin]\nRelogin=true\nUser=${FLL_LIVE_USER}\n" \
+	printf "[General]\nDisplayServer=wayland\n\n[Autologin]\nRelogin=true\nUser=${FLL_LIVE_USER}\n" \
 		>/etc/sddm.conf
 }
 
@@ -175,8 +175,8 @@ setup_wm() {
 			[ -x "/usr/bin/openbox" ] && DESKTOP="lxqt"		# 5th
 		[ -x "/usr/bin/xfwm4" ] && DESKTOP="xfce"			# 4th
 		[ -x "/usr/bin/metacity" ] && DESKTOP="gnome"			# 3rd
-		[ -x "/usr/bin/startplasma-x11" ] && DESKTOP="kde-wayland"	# 2nd
-		[ -x "/usr/bin/startplasma-wayland" ] && DESKTOP="kde-x11"	# 1st
+		[ -x "/usr/bin/startplasma-x11" ] && DESKTOP="kde-x11"		# 2nd
+		[ -x "/usr/bin/startplasma-wayland" ] && DESKTOP="kde-wayland"	# 1st
 	fi
 
 	case "${DESKTOP}" in
@@ -192,11 +192,11 @@ setup_wm() {
 			WM="/usr/bin/icewm"
 			XSESSION="IceWM"
 			;;
-		kde-wayland)
+		kde|kde-wayland)
 			WM="/usr/bin/kwin_wayland"
 			XSESSION="plasmawayland"
 			;;
-		kde|kde-x11)
+		kde-x11)
 			WM="/usr/bin/kwin_x11"
 			XSESSION="plasma"
 			;;
@@ -228,6 +228,11 @@ setup_wm() {
 		if [ -w /etc/sddm.conf ]; then
 			sed -i "s|^Relogin=.*|&\nSession=${XSESSION}.desktop|" \
 				/etc/sddm.conf
+
+			if [ "x${DESKTOP}" = "xkde-wayland" ]; then
+				sed -i "s|^DisplayServer=.*|DisplayServer=x11-user" \
+					/etc/sddm.conf
+			fi
 		fi
 
 		if [ ! "x${WM}" = "x/usr/bin/kwin_wayland" ]; then
