@@ -1,8 +1,8 @@
-fll-live-initscripts (4.6.1) UNRELEASED; urgency=medium
+fll-live-initscripts (4.6.1) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fll-xdm: revise logic for !kde-wayland.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 04 Nov 2023 06:59:02 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 12 Nov 2023 04:55:14 +0100
 
 fll-live-initscripts (4.6.0) unstable; urgency=medium
 

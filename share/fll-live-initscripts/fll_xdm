@@ -229,9 +229,8 @@ setup_wm() {
 			sed -i "s|^Relogin=.*|&\nSession=${XSESSION}.desktop|" \
 				/etc/sddm.conf
 
-			if [ "x${DESKTOP}" = "xkde-wayland" ]; then
-				sed -i "s|^DisplayServer=.*|DisplayServer=x11-user" \
-					/etc/sddm.conf
+			if [ ! "x${DESKTOP}" = "xkde-wayland" ]; then
+				sed -i 's|^DisplayServer=.*|#&|' /etc/sddm.conf
 			fi
 		fi
 
