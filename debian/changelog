@@ -1,3 +1,9 @@
+fll-live-initscripts (4.7.1) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 18 Jul 2024 17:01:04 +0200
+
 fll-live-initscripts (4.7.0) unstable; urgency=medium
 
   * fll_login: restrict to POSIX'ly correct read(2) usage.
