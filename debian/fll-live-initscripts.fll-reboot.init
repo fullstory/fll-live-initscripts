@@ -19,14 +19,14 @@
 # F.U.L.L.S.T.O.R.Y init script
 #
 # Copyright: (C) 2007-2008, Kel Modderman <kel@otaku42.de>
-# Copyright: (C) 2008-2016, Stefan Lippers-Hollmann <s.l-h@gmx.de>
+# Copyright: (C) 2008-2024, Stefan Lippers-Hollmann <s.l-h@gmx.de>
 # License:   GPLv2
 #
 # F.U.L.L.S.T.O.R.Y Project Homepage:
 # https://github.com/fullstory
 ###
 
-PATH=/sbin:/usr/sbin:/bin:/usr/bin
+PATH=/usr/sbin:/usr/bin
 NAME="fll-reboot"
 
 ###
@@ -45,12 +45,12 @@ fi
 ###
 # VERBOSE setting and other rcS variables
 ###
-. /lib/init/vars.sh
+. /usr/lib/init/vars.sh
 
 ###
 # source lsb functions
 ###
-. /lib/lsb/init-functions
+. /usr/lib/lsb/init-functions
 
 ###
 # don't prompt for ejecting in a virtual machine, unless overriden
@@ -227,24 +227,24 @@ do_stop() {
 		copy_exec "${path}" /bin
 	done
 
-	LD_LIBRARY_PATH="${DESTDIR}/lib"
-	if [ -e "${DESTDIR}/lib64" ]; then
-		LD_LIBRARY_PATH="${DESTDIR}/lib64:${LD_LIBRARY_PATH}"
+	LD_LIBRARY_PATH="${DESTDIR}/usr/lib"
+	if [ -e "${DESTDIR}/usr/lib64" ]; then
+		LD_LIBRARY_PATH="${DESTDIR}/usr/lib64:${LD_LIBRARY_PATH}"
 	fi
-	for path in $(awk '/^\/lib/ {print $1}' /etc/ld.so.conf.d/*) ; do
+	for path in $(awk '/^\/usr/lib/ {print $1}' /etc/ld.so.conf.d/*) ; do
 		if [ -e "${DESTDIR}${path}" ]; then
 			LD_LIBRARY_PATH="${DESTDIR}${path}:${LD_LIBRARY_PATH}"
 		fi
 	done
 	export LD_LIBRARY_PATH
 
-	LD_LINUX="${DESTDIR}/lib/ld-linux.so.2"
-	if [ -e "${DESTDIR}/lib64/ld-linux-x86-64.so.2" ]; then
-		LD_LINUX="${DESTDIR}/lib64/ld-linux-x86-64.so.2"
+	LD_LINUX="${DESTDIR}/usr/lib/ld-linux.so.2"
+	if [ -e "${DESTDIR}/usr/lib64/ld-linux-x86-64.so.2" ]; then
+		LD_LINUX="${DESTDIR}/usr/lib64/ld-linux-x86-64.so.2"
 	elif [ ! -e $LD_LINUX ]; then
-		LD_LINUX="${DESTDIR}/lib/ld.so.1"
-		if [ -e "${DESTDIR}/lib64/ld64.so.1" ]; then
-			LD_LINUX="${DESTDIR}/lib64/ld64.so.1"
+		LD_LINUX="${DESTDIR}/usr/lib/ld.so.1"
+		if [ -e "${DESTDIR}/usr/lib64/ld64.so.1" ]; then
+			LD_LINUX="${DESTDIR}/usr/lib64/ld64.so.1"
 		fi
 	fi
 	export LD_LINUX

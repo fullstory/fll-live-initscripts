@@ -11,7 +11,6 @@ override_dh_installinit:
 	dh_installinit
 
 override_dh_installsystemd:
-	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-networkd-one
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-snakeoil-cert
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-live
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-cmdline
@@ -19,4 +18,5 @@ override_dh_installsystemd:
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-adduser
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-locales
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-xdm
+	dh_installsystemd --package=fll-live-initscripts-networkd-one --no-start --name=fll-networkd-one
 	dh_installsystemd

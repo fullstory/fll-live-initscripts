@@ -20,7 +20,8 @@ esac
 # Let user know this shell is no longer activatable when fll_login exits
 trap "echo ; echo ${0##*/} Terminated ; exit" TERM
 
-read -p "${p} " nothing
+printf "${p} "
+read nothing
 
 if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
 	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
@@ -29,7 +30,7 @@ if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
 		chown "${FLL_LIVE_USER}:${FLL_LIVE_USER}" \
 			"${FLL_LIVE_USER_HOME}/.hushlogin"
 	fi
-	exec /bin/login -f "${FLL_LIVE_USER}"
+	exec /usr/bin/login -f "${FLL_LIVE_USER}"
 else
-	exec /bin/login -f root
+	exec /usr/bin/login -f root
 fi

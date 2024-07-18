@@ -1,0 +1,61 @@
+#!/bin/sh
+
+set -e
+
+# This script can be called in the following ways:
+#
+# After the package was installed:
+#       <postinst> configure <old-version>
+#
+#
+# If prerm fails during upgrade or fails on failed upgrade:
+#       <old-postinst> abort-upgrade <new-version>
+#
+# If prerm fails during deconfiguration of a package:
+#       <postinst> abort-deconfigure in-favour <new-package> <version>
+#                  removing <old-package> <version>
+#
+# If prerm fails during replacement due to conflict:
+#       <postinst> abort-remove in-favour <new-package> <version>
+
+chrooted() {
+	# borrowed from udev's postinst
+	if [ "$(stat -c %d/%i /)" = "$(stat -Lc %d/%i /proc/1/root 2>/dev/null)" ]; then
+		# the device number/inode pair of / is the same as that of
+		# /sbin/init's root, so we're *not* in a chroot and hence
+		# return false.
+		return 1
+	fi
+	return 0
+}
+
+case "$1" in
+	configure)
+		if [ -d /etc/systemd/network ] && [ ! -f /etc/systemd/network/wired.network ] && chrooted; then
+			echo 'fll-live-initscripts-networkd-dummy: creating /etc/systemd/network/wired.network ...' 1>&2
+			cat > /etc/systemd/network/wired.network \
+<<EOF
+[Match]
+Name=en*
+
+[Network]
+DHCP=both
+IPv6PrivacyExtensions=true
+
+[DHCP]
+UseDomains=yes
+EOF
+		fi
+		;;
+	triggered)
+		;;
+	abort-upgrade|abort-deconfigure|abort-remove)
+		;;
+	*)
+		echo "$0 called with unknown argument \`$1'" 1>&2
+		exit 1
+		;;
+esac
+
+#DEBHELPER#
+exit 0

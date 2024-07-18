@@ -1,8 +1,16 @@
-fll-live-initscripts (4.6.2) UNRELEASED; urgency=medium
+fll-live-initscripts (4.7.0) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fll_login: restrict to POSIX'ly correct read(2) usage.
+  * adapt to merged-usr.
+  * use pkgconf instead of pkg-config for building.
+  * bump standards version to 4.6.2, no changes necessary.
+  * don't depend on cpufrequtils, it's gone.
+  * split out networking pre-configuration into
+    fll-live-initscripts-networkd-one | fll-live-initscripts-networkd-dummy
+    these are intentionally not pulled in automatically.
+  * update lintian overrides to slightly different formatting.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 12 Nov 2023 04:55:47 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 18 Jul 2024 16:55:26 +0200
 
 fll-live-initscripts (4.6.1) unstable; urgency=medium
 

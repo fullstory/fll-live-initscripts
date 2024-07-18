@@ -9,7 +9,7 @@ my $network = "${path}/dhcp.network";
 -e $network || exit;
 
 # open pipe from journalctl for networkd dhcp_lease_acquired
-open(JRNL, '-|', '/bin/journalctl',
+open(JRNL, '-|', '/usr/bin/journalctl',
   '-o', 'verbose',
   '_SYSTEMD_UNIT=systemd-networkd.service',
   'CODE_FUNCTION=dhcp_lease_acquired'
@@ -33,7 +33,7 @@ close(JRNL);
 my $route;
 # if we have not aquired a lease
 if (length($last)==0) {
-  open(IP, '-|', '/bin/ip', 'route', 'list')||die "failed to open pipe from /bin/ip: $!";
+  open(IP, '-|', '/usr/bin/ip', 'route', 'list')||die "failed to open pipe from /usr/bin/ip: $!";
   $route=<IP>;
   close(IP);
   if (length($route)==0) {
@@ -52,7 +52,7 @@ exit if (length($last)==0);
 LINE: foreach my $line (@seen) {
   next LINE if $line =~ /^${last}$/;
   print STDERR "flush address for $line\n";
-  system('/sbin/ip', 'address', 'flush', 'dev', $line);
+  system('/usr/sbin/ip', 'address', 'flush', 'dev', $line);
 }
 
 # write the networkd config for last

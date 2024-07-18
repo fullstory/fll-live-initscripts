@@ -10,14 +10,14 @@
 # Copyright: (C) 2007 - 2008 Kel Modderman <kel@otaku42.de>
 #            (C) 2008 Michael Deelwater <michael.deelwater@googlemail.com>
 #            (C) 2016 Niall Walsh <niallwalsh@celtux.org>
-#            (C) 2017 - 2020 Stefan Lippers-Hollmann <s.l-h@gmx.de>
+#            (C) 2017 - 2024 Stefan Lippers-Hollmann <s.l-h@gmx.de>
 # License:   GPLv2
 #
 # F.U.L.L.S.T.O.R.Y Project Homepage:
 # https://github.com/fullstory
 ###
 
-PATH=/sbin:/usr/sbin:/bin:/usr/bin
+PATH=/usr/sbin:/usr/bin
 NAME="fll-locales"
 
 if [ "${1}" = "list" ]; then
@@ -42,7 +42,7 @@ fi
 ###
 # source fll functions
 ###
-. /lib/init/fll
+. /usr/lib/init/fll
 
 ###
 # source LANG functions
@@ -257,9 +257,9 @@ set_timezone()
 		# debian defaults to UTC=yes, which is rumored to be dual-boot unfriendly
 		printf "0.000000 0 0.000000\n0\nLOCAL\n" > /etc/adjtime
 
-		# update the system clock a'la /lib/udev/rules.d/85-hwclock.rules
-		/sbin/hwclock --rtc=/dev/rtc0 --systz
-		/sbin/hwclock --rtc=/dev/rtc0 --hctosys
+		# update the system clock a'la /usr/lib/udev/rules.d/85-hwclock.rules
+		/usr/sbin/hwclock --rtc=/dev/rtc0 --systz
+		/usr/sbin/hwclock --rtc=/dev/rtc0 --hctosys
 	fi
 }
 
