@@ -1,8 +1,9 @@
-fll-live-initscripts (4.7.1) UNRELEASED; urgency=medium
+fll-live-initscripts (4.7.1) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fll-live-initscripts: explicitly depend on 'login', which was split out of
+    'shadow' (and is required by "fll_login").
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 18 Jul 2024 17:01:04 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 29 Sep 2024 14:14:34 +0200
 
 fll-live-initscripts (4.7.0) unstable; urgency=medium
 
