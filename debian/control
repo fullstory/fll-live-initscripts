@@ -39,7 +39,6 @@ Depends: ${misc:Depends},
  fll-live-utils,
  login,
  procps,
- ceni,
  keyboard-configuration,
  systemd-sysv (>= 217-2~),
  sysvinit-utils (>= 3.05-1)
