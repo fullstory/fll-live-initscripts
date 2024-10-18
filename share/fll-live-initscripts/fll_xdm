@@ -180,6 +180,10 @@ setup_wm() {
 	fi
 
 	case "${DESKTOP}" in
+		cinnamon)
+			WM="/usr/bin/cinnamon-session"
+			XSESSION="cinnamon"
+			;;
 		flux*)
 			WM="/usr/bin/startfluxbox"
 			XSESSION="fluxbox"
@@ -199,6 +203,10 @@ setup_wm() {
 		kde-x11)
 			WM="/usr/bin/kwin_x11"
 			XSESSION="plasma"
+			;;
+		kodi)
+			WM="/usr/bin/kodi"
+			XSESSION="kodi"
 			;;
 		lxde)
 			WM="/usr/bin/openbox"
