@@ -167,6 +167,8 @@ setup_wm() {
 	if [ -z "${DESKTOP}" ]; then
 		# in the absence of an explicit destop= cheatcode setting,
 		# these defaults are checked in reverse order
+		[ -x "/usr/bin/cinnamon-session" ] && DESKTOP="cinnamon"	# 10th
+		[ -x "/usr/bin/kodi" ] && DESKTOP="kodi"			# 9th
 		[ -x "/usr/bin/icewm" ] && DESKTOP="icewm"			# 8th
 		[ -x "/usr/bin/startfluxbox" ] && DESKTOP="fluxbox"		# 7th
 		[ -x "/usr/bin/startlxde" ] && \
