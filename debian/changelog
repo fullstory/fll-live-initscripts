@@ -1,6 +1,10 @@
 fll-live-initscripts (4.7.4) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Symlink /usr/share/zoneinfo/${TZ} to /etc/localtime rather than copy.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 19 Oct 2024 00:10:36 +0200
 
