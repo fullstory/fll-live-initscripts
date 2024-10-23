@@ -1,8 +1,9 @@
-fll-live-initscripts (4.7.5) UNRELEASED; urgency=medium
+fll-live-initscripts (4.7.5) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * drop fll-networkd-one, it races with systemd-networkd, which expects its
+    networkd configuration to be present way too early in the boot process.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 19 Oct 2024 14:33:11 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 24 Oct 2024 00:05:23 +0200
 
 fll-live-initscripts (4.7.4) unstable; urgency=medium
 

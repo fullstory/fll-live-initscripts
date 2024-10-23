@@ -1,9 +1,0 @@
-[Match]
-KernelCommandLine=!nodhcp
-
-[Network]
-DHCP=both
-
-[DHCP]
-UseDomains=yes
-
