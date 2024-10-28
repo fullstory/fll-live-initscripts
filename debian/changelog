@@ -1,6 +1,7 @@
 fll-live-initscripts (4.7.6) UNRELEASED; urgency=medium
 
-  * NOT RELEASED YET
+  [ Kel Modderman ]
+  * Purge unused fll_blockdev_detect
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 24 Oct 2024 00:27:45 +0200
 
