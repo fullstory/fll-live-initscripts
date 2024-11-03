@@ -1,3 +1,9 @@
+fll-live-initscripts (4.8.1) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Nov 2024 19:22:11 +0100
+
 fll-live-initscripts (4.8.0) unstable; urgency=medium
 
   * Add polkit rules to allow live user in sudo to execute anything as
