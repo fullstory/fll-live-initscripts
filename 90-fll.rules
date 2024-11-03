@@ -1,0 +1,8 @@
+// Allow any user in the 'sudo' group to execute anything
+// without entering a password.
+
+polkit.addRule(function(action, subject) {
+    if (subject.isInGroup("sudo")) {
+        return polkit.Result.YES;
+    }
+});

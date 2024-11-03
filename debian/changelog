@@ -1,8 +1,10 @@
-fll-live-initscripts (4.7.7) UNRELEASED; urgency=medium
+fll-live-initscripts (4.8.0) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  [ Kel Modderman ]
+  * Add polkit rules to allow live user in sudo to execute anything as
+    root.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 28 Oct 2024 18:53:02 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Sun, 03 Nov 2024 15:12:25 +1000
 
 fll-live-initscripts (4.7.6) unstable; urgency=medium
 
