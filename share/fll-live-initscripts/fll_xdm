@@ -208,7 +208,7 @@ setup_wm() {
 			;;
 		kodi)
 			WM="/usr/bin/kodi"
-			XSESSION="kodi"
+			XSESSION="kodi-gbm"
 			;;
 		lxde)
 			WM="/usr/bin/openbox"
@@ -239,9 +239,13 @@ setup_wm() {
 			sed -i "s|^Relogin=.*|&\nSession=${XSESSION}.desktop|" \
 				/etc/sddm.conf
 
-			if [ ! "x${DESKTOP}" = "xkde-wayland" ]; then
-				sed -i 's|^DisplayServer=.*|#&|' /etc/sddm.conf
-			fi
+			case "${DESKTOP}" in
+				kde-wayland|kodi)
+					;;
+				*)
+					sed -i 's|^DisplayServer=.*|#&|' /etc/sddm.conf
+					;;
+			esac
 		fi
 
 		if [ ! "x${WM}" = "x/usr/bin/kwin_wayland" ]; then

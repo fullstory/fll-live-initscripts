@@ -1,8 +1,9 @@
-fll-live-initscripts (4.8.1) UNRELEASED; urgency=medium
+fll-live-initscripts (4.8.1) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  [ Kel Modderman ]
+  * Use wayland/GBM kodi variant when consiguring sddm.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Nov 2024 19:22:11 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Wed, 06 Nov 2024 21:14:12 +1000
 
 fll-live-initscripts (4.8.0) unstable; urgency=medium
 
