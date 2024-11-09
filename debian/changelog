@@ -1,3 +1,11 @@
+fll-live-initscripts (4.8.5) unstable; urgency=medium
+
+  * Allow systemd-homed as an alternative dependency to adduser.
+  * Reintroduce a stripped down version of fll_xdm and associated
+    service, which stricly deals with the desktop manager.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 09 Nov 2024 23:48:12 +1000
+
 fll-live-initscripts (4.8.4) unstable; urgency=medium
 
   * Add fll-homed.service and fll_homed to create live user and home

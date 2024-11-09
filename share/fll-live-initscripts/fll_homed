@@ -1,6 +1,19 @@
 #!/bin/sh
 
-. /etc/default/distro
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -r /etc/default/distro ]; then
+       . /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+       exit 0
+fi
+
+[ -x "$(which homectl)" ] || exit 0
 
 homectl create "${FLL_LIVE_USER}" \
 	--storage=directory \

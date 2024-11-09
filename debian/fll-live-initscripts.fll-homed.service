@@ -1,5 +1,5 @@
 [Unit]
-Description=add live user and setup sudo and root user env
+Description=add live user using systemd-homed
 DefaultDependencies=no
 Conflicts=shutdown.target
 Before=systemd-user-sessions.service
