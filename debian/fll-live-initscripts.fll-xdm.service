@@ -1,7 +1,7 @@
 [Unit]
 Description=setup display and window manager
-Requires=fll-adduser.service
-After=fll-adduser.service
+Requires=fll-live.service
+After=fll-live.service
 Before=systemd-user-sessions.service
 
 [Service]
