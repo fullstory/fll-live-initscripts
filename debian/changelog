@@ -1,9 +1,15 @@
-fll-live-initscripts (4.8.7) UNRELEASED; urgency=medium
+fll-live-initscripts (4.8.8) unstable; urgency=medium
+
+  * Disable systemd-homed auto-login feature for testing.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sun, 10 Nov 2024 01:37:42 +1000
+
+fll-live-initscripts (4.8.7) unstable; urgency=medium
 
   * Do not specify xserver in sddm.con.d snippet, just user and session.
   * Do not set mouse cursor theme in fll_xdm.
 
- -- Kel Modderman <kelvmod@gmail.com>  Sun, 10 Nov 2024 01:18:54 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Sun, 10 Nov 2024 01:37:34 +1000
 
 fll-live-initscripts (4.8.6) unstable; urgency=medium
 
