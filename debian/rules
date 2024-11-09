@@ -14,6 +14,5 @@ override_dh_installsystemd:
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-snakeoil-cert
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-live
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-homed
-	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-xdm
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-locales
 	dh_installsystemd
