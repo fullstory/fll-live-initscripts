@@ -1,3 +1,10 @@
+fll-live-initscripts (4.8.4) unstable; urgency=medium
+
+  * Add fll-homed.service and fll_homed to create live user and home
+    configuration using homectl.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 09 Nov 2024 22:34:32 +1000
+
 fll-live-initscripts (4.8.3) unstable; urgency=medium
 
   * Drop fll-xdm.service and fll_xdm in favour of using homectl.

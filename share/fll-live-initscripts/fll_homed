@@ -1,0 +1,11 @@
+#!/bin/sh
+
+. /etc/default/distro
+
+homectl create "${FLL_LIVE_USER}" \
+	--storage=directory \
+	--real-name="${FLL_LIVE_USER}" \
+	--member-of="${FLL_LIVE_USER_GROUPS}" \
+	--auto-login=on \
+	--session-launcher="${FLL_XSESSION}" \
+	--session-type="${FLL_XTYPE}"
