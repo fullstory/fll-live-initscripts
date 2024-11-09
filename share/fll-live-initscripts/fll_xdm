@@ -44,8 +44,8 @@ setup_gdm3() {
 setup_lightdm() {
 	# set autologin user and set timeout to zero
 	mkdir -p /etc/lightdm/lightdm.conf.d
-	if [ ! -e /etc/lightdm/lightdm.conf.d/80_fll-live-initscripts.conf ]; then
-		cat >/etc/lightdm/lightdm.conf.d/80_fll-live-initscripts.conf <<EOF
+	if [ ! -e "/etc/lightdm/lightdm.conf.d/80_${FLL_LIVE_USER}.conf" ]; then
+		cat >"/etc/lightdm/lightdm.conf.d/80_${FLL_LIVE_USER}.conf" <<EOF
 [SeatDefaults]
 greeter-hide-users=false
 autologin-user=${FLL_LIVE_USER}
@@ -59,16 +59,17 @@ setup_lxdm() {
 	if [ -L /etc/lxdm/default.conf ] && [ ! -e /etc/lxdm/live.conf ]; then
 		rm -f /etc/lxdm/default.conf
 		sed "s/^# autologin=.*/&\nautologin=${FLL_LIVE_USER}/" \
-			/etc/lxdm/lxdm.conf >/etc/lxdm/live.conf
-		ln -fs live.conf /etc/lxdm/default.conf
+			/etc/lxdm/lxdm.conf >"/etc/lxdm/${FLL_LIVE_USER}.conf"
+		ln -fs "${FLL_LIVE_USER}.conf" /etc/lxdm/default.conf
 	fi
 }
 
 setup_sddm() {
+	mkdir -p /etc/sddm.conf.d
 	printf "[General]\nDisplayServer=${FLL_XTYPE}\n\n" \
-		>/etc/sddm.conf
-	printf "[Autologin]\nRelogin=true\n\nSession=${FLL_XSESSION}.desktop\nUser=${FLL_LIVE_USER}\n" \
-		>>/etc/sddm.conf
+		>/etc/sddm.conf.d/${FLL_LIVE_USER}.conf
+	printf "[Autologin]\nUser=${FLL_LIVE_USER}\nSession=${FLL_XSESSION}\n" \
+		>>/etc/sddm.conf.d/${FLL_LIVE_USER}.conf
 }
 
 setup_slim() {

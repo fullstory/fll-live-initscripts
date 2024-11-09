@@ -6,14 +6,15 @@
 FLL_DISTRO_MODE="installed"
 
 if [ -r /etc/default/distro ]; then
-       . /etc/default/distro
+	. /etc/default/distro
 fi
 
 if [ "${FLL_DISTRO_MODE}" != "live" ]; then
-       exit 0
+	exit 0
 fi
 
 [ -x "$(which homectl)" ] || exit 0
+[ -e "/home/${FLL_LIVE_USER}" ] && exit 0
 
 homectl create "${FLL_LIVE_USER}" \
 	--storage=directory \

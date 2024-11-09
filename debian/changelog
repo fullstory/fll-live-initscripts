@@ -1,3 +1,10 @@
+fll-live-initscripts (4.8.6) unstable; urgency=medium
+
+  * Use /etc/sddm.conf.d/.
+  * Do not execute fll_homed when a /home/$FLL_LIVE_USER already exists.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sun, 10 Nov 2024 00:38:16 +1000
+
 fll-live-initscripts (4.8.5) unstable; urgency=medium
 
   * Allow systemd-homed as an alternative dependency to adduser.
