@@ -1,6 +1,6 @@
 FLL_LOGIN(1)
 ============
-Kel Modderman <kel@otaku42.de>
+Kel Modderman <kelvmod@gmail.com>
 
 
 NAME
@@ -32,7 +32,7 @@ login(1), inittab(5), getty(8)
 
 AUTHOR
 ------
-Kel Modderman <kel@otaku42.de>
+Kel Modderman <kelvmod@gmail.com>
 
 
 RESOURCES

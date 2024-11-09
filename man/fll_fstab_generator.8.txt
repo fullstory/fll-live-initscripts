@@ -1,6 +1,6 @@
 FLL_FSTAB_GENERATOR(8)
 ======================
-Kel Modderman <kel@otaku42.de>
+Kel Modderman <kelvmod@gmail.com>
 
 
 NAME
@@ -61,7 +61,7 @@ fstab(5)
 
 AUTHOR
 ------
-Kel Modderman <kel@otaku42.de>
+Kel Modderman <kelvmod@gmail.com>
 
 
 RESOURCES
@@ -71,5 +71,5 @@ FULLSTORY Homepage: https://github.com/fullstory/[]
 
 COPYING
 -------
-Copyright \(C) 2008 Kel Modderman <kel@otaku42.de>. Free use of this software
+Copyright \(C) 2008 Kel Modderman <kelvmod@gmail.com>. Free use of this software
 is granted under the terms of the GNU General Public License (GPL) version 2.
