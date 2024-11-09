@@ -66,8 +66,6 @@ setup_lxdm() {
 
 setup_sddm() {
 	mkdir -p /etc/sddm.conf.d
-	printf "[General]\nDisplayServer=${FLL_XTYPE}\n\n" \
-		>/etc/sddm.conf.d/${FLL_LIVE_USER}.conf
 	printf "[Autologin]\nUser=${FLL_LIVE_USER}\nSession=${FLL_XSESSION}\n" \
 		>>/etc/sddm.conf.d/${FLL_LIVE_USER}.conf
 }
@@ -83,12 +81,6 @@ setup_slim() {
 		printf "default_user\t${FLL_LIVE_USER}\n" >> /etc/slim.conf
 	grep -q ^auto_login /etc/slim.conf || \
 		printf "auto_login\tyes\n" >> /etc/slim.conf
-}
-
-setup_x_cursor_theme() {
-	if [ -e /usr/share/icons/DMZ-Black/cursor.theme ]; then
-		update-alternatives --set x-cursor-theme /usr/share/icons/DMZ-Black/cursor.theme >/dev/null
-	fi
 }
 
 setup_dm() {
@@ -123,5 +115,4 @@ setup_dm() {
 	fi
 }
 
-setup_x_cursor_theme
 setup_dm
