@@ -1,3 +1,11 @@
+fll-live-initscripts (4.8.11) unstable; urgency=medium
+
+  * fll_homed: consider /home/*.homerdir and no-op if live user dir
+    or file exists.
+  * fll_homed: bugfix homectl command.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sun, 10 Nov 2024 09:30:41 +1000
+
 fll-live-initscripts (4.8.10) unstable; urgency=medium
 
   * Purge fll_xdm it has been incorporated into the live initramfs.

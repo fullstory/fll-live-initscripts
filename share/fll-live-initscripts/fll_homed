@@ -14,9 +14,13 @@ if [ "${FLL_DISTRO_MODE}" != "live" ]; then
 fi
 
 [ -x "$(which homectl)" ] || exit 0
-[ -e "/home/${FLL_LIVE_USER}" ] && exit 0
 
-homectl create "${FLL_LIVE_USER}"
+if [ -e "/home/${FLL_LIVE_USER}" ] || \
+   [ -e "/home/${FLL_LIVE_USER}.homedir" ]; then
+	exit 0
+fi
+
+homectl create "${FLL_LIVE_USER}" \
 	--uid=1000 \
 	--storage=directory \
 	--home-dir="/home/${FLL_LIVE_USER}" \
