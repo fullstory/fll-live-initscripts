@@ -1,3 +1,9 @@
+fll-live-initscripts (4.8.3) unstable; urgency=medium
+
+  * Drop fll-xdm.service and fll_xdm in favour of using homectl.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 09 Nov 2024 19:53:33 +1000
+
 fll-live-initscripts (4.8.2) unstable; urgency=medium
 
   [ Kel Modderman ]
