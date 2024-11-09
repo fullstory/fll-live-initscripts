@@ -16,9 +16,12 @@ fi
 [ -x "$(which homectl)" ] || exit 0
 [ -e "/home/${FLL_LIVE_USER}" ] && exit 0
 
-homectl create "${FLL_LIVE_USER}" \
+homectl create "${FLL_LIVE_USER}"
+	--uid=1000 \
 	--storage=directory \
+	--home-dir="/home/${FLL_LIVE_USER}" \
 	--real-name="${FLL_LIVE_USER}" \
 	--member-of="${FLL_LIVE_USER_GROUPS}" \
 	--session-launcher="${FLL_XSESSION}" \
-	--session-type="${FLL_XTYPE}"
+	--session-type="${FLL_XTYPE}" \
+	--auto-login=on
