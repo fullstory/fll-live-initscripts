@@ -256,10 +256,6 @@ set_timezone()
 	else
 		# debian defaults to UTC=yes, which is rumored to be dual-boot unfriendly
 		printf "0.000000 0 0.000000\n0\nLOCAL\n" > /etc/adjtime
-
-		# update the system clock a'la /usr/lib/udev/rules.d/85-hwclock.rules
-		/usr/sbin/hwclock --rtc=/dev/rtc0 --systz
-		/usr/sbin/hwclock --rtc=/dev/rtc0 --hctosys
 	fi
 }
 
