@@ -15,15 +15,12 @@ fi
 
 [ -x "$(which homectl)" ] || exit 0
 
-if [ -e "/home/${FLL_LIVE_USER}" ] || \
+if [ -d "/home/${FLL_LIVE_USER}" ] || \
    [ -e "/home/${FLL_LIVE_USER}.homedir" ]; then
 	exit 0
 fi
 
 homectl create "${FLL_LIVE_USER}" \
-	--uid=1000 \
-	--storage=directory \
-	--home-dir="/home/${FLL_LIVE_USER}" \
 	--real-name="${FLL_LIVE_USER}" \
 	--member-of="${FLL_LIVE_USER_GROUPS}" \
 	--session-launcher="${FLL_XSESSION}" \

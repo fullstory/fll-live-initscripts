@@ -1,3 +1,9 @@
+fll-live-initscripts (4.8.16) unstable; urgency=medium
+
+  * fll_homed: drop hardcoded home type, location and uid for testing.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 12 Nov 2024 08:19:56 +1000
+
 fll-live-initscripts (4.8.15) unstable; urgency=medium
 
   * Remove timezone management from fll_locales.
