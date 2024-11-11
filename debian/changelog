@@ -1,9 +1,9 @@
-fll-live-initscripts (4.8.15) UNRELEASED; urgency=medium
+fll-live-initscripts (4.8.15) unstable; urgency=medium
 
-  * 
   * Remove timezone management from fll_locales.
+  * Release for testing.
 
- -- Kel Modderman <kelvmod@gmail.com>  Mon, 11 Nov 2024 17:22:32 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Mon, 11 Nov 2024 17:23:18 +1000
 
 fll-live-initscripts (4.8.14) unstable; urgency=medium
 
