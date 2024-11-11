@@ -1,13 +1,15 @@
-fll-live-initscripts (4.8.13) UNRELEASED; urgency=medium
+fll-live-initscripts (4.8.14) UNRELEASED; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+  * Set Executable bit on fll_adduser.
 
-  [ Kel Modderman ]
+ -- Kel Modderman <kelvmod@gmail.com>  Mon, 11 Nov 2024 16:49:51 +1000
+
+fll-live-initscripts (4.8.13) unstable; urgency=medium
+
   * Return live adduser as a systemd service, fll_adduser, similar to
     fll_homed.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 10 Nov 2024 22:12:06 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Mon, 11 Nov 2024 16:49:42 +1000
 
 fll-live-initscripts (4.8.12) unstable; urgency=medium
 
