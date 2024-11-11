@@ -78,15 +78,6 @@ if [ -f /proc/cmdline ]; then
 			lang=*)
 				LANGUAGE=$(awk 'BEGIN{ print tolower("'"${param#lang=}"'") }')
 				;;
-			utc=yes)
-				UTC="yes"
-				;;
-			utc|gmt)
-				CUSTOM_TZ="Etc/UTC"
-				;;
-			tz=*)
-				CUSTOM_TZ="${param#tz=}"
-				;;
 			noaptlang)
 				NOAPTLANG="yes"
 				;;
@@ -199,18 +190,6 @@ else
 fi
 
 ###
-# allow CUSTOM_TZ to override above TZ definitions
-###
-if [ -n "${CUSTOM_TZ}" ]; then
-	case "${CUSTOM_TZ}" in
-		utc|UTC)
-			CUSTOM_TZ="Etc/UTC"
-			;;
-	esac
-	[ -f "/usr/share/zoneinfo/${CUSTOM_TZ}" ] && TZ="${CUSTOM_TZ}"
-fi
-
-###
 # allow KEYTABLE to update above XKBLAYOUT settings
 ###
 if [ -n "${KEYTABLE}" ]; then
@@ -237,27 +216,6 @@ fi
 if [ -n "${KBVARIANT}" ]; then
 	XKBVARIANT="${KBVARIANT}"
 fi
-
-set_timezone()
-{
-	###
-	# configure timezone, fallback to UTC
-	###
-	[ -f "/usr/share/zoneinfo/${TZ}" ] || TZ="Etc/UTC"
-	echo "configuring timezone data for '${TZ}'"
-	echo "${TZ}" > /etc/timezone
-	rm -f /etc/localtime && ln -sf "/usr/share/zoneinfo/${TZ}" /etc/localtime
-
-	###
-	# hack rcS, make localtime default, unless tz=Etc/UTC or utc=yes
-	###
-	if [ "${TZ}" = "Etc/UTC" ] || [ "${UTC}" = "yes" ]; then
-		printf "0.000000 0 0.000000\n0\nUTC\n" > /etc/adjtime
-	else
-		# debian defaults to UTC=yes, which is rumored to be dual-boot unfriendly
-		printf "0.000000 0 0.000000\n0\nLOCAL\n" > /etc/adjtime
-	fi
-}
 
 set_locale()
 {
@@ -404,7 +362,6 @@ save_locale_variables() {
 
 case "${1}" in
 	start)
-		set_timezone
 		set_locale
 		set_console
 		apt_install_lang
