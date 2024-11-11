@@ -1,6 +1,11 @@
 fll-live-initscripts (4.8.13) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Return live adduser as a systemd service, fll_adduser, similar to
+    fll_homed.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 10 Nov 2024 22:12:06 +0100
 

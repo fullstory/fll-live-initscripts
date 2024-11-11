@@ -1,0 +1,22 @@
+#!/bin/sh
+
+###
+# source distro-defaults, no-op unless in live mode
+###
+FLL_DISTRO_MODE="installed"
+
+if [ -r /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
+if [ "${FLL_DISTRO_MODE}" != "live" ]; then
+	exit 0
+fi
+
+[ -x "$(which adduser)" ] || exit 0
+
+if [ -e "/home/${FLL_LIVE_USER}" ]; then
+	exit 0
+fi
+
+adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
