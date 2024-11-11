@@ -13,7 +13,7 @@ if [ "${FLL_DISTRO_MODE}" != "live" ]; then
 	exit 0
 fi
 
-[ -x "$(which adduser)" ] || exit 0
+[ -x "$(which adduser)" ] && [ ! -x "$(which homectl)" ] || exit 0
 
 if [ -e "/home/${FLL_LIVE_USER}" ]; then
 	exit 0

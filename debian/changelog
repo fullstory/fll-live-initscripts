@@ -2,6 +2,7 @@ fll-live-initscripts (4.8.15) unstable; urgency=medium
 
   * Remove timezone management from fll_locales.
   * Release for testing.
+  * fll_adduser: let homectl take precedence if present.
 
  -- Kel Modderman <kelvmod@gmail.com>  Mon, 11 Nov 2024 17:23:18 +1000
 
