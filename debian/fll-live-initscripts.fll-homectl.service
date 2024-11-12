@@ -1,5 +1,5 @@
 [Unit]
-Description=add live user using systemd-homed
+Description=add live user using homectl
 DefaultDependencies=no
 Conflicts=shutdown.target
 Before=systemd-user-sessions.service
