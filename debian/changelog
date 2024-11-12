@@ -1,7 +1,4 @@
-fll-live-initscripts (4.8.18) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (4.9.0) unstable; urgency=medium
 
   [ Kel Modderman ]
   * fll_locales: fix awk regexp warnings.
@@ -13,7 +10,7 @@ fll-live-initscripts (4.8.18) UNRELEASED; urgency=medium
   * fll_locales: allow specification of alternate lang code when run
     interactively.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Nov 2024 09:59:14 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 12 Nov 2024 21:43:29 +1000
 
 fll-live-initscripts (4.8.17) unstable; urgency=medium
 
