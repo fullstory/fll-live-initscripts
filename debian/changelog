@@ -7,6 +7,9 @@ fll-live-initscripts (4.8.18) UNRELEASED; urgency=medium
   * fll_locales: fix awk regexp warnings.
   * fll_locales: add hack to accept Releases files from future when
     processing aptlang.
+  * fll_locales: set DEBIAN_FRONTEND=noninteractive when calling apt-
+    get.
+  * fll_locales: allow to be run again interactively.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Nov 2024 09:59:14 +0100
 

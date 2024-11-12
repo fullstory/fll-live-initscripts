@@ -261,6 +261,13 @@ apt_install_lang() {
 		return
 	fi
 
+	# don't touch apt if it has been used and we're noninteractive
+	if [ "${1}" != "localize" ] && \
+	   [ "/var/lib/dpkg/status" -nt "$(fll_get_mnt)/${FLL_IMAGE_LOCATION}" ]; then
+		echo "dpkg already updated"
+		return
+	fi
+
 	LIVEAPT="${FLL_MOUNTPOINT}.2/i18n"
 	if [ ! -d "${LIVEAPT}" ]; then
 		return
@@ -287,13 +294,6 @@ apt_install_lang() {
 	fi
 
 	echo "installing language packages for '${LANG}'"
-
-	# don't touch apt if it has been used
-	if [ "/var/lib/dpkg/status" -nt "$(fll_get_mnt)/${FLL_IMAGE_LOCATION}" ]; then
-		echo "dpkg already updated"
-		return
-	fi
-
 	LIVEAPTSOURCES=$(mktemp -d -t liveapt.XXXXXX)
 	APTGETBASE="apt-get -o Dir::Etc=$LIVEAPTSOURCES -o Acquire::Max-FutureTime=31536000"
 	echo 'deb [trusted=yes] file://'${LIVEAPT}' sid main' > ${LIVEAPTSOURCES}/sources.list
@@ -339,7 +339,7 @@ apt_install_lang() {
 	fi
 
 	# install the packages
-	${APTGETBASE} install ${LANGPACKS} > /dev/null
+	DEBIAN_FRONTEND=noninteractive ${APTGETBASE} install ${LANGPACKS} > /dev/null
 
 	# clean up
 	apt_install_lang_clean
@@ -371,7 +371,7 @@ case "${1}" in
 		# localize
 		set_locale
 		set_console
-		apt_install_lang
+		apt_install_lang localize
 		save_locale_variables
 		;;
 	*)
