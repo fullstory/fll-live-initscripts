@@ -5,6 +5,7 @@ fll-live-initscripts (4.8.17) UNRELEASED; urgency=medium
 
   [ Kel Modderman ]
   * Update description of fll-homectl.service.
+  * fll_homectl: default to unencrypted directory storage for now.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 11 Nov 2024 23:59:08 +0100
 

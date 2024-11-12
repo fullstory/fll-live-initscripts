@@ -25,4 +25,5 @@ homectl create "${FLL_LIVE_USER}" \
 	--member-of="${FLL_LIVE_USER_GROUPS}" \
 	--session-launcher="${FLL_XSESSION}" \
 	--session-type="${FLL_XTYPE}" \
-	--auto-login=on
+	--auto-login=on \
+	--storage=directory
