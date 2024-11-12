@@ -1,6 +1,5 @@
 fll-live-initscripts (4.9.0) unstable; urgency=medium
 
-  [ Kel Modderman ]
   * fll_locales: fix awk regexp warnings.
   * fll_locales: add hack to accept Releases files from future when
     processing aptlang.
