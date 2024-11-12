@@ -309,7 +309,7 @@ apt_install_lang() {
 
 	# do a dry-run to calculate size of packages and that will be used
 	APTUSESRAW=$(LANG=C ${APTGETBASE} --print-uris install ${LANGPACKS} | \
-		awk '/^After\ this\ operation\,\ /{print $4}')
+		awk '/^After this operation, /{print $4}')
 	APTUSES=${APTUSESRAW%%[.]*MB}
 	APTUSES=$(echo $APTUSESRAW | sed 's|MB$||;')
 

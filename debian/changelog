@@ -1,6 +1,10 @@
 fll-live-initscripts (4.8.18) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * fll_locales: fix awk regexp warnings.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Nov 2024 09:59:14 +0100
 
