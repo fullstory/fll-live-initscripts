@@ -10,6 +10,8 @@ fll-live-initscripts (4.8.18) UNRELEASED; urgency=medium
   * fll_locales: set DEBIAN_FRONTEND=noninteractive when calling apt-
     get.
   * fll_locales: allow to be run again interactively.
+  * fll_locales: allow specification of alternate lang code when run
+    interactively.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Nov 2024 09:59:14 +0100
 
