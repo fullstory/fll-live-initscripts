@@ -5,6 +5,8 @@ fll-live-initscripts (4.8.18) UNRELEASED; urgency=medium
 
   [ Kel Modderman ]
   * fll_locales: fix awk regexp warnings.
+  * fll_locales: add hack to accept Releases files from future when
+    processing aptlang.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Nov 2024 09:59:14 +0100
 
