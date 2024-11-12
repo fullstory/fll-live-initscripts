@@ -1,7 +1,4 @@
-fll-live-initscripts (4.8.17) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (4.8.17) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Update description of fll-homectl.service.
