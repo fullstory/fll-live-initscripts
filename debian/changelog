@@ -1,3 +1,10 @@
+fll-live-initscripts (4.9.5) unstable; urgency=medium
+
+  * fll_locales: remove /etc/default/keyboard before reconfiguring
+    keyboard-configuration.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 14 Nov 2024 22:29:26 +1000
+
 fll-live-initscripts (4.9.4) unstable; urgency=medium
 
   * fll_locales: use modelcode, layoutcode, optionscode and
