@@ -1,3 +1,9 @@
+fll-live-initscripts (4.9.3) unstable; urgency=medium
+
+  * fll_locales: use debconf for keyboard-configuration.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 14 Nov 2024 21:27:00 +1000
+
 fll-live-initscripts (4.9.2) unstable; urgency=medium
 
   * fll_locales: fix bashisms and apt command line.

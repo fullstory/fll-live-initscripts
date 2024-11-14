@@ -220,7 +220,7 @@ fi
 set_locale()
 {
 	###
-	# select default locale and configure console-data via debconf
+	# select default locale via debconf
 	###
 	echo "configuring locales for '${LANG}'"
 
@@ -239,17 +239,16 @@ CODESET="${CODESET}"
 FONTFACE="${FONTFACE}"
 FONTSIZE="${FONTSIZE}"
 EOF
+	setupcon --save-only
 
 	# write configuration: keyboard-configuration
-	# only set one layout
-	# FIXME: investigate debconfsettings!
-	sed -i	-e "s/^\(XKBMODEL\=\).*/\1\"${XKBMODEL}\"/" \
-		-e "s/^\(XKBLAYOUT\=\).*/\1\"${XKBLAYOUT%%,*}\"/" \
-		-e "s/^\(XKBVARIANT\=\).*/\1\"${XKBVARIANT}\"/" \
-		-e "s/^\(XKBOPTIONS\=\).*/\1\"${XKBOPTIONS}\"/" \
-			/etc/default/keyboard
-
-	setupcon --save-only
+	DEBCONF=$(mktemp)
+	echo "keyboard-configuration keyboard-configuration/model select ${XKBMODEL}" >> "${DEBCONF}"
+	echo "keyboard-configuration keyboard-configuration/layout select ${XKBLAYOUT%%,*}" >> "${DEBCONF}"
+	echo "keyboard-configuration keyboard-configuration/variant select ${XKBVARIANT}" >> "${DEBCONF}"
+	echo "keyboard-configuration keyboard-configuration/altgr select ${XKBOPTIONS}" >> "${DEBCONF}"
+	debconf-set-selections < "${DEBCONF}"
+	dpkg-reconfigure -fnoninteractive keyboard-configuration
 	udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
 }
 
