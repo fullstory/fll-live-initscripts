@@ -268,22 +268,22 @@ apt_install_lang() {
 		return
 	fi
 
-	LIVEAPT="${FLL_MOUNTPOINT}.2/i18n"
-	if [ ! -d "${LIVEAPT}" ]; then
+	FLL_APT="/fll/apt"
+	FLL_APT_I18N="/fll/apt/i18n"
+	if [ ! -d "${FLL_APT_I18N}" ]; then
 		return
 	fi
 
-	APTARCH=$(dpkg --print-architecture)
-	# e.g. try /fll/sr0/i18n/i386/de_AT then the first de_* found
-	if [ -f "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}" ]; then
+	# e.g. try /fll/apt/i18n/de_AT then the first de_* found
+	if [ -f "${FLL_APT_I18N}/${LANG%%[.]*}" ]; then
 		# we have the variant requested
-		LANGPACKS=$(cat "${LIVEAPT}/${APTARCH}/${LANG%%[.]*}")
+		LANGPACKS=$(< "${FLL_APT_I18N}/${LANG%%[.]*}")
 	elif [ "${LANG%%[_]*}" != 'en' ]; then
 		# try fll-locales to find one
-		for lf in ${LIVEAPT}/${APTARCH}/${LANG%[_]*}*; do
+		for lf in ${FLL_APT_I18N}/${LANG%[_]*}*; do
 			if [ -f "${lf}" ]; then
 				# we have a file for the language
-				LANGPACKS=$(cat "${lf}")
+				LANGPACKS=$(< "${lf}")
 				break
 			fi
 		done
@@ -294,21 +294,11 @@ apt_install_lang() {
 	fi
 
 	echo "installing language packages for '${LANG}'"
-	LIVEAPTSOURCES=$(mktemp -d -t liveapt.XXXXXX)
-	APTGETBASE="apt-get -o Dir::Etc=$LIVEAPTSOURCES -o Acquire::Max-FutureTime=31536000"
-	echo 'deb [trusted=yes] file://'${LIVEAPT}' sid main' > ${LIVEAPTSOURCES}/sources.list
-	mkdir ${LIVEAPTSOURCES}/preferences.d
-
-	if ! ${APTGETBASE} update > /dev/null; then
-		echo "apt-get update for i18n packages from cd failed"
-		apt_install_lang_clean
-		return
-	fi
-
-	APTGETBASE="${APTGETBASE} --allow-unauthenticated --assume-yes --no-remove"
-
+	APTGETBASE=$(find "${FLL_APT}" -type f -name '*.deb' | \
+		awk 'BEGIN{ print "apt-get \\"} { print "\t--with-source", $1, " \\"} END { print "\tinstall"}')
+	APTGETBASE="${APTGETBASE} --assume-yes"
 	# do a dry-run to calculate size of packages and that will be used
-	APTUSESRAW=$(LANG=C ${APTGETBASE} --print-uris install ${LANGPACKS} | \
+	APTUSESRAW=$(LANG=C ${APTGETBASE} --print-uris ${LANGPACKS} | \
 		awk '/^After this operation, /{print $4}')
 	APTUSES=${APTUSESRAW%%[.]*MB}
 	APTUSES=$(echo $APTUSESRAW | sed 's|MB$||;')
@@ -333,23 +323,13 @@ apt_install_lang() {
 		USESRATIO=$(( ${FREEMEM} / ${APTUSES} ))
 		if [ ${USESRATIO} -lt 5 ]; then
 			echo "i18n packages would use (${APTUSES}MB) more then 20% of available memory (${FREEMEM}MB), not installing."
-			apt_install_lang_clean
 			return
 		fi
 	fi
 
 	# install the packages
-	DEBIAN_FRONTEND=noninteractive ${APTGETBASE} install ${LANGPACKS} > /dev/null
+	DEBIAN_FRONTEND=noninteractive ${APTGETBASE} ${LANGPACKS}
 
-	# clean up
-	apt_install_lang_clean
-}
-
-apt_install_lang_clean() {
-	echo '' > ${LIVEAPTSOURCES}/sources.list
-	apt-get -o Dir::Etc=$LIVEAPTSOURCES update > /dev/null
-	apt-get -o Dir::Etc=$LIVEAPTSOURCES clean > /dev/null
-	rm -rf ${LIVEAPTSOURCES}
 }
 
 save_locale_variables() {
