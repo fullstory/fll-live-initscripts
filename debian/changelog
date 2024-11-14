@@ -1,3 +1,10 @@
+fll-live-initscripts (4.9.4) unstable; urgency=medium
+
+  * fll_locales: use modelcode, layoutcode, optionscode and
+    variantcode and string debconf value.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 14 Nov 2024 21:51:34 +1000
+
 fll-live-initscripts (4.9.3) unstable; urgency=medium
 
   * fll_locales: use debconf for keyboard-configuration.

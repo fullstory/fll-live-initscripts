@@ -64,7 +64,7 @@ FONTSIZE="16"
 ###
 # some keyboard-configuration defaults
 ###
-XKBMODEL="linux"
+XKBMODEL="pc105"
 XKBLAYOUT="us"
 XKBVARIANT=""
 XKBOPTIONS="lv3:ralt_switch,compose:lwin,grp:alt_shift_toggle"
@@ -243,11 +243,12 @@ EOF
 
 	# write configuration: keyboard-configuration
 	DEBCONF=$(mktemp)
-	echo "keyboard-configuration keyboard-configuration/model select ${XKBMODEL}" >> "${DEBCONF}"
-	echo "keyboard-configuration keyboard-configuration/layout select ${XKBLAYOUT%%,*}" >> "${DEBCONF}"
-	echo "keyboard-configuration keyboard-configuration/variant select ${XKBVARIANT}" >> "${DEBCONF}"
-	echo "keyboard-configuration keyboard-configuration/altgr select ${XKBOPTIONS}" >> "${DEBCONF}"
+	echo "keyboard-configuration keyboard-configuration/modelcode string ${XKBMODEL}" >> "${DEBCONF}"
+	echo "keyboard-configuration keyboard-configuration/layoutcode string ${XKBLAYOUT%%,*}" >> "${DEBCONF}"
+	echo "keyboard-configuration keyboard-configuration/variantcode string ${XKBVARIANT}" >> "${DEBCONF}"
+	echo "keyboard-configuration keyboard-configuration/optionscode string ${XKBOPTIONS}" >> "${DEBCONF}"
 	debconf-set-selections < "${DEBCONF}"
+	rm -f "${DEBCONF}"
 	dpkg-reconfigure -fnoninteractive keyboard-configuration
 	udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
 }
