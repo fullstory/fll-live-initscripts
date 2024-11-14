@@ -1,8 +1,9 @@
-fll-live-initscripts (4.9.1) UNRELEASED; urgency=medium
+fll-live-initscripts (4.9.1) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fll_locales: use apt's --with-source feature to install
+    internationalisation packages.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Nov 2024 21:18:59 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 14 Nov 2024 20:12:38 +1000
 
 fll-live-initscripts (4.9.0) unstable; urgency=medium
 
@@ -14,8 +15,6 @@ fll-live-initscripts (4.9.0) unstable; urgency=medium
   * fll_locales: allow to be run again interactively.
   * fll_locales: allow specification of alternate lang code when run
     interactively.
-  * fll_locales: use apt's --with-source feature to install
-    internationalisation packages.
 
  -- Kel Modderman <kelvmod@gmail.com>  Tue, 12 Nov 2024 21:43:29 +1000
 
