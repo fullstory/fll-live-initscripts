@@ -1,3 +1,9 @@
+fll-live-initscripts (4.9.2) unstable; urgency=medium
+
+  * fll_locales: fix bashisms and apt command line.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 14 Nov 2024 20:37:53 +1000
+
 fll-live-initscripts (4.9.1) unstable; urgency=medium
 
   * fll_locales: use apt's --with-source feature to install

@@ -277,13 +277,13 @@ apt_install_lang() {
 	# e.g. try /fll/apt/i18n/de_AT then the first de_* found
 	if [ -f "${FLL_APT_I18N}/${LANG%%[.]*}" ]; then
 		# we have the variant requested
-		LANGPACKS=$(< "${FLL_APT_I18N}/${LANG%%[.]*}")
+		LANGPACKS=$(cat "${FLL_APT_I18N}/${LANG%%[.]*}")
 	elif [ "${LANG%%[_]*}" != 'en' ]; then
 		# try fll-locales to find one
 		for lf in ${FLL_APT_I18N}/${LANG%[_]*}*; do
 			if [ -f "${lf}" ]; then
 				# we have a file for the language
-				LANGPACKS=$(< "${lf}")
+				LANGPACKS=$(cat "${lf}")
 				break
 			fi
 		done
@@ -295,8 +295,7 @@ apt_install_lang() {
 
 	echo "installing language packages for '${LANG}'"
 	APTGETBASE=$(find "${FLL_APT}" -type f -name '*.deb' | \
-		awk 'BEGIN{ print "apt-get \\"} { print "\t--with-source", $1, " \\"} END { print "\tinstall"}')
-	APTGETBASE="${APTGETBASE} --assume-yes"
+		awk 'BEGIN{ print "apt-get -y"} { print " --with-source", $1} END { print " install "}')
 	# do a dry-run to calculate size of packages and that will be used
 	APTUSESRAW=$(LANG=C ${APTGETBASE} --print-uris ${LANGPACKS} | \
 		awk '/^After this operation, /{print $4}')
