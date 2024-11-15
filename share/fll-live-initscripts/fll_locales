@@ -332,20 +332,11 @@ apt_install_lang() {
 
 }
 
-save_locale_variables() {
-	for var in FLL_MIRROR CHARMAP CODESET FONTFACE FONTSIZE \
-		   XKBMODEL XKBLAYOUT XKBVARIANT XKBOPTIONS; do
-		val=$(eval echo \$${var})
-		echo "${var}=\"${val}\""
-	done > "/etc/default/${NAME}"
-}
-
 case "${1}" in
 	start)
 		set_locale
 		set_console
 		apt_install_lang
-		save_locale_variables
 		;;
 	localize)
 		[ -n "${2}" ] && LANG="${2}"
@@ -353,7 +344,6 @@ case "${1}" in
 		set_locale
 		set_console
 		apt_install_lang localize
-		save_locale_variables
 		;;
 	*)
 		echo "Usage: ${NAME} {start|localize}" >&2
