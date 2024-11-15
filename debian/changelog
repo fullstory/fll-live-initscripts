@@ -1,12 +1,9 @@
-fll-live-initscripts (4.9.6) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (4.9.6) unstable; urgency=medium
 
   [ Kel Modderman ]
   * fll_locales: no longer save variables to file.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 14 Nov 2024 21:18:16 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 15 Nov 2024 06:44:05 +0100
 
 fll-live-initscripts (4.9.5) unstable; urgency=medium
 
