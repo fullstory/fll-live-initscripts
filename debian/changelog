@@ -1,8 +1,8 @@
-fll-live-initscripts (4.9.7) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.0) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * Retire fll-reboot.init in favour of a systemd-shutdown initrd.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 15 Nov 2024 06:44:33 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Mon, 18 Nov 2024 17:31:36 +1000
 
 fll-live-initscripts (4.9.6) unstable; urgency=medium
 
