@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# So systemd-shutdown can execute /run/initramfs/shutdown
+mount -o remount,exec /run

@@ -1,3 +1,10 @@
+fll-live-initscripts (5.0.1) unstable; urgency=medium
+
+  * Add fll.shutdown helper to remount /run so systemd can execute
+    /run/initramfs/shutdown.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Mon, 18 Nov 2024 19:48:02 +1000
+
 fll-live-initscripts (5.0.0) unstable; urgency=medium
 
   * Retire fll-reboot.init in favour of a systemd-shutdown initrd.
