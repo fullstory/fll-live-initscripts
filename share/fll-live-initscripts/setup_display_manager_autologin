@@ -1,0 +1,97 @@
+#!/bin/sh
+###############################################################################
+# 	configure x-display-manager's
+###############################################################################
+setup_gdm3() {
+	# autologin + greeter theme
+	# timed login required for login after x restart
+	sed -i	-e "/^AutomaticLogin\=.*/d" \
+		-e "/^AutomaticLoginEnable\=.*/d" \
+		-e "/^TimedLoginEnable\=.*/d" \
+		-e "/^TimedLogin\=.*/d" \
+		-e "/^TimedLoginDelay\=.*/d" \
+		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true\n \
+			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=1/" \
+			/etc/gdm3/daemon.conf
+
+	case "${FLL_XTYPE}" in
+		x11)
+			sed -i "s/#WaylandEnable=false/WaylandEnable=false/" /etc/gdm3/daemon.conf
+			;;
+	esac
+}
+
+setup_lightdm() {
+	# set autologin user and set timeout to zero
+	mkdir -p /etc/lightdm/lightdm.conf.d
+	if [ ! -e "/etc/lightdm/lightdm.conf.d/80_${FLL_LIVE_USER}.conf" ]; then
+		cat >"/etc/lightdm/lightdm.conf.d/80_${FLL_LIVE_USER}.conf" <<EOF
+[SeatDefaults]
+greeter-hide-users=false
+autologin-user=${FLL_LIVE_USER}
+autologin-user-timeout=0
+autologin-session=${FLL_XSESSION}
+EOF
+	fi
+}
+
+setup_lxdm() {
+	# set autologin user
+	if [ -L /etc/lxdm/default.conf ] && [ ! -e "/etc/lxdm/${FLL_LIVE_USER}.conf" ]; then
+		rm -f /etc/lxdm/default.conf
+		sed "s/^# autologin=.*/&\nautologin=${FLL_LIVE_USER}/" \
+			"${1}/etc/lxdm/lxdm.conf" > "/etc/lxdm/${FLL_LIVE_USER}.conf"
+		ln -fs "${FLL_LIVE_USER}.conf" /etc/lxdm/default.conf
+	fi
+}
+
+setup_sddm() {
+	mkdir -p /etc/sddm.conf.d
+	printf "[Autologin]\nUser=${FLL_LIVE_USER}\nSession=${FLL_XSESSION}\nRelogin=true\n" \
+		>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
+}
+
+setup_slim() {
+	# set autologin for $FLL_LIVE_USER to yes
+	sed -i	-e "s/^default_user.*/\#FLL\#&/" \
+		-e "s/^\#FLL\#\(default_user[ \t]*${FLL_LIVE_USER}$\)/\1/" \
+		-e "s/^auto_login.*/\#FLL\#&/" \
+		-e "s/^\#FLL\#\(auto_login[ \t]*yes$\)/\1/" \
+			/etc/slim.conf
+	grep -q ^default_user /etc/slim.conf || \
+		printf "default_user\t${FLL_LIVE_USER}\n" >> /etc/slim.conf
+	grep -q ^auto_login /etc/slim.conf || \
+		printf "auto_login\tyes\n" >> /etc/slim.conf
+}
+
+setup_display_manager_autologin() {
+	SLIM=/usr/bin/slim
+	if [ -x "${SLIM}" ]; then
+		echo "Configuring slim..."
+		setup_slim
+	fi
+
+	GDM3=/usr/sbin/gdm3
+	if [ -x "${GDM3}" ]; then
+		echo "Configuring gdm3..."
+		setup_gdm3
+	fi
+
+	LXDM=/usr/sbin/lxdm
+	if [ -x "${LXDM}" ]; then
+		echo "Configuring lxdm..."
+		setup_lxdm
+	fi
+
+	LIGHTDM=/usr/sbin/lightdm
+	if [ -x "${LIGHTDM}" ]; then
+		echo "Configuring lightdm..."
+		setup_lightdm
+	fi
+
+	SDDM=/usr/bin/sddm
+	if [ -x "${SDDM}" ]; then
+		echo "Configuring sddm..."
+		setup_sddm
+	fi
+}

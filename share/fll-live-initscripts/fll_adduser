@@ -13,6 +13,7 @@ if [ "${FLL_DISTRO_MODE}" != "live" ]; then
 	exit 0
 fi
 
+# do not execute if systemd-homed is installed
 [ -x "$(which adduser)" ] && [ ! -x "$(which homectl)" ] || exit 0
 
 if [ -e "/home/${FLL_LIVE_USER}" ]; then
@@ -20,3 +21,19 @@ if [ -e "/home/${FLL_LIVE_USER}" ]; then
 fi
 
 adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
+
+# Create sudoers.d snippet
+if [ ! -e "/etc/sudoers.d/15_${FLL_DISTRO_NAME}" ]; then
+	# append sudoers entry
+	cat >> "/etc/sudoers.d/15_${FLL_DISTRO_NAME}" \
+<<EOF
+# WARNING: This allows the unprivileged ${FLL_LIVE_USER} user to start commands as root
+# WARNING: This is totally insecure and (almost) makes ${FLL_LIVE_USER} a second root account.
+# WARNING: Never allow external access to the ${FLL_LIVE_USER} user!!!
+${FLL_LIVE_USER} ALL=(ALL:ALL) NOPASSWD: ALL
+EOF
+	chmod 0440 "/etc/sudoers.d/15_${FLL_DISTRO_NAME}"
+fi
+
+. /usr/share/fll-live-initscripts/setup_display_manager_autologin
+setup_display_manager_autologin
