@@ -589,10 +589,10 @@ end_process_disk:
 
 int main(int argc, char **argv)
 {
-        struct udev *udev;
+	struct udev *udev;
 	struct udev_enumerate *u_enum;
-        struct udev_list_entry *u_list_ent;
-        struct udev_list_entry *u_first_list_ent;
+	struct udev_list_entry *u_list_ent;
+	struct udev_list_entry *u_first_list_ent;
 	int disk = 0;
 
 	if (cmdline_parser(argc, argv, &opts) != 0) {
