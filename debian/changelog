@@ -1,12 +1,8 @@
-fll-live-initscripts (5.0.4) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.4) unstable; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_adduser: disable kscreenlock for passwdless live user.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 20 Nov 2024 20:44:37 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 21 Nov 2024 19:48:20 +1000
 
 fll-live-initscripts (5.0.3) unstable; urgency=medium
 
