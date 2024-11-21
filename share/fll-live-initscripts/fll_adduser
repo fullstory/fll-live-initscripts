@@ -35,6 +35,7 @@ EOF
 	chmod 0440 "/etc/sudoers.d/15_${FLL_DISTRO_NAME}"
 fi
 
+# disable kscreenlock for passwdless live user
 case "${FLL_XSESSION}" in
 	plasma*)
 		cat <<EOF >> /etc/xdg/kscreenlockerrc
@@ -45,5 +46,6 @@ EOF
 		;;
 esac
 
+# setup autologin for passwdless live user
 . /usr/share/fll-live-initscripts/setup_display_manager_autologin
 setup_display_manager_autologin
