@@ -15,15 +15,23 @@ fi
 
 [ -x "$(which homectl)" ] || exit 0
 
-if [ -d "/home/${FLL_LIVE_USER}" ] || \
-   [ -e "/home/${FLL_LIVE_USER}.homedir" ]; then
-	exit 0
+HOMECTL=$(homectl list -EE | jq '.[] | select(.name=="'${FLL_LIVE_USER}'")')
+if [ -n "${HOMECTL}" ]; then
+	HOMECTL_STATE=$(echo "${HOMECTL}" | jq '.state')
+	case "${HOMECTL_STATE}" in
+		"unfixated"|"inactive")
+			homectl activate "${FLL_LIVE_USER}"
+			homectl update "${FLL_LIVE_USER}" \
+				--member-of="${FLL_LIVE_USER_GROUPS}" \
+				--session-launcher="${FLL_XSESSION}" \
+				--session-type="${FLL_XTYPE}"
+			;;
+	esac
+else
+	homectl create "${FLL_LIVE_USER}" \
+		--real-name="${FLL_LIVE_USER}" \
+		--member-of="${FLL_LIVE_USER_GROUPS}" \
+		--session-launcher="${FLL_XSESSION}" \
+		--session-type="${FLL_XTYPE}" \
+		--storage=directory
 fi
-
-homectl create "${FLL_LIVE_USER}" \
-	--real-name="${FLL_LIVE_USER}" \
-	--member-of="${FLL_LIVE_USER_GROUPS}" \
-	--session-launcher="${FLL_XSESSION}" \
-	--session-type="${FLL_XTYPE}" \
-	--auto-login=on \
-	--storage=directory

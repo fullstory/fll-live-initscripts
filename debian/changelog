@@ -1,8 +1,10 @@
-fll-live-initscripts (5.0.5) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.5) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fll_homectl: check for existing live user home and activate it if
+    present.
+  * Depend on jq.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 21 Nov 2024 21:28:16 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 20:05:17 +1000
 
 fll-live-initscripts (5.0.4) unstable; urgency=medium
 
