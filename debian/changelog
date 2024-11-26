@@ -1,3 +1,10 @@
+fll-live-initscripts (5.0.10) unstable; urgency=medium
+
+  * fll-homesctl.service: start after systemd-homed.service but before
+    systemd-homed-activate.service.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 22:57:35 +1000
+
 fll-live-initscripts (5.0.9) unstable; urgency=medium
 
   * fll_homectl: do not reactivate unfixated homes and use --offline

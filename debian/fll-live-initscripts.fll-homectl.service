@@ -2,9 +2,9 @@
 Description=add live user using homectl
 DefaultDependencies=no
 Conflicts=shutdown.target
-Before=systemd-homed.service
+Before=systemd-homed-activate.service
 Requires=fll-live.service
-After=fll-live.service
+After=fll-live.service systemd-homed.service
 
 [Service]
 Type=oneshot
