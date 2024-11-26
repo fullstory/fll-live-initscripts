@@ -1,8 +1,14 @@
-fll-live-initscripts (5.0.6) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.7) UNRELEASED; urgency=medium
+
+  * fll_homectl: escape quotation marks returned by jq.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 21:40:17 +1000
+
+fll-live-initscripts (5.0.6) unstable; urgency=medium
 
   * Drop dependencies on procps, systemd-sysv and sysvinit-utils.
 
- -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 20:19:37 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 21:22:35 +1000
 
 fll-live-initscripts (5.0.5) unstable; urgency=medium
 

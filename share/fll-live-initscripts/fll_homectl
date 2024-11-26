@@ -19,7 +19,7 @@ HOMECTL=$(homectl list -EE | jq '.[] | select(.name=="'${FLL_LIVE_USER}'")')
 if [ -n "${HOMECTL}" ]; then
 	HOMECTL_STATE=$(echo "${HOMECTL}" | jq '.state')
 	case "${HOMECTL_STATE}" in
-		"unfixated"|"inactive")
+		\"unfixated\"|\"inactive\")
 			homectl activate "${FLL_LIVE_USER}"
 			homectl update "${FLL_LIVE_USER}" \
 				--member-of="${FLL_LIVE_USER_GROUPS}" \
