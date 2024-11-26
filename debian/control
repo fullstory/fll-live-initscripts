@@ -38,11 +38,8 @@ Depends: ${misc:Depends},
  eject,
  fll-live-utils,
  login,
- procps,
  keyboard-configuration,
- jq,
- systemd-sysv (>= 217-2~),
- sysvinit-utils (>= 3.05-1)
+ jq
 Recommends: tzdata
 Suggests: fll-live-initscripts-dummy
 Description: fll live media sysv initscripts

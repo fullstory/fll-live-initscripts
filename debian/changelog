@@ -1,3 +1,9 @@
+fll-live-initscripts (5.0.6) UNRELEASED; urgency=medium
+
+  * Drop dependencies on procps, systemd-sysv and sysvinit-utils.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 20:19:37 +1000
+
 fll-live-initscripts (5.0.5) unstable; urgency=medium
 
   * fll_homectl: check for existing live user home and activate it if
