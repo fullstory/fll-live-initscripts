@@ -1,8 +1,14 @@
-fll-live-initscripts (5.0.7) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.8) unstable; urgency=medium
+
+  * fll-homesctl.service: start before systemd-homed.service.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 22:08:10 +1000
+
+fll-live-initscripts (5.0.7) unstable; urgency=medium
 
   * fll_homectl: escape quotation marks returned by jq.
 
- -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 21:40:17 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 22:07:41 +1000
 
 fll-live-initscripts (5.0.6) unstable; urgency=medium
 
