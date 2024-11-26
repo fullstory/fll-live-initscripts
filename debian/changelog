@@ -1,6 +1,14 @@
+fll-live-initscripts (5.0.11) UNRELEASED; urgency=medium
+
+  * fll_homectl:
+    - use raw jq output
+    - return code to activate unfixated home (requires machine-id fix)
+
+ -- Kel Modderman <kelvmod@gmail.com>  Wed, 27 Nov 2024 00:35:10 +1000
+
 fll-live-initscripts (5.0.10) unstable; urgency=medium
 
-  * fll-homesctl.service: start after systemd-homed.service but before
+  * fll-homectl.service: start after systemd-homed.service but before
     systemd-homed-activate.service.
 
  -- Kel Modderman <kelvmod@gmail.com>  Tue, 26 Nov 2024 22:57:35 +1000

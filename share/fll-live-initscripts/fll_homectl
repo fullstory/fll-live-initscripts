@@ -17,9 +17,11 @@ fi
 
 HOMECTL=$(homectl list -EE | jq '.[] | select(.name=="'${FLL_LIVE_USER}'")')
 if [ -n "${HOMECTL}" ]; then
-	HOMECTL_STATE=$(echo "${HOMECTL}" | jq '.state')
+	HOMECTL_STATE=$(echo "${HOMECTL}" | jq -r '.state')
 	case "${HOMECTL_STATE}" in
-		\"inactive\")
+		unfixated|inactive)
+			[ "${HOMECTL_STATE}" = "unfixated" ] && \
+				homectl activate "${FLL_LIVE_USER}"
 			homectl update --offline "${FLL_LIVE_USER}" \
 				--member-of="${FLL_LIVE_USER_GROUPS}" \
 				--session-launcher="${FLL_XSESSION}" \
