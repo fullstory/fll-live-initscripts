@@ -40,6 +40,7 @@ Depends: ${misc:Depends},
  login,
  procps,
  keyboard-configuration,
+ jq,
  systemd-sysv (>= 217-2~),
  sysvinit-utils (>= 3.05-1)
 Recommends: tzdata
