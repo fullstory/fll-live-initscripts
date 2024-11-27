@@ -24,11 +24,18 @@ OPTIONS
 -a, --auto::
 	Set 'auto' mount option where applicable.
 
--d, --debug::
-	Enable debug output. Use twice to see shell execution (set -x).
+-b, --blkid::
+	Use blkid to query filesystem information.
+
+-c <dir>, --chroot=<dir>::
+	Prepend chroot path to mount point directories.
 
 -f <file>, --file=<file>::
 	File to write fstab configuration output to.
+
+-i <device>, --ignore=<device>::
+	Specify devices to ignore and not include in fstab configuration when
+	they would otherwise qualify for inclusion.
 
 -l, --labels::
 	Use LABELS tokens for mount names when possible.
@@ -36,11 +43,17 @@ OPTIONS
 -m, --mkdir::
 	Create mount points for each '/etc/fstab' filesystem entry.
 
--n, --nomnt::
+-n, --nomounts::
 	Disable detection of local mounts, simulating a fll live environment.
 
--s, --swapless::
+-r, --removable::
+	Include entries for removable devices.
+
+-N, --noswap::
 	Disable addition of swap partitions to '/etc/fstab'.
+
+-s, --swapon::
+	Enable addition of swap partitions to '/etc/fstab'.
 
 -u, --uuids::
 	Use UUID tokens for mount names when possible.
@@ -48,10 +61,6 @@ OPTIONS
 -w <device>, --wanted=<device>::
 	Specify devices to include in fstab configuration when they would
 	otherwise not qualify for inclusion. For example, usb devices.
-
--i <device>, --ignore=<device>::
-	Specify devices to ignore and not include in fstab configuration when
-	they would otherwise qualify for inclusion.
 
 
 SEE ALSO

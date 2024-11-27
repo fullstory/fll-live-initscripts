@@ -1,5 +1,5 @@
 package "fll_fstab_generator"
-version "1.0"
+version "1.1"
 
 option	"auto" a
 	"add \"auto\" to default mount options"
@@ -7,6 +7,11 @@ option	"auto" a
 option	"blkid" b
 	"use blkid to query filesystem information"
 	flag off
+option	"chroot" c
+	"prepend chroot path to mount point directories"
+	typestr="DIR"
+	string optional
+	default="/"
 option	"file" f
 	"write output to file"
 	typestr="FILE"
