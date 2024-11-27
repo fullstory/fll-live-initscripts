@@ -25,6 +25,7 @@ if [ -n "${HOMECTL}" ]; then
 				--member-of="${FLL_LIVE_USER_GROUPS}" \
 				--session-launcher="${FLL_XSESSION}" \
 				--session-type="${FLL_XTYPE}"
+			homectl deactivate "${FLL_LIVE_USER}"
 			exit $?
 			;;
 	esac
