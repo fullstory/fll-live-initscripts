@@ -20,19 +20,19 @@ if [ -n "${HOMECTL}" ]; then
 	HOMECTL_STATE=$(echo "${HOMECTL}" | jq -r '.state')
 	case "${HOMECTL_STATE}" in
 		unfixated|inactive)
-			[ "${HOMECTL_STATE}" = "unfixated" ] && \
-				homectl activate "${FLL_LIVE_USER}"
-			homectl update --offline "${FLL_LIVE_USER}" \
+			homectl activate "${FLL_LIVE_USER}"
+			homectl update "${FLL_LIVE_USER}" \
 				--member-of="${FLL_LIVE_USER_GROUPS}" \
 				--session-launcher="${FLL_XSESSION}" \
 				--session-type="${FLL_XTYPE}"
+			exit $?
 			;;
 	esac
-else
-	homectl create "${FLL_LIVE_USER}" \
-		--real-name="${FLL_LIVE_USER}" \
-		--member-of="${FLL_LIVE_USER_GROUPS}" \
-		--session-launcher="${FLL_XSESSION}" \
-		--session-type="${FLL_XTYPE}" \
-		--storage=directory
 fi
+
+homectl create "${FLL_LIVE_USER}" \
+	--real-name="${FLL_LIVE_USER}" \
+	--member-of="${FLL_LIVE_USER_GROUPS}" \
+	--session-launcher="${FLL_XSESSION}" \
+	--session-type="${FLL_XTYPE}" \
+	--storage=directory

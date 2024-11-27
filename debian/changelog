@@ -1,8 +1,9 @@
-fll-live-initscripts (5.0.12) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.12) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fll_homectl: fallback to creating a temp live user if a persistent
+    home is absent.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 26 Nov 2024 23:11:34 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Wed, 27 Nov 2024 15:19:35 +1000
 
 fll-live-initscripts (5.0.11) unstable; urgency=medium
 
