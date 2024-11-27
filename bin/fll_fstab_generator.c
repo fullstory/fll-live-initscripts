@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010  Kel Modderman <kelvmod@gmail.com>
+ *  Copyright (C) 2010 - 2024  Kel Modderman <kelvmod@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
