@@ -1,4 +1,6 @@
 [Unit]
+ConditionFileIsExecutable=/usr/sbin/adduser
+ConditionFileIsExecutable=!/usr/bin/homectl
 Description=add live user using adduser
 DefaultDependencies=no
 Conflicts=shutdown.target

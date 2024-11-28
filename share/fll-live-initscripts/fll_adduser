@@ -13,13 +13,6 @@ if [ "${FLL_DISTRO_MODE}" != "live" ]; then
 	exit 0
 fi
 
-# do not execute if systemd-homed is installed
-[ -x "$(which adduser)" ] && [ ! -x "$(which homectl)" ] || exit 0
-
-if [ -e "/home/${FLL_LIVE_USER}" ]; then
-	exit 0
-fi
-
 adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
 
 # Create sudoers.d snippet

@@ -3,6 +3,9 @@ fll-live-initscripts (5.0.15) unstable; urgency=medium
   * fll_homectl:
     - do not attempt to activate an inactive home during boot, it
       will get activated upon login to x-desktop-manager
+  * fll-adduser.service, fll-homectl.service:
+    - use ConditionFileIsExecutable assertions and remove tests from
+      scripts
 
  -- Kel Modderman <kelvmod@gmail.com>  Thu, 28 Nov 2024 20:12:09 +1000
 
