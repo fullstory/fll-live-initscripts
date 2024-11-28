@@ -3,28 +3,36 @@
 # only run in live environment
 [ -d "${FLL_MOUNTPOINT}" ] || exit 0
 
+HOMECTL_STATE="absent"
 HOMECTL=$(homectl list -EE | jq '.[] | select(.name=="'${FLL_LIVE_USER}'")')
 if [ -n "${HOMECTL}" ]; then
 	HOMECTL_STATE=$(echo "${HOMECTL}" | jq -r '.state')
-	case "${HOMECTL_STATE}" in
-		unfixated)
-			homectl activate "${FLL_LIVE_USER}"
-			homectl update "${FLL_LIVE_USER}" \
-				--member-of="${FLL_LIVE_USER_GROUPS}" \
-				--session-launcher="${FLL_XSESSION}" \
-				--session-type="${FLL_XTYPE}"
-			#homectl deactivate "${FLL_LIVE_USER}"
-			exit $?
-			;;
-		inactive)
-			exit 0
-			;;
-	esac
 fi
 
-homectl create "${FLL_LIVE_USER}" \
-	--real-name="${FLL_LIVE_USER}" \
-	--member-of="${FLL_LIVE_USER_GROUPS}" \
-	--session-launcher="${FLL_XSESSION}" \
-	--session-type="${FLL_XTYPE}" \
-	--storage=directory
+case "${HOMECTL_STATE}" in
+	absent)
+		homectl create "${FLL_LIVE_USER}" \
+			--real-name="${FLL_LIVE_USER}" \
+			--member-of="${FLL_LIVE_USER_GROUPS}" \
+			--session-launcher="${FLL_XSESSION}" \
+			--session-type="${FLL_XTYPE}" \
+			--auto-login=yes \
+			--storage=directory
+		homectl activate "${FLL_LIVE_USER}"
+		;;
+	unfixated)
+		homectl activate "${FLL_LIVE_USER}"
+		homectl update "${FLL_LIVE_USER}" \
+			--member-of="${FLL_LIVE_USER_GROUPS}" \
+			--session-launcher="${FLL_XSESSION}" \
+			--session-type="${FLL_XTYPE}" \
+			--auto-login=yes
+		;;
+	inactive)
+		exit 0
+		;;
+esac
+
+# setup autologin for live user
+. /usr/share/fll-live-initscripts/setup_display_manager_autologin
+setup_display_manager_autologin
