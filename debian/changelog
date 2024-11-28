@@ -12,8 +12,10 @@ fll-live-initscripts (5.0.15) unstable; urgency=medium
   * fll-adduser.service, fll-homectl.service:
     - use ConditionFileIsExecutable assertions and remove tests from
       scripts
+  * setup_display_manager_autologin: only enable auto re-login when
+    configuring for the passwordless live user.
 
- -- Kel Modderman <kelvmod@gmail.com>  Thu, 28 Nov 2024 21:52:32 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 28 Nov 2024 22:39:40 +1000
 
 fll-live-initscripts (5.0.14) unstable; urgency=medium
 
