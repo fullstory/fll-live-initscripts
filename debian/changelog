@@ -1,8 +1,6 @@
 fll-live-initscripts (5.0.15) unstable; urgency=medium
 
   * fll_homectl:
-    - do not attempt to activate an inactive home during boot, it
-      will get activated upon login to x-desktop-manager
     - create plain directory live user in ram if live users home is
       absent or non-existing
     - simplify test for live mode, make use of EnvironmentFile used
@@ -15,7 +13,7 @@ fll-live-initscripts (5.0.15) unstable; urgency=medium
     - use ConditionFileIsExecutable assertions and remove tests from
       scripts
 
- -- Kel Modderman <kelvmod@gmail.com>  Thu, 28 Nov 2024 21:23:49 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 28 Nov 2024 21:52:32 +1000
 
 fll-live-initscripts (5.0.14) unstable; urgency=medium
 

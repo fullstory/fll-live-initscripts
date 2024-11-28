@@ -20,16 +20,13 @@ case "${HOMECTL_STATE}" in
 			--storage=directory
 		homectl activate "${FLL_LIVE_USER}"
 		;;
-	unfixated)
+	unfixated|inactive)
 		homectl activate "${FLL_LIVE_USER}"
 		homectl update "${FLL_LIVE_USER}" \
 			--member-of="${FLL_LIVE_USER_GROUPS}" \
 			--session-launcher="${FLL_XSESSION}" \
 			--session-type="${FLL_XTYPE}" \
 			--auto-login=yes
-		;;
-	inactive)
-		exit 0
 		;;
 esac
 
