@@ -1,8 +1,10 @@
-fll-live-initscripts (5.0.15) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.15) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fll_homectl:
+    - do not attempt to activate an inactive home during boot, it
+      will get activated upon login to x-desktop-manager
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 27 Nov 2024 22:35:41 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 28 Nov 2024 20:12:09 +1000
 
 fll-live-initscripts (5.0.14) unstable; urgency=medium
 
