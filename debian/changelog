@@ -1,6 +1,12 @@
 fll-live-initscripts (5.0.16) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * fll_adduser: split sudo setup into re-usable snippet.
+  * fll_homectl: fallback to using adduser if no systemd-home homes are
+    detected.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 29 Nov 2024 00:07:20 +0100
 

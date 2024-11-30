@@ -10,17 +10,30 @@ if [ -n "${HOMECTL}" ]; then
 fi
 
 case "${HOMECTL_STATE}" in
-	absent)
-		homectl create "${FLL_LIVE_USER}" \
-			--real-name="${FLL_LIVE_USER}" \
-			--member-of="${FLL_LIVE_USER_GROUPS}" \
-			--session-launcher="${FLL_XSESSION}" \
-			--session-type="${FLL_XTYPE}" \
-			--auto-login=yes \
-			--storage=directory
-		homectl activate "${FLL_LIVE_USER}"
+	absent|*)
+		# There is no real advantage to setting up a plain directory home with
+		# systemd-homed for the live user, so fallback to adduser if available.
+		if [ -x "$(which adduser)" ]; then
+			adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
+			. /usr/share/fll-live-initscripts/setup_sudo
+			setup_sudo
+		else
+			# This requires entry of 3 passwords, but may be exposed by a boot
+			# cheatcode in the future.
+			homectl create "${FLL_LIVE_USER}" \
+					--real-name="${FLL_LIVE_USER}" \
+					--member-of="${FLL_LIVE_USER_GROUPS}" \
+					--session-launcher="${FLL_XSESSION}" \
+					--session-type="${FLL_XTYPE}" \
+					--auto-login=yes \
+					--storage=directory
+			homectl activate "${FLL_LIVE_USER}"
+		fi
 		;;
 	unfixated|inactive)
+		# A home matching installed systemd-homed keys is present but may not
+		# have been blessed by the system yet (unfixated). Activate discovered
+		# homes in anticipation of autologin into the live desktop environment.
 		homectl activate "${FLL_LIVE_USER}"
 		homectl update "${FLL_LIVE_USER}" \
 			--member-of="${FLL_LIVE_USER_GROUPS}" \
