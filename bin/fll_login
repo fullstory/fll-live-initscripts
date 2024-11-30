@@ -23,6 +23,21 @@ trap "echo ; echo ${0##*/} Terminated ; exit" TERM
 printf "${p} "
 read nothing
 
+# There will be a password (or equivalent factor) for a user with an active or
+# inactive (but blessed by system) home. Fallback to passwordless login.
+if [ -x "$(which homectl)" ]; then
+	HOMECTL_STATE="absent"
+	HOMECTL=$(homectl list -EE | jq '.[] | select(.name=="'${FLL_LIVE_USER}'")')
+	if [ -n "${HOMECTL}" ]; then
+		HOMECTL_STATE=$(echo "${HOMECTL}" | jq -r '.state')
+	fi
+	case "${HOMECTL_STATE}" in
+		active|inactive)
+			exec /usr/bin/login "${FLL_LIVE_USER}"
+			;;
+	esac
+fi
+
 if getent passwd "${FLL_LIVE_USER}" >/dev/null 2>&1; then
 	FLL_LIVE_USER_HOME=$(getent passwd ${FLL_LIVE_USER} | cut -d\: -f 6)
 	if [ ! -e "${FLL_LIVE_USER_HOME}/.hushlogin" ]; then
