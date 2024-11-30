@@ -18,6 +18,7 @@ case "${HOMECTL_STATE}" in
 			. /usr/share/fll-live-initscripts/setup_sudo
 			setup_sudo
 		else
+			FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
 			# This requires entry of 3 passwords, but may be exposed by a boot
 			# cheatcode in the future.
 			homectl create "${FLL_LIVE_USER}" \
@@ -31,6 +32,7 @@ case "${HOMECTL_STATE}" in
 		fi
 		;;
 	unfixated|inactive)
+		FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
 		# A home matching installed systemd-homed keys is present but may not
 		# have been blessed by the system yet (unfixated). Activate discovered
 		# homes in anticipation of autologin into the live desktop environment.
