@@ -10,6 +10,18 @@ if [ -n "${HOMECTL}" ]; then
 fi
 
 case "${HOMECTL_STATE}" in
+	unfixated|inactive)
+		FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
+		# A home matching installed systemd-homed keys is present but may not
+		# have been blessed by the system yet (unfixated). Activate discovered
+		# homes in anticipation of autologin into the live desktop environment.
+		homectl activate "${FLL_LIVE_USER}"
+		homectl update "${FLL_LIVE_USER}" \
+			--member-of="${FLL_LIVE_USER_GROUPS}" \
+			--session-launcher="${FLL_XSESSION}" \
+			--session-type="${FLL_XTYPE}" \
+			--auto-login=yes
+		;;
 	absent|*)
 		# There is no real advantage to setting up a plain directory home with
 		# systemd-homed for the live user, so fallback to adduser if available.
@@ -30,18 +42,6 @@ case "${HOMECTL_STATE}" in
 					--storage=directory
 			homectl activate "${FLL_LIVE_USER}"
 		fi
-		;;
-	unfixated|inactive)
-		FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
-		# A home matching installed systemd-homed keys is present but may not
-		# have been blessed by the system yet (unfixated). Activate discovered
-		# homes in anticipation of autologin into the live desktop environment.
-		homectl activate "${FLL_LIVE_USER}"
-		homectl update "${FLL_LIVE_USER}" \
-			--member-of="${FLL_LIVE_USER_GROUPS}" \
-			--session-launcher="${FLL_XSESSION}" \
-			--session-type="${FLL_XTYPE}" \
-			--auto-login=yes
 		;;
 esac
 

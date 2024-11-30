@@ -9,6 +9,6 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 override_dh_installsystemd:
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-snakeoil-cert
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-live
-	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-homectl
+	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-home
 	dh_installsystemd --package=fll-live-initscripts --no-start --name=fll-locales
 	dh_installsystemd

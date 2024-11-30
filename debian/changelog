@@ -1,9 +1,14 @@
-fll-live-initscripts (5.0.16) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.17) UNRELEASED; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+  * fll_home:
+    - renamed from fll_homectl
+    - fix sequencing of fallback home creation
 
-  [ Kel Modderman ]
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 30 Nov 2024 19:17:13 +1000
+
+fll-live-initscripts (5.0.16) unstable; urgency=medium
+
   * fll_adduser: split sudo setup into re-usable snippet.
   * fll_homectl: fallback to using adduser if no systemd-home homes are
     detected.
@@ -13,7 +18,7 @@ fll-live-initscripts (5.0.16) UNRELEASED; urgency=medium
   * fll_adduser: purge and consolidate upon fll_homectl for live user
     creation now that it falls back to using adduser.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 29 Nov 2024 00:07:20 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 30 Nov 2024 19:15:13 +1000
 
 fll-live-initscripts (5.0.15) unstable; urgency=medium
 
