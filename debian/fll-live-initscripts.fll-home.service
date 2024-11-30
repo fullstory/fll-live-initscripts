@@ -1,6 +1,6 @@
 [Unit]
 ConditionFileIsExecutable=/usr/bin/homectl
-Description=add live user
+Description=Live User Home Service
 DefaultDependencies=no
 Conflicts=shutdown.target
 Before=systemd-homed-activate.service
