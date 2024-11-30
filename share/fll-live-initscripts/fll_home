@@ -10,7 +10,7 @@ if [ -n "${HOMECTL}" ]; then
 fi
 
 case "${HOMECTL_STATE}" in
-	unfixated|inactive)
+	fixating*|unfixated|inactive)
 		FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
 		# A home matching installed systemd-homed keys is present but may not
 		# have been blessed by the system yet (unfixated). Activate discovered

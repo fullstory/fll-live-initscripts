@@ -1,8 +1,14 @@
-fll-live-initscripts (5.0.18) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.19) UNRELEASED; urgency=medium
+
+  * fll_home: add fixating-to-acquire state handling.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 30 Nov 2024 20:17:43 +1000
+
+fll-live-initscripts (5.0.18) unstable; urgency=medium
 
   * fll-home.service: fix path to renamed script.
 
- -- Kel Modderman <kelvmod@gmail.com>  Sat, 30 Nov 2024 19:37:24 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 30 Nov 2024 20:17:11 +1000
 
 fll-live-initscripts (5.0.17) unstable; urgency=medium
 
