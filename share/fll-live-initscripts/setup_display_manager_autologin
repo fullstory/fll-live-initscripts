@@ -51,6 +51,12 @@ setup_sddm() {
 		>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
 	[ -z "${HOMECTL}" ] && printf "Relogin=true\n" \
 		>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
+
+	case "${FLL_XTYPE}" in
+		x11)
+			sed -i 's/^DisplayServer=.*/DisplayServer=x11/' /etc/sddm.conf.d/*.conf
+			;;
+	esac
 }
 
 setup_slim() {

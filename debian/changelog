@@ -1,6 +1,11 @@
 fll-live-initscripts (5.0.20) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * If x11 has been chosen explcitly by cheatcode, set sddm up to use it
+    instead of wayland.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 30 Nov 2024 21:00:41 +0100
 
