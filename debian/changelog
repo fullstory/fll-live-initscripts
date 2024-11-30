@@ -1,11 +1,17 @@
-fll-live-initscripts (5.0.17) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.18) UNRELEASED; urgency=medium
+
+  * fll-home.service: fix path to renamed script.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 30 Nov 2024 19:37:24 +1000
+
+fll-live-initscripts (5.0.17) unstable; urgency=medium
 
   * fll_home:
     - renamed from fll_homectl
     - fix sequencing of fallback home creation
 
 
- -- Kel Modderman <kelvmod@gmail.com>  Sat, 30 Nov 2024 19:17:13 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 30 Nov 2024 19:37:20 +1000
 
 fll-live-initscripts (5.0.16) unstable; urgency=medium
 
