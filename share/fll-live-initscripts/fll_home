@@ -40,7 +40,7 @@ case "${HOMECTL_STATE}" in
 					--session-type="${FLL_XTYPE}" \
 					--auto-login=yes \
 					--storage=directory
-			homectl activate "${FLL_LIVE_USER}"
+			exit $?
 		fi
 		;;
 esac

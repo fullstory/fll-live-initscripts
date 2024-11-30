@@ -1,6 +1,9 @@
 fll-live-initscripts (5.0.19) UNRELEASED; urgency=medium
 
-  * fll_home: add fixating-to-acquire state handling.
+  * fll_home:
+    - add fixating-to-acquire state handling
+    - exit and do not set up autologin when falling back to homectl
+      plain directory
 
  -- Kel Modderman <kelvmod@gmail.com>  Sat, 30 Nov 2024 20:17:43 +1000
 
