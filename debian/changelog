@@ -1,4 +1,4 @@
-fll-live-initscripts (5.0.19) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.19) unstable; urgency=medium
 
   * fll_home:
     - add fixating-to-acquire state handling
