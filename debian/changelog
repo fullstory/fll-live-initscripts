@@ -10,6 +10,8 @@ fll-live-initscripts (5.0.16) UNRELEASED; urgency=medium
   * fll_homectl: replace spaces with commas in list of groups.
   * fll_login: add handling to allow for a secure user created via
     homectl.
+  * fll_adduser: purge and consolidate upon fll_homectl for live user
+    creation now that it falls back to using adduser.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 29 Nov 2024 00:07:20 +0100
 
