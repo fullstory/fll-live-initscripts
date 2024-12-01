@@ -5,8 +5,11 @@ fll-live-initscripts (5.0.21) unstable; urgency=medium
     The original intentions of this dependency was to depend on systemd to run
     as PID1, as well as on a version of systemd with (sufficient) networkd
     support.
+  * d/control: reword package descriptions to account for the paradigm shift
+    from sysvinit initscripts to systemd units; this package only works on top
+    of systemd-sysv.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 01 Dec 2024 02:09:33 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 01 Dec 2024 02:15:32 +0100
 
 fll-live-initscripts (5.0.20) unstable; urgency=medium
 
