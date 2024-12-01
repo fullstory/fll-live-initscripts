@@ -1,13 +1,13 @@
-fll-live-initscripts (5.0.20) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.20) unstable; urgency=medium
 
   [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+  * fix suggests for fll-live-initscripts-networkd-dummy.
 
   [ Kel Modderman ]
   * If x11 has been chosen explcitly by cheatcode, set sddm up to use it
     instead of wayland.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 30 Nov 2024 21:00:41 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 01 Dec 2024 02:01:41 +0100
 
 fll-live-initscripts (5.0.19) unstable; urgency=medium
 
