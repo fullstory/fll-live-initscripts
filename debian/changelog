@@ -1,3 +1,13 @@
+fll-live-initscripts (5.0.21) unstable; urgency=medium
+
+  * fll-live-initscripts-networkd-dummy: drop versioned dependency on
+    systemd-sysv (>= 217-2~), the dependency is fullfilled in old-stable.
+    The original intentions of this dependency was to depend on systemd to run
+    as PID1, as well as on a version of systemd with (sufficient) networkd
+    support.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 01 Dec 2024 02:09:33 +0100
+
 fll-live-initscripts (5.0.20) unstable; urgency=medium
 
   [ Stefan Lippers-Hollmann ]
