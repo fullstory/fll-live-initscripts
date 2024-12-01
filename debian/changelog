@@ -1,3 +1,9 @@
+fll-live-initscripts (5.0.22) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 01 Dec 2024 02:16:38 +0100
+
 fll-live-initscripts (5.0.21) unstable; urgency=medium
 
   * fll-live-initscripts-networkd-dummy: drop versioned dependency on
