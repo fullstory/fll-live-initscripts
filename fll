@@ -6,6 +6,8 @@ fll_get_mnt() {
 
 	if grep -s -q -w fromiso /proc/cmdline; then
 		echo /fll/fromiso
+	elif grep -s -q -w toram /proc/cmdline; then
+		echo /fll/toram
 	else
 		FLL="$(readlink -f /dev/fll)"
 

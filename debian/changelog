@@ -1,6 +1,10 @@
 fll-live-initscripts (5.0.22) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * fll_get_mnt: fix fll mountpoint when toram boot cheatcode is used.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 01 Dec 2024 02:16:38 +0100
 
