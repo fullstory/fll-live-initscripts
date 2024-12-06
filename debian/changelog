@@ -1,16 +1,13 @@
-fll-live-initscripts (5.0.23) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.23) unstable; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_home:
     - rename setup_sudo() to setup_passwdless_live_user() to better
       describe the purpose
     - disable gnome screen lock
     - activatee home after creation to allow autologin to follow
+    - hack calamares to allow passthru of existing user+home
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 03 Dec 2024 13:53:29 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Fri, 06 Dec 2024 17:24:06 +1000
 
 fll-live-initscripts (5.0.22) unstable; urgency=medium
 
