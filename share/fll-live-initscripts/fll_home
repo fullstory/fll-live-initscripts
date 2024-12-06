@@ -16,11 +16,16 @@ case "${HOMECTL_STATE}" in
 		# have been blessed by the system yet (unfixated). Activate discovered
 		# homes in anticipation of autologin into the live desktop environment.
 		homectl activate "${FLL_LIVE_USER}"
-		homectl update "${FLL_LIVE_USER}" \
-			--member-of="${FLL_LIVE_USER_GROUPS}" \
-			--session-launcher="${FLL_XSESSION}" \
-			--session-type="${FLL_XTYPE}" \
-			--auto-login=yes
+		if [ "$?" = "0" ]; then
+			homectl update "${FLL_LIVE_USER}" \
+				--member-of="${FLL_LIVE_USER_GROUPS}" \
+				--session-launcher="${FLL_XSESSION}" \
+				--session-type="${FLL_XTYPE}" \
+				--auto-login=yes
+			# hack calamares to allow passthru of existing user+home
+			[ -w /etc/calamares/settings.conf ] && \
+				sed -i 's/- users/#- users/g' /etc/calamares/settings.conf
+		fi
 		;;
 	absent|*)
 		# There is no real advantage to setting up a plain directory home with
