@@ -27,7 +27,7 @@ EOF
                 org.gnome.desktop.screensaver lock-enabled false
             ;;
         xfce)
-            if ! grep -qs "^lock:" "/home/${LIVE_USERNAME}/.xscreensaver"; then
+            if ! grep -qs "^lock:" "/home/${FLL_LIVE_USER}/.xscreensaver"; then
                 echo "lock: False" >> "/home/${FLL_LIVE_USER}/.xscreensaver"
                 chown "${FLL_LIVE_USER}:${FLL_LIVE_USER}" \
                     "/home/${FLL_LIVE_USER}/.xscreensaver"
