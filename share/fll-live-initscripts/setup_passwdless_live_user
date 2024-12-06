@@ -33,5 +33,9 @@ EOF
                     "/home/${FLL_LIVE_USER}/.xscreensaver"
             fi
             ;;
+        cinnamon)
+            sudo -u "${FLL_LIVE_USER}" gsettings set \
+                org.cinnamon.desktop.lockdown disable-lock-screen true
+            ;;
     esac
 }
