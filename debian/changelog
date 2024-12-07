@@ -1,4 +1,4 @@
-fll-live-initscripts (5.0.26) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.27) UNRELEASED; urgency=medium
 
   [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
@@ -7,7 +7,10 @@ fll-live-initscripts (5.0.26) UNRELEASED; urgency=medium
   * setup_passwdless_live_user: disable gnome screen lock for budgie
     xsession.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Dec 2024 06:18:35 +0100
+  [ Stefan Lippers-Hollmann ]
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Dec 2024 13:05:43 +0100
 
 fll-live-initscripts (5.0.25) unstable; urgency=medium
 
