@@ -34,7 +34,7 @@ EOF
             fi
             ;;
         cinnamon)
-            sudo -u "${FLL_LIVE_USER}" gsettings set \
+            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
                 org.cinnamon.desktop.lockdown disable-lock-screen true
             ;;
     esac
