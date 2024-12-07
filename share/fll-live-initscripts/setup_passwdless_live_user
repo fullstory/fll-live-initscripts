@@ -19,7 +19,7 @@ EOF
             sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
                 org.cinnamon.desktop.lockdown disable-lock-screen true
             ;;
-        gnome)
+        gnome|budgie*)
             sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
                 org.gnome.desktop.screensaver lock-enabled false
             ;;
