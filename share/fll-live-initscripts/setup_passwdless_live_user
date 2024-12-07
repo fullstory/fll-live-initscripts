@@ -15,6 +15,14 @@ EOF
 
     # disable screen lock for passwdless live user
     case "${FLL_XSESSION}" in
+        cinnamon)
+            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
+                org.cinnamon.desktop.lockdown disable-lock-screen true
+            ;;
+        gnome)
+            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
+                org.gnome.desktop.screensaver lock-enabled false
+            ;;
         plasma*)
             cat >> /etc/xdg/kscreenlockerrc <<EOF
 [Daemon]
@@ -22,20 +30,12 @@ Autolock=false
 LockOnResume=false
 EOF
             ;;
-        gnome)
-            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
-                org.gnome.desktop.screensaver lock-enabled false
-            ;;
         xfce)
             if ! grep -qs "^lock:" "/home/${FLL_LIVE_USER}/.xscreensaver"; then
                 echo "lock: False" >> "/home/${FLL_LIVE_USER}/.xscreensaver"
                 chown "${FLL_LIVE_USER}:${FLL_LIVE_USER}" \
                     "/home/${FLL_LIVE_USER}/.xscreensaver"
             fi
-            ;;
-        cinnamon)
-            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
-                org.cinnamon.desktop.lockdown disable-lock-screen true
             ;;
     esac
 }
