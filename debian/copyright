@@ -14,23 +14,12 @@ Comment:
             Jörg Schirottke <master@kanotix.com>
             Stefan Lippers-Hollmann <s.l-h@gmx.net>
  .
- debian/fll-live-initscripts.fll-reboot.init was inspired by
- /etc/init.d/umountfs from initscripts (2.86.ds1-38).
- Copyright: 1997-2005, Miquel van Smoorenburg <miquels@cistron.nl>
-	    2007-2008, Kel Modderman <kelvmod@gmail.com>
-	    2007-2024, Stefan Lippers-Hollmann <s.l-h@gmx.net>
- the members pkg-sysvinit project.
- .
- copy_exec() in ./debian/fll-live-initscripts.fll-reboot.init was shamelessly
- adapted from initramfs-tools.
- Copyright: 2005-2006, Adam Conrad
-	    2006, Ben Collins
-	    2005-2007, David Härdeman
-	    2005, Jeff Bailey
-	    2005-2007, Maximilian Attems
-	    2005-2006, Scott James Remnant
-	    2007-2008, Kel Modderman <kelvmod@gmail.com>
-	    2007-2024 Stefan Lippers-Hollmann <s.l-h@gmx.net>
+Files: share/fll-live-initscripts/face.svg
+Copyright: 2007-2010, Bernard Gray <bernard.gray@gmail.com>
+           2007-2016, Stefan Lippers-Hollmann <s.l-h@gmx.de>
+           2009, David Creedy <djcreedy@iinet.net.au>
+           2010-2011, Rick Battle <rick.battle@celtrenicdesigns.com>
+License: GPL-2.0+
 
 License: GPL-2.0
  This package is free software; you can redistribute it and/or modify
