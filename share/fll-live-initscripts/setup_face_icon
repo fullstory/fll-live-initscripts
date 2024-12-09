@@ -5,6 +5,5 @@ setup_face_icon() {
 
     [ -f "${FACE}" ] || return 0
 
-    sudo -u "${FLL_LIVE_USER}" sh -c \
-        "[ -f ~${FLL_LIVE_USER}/.face ] || cp ${FACE} ~${FLL_LIVE_USER}/.face"
+    cp ${FACE} /etc/skel/.face
 }
