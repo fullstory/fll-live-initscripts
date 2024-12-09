@@ -1,8 +1,9 @@
-fll-live-initscripts (5.0.28) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.28) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  [ Kel Modderman ]
+  * Fix copyright and add gpl2+ text.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Dec 2024 08:35:05 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Dec 2024 10:41:22 +0100
 
 fll-live-initscripts (5.0.27) unstable; urgency=medium
 
