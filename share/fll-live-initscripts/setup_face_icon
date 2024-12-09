@@ -1,0 +1,10 @@
+#!/bin/sh
+
+setup_face_icon() {
+    FACE=/usr/share/fll-live-initscripts/face.svg
+
+    [ -f "${FACE}" ] || return 0
+
+    sudo -u "${FLL_LIVE_USER}" sh -c \
+        "[ -f ~${FLL_LIVE_USER}/.face ] || cp ${FACE} ~${FLL_LIVE_USER}/.face"
+}

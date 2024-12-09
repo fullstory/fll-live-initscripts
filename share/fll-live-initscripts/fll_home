@@ -50,6 +50,10 @@ case "${HOMECTL_STATE}" in
 		;;
 esac
 
+# setup face icon
+. /usr/share/fll-live-initscripts/setup_face_icon
+setup_face_icon
+
 # setup autologin for live user
 . /usr/share/fll-live-initscripts/setup_display_manager_autologin
 setup_display_manager_autologin

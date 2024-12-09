@@ -10,6 +10,9 @@ fll-live-initscripts (5.0.27) UNRELEASED; urgency=medium
   [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
+  [ Kel Modderman ]
+  * fll_home: setup live user face icon using little fred.
+
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 07 Dec 2024 13:05:43 +0100
 
 fll-live-initscripts (5.0.25) unstable; urgency=medium
