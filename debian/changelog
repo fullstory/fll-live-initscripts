@@ -1,6 +1,10 @@
 fll-live-initscripts (5.0.29) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Remove face icon, it will be provided by aptosid-icons.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Dec 2024 10:42:01 +0100
 

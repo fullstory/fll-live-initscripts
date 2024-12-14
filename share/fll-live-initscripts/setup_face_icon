@@ -1,7 +1,7 @@
 #!/bin/sh
 
 setup_face_icon() {
-    FACE=/usr/share/fll-live-initscripts/face.svg
+    FACE=/usr/share/icons/hicolor/scalable/apps/aptosid-fred.svg
 
     [ -f "${FACE}" ] || return 0
 
