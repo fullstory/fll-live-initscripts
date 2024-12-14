@@ -5,6 +5,7 @@ fll-live-initscripts (5.0.29) UNRELEASED; urgency=medium
 
   [ Kel Modderman ]
   * Remove face icon, it will be provided by aptosid-icons.
+  * fll-home.service: add Before=shutdown.target.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Dec 2024 10:42:01 +0100
 

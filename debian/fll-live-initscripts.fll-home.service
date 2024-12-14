@@ -2,6 +2,7 @@
 ConditionFileIsExecutable=/usr/bin/homectl
 Description=Live User Home Service
 DefaultDependencies=no
+Before=shutdown.target
 Conflicts=shutdown.target
 Before=systemd-homed-activate.service
 Requires=fll-live.service
