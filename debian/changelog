@@ -1,13 +1,12 @@
-fll-live-initscripts (5.0.29) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.29) unstable; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * Remove face icon, it will be provided by aptosid-icons.
   * fll-home.service: add Before=shutdown.target.
+  * setup_passwdless_live_user: set lockdown disable-lock-screen true,
+    screensaver lock-enabled false, and session idle-delay 0 for gnome
+    budgie and cinnamon sessions.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Dec 2024 10:42:01 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Sun, 15 Dec 2024 20:26:27 +1000
 
 fll-live-initscripts (5.0.28) unstable; urgency=medium
 
