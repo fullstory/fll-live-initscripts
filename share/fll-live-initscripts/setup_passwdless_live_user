@@ -39,6 +39,8 @@ LockOnResume=false
 EOF
             ;;
         xfce)
+            [ -x /usr/share/aptosid-settings-xfce/setup_xfce4 ] &&
+                . /usr/share/aptosid-settings-xfce/setup_xfce4
             ;;
     esac
 }
