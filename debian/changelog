@@ -1,13 +1,10 @@
-fll-live-initscripts (5.0.30) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (5.0.30) unstable; urgency=medium
 
   [ Kel Modderman ]
   * setup_passwdless_live_user: purge legacy xscreensaver configuration.
   * setup_passwdless_live_user: source setup_xfce4 script. 
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 15 Dec 2024 12:52:22 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 16 Dec 2024 23:32:37 +0100
 
 fll-live-initscripts (5.0.29) unstable; urgency=medium
 
