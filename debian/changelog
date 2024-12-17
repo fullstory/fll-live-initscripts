@@ -1,12 +1,9 @@
-fll-live-initscripts (5.0.31) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (5.0.31) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Remove obsolete lintian overrides for fll-reboot.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 16 Dec 2024 23:32:57 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 17 Dec 2024 22:46:47 +0100
 
 fll-live-initscripts (5.0.30) unstable; urgency=medium
 
