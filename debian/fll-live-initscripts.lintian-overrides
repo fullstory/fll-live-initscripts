@@ -1,3 +1,0 @@
-# fll-reboot needs to replace sysvinit's reboot, therefore we indeed don't stop
-# in runlevel 1.
-fll-live-initscripts: init.d-script-possible-missing-stop 1 [etc/init.d/fll-reboot]
