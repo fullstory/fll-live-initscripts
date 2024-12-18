@@ -39,8 +39,22 @@ LockOnResume=false
 EOF
             ;;
         xfce)
-            [ -x /usr/share/aptosid-settings-xfce/setup_xfce4 ] &&
-                . /usr/share/aptosid-settings-xfce/setup_xfce4
+            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- xfconf-query \
+                --create --channel xfce4-screensaver \
+                --property /lock/enabled --type bool \
+                --set false
+            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- xfconf-query \
+                --create --channel xfce4-screensaver \
+                --property /lock/sleep-activation --type bool \
+                --set false
+            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- xfconf-query \
+                --create --channel xfce4-power-manager \
+                --property /xfce4-power-manager/presentation-mode --type bool \
+                --set true
+            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- xfconf-query \
+                --create --channel xfce4-power-manager \
+                --property /xfce4-power-manager/lock-screen-suspend-hibernate \
+                --type bool --set false
             ;;
     esac
 }
