@@ -1,13 +1,10 @@
-fll-live-initscripts (5.0.32) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (5.0.32) unstable; urgency=medium
 
   [ Kel Modderman ]
   * setup_passwdless_live_user: add XFCE specific commands to disable
     screen lock.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 17 Dec 2024 22:47:01 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 19 Dec 2024 04:58:06 +0100
 
 fll-live-initscripts (5.0.31) unstable; urgency=medium
 
