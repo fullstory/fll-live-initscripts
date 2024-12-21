@@ -40,6 +40,10 @@ EOF
             ;;
         xfce)
             sudo -u "${FLL_LIVE_USER}" dbus-run-session -- xfconf-query \
+                --create --channel xfce4-session \
+                --property /general/LockCommand --type string \
+                --set /usr/bin/true
+            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- xfconf-query \
                 --create --channel xfce4-screensaver \
                 --property /lock/enabled --type bool \
                 --set false

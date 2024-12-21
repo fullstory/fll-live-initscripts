@@ -1,6 +1,11 @@
 fll-live-initscripts (5.0.33) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * setup_passwdless_live_user: set xfce4-session lock command to
+    /usr/bin/true.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 19 Dec 2024 04:58:31 +0100
 
