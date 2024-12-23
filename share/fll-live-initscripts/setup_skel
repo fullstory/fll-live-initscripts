@@ -1,0 +1,17 @@
+#!/bin/sh
+
+setup_skel() {
+    FACE=/usr/share/icons/hicolor/scalable/apps/aptosid-fred.svg
+
+    [ -f "${FACE}" ] || return 0
+
+    cp ${FACE} /etc/skel/.face
+
+    case "${FLL_XSESSION}" in
+        lxqt-wayland)
+            mkdir -p /etc/skel/.config/lxqt
+            cp /etc/xdg/lxqt/session.conf \
+                /etc/skel/.config/lxqt/session.conf
+            ;;
+    esac
+}

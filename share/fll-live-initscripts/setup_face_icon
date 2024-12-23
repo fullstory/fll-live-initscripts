@@ -1,9 +1,0 @@
-#!/bin/sh
-
-setup_face_icon() {
-    FACE=/usr/share/icons/hicolor/scalable/apps/aptosid-fred.svg
-
-    [ -f "${FACE}" ] || return 0
-
-    cp ${FACE} /etc/skel/.face
-}

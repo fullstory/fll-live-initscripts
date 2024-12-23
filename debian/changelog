@@ -1,8 +1,10 @@
-fll-live-initscripts (5.0.34) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.34) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * fll_home: rename setup_face_icon to setup_skel and use function to
+    provide a default setting to avoid a chicken and egg problem when
+    starting lxqt-wayland session.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 21 Dec 2024 22:48:04 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Mon, 23 Dec 2024 20:23:09 +1000
 
 fll-live-initscripts (5.0.33) unstable; urgency=medium
 
