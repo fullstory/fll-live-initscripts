@@ -17,6 +17,8 @@ EOF
     case "${FLL_XSESSION}" in
         cinnamon)
             sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
+                org.cinnamon.desktop.lockdown disable-log-out true
+            sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
                 org.cinnamon.desktop.lockdown disable-lock-screen true
             sudo -u "${FLL_LIVE_USER}" dbus-run-session -- gsettings set \
                 org.cinnamon.desktop.screensaver lock-enabled false
