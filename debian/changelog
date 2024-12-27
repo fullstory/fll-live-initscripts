@@ -1,13 +1,10 @@
-fll-live-initscripts (5.0.35) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (5.0.35) unstable; urgency=medium
 
   [ Kel Modderman ]
   * setup_passwdless_live_user: disable logout button on cinnamon live
     session.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 23 Dec 2024 21:15:23 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 27 Dec 2024 21:24:09 +0100
 
 fll-live-initscripts (5.0.34) unstable; urgency=medium
 
