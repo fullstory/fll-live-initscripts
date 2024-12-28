@@ -1,3 +1,11 @@
+fll-live-initscripts (5.0.39) unstable; urgency=medium
+
+  * setup_display_manager_autologin: s/restart/reboot/ in tuigreet
+    reboot command and try to prepend path to reboot and shutdown
+    commands.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 28 Dec 2024 23:14:37 +1000
+
 fll-live-initscripts (5.0.38) unstable; urgency=medium
 
   * setup_display_manager_autologin: set poweroff and reboot commands

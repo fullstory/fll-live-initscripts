@@ -121,8 +121,8 @@ EOF
 		GREETER_CMD="${GREETER_CMD} --theme ${TUITHEME} --time"
 		GREETER_CMD="${GREETER_CMD} --user-menu --user-menu-max-uid 60513"
 		GREETER_CMD="${GREETER_CMD} --asterisks --remember --remember-user-session"
-		GREETER_CMD="${GREETER_CMD} --power-shutdown 'systemctl poweroff'"
-		GREETER_CMD="${GREETER_CMD} --power-reboot 'systemctl restart'"
+		GREETER_CMD="${GREETER_CMD} --power-shutdown '/usr/bin/systemctl -i poweroff'"
+		GREETER_CMD="${GREETER_CMD} --power-reboot '/usr/bin/systemctl -i reboot'"
 		GREETER_CMD="${GREETER_CMD} --cmd ${INITIAL_CMD}"
 	fi
 
