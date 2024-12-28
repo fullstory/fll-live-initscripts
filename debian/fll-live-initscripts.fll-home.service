@@ -6,7 +6,7 @@ Before=shutdown.target
 Conflicts=shutdown.target
 Before=systemd-homed-activate.service
 Requires=fll-live.service
-After=fll-live.service systemd-homed.service
+After=fll-live.service fll-locales.service systemd-homed.service
 
 [Service]
 Type=oneshot
