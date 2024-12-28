@@ -1,9 +1,9 @@
-fll-live-initscripts (5.0.37) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.37) unstable; urgency=medium
 
   * setup_skel: do not bail out of face icon (aptosid-icons) is not
     installed.
 
- -- Kel Modderman <kelvmod@gmail.com>  Sat, 28 Dec 2024 21:56:50 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 28 Dec 2024 22:00:03 +1000
 
 fll-live-initscripts (5.0.36) unstable; urgency=medium
 
