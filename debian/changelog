@@ -6,6 +6,9 @@ fll-live-initscripts (5.0.36) UNRELEASED; urgency=medium
   [ Kel Modderman ]
   * fll-home.service: start after fll-locales.service.
   * fll-home.service: start after fll-locales.service.
+  * Add initial support for configuring greetd with tuigreet+labwc
+    session, as well as speculative (untested) initial support for sway,
+    hyprland and other wayland compatible greeters wlgreet and gtkgreet.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 27 Dec 2024 21:24:25 +0100
 
