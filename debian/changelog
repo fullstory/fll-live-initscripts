@@ -1,3 +1,10 @@
+fll-live-initscripts (5.0.38) unstable; urgency=medium
+
+  * setup_display_manager_autologin: set poweroff and reboot commands
+    for tuigreet.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 28 Dec 2024 22:09:00 +1000
+
 fll-live-initscripts (5.0.37) unstable; urgency=medium
 
   * setup_skel: do not bail out of face icon (aptosid-icons) is not
