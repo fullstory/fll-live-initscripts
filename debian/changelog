@@ -1,16 +1,18 @@
-fll-live-initscripts (5.0.36) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.37) UNRELEASED; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+  * setup_skel: do not bail out of face icon (aptosid-icons) is not
+    installed.
 
-  [ Kel Modderman ]
-  * fll-home.service: start after fll-locales.service.
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 28 Dec 2024 21:56:50 +1000
+
+fll-live-initscripts (5.0.36) unstable; urgency=medium
+
   * fll-home.service: start after fll-locales.service.
   * Add initial support for configuring greetd with tuigreet+labwc
     session, as well as speculative (untested) initial support for sway,
     hyprland and other wayland compatible greeters wlgreet and gtkgreet.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 27 Dec 2024 21:24:25 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 28 Dec 2024 21:56:12 +1000
 
 fll-live-initscripts (5.0.35) unstable; urgency=medium
 
