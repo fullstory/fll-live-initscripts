@@ -1,3 +1,9 @@
+fll-live-initscripts (5.0.44) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 29 Dec 2024 07:14:41 +0100
+
 fll-live-initscripts (5.0.43) unstable; urgency=medium
 
   * fll_locales: guess charset and set console text size to 8x16.
