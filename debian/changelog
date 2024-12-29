@@ -1,3 +1,9 @@
+fll-live-initscripts (5.0.43) unstable; urgency=medium
+
+  * fll_locales: guess charset and set console text size to 8x16.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Sun, 29 Dec 2024 15:34:13 +1000
+
 fll-live-initscripts (5.0.42) unstable; urgency=medium
 
   * setup_display_manager_autologin: remove improperly escaped theme

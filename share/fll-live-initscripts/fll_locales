@@ -53,13 +53,13 @@ fi
 # some console-setup defaults
 ###
 CHARMAP="UTF-8"
-CODESET="Uni2"
+CODESET="guess"
 # Debian agrees that Terminus doesn't look great enough to be default
 # http://bugs.debian.org/497331
 FONTFACE="VGA"
 # Keep the default size of 16 here to avoid clearing VT 1/2 way through
 # bootup sequence
-FONTSIZE="16"
+FONTSIZE="8x16"
 
 ###
 # some keyboard-configuration defaults
