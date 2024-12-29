@@ -1,6 +1,11 @@
 fll-live-initscripts (5.0.44) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * setup_display_manager_autologin: theme tuigreet with proper
+    quotation syntax.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 29 Dec 2024 07:14:41 +0100
 
