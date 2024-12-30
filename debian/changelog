@@ -1,6 +1,11 @@
 fll-live-initscripts (5.0.48) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * setup_passwdless_live_user: do not fully lockdown the
+    logout/restart/shutdown controls.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 30 Dec 2024 06:55:03 +0100
 
