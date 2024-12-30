@@ -116,7 +116,7 @@ EOF
 	fi
 
 	if [ -x /usr/bin/tuigreet ]; then
-		TUITHEME="border=magenta;text=cyan;prompt=cyan;time=magenta;action=cyan;button=magenta;container=black;input=magenta"
+		TUITHEME="border=magenta;text=cyan;prompt=cyan;time=cyan;action=cyan;button=magenta;container=black;input=magenta"
 		GREETER_CMD="/usr/bin/tuigreet --greeting 'Welcome to ${FLL_DISTRO_NAME}'"
 		GREETER_CMD="${GREETER_CMD} --time --user-menu --user-menu-max-uid 60513"
 		GREETER_CMD="${GREETER_CMD} --asterisks --remember --remember-user-session"
