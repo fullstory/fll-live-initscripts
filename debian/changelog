@@ -1,3 +1,10 @@
+fll-live-initscripts (5.0.45) UNRELEASED; urgency=medium
+
+  * setup_skel: test removal of skel hacks and allowing /etc/xdg
+    conffile to stand on their own.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Mon, 30 Dec 2024 10:04:06 +1000
+
 fll-live-initscripts (5.0.44) unstable; urgency=medium
 
   * setup_display_manager_autologin: theme tuigreet with proper

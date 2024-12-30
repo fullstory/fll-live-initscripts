@@ -5,21 +5,14 @@ setup_skel() {
     [ -f "${FACE}" ] && cp ${FACE} /etc/skel/.face
 
     case "${FLL_XSESSION}" in
-        lxqt-wayland)
-            mkdir -p /etc/skel/.config/lxqt
-            cp /etc/xdg/lxqt/session.conf \
-                /etc/skel/.config/lxqt/session.conf
-            ;;
         labwc)
-            mkdir -p /etc/skel/.config/labwc
-            cp -a /etc/xdg/labwc /etc/skel/.config/
             . /etc/default/keyboard
             if [ "${XKBVARIANT}" ]; then
                 XKB_DEFAULT_LAYOUT="${XKBLAYOUT}(${XKBVARIANT})"
             else
                 XKB_DEFAULT_LAYOUT="${XKBLAYOUT}"
             fi
-            cat >> /etc/skel/.config/labwc/keyboard <<EOF
+            cat >> /etc/xdg/labwc/keyboard <<EOF
 XKB_DEFAULT_LAYOUT="${XKB_DEFAULT_LAYOUT}"
 EOF
             ;;
