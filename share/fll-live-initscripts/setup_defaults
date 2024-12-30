@@ -12,7 +12,7 @@ setup_skel() {
             else
                 XKB_DEFAULT_LAYOUT="${XKBLAYOUT}"
             fi
-            cat >> /etc/xdg/labwc/keyboard <<EOF
+            cat >> /etc/xdg/labwc/environment <<EOF
 XKB_DEFAULT_LAYOUT="${XKB_DEFAULT_LAYOUT}"
 EOF
             ;;

@@ -125,7 +125,7 @@ EOF
 		GREETER_CMD="${GREETER_CMD} --cmd '${INITIAL_CMD}' --theme '${TUITHEME}'"
 	fi
 
-	if [ "${GREETER_CMD}" ] && "${INITIAL_CMD}" ]; then
+	if [ -n "${GREETER_CMD}" ] && [ -n "${INITIAL_CMD}" ]; then
 		sed -i "s#^command = ".*"#command = \"${GREETER_CMD}\"#" \
 			/etc/greetd/config.toml
 
