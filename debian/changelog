@@ -1,3 +1,9 @@
+fll-live-initscripts (5.0.48) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 30 Dec 2024 06:55:03 +0100
+
 fll-live-initscripts (5.0.47) unstable; urgency=medium
 
   * setup_defaults: reinstate lxqt-wayland skel configuration and leave
