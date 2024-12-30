@@ -5,6 +5,14 @@ setup_skel() {
     [ -f "${FACE}" ] && cp ${FACE} /etc/skel/.face
 
     case "${FLL_XSESSION}" in
+        lxqt-wayland)
+            # Solve a chicken and egg problem: preselect wayland compositor
+            # or else startlxqt launches lxqt session prefernces dialog on
+            # first login
+            mkdir -p /etc/skel/.config/lxqt
+            cp /etc/xdg/lxqt/session.conf \
+                /etc/skel/.config/lxqt/session.conf
+            ;;
         labwc)
             . /etc/default/keyboard
             if [ "${XKBVARIANT}" ]; then

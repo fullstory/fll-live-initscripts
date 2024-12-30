@@ -1,3 +1,10 @@
+fll-live-initscripts (5.0.47) UNRELEASED; urgency=medium
+
+  * setup_defaults: reinstate lxqt-wayland skel configuration and leave
+    a comment about why it is needed.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Mon, 30 Dec 2024 15:13:31 +1000
+
 fll-live-initscripts (5.0.46) unstable; urgency=medium
 
   * Rename setup_skel to setup_defaults, fix path to labwc environment
