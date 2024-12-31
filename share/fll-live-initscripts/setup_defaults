@@ -24,5 +24,14 @@ setup_defaults() {
 XKB_DEFAULT_LAYOUT="${XKB_DEFAULT_LAYOUT}"
 EOF
             ;;
+        hyprland)
+            . /etc/default/keyboard
+            cat > /etc/xdg/hypr/kb.conf <<EOF
+kb_layout = ${XKBLAYOUT}
+kb_variant = ${XKBVARIANT}
+kb_model = ${XKBMODEL}
+kb_options = ${XKBOPTIONS}
+EOF
+            ;;
     esac
 }

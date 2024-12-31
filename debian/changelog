@@ -1,6 +1,10 @@
 fll-live-initscripts (5.0.49) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * setup_defaults: support setting up hyprland keyboard input options.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 31 Dec 2024 01:10:26 +0100
 
