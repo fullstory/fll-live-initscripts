@@ -32,6 +32,9 @@ kb_variant = ${XKBVARIANT}
 kb_model = ${XKBMODEL}
 kb_options = ${XKBOPTIONS}
 EOF
+            # Hyprland doesn't appear to read from /etc/xdg
+            mkdir -p /etc/skel/.config
+            cp -a /etc/xdg/hypr /etc/skel/.config/
             ;;
     esac
 }
