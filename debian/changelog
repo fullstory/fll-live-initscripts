@@ -1,6 +1,6 @@
 fll-live-initscripts (5.0.50) unstable; urgency=medium
 
-  * setup_defaults: help hyprland configuration propogate to user via
+  * setup_defaults: help hyprland configuration propagate to user via
     skel.
 
  -- Kel Modderman <kelvmod@gmail.com>  Tue, 31 Dec 2024 22:25:46 +1000
