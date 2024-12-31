@@ -26,12 +26,10 @@ EOF
             ;;
         hyprland)
             . /etc/default/keyboard
-            cat > /etc/xdg/hypr/kb.conf <<EOF
-kb_layout = ${XKBLAYOUT}
-kb_variant = ${XKBVARIANT}
-kb_model = ${XKBMODEL}
-kb_options = ${XKBOPTIONS}
-EOF
+            sed -i "s#\#kb_model =#kb_layout = ${XKBLAYOUT}#" /etc/xdg/hypr/hyprland.conf
+            sed -i "s#\#kb_variant =#kb_variant = ${XKBVARIANT}#" /etc/xdg/hypr/hyprland.conf
+            sed -i "s#\#kb_model =#kb_model = ${XKBMODEL}#" /etc/xdg/hypr/hyprland.conf
+            sed -i "s#\#kb_options =#kb_options = ${XKBOPTIONS}#" /etc/xdg/hypr/hyprland.conf
             # Hyprland doesn't appear to read from /etc/xdg
             mkdir -p /etc/skel/.config
             cp -a /etc/xdg/hypr /etc/skel/.config/
