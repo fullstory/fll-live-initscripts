@@ -6,6 +6,8 @@ fll-live-initscripts (5.0.48) UNRELEASED; urgency=medium
   [ Kel Modderman ]
   * setup_passwdless_live_user: do not fully lockdown the
     logout/restart/shutdown controls.
+  * setup_defaults: fix function renaming of setup_skel to
+    setup_defaults.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 30 Dec 2024 06:55:03 +0100
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-setup_skel() {
+setup_defaults() {
     FACE=/usr/share/icons/hicolor/scalable/apps/aptosid-fred.svg
     [ -f "${FACE}" ] && cp ${FACE} /etc/skel/.face
 
