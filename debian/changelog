@@ -1,8 +1,8 @@
-fll-live-initscripts (5.0.51) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.51) unstable; urgency=medium
 
   * setup_defaults: insert keyboard config directly into hyprland.conf.
 
- -- Kel Modderman <kelvmod@gmail.com>  Tue, 31 Dec 2024 22:57:30 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Tue, 31 Dec 2024 22:57:43 +1000
 
 fll-live-initscripts (5.0.50) unstable; urgency=medium
 
