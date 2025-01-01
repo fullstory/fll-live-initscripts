@@ -1,3 +1,9 @@
+fll-live-initscripts (5.0.55) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 01 Jan 2025 22:22:55 +0100
+
 fll-live-initscripts (5.0.54) unstable; urgency=medium
 
   * setup_defaults: hotfix the handling of lxqt compositor variant
