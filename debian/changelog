@@ -1,3 +1,10 @@
+fll-live-initscripts (5.0.53) UNRELEASED; urgency=medium
+
+  * Support cheatcodes for lxqt: lxqt-wayland|lxqt-labwc|labwc-
+    kwin|lxqt-hyprland|lxqt-sway|lxqt-wayfire.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Wed, 01 Jan 2025 20:29:16 +1000
+
 fll-live-initscripts (5.0.52) unstable; urgency=medium
 
   * setup_display_manager_autologin:
