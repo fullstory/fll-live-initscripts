@@ -74,6 +74,9 @@ setup_slim() {
 
 setup_greetd() {
 	unset GREETER_CMD
+	unset EXECUTE_CMD
+
+	[ "${FLL_XSESSION}" = "hyprland" ] && EXECUTE_CMD="Hyprland" || EXECUTE_CMD="${FLL_XSESSION}"
 
 	if [ -n "${FLL_XSESSION}" ] && [ -x /usr/bin/tuigreet ]; then
 		TUITHEME="border=magenta;text=cyan;prompt=cyan;time=cyan;action=cyan;button=magenta;container=black;input=magenta"
@@ -82,16 +85,16 @@ setup_greetd() {
 		GREETER_CMD="${GREETER_CMD} --asterisks --remember --remember-user-session"
 		GREETER_CMD="${GREETER_CMD} --power-shutdown 'systemctl -i poweroff'"
 		GREETER_CMD="${GREETER_CMD} --power-reboot 'systemctl -i reboot'"
-		GREETER_CMD="${GREETER_CMD} --cmd '${FLL_XSESSION}' --theme '${TUITHEME}'"
+		GREETER_CMD="${GREETER_CMD} --cmd '${EXECUTE_CMD}' --theme '${TUITHEME}'"
 	else
 		case "${FLL_XSESSION}" in
 			sway|hyprland)
-				GREETER_CMD="${FLL_XSESSION} --config /etc/greetd/${FLL_XSESSION}-config"
-				GREETER="agreety -c ${FLL_XSESSION}"
-				[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet -c ${FLL_XSESSION}"
-				[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet -l -c ${FLL_XSESSION}"
+				GREETER_CMD="${EXECUTE_CMD} --config /etc/greetd/${FLL_XSESSION}-config"
+				GREETER="agreety -c ${EXECUTE_CMD}"
+				[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet -c ${EXECUTE_CMD}"
+				[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet -l -c ${EXECUTE_CMD}"
 				if [ -x /usr/bin/nwg-hello ]; then
-					GREETER_CMD= "${FLL_XSESSION} -c /etc/nwg-hello/${FLL_XSESSION}-config"
+					GREETER_CMD= "${EXECUTE_CMD} -c /etc/nwg-hello/${FLL_XSESSION}-config"
 				elif [ "${FLL_XSESSION}" = "sway" ]; then
 					cat > /etc/greetd/sway-config <<EOF
 exec "${GREETER}; swaymsg exit"
@@ -126,7 +129,7 @@ EOF
 		cat >> /etc/greetd/config.toml <<EOF
 
 [initial_session]
-command = "${FLL_XSESSION}"
+command = "${EXECUTE_CMD}"
 user = "${FLL_LIVE_USER}"
 EOF
 
