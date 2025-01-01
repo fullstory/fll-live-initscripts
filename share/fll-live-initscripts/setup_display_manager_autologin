@@ -73,66 +73,58 @@ setup_slim() {
 }
 
 setup_greetd() {
-	unset GREETER
 	unset GREETER_CMD
-	unset INITIAL_CMD
 
-	if [ -x /usr/bin/sway ]; then
-		INITIAL_CMD="sway"
-		GREETER_CMD="sway --config /etc/greetd/sway-config"
-		GREETER="agreety -c sway"
-		[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet -c sway"
-		[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet -l -c sway"
-		cat > /etc/greetd/sway-config <<EOF
-exec "${GREETER}; swaymsg exit"
-
-bindsym Mod4+shift+e exec swaynag \
--t warning \
--m 'What do you want to do?' \
--b 'Poweroff' 'pkexec systemctl poweroff' \
--b 'Reboot' 'pkexec systemctl reboot'
-
-include /etc/sway/sway-config.d/*
-EOF
-	fi
-
-	if [ -x /usr/bin/Hyprland ]; then
-		INITIAL_CMD="Hyprland"
-		GREETER_CMD="Hyprland --config /etc/greetd/hyprland.conf"
-		GREETER="agreety -c Hyprland"
-		[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet -c Hyprland"
-		[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet -l -c Hyprland"
-		cat > /etc/greetd/hyprland.conf <<EOF
-exec-once = ${GREETER}; hyprctl dispatch exit
-EOF
-	fi
-
-	if [ -x /usr/bin/labwc ]; then
-		INITIAL_CMD="labwc"
-		GREETER="agreety"
-		[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet"
-		[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet"
-		GREETER_CMD="labwc --startup ${GREETER}"
-	fi
-
-	if [ -x /usr/bin/tuigreet ]; then
+	if [ -n "${FLL_XSESSION}" ] && [ -x /usr/bin/tuigreet ]; then
 		TUITHEME="border=magenta;text=cyan;prompt=cyan;time=cyan;action=cyan;button=magenta;container=black;input=magenta"
 		GREETER_CMD="/usr/bin/tuigreet --greeting 'Welcome to ${FLL_DISTRO_NAME}'"
 		GREETER_CMD="${GREETER_CMD} --time --user-menu --user-menu-max-uid 60513"
 		GREETER_CMD="${GREETER_CMD} --asterisks --remember --remember-user-session"
 		GREETER_CMD="${GREETER_CMD} --power-shutdown 'systemctl -i poweroff'"
 		GREETER_CMD="${GREETER_CMD} --power-reboot 'systemctl -i reboot'"
-		GREETER_CMD="${GREETER_CMD} --cmd '${INITIAL_CMD}' --theme '${TUITHEME}'"
+		GREETER_CMD="${GREETER_CMD} --cmd '${FLL_XSESSION}' --theme '${TUITHEME}'"
+	else
+		case "${FLL_XSESSION}" in
+			sway|hyprland)
+				GREETER_CMD="${FLL_XSESSION} --config /etc/greetd/${FLL_XSESSION}-config"
+				GREETER="agreety -c ${FLL_XSESSION}"
+				[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet -c ${FLL_XSESSION}"
+				[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet -l -c ${FLL_XSESSION}"
+				if [ "${FLL_XSESSION}" = "sway" ]; then
+					cat > /etc/greetd/sway-config <<EOF
+exec "${GREETER}; swaymsg exit"
+
+bindsym Mod4+shift+e exec swaynag \
+-t warning \
+-m 'What do you want to do?' \
+-b 'Poweroff' 'systemctl -i poweroff' \
+-b 'Reboot' 'systemctl -i reboot'
+
+include /etc/sway/sway-config.d/*
+EOF
+				elif [ "${FLL_XSESSION}" = "hyprland" ]; then
+					cat > /etc/greetd/hyprland.conf <<EOF
+exec-once = ${GREETER}; hyprctl dispatch exit
+EOF
+				fi
+				;;
+			labwc)
+				GREETER="agreety"
+				[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet"
+				[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet"
+				GREETER_CMD="labwc --startup ${GREETER}"
+				;;
+		esac
 	fi
 
-	if [ -n "${GREETER_CMD}" ] && [ -n "${INITIAL_CMD}" ]; then
+	if [ -n "${GREETER_CMD}" ]; then
 		sed -i "s#^command = ".*"#command = \"${GREETER_CMD}\"#" \
 			/etc/greetd/config.toml
 
 		cat >> /etc/greetd/config.toml <<EOF
 
 [initial_session]
-command = "${INITIAL_CMD}"
+command = "${FLL_XSESSION}"
 user = "${FLL_LIVE_USER}"
 EOF
 

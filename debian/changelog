@@ -1,6 +1,11 @@
 fll-live-initscripts (5.0.52) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Refactor setup_display_manager_autologin:setup_greetd() logic and
+    remove pkexec.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 01 Jan 2025 01:19:55 +0100
 
