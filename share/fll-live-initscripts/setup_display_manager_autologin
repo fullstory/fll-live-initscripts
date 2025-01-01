@@ -90,7 +90,9 @@ setup_greetd() {
 				GREETER="agreety -c ${FLL_XSESSION}"
 				[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet -c ${FLL_XSESSION}"
 				[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet -l -c ${FLL_XSESSION}"
-				if [ "${FLL_XSESSION}" = "sway" ]; then
+				if [ -x /usr/bin/nwg-hello ]; then
+					GREETER_CMD= "${FLL_XSESSION} -c /etc/nwg-hello/${FLL_XSESSION}-config"
+				elif [ "${FLL_XSESSION}" = "sway" ]; then
 					cat > /etc/greetd/sway-config <<EOF
 exec "${GREETER}; swaymsg exit"
 
