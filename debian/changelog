@@ -1,3 +1,9 @@
+fll-live-initscripts (5.0.52) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 01 Jan 2025 01:19:55 +0100
+
 fll-live-initscripts (5.0.51) unstable; urgency=medium
 
   * setup_defaults: insert keyboard config directly into hyprland.conf.
