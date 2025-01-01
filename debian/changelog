@@ -1,3 +1,10 @@
+fll-live-initscripts (5.0.54) unstable; urgency=medium
+
+  * setup_defaults: hotfix the handling of lxqt compositor variant
+    management.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Wed, 01 Jan 2025 21:48:10 +1000
+
 fll-live-initscripts (5.0.53) unstable; urgency=medium
 
   * Support cheatcodes for lxqt: lxqt-wayland|lxqt-labwc|labwc-

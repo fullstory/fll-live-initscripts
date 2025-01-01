@@ -9,19 +9,19 @@ setup_defaults() {
             # Support various compositors of lxqt (default: labwc)
             [ "${FLL_XDESKTOP}" = "lxqt-labwc" -a -x /usr/bin/labwc ] && \
                 sed -i 's#^compositor=.*#compositor=/usr/bin/labwc#' \
-                    /etc/skel/.config/lxqt/session.conf
+                    /etc/xdg/lxqt/session.conf
             [ "${FLL_XDESKTOP}" = "lxqt-kwin" -a -x /usr/bin/kwin_wayland ] && \
                 sed -i 's#^compositor=.*#compositor=/usr/bin/kwin_wayland#' \
-                    /etc/skel/.config/lxqt/session.conf
+                    /etc/xdg/lxqt/session.conf
             [ "${FLL_XDESKTOP}" = "lxqt-hyprland" -a -x /usr/bin/Hyprland ] && \
                 sed -i 's#^compositor=.*#compositor=/usr/bin/Hyprland#' \
-                    /etc/skel/.config/lxqt/session.conf
+                    /etc/xdg/lxqt/session.conf
             [ "${FLL_XDESKTOP}" = "lxqt-sway" -a -x /usr/bin/sway ] && \
                 sed -i 's#^compositor=.*#compositor=/usr/bin/sway#' \
-                    /etc/skel/.config/lxqt/session.conf
+                    /etc/xdg/lxqt/session.conf
             [ "${FLL_XDESKTOP}" = "lxqt-wayfire" -a -x /usr/bin/wayfire ] && \
                 sed -i 's#^compositor=.*#compositor=/usr/bin/wayfire#' \
-                    /etc/skel/.config/lxqt/session.conf
+                    /etc/xdg/lxqt/session.conf
             # Solve a chicken and egg problem: preselect wayland compositor
             # or else startlxqt launches lxqt session prefernces dialog on
             # first login
