@@ -41,14 +41,22 @@ XKB_DEFAULT_LAYOUT="${XKB_DEFAULT_LAYOUT}"
 EOF
             ;;
         hyprland)
-            . /etc/default/keyboard
-            sed -i "s#\#kb_model =#kb_layout = ${XKBLAYOUT}#" /etc/xdg/hypr/hyprland.conf
-            sed -i "s#\#kb_variant =#kb_variant = ${XKBVARIANT}#" /etc/xdg/hypr/hyprland.conf
-            sed -i "s#\#kb_model =#kb_model = ${XKBMODEL}#" /etc/xdg/hypr/hyprland.conf
-            sed -i "s#\#kb_options =#kb_options = ${XKBOPTIONS}#" /etc/xdg/hypr/hyprland.conf
             # Hyprland doesn't appear to read from /etc/xdg
             mkdir -p /etc/skel/.config
-            cp -a /etc/xdg/hypr /etc/skel/.config/
+            cp -a /usr/share/aptosid-settings-hyprland/hypr /etc/skel/.config/
+            . /etc/default/keyboard
+            sed -i "s#\#kb_model =#kb_layout = ${XKBLAYOUT}#" /etc/skel/.config/hypr/hyprland.conf
+            sed -i "s#\#kb_variant =#kb_variant = ${XKBVARIANT}#" /etc/skel/.config/hyprland.conf
+            sed -i "s#\#kb_model =#kb_model = ${XKBMODEL}#" /etc/skel/.config/hyprland.conf
+            sed -i "s#\#kb_options =#kb_options = ${XKBOPTIONS}#" /etc/skel/.config/hyprland.conf
             ;;
+        sway)
+            mkdir -p /etc/skel/.config/sway
+            cp /usr/share/aptosid-settings-sway/config /etc/skel/.config/sway
+            . /etc/default/keyboard
+            sed -i "s#xkb_layout \"\"#xkb_layout \"${XKBLAYOUT}\"#" /etc/skel/.config/sway/config
+            sed -i "s#xkb_variant \"\"#xkb_variant \"${XKBVARIANT}\"#" /etc/skel/.config/sway/config
+            sed -i "s#xkb_model \"\"#xkb_model \"${XKBMODEL}\"#" /etc/skel/.config/sway/config
+            sed -i "s#xkb_options \"\"#xkb_options \"${XKBOPTIONS}\"#" /etc/skel/.config/sway/config
     esac
 }

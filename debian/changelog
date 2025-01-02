@@ -1,8 +1,9 @@
-fll-live-initscripts (5.0.55) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.55) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * setup_defaults: support sway config preseeding, adapt hyprland for
+    move to usr/share.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 01 Jan 2025 22:22:55 +0100
+ -- Kel Modderman <kelvmod@gmail.com>  Thu, 02 Jan 2025 18:41:01 +1000
 
 fll-live-initscripts (5.0.54) unstable; urgency=medium
 
