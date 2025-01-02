@@ -1,3 +1,9 @@
+fll-live-initscripts (5.0.56) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 02 Jan 2025 21:22:43 +0100
+
 fll-live-initscripts (5.0.55) unstable; urgency=medium
 
   * setup_defaults: support sway config preseeding, adapt hyprland for
