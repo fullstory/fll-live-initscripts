@@ -1,12 +1,9 @@
-fll-live-initscripts (5.0.56) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (5.0.56) unstable; urgency=medium
 
   [ Kel Modderman ]
   * setup_defaults: support setup of sway colorschemes.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 02 Jan 2025 21:22:43 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 05 Jan 2025 21:42:53 +0100
 
 fll-live-initscripts (5.0.55) unstable; urgency=medium
 
