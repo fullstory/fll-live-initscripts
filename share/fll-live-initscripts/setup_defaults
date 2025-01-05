@@ -53,6 +53,7 @@ EOF
         sway)
             mkdir -p /etc/skel/.config/sway
             cp /usr/share/aptosid-settings-sway/config /etc/skel/.config/sway
+            cp /usr/share/aptosid-settings-sway/colorscheme /etc/skel/.config/sway
             . /etc/default/keyboard
             sed -i "s#xkb_layout \"\"#xkb_layout \"${XKBLAYOUT}\"#" /etc/skel/.config/sway/config
             sed -i "s#xkb_variant \"\"#xkb_variant \"${XKBVARIANT}\"#" /etc/skel/.config/sway/config
