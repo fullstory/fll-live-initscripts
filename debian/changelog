@@ -8,6 +8,7 @@ fll-live-initscripts (5.0.56) unstable; urgency=medium
 
   [ Kel Modderman ]
   * setup_defaults: support setup of sway colorschemes.
+  * setup_defaults: fix path to aptosid-fred icon.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 05 Jan 2025 21:42:53 +0100
 
