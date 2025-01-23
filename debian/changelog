@@ -1,14 +1,14 @@
-fll-live-initscripts (5.0.57) UNRELEASED; urgency=medium
+fll-live-initscripts (5.0.57) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  [ Kel Modderman ]
+  * setup_defaults: fix path to aptosid-fred icon.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 05 Jan 2025 21:43:21 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 23 Jan 2025 03:59:10 +0100
 
 fll-live-initscripts (5.0.56) unstable; urgency=medium
 
   [ Kel Modderman ]
   * setup_defaults: support setup of sway colorschemes.
-  * setup_defaults: fix path to aptosid-fred icon.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 05 Jan 2025 21:42:53 +0100
 
