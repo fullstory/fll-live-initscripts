@@ -13,7 +13,14 @@ fll-live-initscripts (5.0.58) UNRELEASED; urgency=medium
     - rename set_console to set_keytable
     - only run set_locale and set_keytable if same defaults have not already
       been set at build time
-  * locales.csv: fix typo for de_DE.
+  * locales.csv:
+    - fix typo for de_DE locale variant (US.utf8 -> en_US.utf8)
+    - fix en_US default timezone
+    - remove unused model, options and tz columns
+    - fll_locale_lang now works agin by virtue of removing the above columns,
+      it wasn't adjusted well in the past when columns were inserted
+    - call and eval awk output only once per locale for xbk env vars
+    - skip first row when calculating lang cheats
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 23 Jan 2025 03:59:17 +0100
 
