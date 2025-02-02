@@ -196,7 +196,7 @@ fi
 
 set_locale()
 {
-	if grep -q "^LANG=\"${LANG}\"" /etc/locale.conf; then
+	if grep -q "^LANG=${LANG}" /etc/locale.conf; then
 		return 0
 	fi
 
@@ -208,7 +208,7 @@ set_locale()
 
 set_keytable()
 {
-	if ! grep -q "${XKBLAYOUT%%,*}" /etc/default/keyboard; then
+	if ! grep -q "XKBLAYOUT=\"${XKBLAYOUT%%,*}\"" /etc/default/keyboard; then
 		# generate new keyboard-configuration conffile
 		rm -f /etc/default/keyboard
 		DEBCONF=$(mktemp)
