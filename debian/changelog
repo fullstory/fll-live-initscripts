@@ -9,6 +9,10 @@ fll-live-initscripts (5.0.58) UNRELEASED; urgency=medium
     - do not execute `locale -a twice'
     - remove unneccessary FLL_LANG variable
     - only execute udev trigger for keymap change if not in chroot
+    - move console-setup defaults to pyfll
+    - rename set_console to set_keytable
+    - only run set_locale and set_keytable if same defaults have not already
+      been set at build time
   * Add debianutils for ischroot.
   * locales.csv: fix typo for de_DE.
 

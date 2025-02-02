@@ -49,21 +49,6 @@ fi
 ###
 . /usr/share/fll-live-initscripts/locales
 
-###
-# some console-setup defaults
-###
-CHARMAP="UTF-8"
-CODESET="guess"
-# Debian agrees that Terminus doesn't look great enough to be default
-# http://bugs.debian.org/497331
-FONTFACE="VGA"
-# Keep the default size of 16 here to avoid clearing VT 1/2 way through
-# bootup sequence
-FONTSIZE="8x16"
-
-###
-# some keyboard-configuration defaults
-###
 XKBMODEL="pc105"
 XKBLAYOUT="us"
 XKBVARIANT=""
@@ -211,54 +196,48 @@ fi
 
 set_locale()
 {
-	###
-	# select default locale via debconf
-	###
-	echo "configuring locales for '${LANG}'"
+	if grep -q "^LANG=\"${LANG}\"" /etc/locale.conf; then
+		return 0
+	fi
 
+	echo "${NAME}: configuring locales for '${LANG}'"
 	echo "locales locales/default_environment_locale select ${LANG}" | \
 		debconf-set-selections
 	update-locale "LANG=${LANG}"
 }
 
-set_console()
+set_keytable()
 {
-	# write configuration: console-setup
-	cat > /etc/default/console-setup <<EOF
-ACTIVE_CONSOLES="/dev/tty[1-6]"
-CHARMAP="${CHARMAP}"
-CODESET="${CODESET}"
-FONTFACE="${FONTFACE}"
-FONTSIZE="${FONTSIZE}"
+	if ! grep -q "${XKBLAYOUT%%,*}" /etc/default/keyboard; then
+		# generate new keyboard-configuration conffile
+		rm -f /etc/default/keyboard
+		DEBCONF=$(mktemp)
+		cat >"${DEBCONF}" <<EOF
+keyboard-configuration keyboard-configuration/layoutcode string ${XKBLAYOUT%%,*}
+keyboard-configuration keyboard-configuration/modelcode string ${XKBMODEL}
+keyboard-configuration keyboard-configuration/variantcode string ${XKBVARIANT}
+keyboard-configuration keyboard-configuration/optionscode string ${XKBOPTIONS}
 EOF
-	setupcon --save-only
+		debconf-set-selections < "${DEBCONF}"
+		rm -f "${DEBCONF}"
+		dpkg-reconfigure -fnoninteractive keyboard-configuration
 
-	# write configuration: keyboard-configuration
-	rm -f /etc/default/keyboard
-	DEBCONF=$(mktemp)
-	echo "keyboard-configuration keyboard-configuration/modelcode string ${XKBMODEL}" >> "${DEBCONF}"
-	echo "keyboard-configuration keyboard-configuration/layoutcode string ${XKBLAYOUT%%,*}" >> "${DEBCONF}"
-	echo "keyboard-configuration keyboard-configuration/variantcode string ${XKBVARIANT}" >> "${DEBCONF}"
-	echo "keyboard-configuration keyboard-configuration/optionscode string ${XKBOPTIONS}" >> "${DEBCONF}"
-	debconf-set-selections < "${DEBCONF}"
-	rm -f "${DEBCONF}"
-	dpkg-reconfigure -fnoninteractive keyboard-configuration
-
-	if ! ischroot; then
-		udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
+		if ! ischroot; then
+			udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
+		fi
 	fi
 }
 
 case "${1}" in
 	start)
 		set_locale
-		set_console
+		set_keytable
 		;;
 	localize)
 		[ -n "${2}" ] && LANG="${2}"
 		# localize
 		set_locale
-		set_console
+		set_keytable
 		;;
 	*)
 		echo "Usage: ${NAME} {start|localize}" >&2
