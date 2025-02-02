@@ -254,96 +254,16 @@ EOF
 	udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
 }
 
-apt_install_lang() {
-	###
-	# install debs for lang from deb archive on cd
-	###
-	if [ -n "$NOAPTLANG" ]; then
-		return
-	fi
-
-	# don't touch apt if it has been used and we're noninteractive
-	if [ "${1}" != "localize" ] && \
-	   [ "/var/lib/dpkg/status" -nt "$(fll_get_mnt)/${FLL_IMAGE_LOCATION}" ]; then
-		echo "dpkg already updated"
-		return
-	fi
-
-	FLL_APT="/fll/apt"
-	FLL_APT_I18N="/fll/apt/i18n"
-	if [ ! -d "${FLL_APT_I18N}" ]; then
-		return
-	fi
-
-	# e.g. try /fll/apt/i18n/de_AT then the first de_* found
-	if [ -f "${FLL_APT_I18N}/${LANG%%[.]*}" ]; then
-		# we have the variant requested
-		LANGPACKS=$(cat "${FLL_APT_I18N}/${LANG%%[.]*}")
-	elif [ "${LANG%%[_]*}" != 'en' ]; then
-		# try fll-locales to find one
-		for lf in ${FLL_APT_I18N}/${LANG%[_]*}*; do
-			if [ -f "${lf}" ]; then
-				# we have a file for the language
-				LANGPACKS=$(cat "${lf}")
-				break
-			fi
-		done
-		[ -z "${LANGPACKS}" ] && return
-	else
-		# it's english and we don't have the variant requested
-		return
-	fi
-
-	echo "installing language packages for '${LANG}'"
-	APTGETBASE=$(find "${FLL_APT}" -type f -name '*.deb' | \
-		awk 'BEGIN{ print "apt-get -y"} { print " --with-source", $1} END { print " install "}')
-	# do a dry-run to calculate size of packages and that will be used
-	APTUSESRAW=$(LANG=C ${APTGETBASE} --print-uris ${LANGPACKS} | \
-		awk '/^After this operation, /{print $4}')
-	APTUSES=${APTUSESRAW%%[.]*MB}
-	APTUSES=$(echo $APTUSESRAW | sed 's|MB$||;')
-
-	# lets assume it is <MB and ok if it's not in MB
-	if [ "${APTUSES}" != "${APTUSESRAW}" ]; then
-		APTUSES=$(echo $APTUSES | sed 's|\.[0-9]*$||;')
-
-		# get a free memory figure
-		FREEMEM=$(LANG=C free -m | awk '/\-\/\+\ buffers/{print $4}')
-
-		# check free - used > minspace (256M)
-		MEMAFTER=$(( ${FREEMEM} - ${APTUSES} ))
-		if [ ${MEMAFTER} -lt 256 ]; then
-			echo "minimum 256MB free ram needed for i18n packages"
-			echo "you would only have ${MEMAFTER}MB free, not installing"
-			apt_install_lang_clean
-			return
-		fi
-
-		# check used/free > minratio
-		USESRATIO=$(( ${FREEMEM} / ${APTUSES} ))
-		if [ ${USESRATIO} -lt 5 ]; then
-			echo "i18n packages would use (${APTUSES}MB) more then 20% of available memory (${FREEMEM}MB), not installing."
-			return
-		fi
-	fi
-
-	# install the packages
-	DEBIAN_FRONTEND=noninteractive ${APTGETBASE} ${LANGPACKS}
-
-}
-
 case "${1}" in
 	start)
 		set_locale
 		set_console
-		apt_install_lang
 		;;
 	localize)
 		[ -n "${2}" ] && LANG="${2}"
 		# localize
 		set_locale
 		set_console
-		apt_install_lang localize
 		;;
 	*)
 		echo "Usage: ${NAME} {start|localize}" >&2
