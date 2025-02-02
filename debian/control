@@ -34,6 +34,7 @@ Architecture: all
 Depends: ${misc:Depends},
  systemd-homed | adduser,
  console-setup,
+ debianutils,
  distro-defaults,
  eject,
  fll-live-utils,

@@ -36,7 +36,7 @@ if [ -r /etc/default/distro ]; then
 fi
 
 if [ "${FLL_DISTRO_MODE}" != "live" ]; then
-	[ -n "${FLL_LANG}" ] || exit 0
+	[ "${1}" -eq "localize" ] || exit 0
 fi
 
 ###
@@ -98,13 +98,6 @@ if [ -f /proc/cmdline ]; then
 fi
 
 ###
-# allow FLL_LANG environment variable to trump
-###
-if [ -n "${FLL_LANG}" ]; then
-	LANGUAGE="${FLL_LANG}"
-fi
-
-###
 # lang cheatcode can optionally be made of two dash-separated parts ll-cc
 # ll -> language code
 # cc -> demographic code
@@ -112,11 +105,10 @@ fi
 LANG_CODE=${LANGUAGE%%[-_]*}
 DEMO_CODE="$(echo ${LANGUAGE##*[-_]} | awk '{print toupper($1)}')"
 
-LANGS=$(locale -a)
 LANG=""
 
 # First check if they entered a built in lang
-for LOCALE in ${LANGS}; do
+for LOCALE in ${LOCALES}; do
 	[ "${LOCALE}" = "${LANG_CODE}_${DEMO_CODE}.utf8" ] && LANG="${LOCALE}" && break
 
 	# match the language to find the default and possible locales
@@ -251,7 +243,10 @@ EOF
 	debconf-set-selections < "${DEBCONF}"
 	rm -f "${DEBCONF}"
 	dpkg-reconfigure -fnoninteractive keyboard-configuration
-	udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
+
+	if ! ischroot; then
+		udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
+	fi
 }
 
 case "${1}" in

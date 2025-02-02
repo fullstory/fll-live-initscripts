@@ -4,7 +4,12 @@ fll-live-initscripts (5.0.58) UNRELEASED; urgency=medium
   * NOT RELEASED YET
 
   [ Kel Modderman ]
-  * fll_locales: retire liveapt.
+  * fll_locales:
+    - retire liveapt
+    - do not execute `locale -a twice'
+    - remove unneccessary FLL_LANG variable
+    - only execute udev trigger for keymap change if not in chroot
+  * Add debianutils for ischroot.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 23 Jan 2025 03:59:17 +0100
 
