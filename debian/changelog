@@ -7,7 +7,7 @@ fll-live-initscripts (5.0.58) UNRELEASED; urgency=medium
   * fll_locales:
     - retire liveapt
     - do not execute `locale -a twice'
-    - remove unneccessary FLL_LANG variable
+    - remove unnecessary FLL_LANG variable
     - only execute udev trigger for keymap change if not in chroot
     - move console-setup defaults to pyfll
     - rename set_console to set_keytable
