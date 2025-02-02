@@ -13,7 +13,6 @@ fll-live-initscripts (5.0.58) UNRELEASED; urgency=medium
     - rename set_console to set_keytable
     - only run set_locale and set_keytable if same defaults have not already
       been set at build time
-  * Add debianutils for ischroot.
   * locales.csv: fix typo for de_DE.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 23 Jan 2025 03:59:17 +0100
