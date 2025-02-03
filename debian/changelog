@@ -1,7 +1,4 @@
-fll-live-initscripts (5.0.58) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (5.0.58) unstable; urgency=medium
 
   [ Kel Modderman ]
   * fll_locales:
@@ -22,7 +19,7 @@ fll-live-initscripts (5.0.58) UNRELEASED; urgency=medium
     - call and eval awk output only once per locale for xbk env vars
     - skip first row when calculating lang cheats
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 23 Jan 2025 03:59:17 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 03 Feb 2025 03:08:24 +0100
 
 fll-live-initscripts (5.0.57) unstable; urgency=medium
 
