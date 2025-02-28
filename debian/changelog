@@ -1,6 +1,10 @@
 fll-live-initscripts (5.0.59) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * setup_defaults: update location to fred icon location.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 03 Feb 2025 03:08:39 +0100
 
