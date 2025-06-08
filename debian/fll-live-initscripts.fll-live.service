@@ -7,8 +7,7 @@ Before=shutdown.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-EnvironmentFile=/etc/default/distro
-ExecStart=/usr/bin/test -d "${FLL_MOUNTPOINT}"
+ExecStart=/usr/bin/test -f /etc/default/distro
 Restart=no
 
 [Install]

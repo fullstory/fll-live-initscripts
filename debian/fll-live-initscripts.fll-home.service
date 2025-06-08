@@ -1,5 +1,4 @@
 [Unit]
-ConditionFileIsExecutable=/usr/bin/homectl
 Description=Live User Home Service
 DefaultDependencies=no
 Before=shutdown.target
