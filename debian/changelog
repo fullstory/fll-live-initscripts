@@ -1,7 +1,4 @@
-fll-live-initscripts (5.0.60) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (5.0.60) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Purge /lib/init/fll these functions are no longer used/useful.
