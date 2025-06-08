@@ -683,7 +683,8 @@ fll-live-initscripts (4.8.0) unstable; urgency=medium
 
 fll-live-initscripts (4.7.6) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  [ Kel Modderman ]
+  * Purge unused fll_blockdev_detect.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 28 Oct 2024 18:52:40 +0100
 
