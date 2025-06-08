@@ -8,6 +8,7 @@ fll-live-initscripts (5.0.60) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Purge /lib/init/fll these functions are no longer used/useful.
+  * fll_locales: remove 'list' argument handling.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 01 Mar 2025 08:17:22 +0100
 

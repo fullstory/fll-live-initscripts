@@ -20,11 +20,6 @@
 PATH=/usr/sbin:/usr/bin
 NAME="fll-locales"
 
-if [ "${1}" = "list" ]; then
-	sed -n 's![ \t]\+\([a-z-]\+\)|\?\([a-z]\+\)\?).*### [A-Z][A-Z] \(.\+\) kb:\(.\+\) ###!\1, \3,\4!p' "${0}"
-	exit 0
-fi
-
 ###
 # source distro-defaults, no-op unless in live mode
 ###
