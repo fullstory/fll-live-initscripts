@@ -40,11 +40,6 @@ if [ "${FLL_DISTRO_MODE}" != "live" ]; then
 fi
 
 ###
-# source fll functions
-###
-. /usr/lib/init/fll
-
-###
 # source LANG functions
 ###
 . /usr/share/fll-live-initscripts/locales
