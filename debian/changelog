@@ -1,12 +1,9 @@
-fll-live-initscripts (6.0.0) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (6.0.0) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Reintroduce fll_blockdev_detect.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 08 Jun 2025 02:52:52 +0200
+ -- Kel Modderman <kelvmod@gmail.com>  Sun, 08 Jun 2025 21:39:23 +1000
 
 fll-live-initscripts (5.0.60) unstable; urgency=medium
 
