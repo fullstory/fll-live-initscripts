@@ -1,4 +1,4 @@
-FLL_BLOCKDEV_DETECT(8)
+FLL_BLOCKDEV_DETECT(1)
 ======================
 Kel Modderman <kelvmod@gmail.com>
 
