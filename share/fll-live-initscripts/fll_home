@@ -1,47 +1,36 @@
 #!/bin/sh
 
-# only run in live environment
-[ -d "${FLL_MOUNTPOINT}" ] || exit 0
-
 # setup face icon, patch desktop environment settings
 . /usr/share/fll-live-initscripts/setup_defaults
 setup_defaults
 
-HOMECTL_STATE="absent"
-HOMECTL=$(homectl list -EE | jq '.[] | select(.name=="'${FLL_LIVE_USER}'")')
-if [ -n "${HOMECTL}" ]; then
-	HOMECTL_STATE=$(echo "${HOMECTL}" | jq -r '.state')
-fi
+if [ -x /usr/bin/homectl ]; then
+	HOMECTL_STATE="absent"
+	HOMECTL=$(homectl list -EE | jq '.[] | select(.name=="'${FLL_LIVE_USER}'")')
+	if [ -n "${HOMECTL}" ]; then
+		HOMECTL_STATE=$(echo "${HOMECTL}" | jq -r '.state')
+	fi
 
-case "${HOMECTL_STATE}" in
-	fixating*|unfixated|inactive)
-		FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
-		# A home matching installed systemd-homed keys is present but may not
-		# have been blessed by the system yet (unfixated). Activate discovered
-		# homes in anticipation of autologin into the live desktop environment.
-		homectl activate "${FLL_LIVE_USER}"
-		if [ "$?" = "0" ]; then
-			homectl update "${FLL_LIVE_USER}" \
-				--member-of="${FLL_LIVE_USER_GROUPS}" \
-				--session-launcher="${FLL_XSESSION}" \
-				--session-type="${FLL_XTYPE}" \
-				--auto-login=yes
-			# hack calamares to allow passthru of existing user+home
-			[ -w /etc/calamares/settings.conf ] && \
-				sed -i 's/- users/#- users/g' /etc/calamares/settings.conf
-		fi
-		;;
-	absent|*)
-		# There is no real advantage to setting up a plain directory home with
-		# systemd-homed for the live user, so prefer adduser if available.
-		if [ -x "$(which adduser)" ]; then
-			adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
-			. /usr/share/fll-live-initscripts/setup_passwdless_live_user
-			setup_passwdless_live_user
-		else
+	case "${HOMECTL_STATE}" in
+		fixating*|unfixated|inactive)
 			FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
-			# This requires entry of 3 passwords, but may be exposed by a boot
-			# cheatcode in the future.
+			# A home matching installed systemd-homed keys is present but may not
+			# have been blessed by the system yet (unfixated). Activate discovered
+			# homes in anticipation of autologin into the live desktop environment.
+			homectl activate "${FLL_LIVE_USER}"
+			if [ "$?" = "0" ]; then
+				homectl update "${FLL_LIVE_USER}" \
+					--member-of="${FLL_LIVE_USER_GROUPS}" \
+					--session-launcher="${FLL_XSESSION}" \
+					--session-type="${FLL_XTYPE}" \
+					--auto-login=yes
+				# hack calamares to allow passthru of existing user+home
+				[ -w /etc/calamares/settings.conf ] && \
+					sed -i 's/- users/#- users/g' /etc/calamares/settings.conf
+			fi
+			;;
+		absent|*)
+			FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
 			homectl create "${FLL_LIVE_USER}" \
 					--real-name="${FLL_LIVE_USER}" \
 					--member-of="${FLL_LIVE_USER_GROUPS}" \
@@ -50,9 +39,13 @@ case "${HOMECTL_STATE}" in
 					--auto-login=yes \
 					--storage=directory
 			homectl activate "${FLL_LIVE_USER}"
-		fi
-		;;
-esac
+			;;
+	esac
+else
+	adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
+	. /usr/share/fll-live-initscripts/setup_passwdless_live_user
+	setup_passwdless_live_user
+fi
 
 # setup autologin for live user
 . /usr/share/fll-live-initscripts/setup_display_manager_autologin
