@@ -1,6 +1,6 @@
 FLL_BLOCKDEV_DETECT(8)
 ======================
-Kel Modderman <kel@otaku42.de>
+Kel Modderman <kelvmod@gmail.com>
 
 
 NAME
