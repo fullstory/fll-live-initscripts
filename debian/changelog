@@ -1,6 +1,11 @@
 fll-live-initscripts (6.0.4) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Source distro-defaults if executed explcitly (e.g. by calamares) but
+    do not otherwise exit.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Jun 2025 02:43:29 +0200
 

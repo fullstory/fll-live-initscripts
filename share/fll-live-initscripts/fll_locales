@@ -21,9 +21,9 @@ PATH=/usr/sbin:/usr/bin
 NAME="fll-locales"
 
 ###
-# source distro-defaults
+# source distro-defaults if executed explcitly (e.g. by calamares)
 ###
-[ "${1}" = "localize" ] && . /etc/default/distro || exit 1
+[ "${1}" = "localize" ] && . /etc/default/distro
 
 ###
 # source LANG functions
