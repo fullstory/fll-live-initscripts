@@ -1,7 +1,6 @@
 Source: fll-live-initscripts
 Maintainer: Stefan Lippers-Hollmann <s.l-h@gmx.de>
-Uploaders: Kel Modderman <kelvmod@gmail.com>,
- Niall Walsh <niallwalsh@celtux.org>
+Uploaders: Kel Modderman <kelvmod@gmail.com>
 Section: misc
 Priority: optional
 Rules-Requires-Root: no

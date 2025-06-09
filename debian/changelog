@@ -1,13 +1,10 @@
-fll-live-initscripts (6.0.3) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (6.0.3) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Purge fll-live.service and make live service units conditional on
     /etc/default/distro.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Jun 2025 02:11:16 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Jun 2025 02:42:34 +0200
 
 fll-live-initscripts (6.0.2) unstable; urgency=medium
 
