@@ -56,10 +56,6 @@ static int linux_filesystem(const char *fstype)
 		return 1;
 	if (strcmp(fstype, "jfs") == 0)
 		return 1;
-	if (strcmp(fstype, "reiserfs") == 0)
-		return 1;
-	if (strcmp(fstype, "reiser4") == 0)
-		return 1;
 	if (strcmp(fstype, "btrfs") == 0)
 		return 1;
 	

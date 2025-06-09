@@ -1,8 +1,8 @@
-fll-live-initscripts (6.0.2) UNRELEASED; urgency=medium
+fll-live-initscripts (6.0.2) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * drop support for reiserfs (dropped with v6.13) and reiser4 (never merged).
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Jun 2025 01:36:39 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Jun 2025 02:09:49 +0200
 
 fll-live-initscripts (6.0.1) unstable; urgency=medium
 
