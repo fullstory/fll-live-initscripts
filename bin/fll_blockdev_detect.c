@@ -29,9 +29,6 @@
 #include <signal.h>
 #include <sys/select.h>
 #include <libudev.h>
-#ifdef USE_LIBPIPELINE
-#include <pipeline.h>
-#endif
 
 #include "fll_blockdev_cmdline.h"
 
@@ -70,30 +67,6 @@ static int print_device(struct udev_device *device)
 	return 0;
 }
 
-#ifdef USE_LIBPIPELINE
-static int execp_device(struct udev_device *device)
-{
-	struct udev_list_entry *list_entry;
-	struct udev_list_entry *first_list_entry;
-	pipeline *pipe;
-	pipecmd *cmd;
-	int ret;
-
-	pipe = pipeline_new();
-	cmd = pipecmd_new(opts.execp_arg);
-
-	first_list_entry = udev_device_get_properties_list_entry(device);
-	udev_list_entry_foreach(list_entry, first_list_entry) {
-		pipecmd_setenv(cmd, udev_list_entry_get_name(list_entry),
-			       udev_list_entry_get_value(list_entry));
-	}
-
-	pipeline_command(pipe, cmd);
-	ret = pipeline_run(pipe);
-
-	return !ret;
-}
-#else
 static int execp_device(struct udev_device *device)
 {
 	struct udev_list_entry *list_entry;
@@ -114,7 +87,6 @@ static int execp_device(struct udev_device *device)
 
 	return !ret;
 }
-#endif
 
 static int process_device(struct udev_device *device)
 {
