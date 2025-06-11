@@ -1,12 +1,7 @@
-fll-live-initscripts (6.0.6) UNRELEASED; urgency=medium
-
-  * Change systemd service file to set WantedBy=multi-user.target.
-
- -- Kel Modderman <kelvmod@gmail.com>  Wed, 11 Jun 2025 16:40:44 +1000
-
 fll-live-initscripts (6.0.5) unstable; urgency=medium
 
   [ Kel Modderman ]
+  * Change systemd service file to set WantedBy=multi-user.target.
   * Drop removable device detection from fll_blockdev_detect.
 
  -- Kel Modderman <kelvmod@gmail.com>  Wed, 11 Jun 2025 16:33:53 +1000
