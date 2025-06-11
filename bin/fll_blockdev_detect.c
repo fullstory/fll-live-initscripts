@@ -54,25 +54,6 @@ static void setup_timeout_signal(unsigned int seconds)
 	alarm(seconds);
 }
 
-static int device_removable(struct udev_device *device)
-{
-	struct udev_device *parent = device;
-	const char *removable;
-
-	do {
-		removable = udev_device_get_sysattr_value(parent,
-							  "removable");
-		if (removable != NULL)
-			return atoi(removable);
-
-		parent = udev_device_get_parent_with_subsystem_devtype(parent,
-								       "block",
-								       "disk");
-	} while (parent != NULL);
-
-	return 1;
-}
-
 static int print_device(struct udev_device *device)
 {
 	struct udev_list_entry *list_entry;
@@ -190,11 +171,6 @@ int main(int argc, char **argv)
 		if (device == NULL)
 			continue;
 
-		if (opts.removable_flag && !device_removable(device)) {
-			udev_device_unref(device);
-			continue;
-		}
-
 		ret = process_device(device);
 		udev_device_unref(device);
 		if (ret)
@@ -261,11 +237,6 @@ int main(int argc, char **argv)
 			if (strcmp(action, "add") != 0 &&
 			    strcmp(action, "change") != 0) {
 			    	udev_device_unref(device);
-				continue;
-			}
-
-			if (opts.removable_flag && !device_removable(device)) {
-				udev_device_unref(device);
 				continue;
 			}
 

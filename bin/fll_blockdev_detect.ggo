@@ -1,5 +1,5 @@
 package "fll_blockdev_detect"
-version "1.0"
+version "1.1"
 
 option	"execp" e
 	"execute this script for every block device detected"
@@ -8,10 +8,6 @@ option	"execp" e
 
 option	"monitor" m
 	"monitor for block device add|change events"
-	flag off
-
-option	"removable" r
-	"detect removable block devices"
 	flag off
 
 option	"timeout" t

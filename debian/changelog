@@ -1,8 +1,9 @@
-fll-live-initscripts (6.0.5) UNRELEASED; urgency=medium
+fll-live-initscripts (6.0.5) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  [ Kel Modderman ]
+  * Drop removable device detection from fll_blockdev_detect.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 09 Jun 2025 03:04:19 +0200
+ -- Kel Modderman <kelvmod@gmail.com>  Wed, 11 Jun 2025 16:33:53 +1000
 
 fll-live-initscripts (6.0.4) unstable; urgency=medium
 
