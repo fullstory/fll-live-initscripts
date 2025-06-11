@@ -12,5 +12,5 @@ RemainAfterExit=yes
 ExecStart=/usr/sbin/make-ssl-cert generate-default-snakeoil --force-overwrite
 
 [Install]
-WantedBy=network.target
+WantedBy=multi-user.target
 

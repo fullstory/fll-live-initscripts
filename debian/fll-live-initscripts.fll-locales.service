@@ -13,4 +13,4 @@ ExecStart=/usr/share/fll-live-initscripts/fll_locales start
 Restart=no
 
 [Install]
-WantedBy=basic.target
+WantedBy=multi-user.target
