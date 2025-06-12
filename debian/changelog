@@ -1,6 +1,10 @@
 fll-live-initscripts (6.0.6) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Inherit /root dotfile setup from fll-live-initramfs.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 12 Jun 2025 05:27:05 +0200
 

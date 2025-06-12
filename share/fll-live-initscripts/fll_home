@@ -50,3 +50,10 @@ fi
 # setup autologin for live user
 . /usr/share/fll-live-initscripts/setup_display_manager_autologin
 setup_display_manager_autologin
+
+# setup root dotfiles
+for dotfile in '.bash_logout' '.bash_profile' '.bashrc' '.profile'; do
+	[ -f /etc/skel/${dotfile} ] && [ ! -f /root/${dotfile} ] && \
+		cp /etc/skel/${dotfile} /root/${dotfile}
+done
+:> /root/.hushlogin
