@@ -1,9 +1,9 @@
 #!/bin/sh
 
-# setup face icon, patch desktop environment settings
-. /usr/share/fll-live-initscripts/setup_defaults
-setup_defaults
+# use fred for .face
+cp /usr/share/icons/hicolor/scalable/emblems/emblem-aptosid-fred.svg /etc/skel/.face
 
+# systemd-homed support
 if [ -x /usr/bin/homectl ]; then
 	HOMECTL_STATE="absent"
 	HOMECTL=$(homectl list -EE | jq '.[] | select(.name=="'${FLL_LIVE_USER}'")')

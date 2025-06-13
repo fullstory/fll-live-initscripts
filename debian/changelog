@@ -6,6 +6,7 @@ fll-live-initscripts (6.0.6) UNRELEASED; urgency=medium
   [ Kel Modderman ]
   * Inherit /root dotfile setup from fll-live-initramfs.
   * Add desktop cheatcode handling.
+  * Dissolve setup_defaults into setup_display_manager_autologin.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 12 Jun 2025 05:27:05 +0200
 

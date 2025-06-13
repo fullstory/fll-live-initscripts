@@ -262,6 +262,63 @@ setup_display_manager_autologin() {
 			;;
 	esac
 
+    case "${FLL_XSESSION}" in
+        lxqt-wayland)
+            # Support various compositors of lxqt (default: labwc)
+            [ "${FLL_XDESKTOP}" = "lxqt-labwc" -a -x /usr/bin/labwc ] && \
+                sed -i 's#^compositor=.*#compositor=/usr/bin/labwc#' \
+                    /etc/xdg/lxqt/session.conf
+            [ "${FLL_XDESKTOP}" = "lxqt-kwin" -a -x /usr/bin/kwin_wayland ] && \
+                sed -i 's#^compositor=.*#compositor=/usr/bin/kwin_wayland#' \
+                    /etc/xdg/lxqt/session.conf
+            [ "${FLL_XDESKTOP}" = "lxqt-hyprland" -a -x /usr/bin/Hyprland ] && \
+                sed -i 's#^compositor=.*#compositor=/usr/bin/Hyprland#' \
+                    /etc/xdg/lxqt/session.conf
+            [ "${FLL_XDESKTOP}" = "lxqt-sway" -a -x /usr/bin/sway ] && \
+                sed -i 's#^compositor=.*#compositor=/usr/bin/sway#' \
+                    /etc/xdg/lxqt/session.conf
+            [ "${FLL_XDESKTOP}" = "lxqt-wayfire" -a -x /usr/bin/wayfire ] && \
+                sed -i 's#^compositor=.*#compositor=/usr/bin/wayfire#' \
+                    /etc/xdg/lxqt/session.conf
+            # Solve a chicken and egg problem: preselect wayland compositor
+            # or else startlxqt launches lxqt session prefernces dialog on
+            # first login
+            mkdir -p /etc/skel/.config/lxqt
+            cp /etc/xdg/lxqt/session.conf \
+                /etc/skel/.config/lxqt/session.conf
+            ;;
+        labwc)
+            . /etc/default/keyboard
+            if [ "${XKBVARIANT}" ]; then
+                XKB_DEFAULT_LAYOUT="${XKBLAYOUT}(${XKBVARIANT})"
+            else
+                XKB_DEFAULT_LAYOUT="${XKBLAYOUT}"
+            fi
+            cat >> /etc/xdg/labwc/environment <<EOF
+XKB_DEFAULT_LAYOUT="${XKB_DEFAULT_LAYOUT}"
+EOF
+            ;;
+        hyprland)
+            # Hyprland doesn't appear to read from /etc/xdg
+            mkdir -p /etc/skel/.config
+            cp -a /usr/share/aptosid-settings-hyprland/hypr /etc/skel/.config/
+            . /etc/default/keyboard
+            sed -i "s#\#kb_model =#kb_layout = ${XKBLAYOUT}#" /etc/skel/.config/hypr/hyprland.conf
+            sed -i "s#\#kb_variant =#kb_variant = ${XKBVARIANT}#" /etc/skel/.config/hyprland.conf
+            sed -i "s#\#kb_model =#kb_model = ${XKBMODEL}#" /etc/skel/.config/hyprland.conf
+            sed -i "s#\#kb_options =#kb_options = ${XKBOPTIONS}#" /etc/skel/.config/hyprland.conf
+            ;;
+        sway)
+            mkdir -p /etc/skel/.config/sway
+            cp /usr/share/aptosid-settings-sway/config /etc/skel/.config/sway
+            cp /usr/share/aptosid-settings-sway/colorscheme /etc/skel/.config/sway
+            . /etc/default/keyboard
+            sed -i "s#xkb_layout \"\"#xkb_layout \"${XKBLAYOUT}\"#" /etc/skel/.config/sway/config
+            sed -i "s#xkb_variant \"\"#xkb_variant \"${XKBVARIANT}\"#" /etc/skel/.config/sway/config
+            sed -i "s#xkb_model \"\"#xkb_model \"${XKBMODEL}\"#" /etc/skel/.config/sway/config
+            sed -i "s#xkb_options \"\"#xkb_options \"${XKBOPTIONS}\"#" /etc/skel/.config/sway/config
+    esac
+
 	SLIM=/usr/bin/slim
 	if [ -x "${SLIM}" ]; then
 		echo "Configuring slim..."
