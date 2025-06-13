@@ -140,6 +140,128 @@ EOF
 }
 
 setup_display_manager_autologin() {
+	for opt in $(cat /proc/cmdline); do
+		case "${opt}" in
+			desktop=*)
+				DESKTOP="${opt#desktop=}"
+				;;
+		esac
+	done
+
+	# configure xsession environment variables before beginning boot so
+	# they may be inherited by fll-home.service during boot sequence
+	if [ -z "${DESKTOP}" ]; then
+		# in the absence of an explicit destop= cheatcode setting,
+		# these defaults are checked in reverse order
+		[ -r /usr/share/wayland-sessions/sway.desktop ] 			&& DESKTOP="sway"
+		[ -r /usr/share/wayland-sessions/hyprland.desktop ] 		&& DESKTOP="hyprland"
+		[ -r /usr/share/wayland-sessions/labwc.desktop ] 			&& DESKTOP="labwc"
+		[ -r /usr/share/xsessions/mate.desktop ] 					&& DESKTOP="mate"
+		[ -r /usr/share/xsessions/budgie-desktop.desktop ] 			&& DESKTOP="budgie-desktop"
+		[ -r /usr/share/wayland-sessions/cinnamon-wayland.desktop ] && DESKTOP="cinnamon-wayland"
+		[ -r /usr/share/xsessions/cinnamon.desktop ] 				&& DESKTOP="cinnamon"
+		[ -r /usr/share/xsessions/kodi.desktop ] 					&& DESKTOP="kodi-x11"
+		[ -r /usr/share/wayland-sessions/kodi-gbm.desktop ] 		&& DESKTOP="kodi"
+		[ -r /usr/share/xsessions/icewm-session.desktop ] 			&& DESKTOP="icewm"
+		[ -r /usr/share/xsessions/fluxbox.desktop ] 				&& DESKTOP="fluxbox"
+		[ -r /usr/share/xsessions/LXDE.desktop ] 					&& DESKTOP="lxde"
+		[ -r /usr/share/xsessions/lxqt.desktop ] 					&& DESKTOP="lxqt"
+		[ -r /usr/share/wayland-sessions/lxqt-wayland.desktop ] 	&& DESKTOP="lxqt-wayland"
+		[ -r /usr/share/wayland-sessions/xfce-wayland.desktop ] 	&& DESKTOP="xfce-wayland"
+		[ -r /usr/share/xsessions/xfce.desktop ] 					&& DESKTOP="xfce"
+		[ -r /usr/share/xsessions/gnome.desktop ] 					&& DESKTOP="gnome-x11"
+		[ -r /usr/share/wayland-sessions/gnome.desktop ] 			&& DESKTOP="gnome"
+		[ -r /usr/share/xsessions/plasmax11.desktop ] 				&& DESKTOP="plasmax11"
+		[ -r /usr/share/wayland-sessions/plasma.desktop ] 			&& DESKTOP="plasma"
+	fi
+
+	case "${DESKTOP}" in
+		budgie-desktop)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="budgie-desktop"
+			;;
+		cinnamon-wayland)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="cinnamon-wayland"
+			;;
+		cinnamon)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="cinnamon"
+			;;
+		flux*)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="fluxbox"
+			;;
+		gnome)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="gnome"
+			;;
+		gnome-x11)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="gnome"
+			;;
+		hyprland)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="hyprland"
+			;;
+		icewm)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="IceWM"
+			;;
+		kde|kde-wayland|plasma)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="plasma"
+			;;
+		kde-x11|plasmax11)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="plasmax11"
+			;;
+		kodi)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="kodi-gbm"
+			;;
+		kodi-x11)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="kodi"
+			;;
+		labwc)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="labwc"
+			;;
+		lxde)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="LXDE"
+			;;
+		lxqt)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="lxqt"
+			;;
+		lxqt-wayland|lxqt-labwc|lxqt-kwin|lxqt-hyprland|lxqt-sway|lxqt-wayfire)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="lxqt-wayland"
+			;;
+		mate)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="mate"
+			;;
+		sway)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="sway"
+			;;
+		xfce)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="xfce"
+			;;
+		xfce-wayland)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="xfce-wayland"
+			;;
+		*)
+			FLL_XTYPE=""
+			FLL_XSESSION=""
+			;;
+	esac
+
 	SLIM=/usr/bin/slim
 	if [ -x "${SLIM}" ]; then
 		echo "Configuring slim..."
