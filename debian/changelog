@@ -1,14 +1,11 @@
-fll-live-initscripts (6.0.6) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (6.0.6) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Inherit /root dotfile setup from fll-live-initramfs.
   * Add desktop cheatcode handling.
   * Dissolve setup_defaults into setup_display_manager_autologin.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 12 Jun 2025 05:27:05 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 14 Jun 2025 02:05:24 +0200
 
 fll-live-initscripts (6.0.5) unstable; urgency=medium
 
