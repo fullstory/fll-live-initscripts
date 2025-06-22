@@ -281,7 +281,7 @@ setup_display_manager_autologin() {
                 sed -i 's#^compositor=.*#compositor=/usr/bin/wayfire#' \
                     /etc/xdg/lxqt/session.conf
             # Solve a chicken and egg problem: preselect wayland compositor
-            # or else startlxqt launches lxqt session prefernces dialog on
+            # or else startlxqt launches lxqt session preferences dialog on
             # first login
             mkdir -p /etc/skel/.config/lxqt
             cp /etc/xdg/lxqt/session.conf \
