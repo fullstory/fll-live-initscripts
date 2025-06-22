@@ -1,6 +1,11 @@
 fll-live-initscripts (6.0.7) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * setup_display_manager_autologin: add hack to set initial Vent-dark
+    theme for lxqt-wayland/labwc.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 14 Jun 2025 02:05:41 +0200
 
