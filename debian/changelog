@@ -1,12 +1,9 @@
-fll-live-initscripts (6.0.8) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (6.0.8) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Drop lxqt-wayland/labwc rc.xml hack.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 23 Jun 2025 23:03:50 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 26 Jun 2025 15:15:37 +0200
 
 fll-live-initscripts (6.0.7) unstable; urgency=medium
 
