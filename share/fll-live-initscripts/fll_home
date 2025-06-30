@@ -3,6 +3,10 @@
 # use fred for .face
 cp /usr/share/icons/hicolor/scalable/emblems/emblem-aptosid-fred.svg /etc/skel/.face
 
+# setup autologin for live user
+. /usr/share/fll-live-initscripts/setup_display_manager_autologin
+setup_display_manager_autologin
+
 # systemd-homed support
 if [ -x /usr/bin/homectl ]; then
 	HOMECTL_STATE="absent"
@@ -46,10 +50,6 @@ else
 	. /usr/share/fll-live-initscripts/setup_passwdless_live_user
 	setup_passwdless_live_user
 fi
-
-# setup autologin for live user
-. /usr/share/fll-live-initscripts/setup_display_manager_autologin
-setup_display_manager_autologin
 
 # setup root dotfiles
 for dotfile in '.bash_logout' '.bash_profile' '.bashrc' '.profile'; do

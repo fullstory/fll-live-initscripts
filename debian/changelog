@@ -1,6 +1,11 @@
 fll-live-initscripts (6.0.9) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * setup_display_manager_autologin: execute before calling adduser so that
+    skel configuration preseeding is effective.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 26 Jun 2025 15:15:50 +0200
 
