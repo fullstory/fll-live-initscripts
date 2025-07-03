@@ -1,7 +1,4 @@
-fll-live-initscripts (6.0.9) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (6.0.9) unstable; urgency=medium
 
   [ Kel Modderman ]
   * setup_display_manager_autologin: execute before calling adduser so that
@@ -9,7 +6,7 @@ fll-live-initscripts (6.0.9) UNRELEASED; urgency=medium
   * setup_display_manager_autologin: add hack to set initial Vent-dark
     theme for lxqt-wayland/labwc.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 26 Jun 2025 15:15:50 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 03 Jul 2025 10:34:09 +0200
 
 fll-live-initscripts (6.0.8) unstable; urgency=medium
 
