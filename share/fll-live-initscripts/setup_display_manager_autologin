@@ -291,6 +291,8 @@ setup_display_manager_autologin() {
 			sed -e 's/Vent/Vent-dark/' \
 				/usr/share/lxqt/wayland/labwc/rc.xml \
 				> /etc/skel/.config/labwc/rc.xml
+			# Disable the desktopswitch plugin on wayland
+			sed -i 's/desktopswitch, //' /etc/xdg/lxqt/panel.conf
 			;;
 		labwc)
 			. /etc/default/keyboard
