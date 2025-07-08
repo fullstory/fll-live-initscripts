@@ -1,13 +1,10 @@
-fll-live-initscripts (6.0.10) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (6.0.10) unstable; urgency=medium
 
   [ Kel Modderman ]
   * setup_display_manager_autologin: disable the desktopswitch panel plugin
     on lxqt-wayland.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 03 Jul 2025 10:34:25 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 08 Jul 2025 06:53:05 +0200
 
 fll-live-initscripts (6.0.9) unstable; urgency=medium
 
