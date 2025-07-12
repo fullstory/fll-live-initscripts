@@ -1,59 +1,19 @@
 #!/bin/sh
 
-# use fred for .face
-cp /usr/share/icons/hicolor/scalable/emblems/emblem-aptosid-fred.svg /etc/skel/.face
-
-# setup autologin for live user
-. /usr/share/fll-live-initscripts/setup_display_manager_autologin
-setup_display_manager_autologin
+# setup desktop autologin for live user
+. /usr/share/fll-live-initscripts/fll_desktop
 
 # systemd-homed support
 if [ -x /usr/bin/homectl ]; then
-	HOMECTL_STATE="absent"
-	HOMECTL=$(homectl list -EE | jq '.[] | select(.name=="'${FLL_LIVE_USER}'")')
-	if [ -n "${HOMECTL}" ]; then
-		HOMECTL_STATE=$(echo "${HOMECTL}" | jq -r '.state')
-	fi
-
-	case "${HOMECTL_STATE}" in
-		fixating*|unfixated|inactive)
-			FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
-			# A home matching installed systemd-homed keys is present but may not
-			# have been blessed by the system yet (unfixated). Activate discovered
-			# homes in anticipation of autologin into the live desktop environment.
-			homectl activate "${FLL_LIVE_USER}"
-			if [ "$?" = "0" ]; then
-				homectl update "${FLL_LIVE_USER}" \
-					--member-of="${FLL_LIVE_USER_GROUPS}" \
-					--session-launcher="${FLL_XSESSION}" \
-					--session-type="${FLL_XTYPE}" \
-					--auto-login=yes
-				# hack calamares to allow passthru of existing user+home
-				[ -w /etc/calamares/settings.conf ] && \
-					sed -i 's/- users/#- users/g' /etc/calamares/settings.conf
-			fi
-			;;
-		absent|*)
-			FLL_LIVE_USER_GROUPS=$(echo "${FLL_LIVE_USER_GROUPS}" | sed -e 's/\s/,/g')
-			homectl create "${FLL_LIVE_USER}" \
-					--real-name="${FLL_LIVE_USER}" \
-					--member-of="${FLL_LIVE_USER_GROUPS}" \
-					--session-launcher="${FLL_XSESSION}" \
-					--session-type="${FLL_XTYPE}" \
-					--auto-login=yes \
-					--storage=directory
-			homectl activate "${FLL_LIVE_USER}"
-			;;
-	esac
+	. /usr/share/fll-live-initscripts/fll_homectl
 else
-	adduser --disabled-password --gecos "${FLL_LIVE_USER}" "${FLL_LIVE_USER}"
-	. /usr/share/fll-live-initscripts/setup_passwdless_live_user
-	setup_passwdless_live_user
+	. /usr/share/fll-live-initscripts/fll_adduser
 fi
 
-# setup root dotfiles
+# setup root home dotfiles
 for dotfile in '.bash_logout' '.bash_profile' '.bashrc' '.profile'; do
-	[ -f /etc/skel/${dotfile} ] && [ ! -f /root/${dotfile} ] && \
+	if [ -f /etc/skel/${dotfile} ] && [ ! -f /root/${dotfile} ]; then
 		cp /etc/skel/${dotfile} /root/${dotfile}
+	fi
 done
 :> /root/.hushlogin

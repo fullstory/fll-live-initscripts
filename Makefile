@@ -1,5 +1,5 @@
 DIRS := bin man
-INIT := $(notdir $(wildcard debian/*.init))
+INIT := $(notdir $(wildcard share/fll-live-initscripts/fll_*))
 
 all: $(DIRS:%=all-%)
 all-%:
@@ -14,5 +14,5 @@ distclean: clean
 test: $(INIT:%=test-%)
 test-%:
 	$(info checking $* ...)
-	@dash -n debian/$*
-	@checkbashisms -p debian/$*
+	@dash -n share/fll-live-initscripts/$*
+	@checkbashisms -p share/fll-live-initscripts/$*
