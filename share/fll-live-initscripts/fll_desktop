@@ -285,6 +285,13 @@ case "${FLL_XSESSION}" in
 		mkdir -p /etc/skel/.config/lxqt
 		cp /etc/xdg/lxqt/session.conf \
 			/etc/skel/.config/lxqt/session.conf
+		# Hack to set initial dark theme
+		mkdir -p /etc/skel/.config/labwc
+		sed -e 's/Vent/Vent-dark/' \
+			/usr/share/lxqt/wayland/labwc/rc.xml \
+			> /etc/skel/.config/labwc/rc.xml
+		# Disable the desktopswitch plugin on wayland
+		sed -i 's/desktopswitch, //' /etc/xdg/lxqt/panel.conf
 		;;
 	labwc)
 		. /etc/default/keyboard
