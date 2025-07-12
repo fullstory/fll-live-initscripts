@@ -1,6 +1,11 @@
 fll-live-initscripts (6.0.11) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Refactor share/fll-live-initscripts scripts and adjust Makefile for
+    shell tests.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 08 Jul 2025 06:53:30 +0200
 
