@@ -132,10 +132,6 @@ EOF
 command = "${EXECUTE_CMD}"
 user = "${FLL_LIVE_USER}"
 EOF
-
-		# Patch Debian greetd package shortcomings
-		usermod -a -G video _greetd
-		chown -R "_greetd:_greetd" /etc/greetd
 	fi
 }
 
