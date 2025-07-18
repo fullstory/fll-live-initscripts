@@ -1,12 +1,9 @@
-fll-live-initscripts (6.0.12) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (6.0.12) unstable; urgency=medium
 
   [ Kel Modderman ]
   * fll_desktop: remove _greetd group "fixes".
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Jul 2025 18:16:29 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 18 Jul 2025 06:46:23 +0200
 
 fll-live-initscripts (6.0.11) unstable; urgency=medium
 
