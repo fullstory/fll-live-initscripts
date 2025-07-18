@@ -1,6 +1,10 @@
 fll-live-initscripts (6.0.13) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * fll_desktop: clarify budgie and lxqt desktop= cheatcodes.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 18 Jul 2025 06:46:40 +0200
 

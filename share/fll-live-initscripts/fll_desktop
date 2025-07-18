@@ -171,7 +171,7 @@ if [ -z "${DESKTOP}" ]; then
 fi
 
 case "${DESKTOP}" in
-	budgie-desktop)
+	budgie|budgie-desktop)
 		FLL_XTYPE="x11"
 		FLL_XSESSION="budgie-desktop"
 		;;
@@ -227,11 +227,11 @@ case "${DESKTOP}" in
 		FLL_XTYPE="x11"
 		FLL_XSESSION="LXDE"
 		;;
-	lxqt)
+	lxqt-x11)
 		FLL_XTYPE="x11"
 		FLL_XSESSION="lxqt"
 		;;
-	lxqt-wayland|lxqt-labwc|lxqt-kwin|lxqt-hyprland|lxqt-sway|lxqt-wayfire)
+	lxqt|lxqt-wayland|lxqt-labwc|lxqt-kwin|lxqt-hyprland|lxqt-sway|lxqt-wayfire)
 		FLL_XTYPE="wayland"
 		FLL_XSESSION="lxqt-wayland"
 		;;
