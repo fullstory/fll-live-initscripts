@@ -19,6 +19,12 @@ setup_gdm3() {
 			sed -i "s/#WaylandEnable=false/WaylandEnable=false/" /etc/gdm3/daemon.conf
 			;;
 	esac
+
+	# preselect the xsession
+	cat > /etc/skel/.dmrc <<EOF
+[Desktop]
+Session=${FLL_XSESSION}
+EOF
 }
 
 setup_lightdm() {
@@ -135,224 +141,246 @@ EOF
 	fi
 }
 
+setup_desktop() {
+	# This function may be called twice for the same desktop if user
+	# supplied a desktop= cheatcode - everything below must be imdepotent
+	DESKTOP="${1}"
+
+	case "${DESKTOP}" in
+		budgie|budgie-desktop)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="budgie-desktop"
+			;;
+		cinnamon-wayland)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="cinnamon-wayland"
+			;;
+		cinnamon)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="cinnamon"
+			;;
+		flux*)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="fluxbox"
+			;;
+		gnome)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="gnome"
+			;;
+		gnome-x11)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="gnome"
+			;;
+		hyprland)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="hyprland"
+			;;
+		icewm)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="IceWM"
+			;;
+		kde|kde-wayland|plasma)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="plasma"
+			;;
+		kde-x11|plasmax11)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="plasmax11"
+			;;
+		kodi)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="kodi-gbm"
+			;;
+		kodi-x11)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="kodi"
+			;;
+		labwc)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="labwc"
+			;;
+		lxde)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="LXDE"
+			;;
+		lxqt-x11)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="lxqt"
+			;;
+		lxqt|lxqt-wayland|lxqt-labwc|lxqt-kwin|lxqt-hyprland|lxqt-sway|lxqt-wayfire)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="lxqt-wayland"
+			;;
+		mate)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="mate"
+			;;
+		sway)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="sway"
+			;;
+		xfce)
+			FLL_XTYPE="x11"
+			FLL_XSESSION="xfce"
+			;;
+		xfce-wayland)
+			FLL_XTYPE="wayland"
+			FLL_XSESSION="xfce-wayland"
+			;;
+		*)
+			FLL_XTYPE=""
+			FLL_XSESSION=""
+			;;
+	esac
+
+	case "${FLL_XSESSION}" in
+		lxqt-wayland)
+			# Support various compositors of lxqt (default: labwc)
+			case "${DESKTOP}" in
+				lxqt-labwc)
+					[ -x /usr/bin/labwc ] && \
+					sed -i 's#^compositor=.*#compositor=/usr/bin/labwc#' \
+						/etc/xdg/lxqt/session.conf
+					;;
+				lxqt-kwin)
+					[ -x /usr/bin/kwin_wayland ] && \
+					sed -i 's#^compositor=.*#compositor=/usr/bin/kwin_wayland#' \
+						/etc/xdg/lxqt/session.conf
+					;;
+				lxqt-hyprland)
+					[ -x /usr/bin/Hyprland ] && \
+					sed -i 's#^compositor=.*#compositor=/usr/bin/Hyprland#' \
+						/etc/xdg/lxqt/session.conf
+					;;
+				lxqt-sway)
+					[ -x /usr/bin/sway ] && \
+					sed -i 's#^compositor=.*#compositor=/usr/bin/sway#' \
+						/etc/xdg/lxqt/session.conf
+					;;
+				lxqt-wayfire)
+					[ -x /usr/bin/wayfire ] && \
+					sed -i 's#^compositor=.*#compositor=/usr/bin/wayfire#' \
+						/etc/xdg/lxqt/session.conf
+					;;
+			esac
+			# Solve a chicken and egg problem: preselect wayland compositor
+			# or else startlxqt launches lxqt session preferences dialog on
+			# first login
+			mkdir -p /etc/skel/.config/lxqt
+			cp /etc/xdg/lxqt/session.conf \
+				/etc/skel/.config/lxqt/session.conf
+			# Hack to set initial dark theme
+			mkdir -p /etc/skel/.config/labwc
+			sed -e 's/Vent/Vent-dark/' \
+				/usr/share/lxqt/wayland/labwc/rc.xml \
+				> /etc/skel/.config/labwc/rc.xml
+			;;
+		labwc)
+			. /etc/default/keyboard
+			if [ "${XKBVARIANT}" ]; then
+				XKB_DEFAULT_LAYOUT="${XKBLAYOUT}(${XKBVARIANT})"
+			else
+				XKB_DEFAULT_LAYOUT="${XKBLAYOUT}"
+			fi
+			if ! grep -q '^XKB_DEFAULT_LAYOUT=' /etc/xdg/labwc/environment; then
+				cat >> /etc/xdg/labwc/environment <<EOF
+XKB_DEFAULT_LAYOUT="${XKB_DEFAULT_LAYOUT}"
+EOF
+			fi
+			;;
+		hyprland)
+			# Hyprland doesn't appear to read from /etc/xdg
+			mkdir -p /etc/skel/.config
+			cp -a /usr/share/aptosid-settings-hyprland/hypr /etc/skel/.config/
+			. /etc/default/keyboard
+			sed -i "s#\#kb_model =#kb_layout = ${XKBLAYOUT}#" /etc/skel/.config/hypr/hyprland.conf
+			sed -i "s#\#kb_variant =#kb_variant = ${XKBVARIANT}#" /etc/skel/.config/hypr/hyprland.conf
+			sed -i "s#\#kb_model =#kb_model = ${XKBMODEL}#" /etc/skel/.config/hypr/hyprland.conf
+			sed -i "s#\#kb_options =#kb_options = ${XKBOPTIONS}#" /etc/skel/.config/hypr/hyprland.conf
+			;;
+		sway)
+			mkdir -p /etc/skel/.config/sway
+			cp /usr/share/aptosid-settings-sway/config /etc/skel/.config/sway
+			cp /usr/share/aptosid-settings-sway/colorscheme /etc/skel/.config/sway
+			. /etc/default/keyboard
+			sed -i "s#xkb_layout \"\"#xkb_layout \"${XKBLAYOUT}\"#" /etc/skel/.config/sway/config
+			sed -i "s#xkb_variant \"\"#xkb_variant \"${XKBVARIANT}\"#" /etc/skel/.config/sway/config
+			sed -i "s#xkb_model \"\"#xkb_model \"${XKBMODEL}\"#" /etc/skel/.config/sway/config
+			sed -i "s#xkb_options \"\"#xkb_options \"${XKBOPTIONS}\"#" /etc/skel/.config/sway/config
+	esac
+
+	export DESKTOP FLL_XTYPE FLL_XSESSION
+}
+
+DESKTOP=
+# desktop defaults are checked in reverse order
+[ -r /usr/share/wayland-sessions/sway.desktop ]				&& setup_desktop "sway"
+[ -r /usr/share/wayland-sessions/hyprland.desktop ] 		&& setup_desktop "hyprland"
+[ -r /usr/share/wayland-sessions/labwc.desktop ] 			&& setup_desktop "labwc"
+[ -r /usr/share/xsessions/mate.desktop ] 					&& setup_desktop "mate"
+[ -r /usr/share/xsessions/budgie-desktop.desktop ] 			&& setup_desktop "budgie-desktop"
+[ -r /usr/share/wayland-sessions/cinnamon-wayland.desktop ] && setup_desktop "cinnamon-wayland"
+[ -r /usr/share/xsessions/cinnamon.desktop ] 				&& setup_desktop "cinnamon"
+[ -r /usr/share/xsessions/kodi.desktop ] 					&& setup_desktop "kodi-x11"
+[ -r /usr/share/wayland-sessions/kodi-gbm.desktop ] 		&& setup_desktop "kodi"
+[ -r /usr/share/xsessions/icewm-session.desktop ] 			&& setup_desktop "icewm"
+[ -r /usr/share/xsessions/fluxbox.desktop ] 				&& setup_desktop "fluxbox"
+[ -r /usr/share/xsessions/LXDE.desktop ] 					&& setup_desktop "lxde"
+[ -r /usr/share/xsessions/lxqt.desktop ] 					&& setup_desktop "lxqt"
+[ -r /usr/share/wayland-sessions/lxqt-wayland.desktop ] 	&& setup_desktop "lxqt-wayland"
+[ -r /usr/share/wayland-sessions/xfce-wayland.desktop ] 	&& setup_desktop "xfce-wayland"
+[ -r /usr/share/xsessions/xfce.desktop ] 					&& setup_desktop "xfce"
+[ -r /usr/share/xsessions/gnome.desktop ] 					&& setup_desktop "gnome-x11"
+[ -r /usr/share/wayland-sessions/gnome.desktop ] 			&& setup_desktop "gnome"
+[ -r /usr/share/xsessions/plasmax11.desktop ] 				&& setup_desktop "plasmax11"
+[ -r /usr/share/wayland-sessions/plasma.desktop ] 			&& setup_desktop "plasma"
+
+# override default desktop
 for opt in $(cat /proc/cmdline); do
 	case "${opt}" in
 		desktop=*)
-			DESKTOP="${opt#desktop=}"
+			setup_desktop "${opt#desktop=}"
 			;;
 	esac
 done
 
-# configure xsession environment variables before beginning boot so
-# they may be inherited by fll-home.service during boot sequence
-if [ -z "${DESKTOP}" ]; then
-	# in the absence of an explicit destop= cheatcode setting,
-	# these defaults are checked in reverse order
-	[ -r /usr/share/wayland-sessions/sway.desktop ] 			&& DESKTOP="sway"
-	[ -r /usr/share/wayland-sessions/hyprland.desktop ] 		&& DESKTOP="hyprland"
-	[ -r /usr/share/wayland-sessions/labwc.desktop ] 			&& DESKTOP="labwc"
-	[ -r /usr/share/xsessions/mate.desktop ] 					&& DESKTOP="mate"
-	[ -r /usr/share/xsessions/budgie-desktop.desktop ] 			&& DESKTOP="budgie-desktop"
-	[ -r /usr/share/wayland-sessions/cinnamon-wayland.desktop ] && DESKTOP="cinnamon-wayland"
-	[ -r /usr/share/xsessions/cinnamon.desktop ] 				&& DESKTOP="cinnamon"
-	[ -r /usr/share/xsessions/kodi.desktop ] 					&& DESKTOP="kodi-x11"
-	[ -r /usr/share/wayland-sessions/kodi-gbm.desktop ] 		&& DESKTOP="kodi"
-	[ -r /usr/share/xsessions/icewm-session.desktop ] 			&& DESKTOP="icewm"
-	[ -r /usr/share/xsessions/fluxbox.desktop ] 				&& DESKTOP="fluxbox"
-	[ -r /usr/share/xsessions/LXDE.desktop ] 					&& DESKTOP="lxde"
-	[ -r /usr/share/xsessions/lxqt.desktop ] 					&& DESKTOP="lxqt"
-	[ -r /usr/share/wayland-sessions/lxqt-wayland.desktop ] 	&& DESKTOP="lxqt-wayland"
-	[ -r /usr/share/wayland-sessions/xfce-wayland.desktop ] 	&& DESKTOP="xfce-wayland"
-	[ -r /usr/share/xsessions/xfce.desktop ] 					&& DESKTOP="xfce"
-	[ -r /usr/share/xsessions/gnome.desktop ] 					&& DESKTOP="gnome-x11"
-	[ -r /usr/share/wayland-sessions/gnome.desktop ] 			&& DESKTOP="gnome"
-	[ -r /usr/share/xsessions/plasmax11.desktop ] 				&& DESKTOP="plasmax11"
-	[ -r /usr/share/wayland-sessions/plasma.desktop ] 			&& DESKTOP="plasma"
-fi
-
-case "${DESKTOP}" in
-	budgie|budgie-desktop)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="budgie-desktop"
-		;;
-	cinnamon-wayland)
-		FLL_XTYPE="wayland"
-		FLL_XSESSION="cinnamon-wayland"
-		;;
-	cinnamon)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="cinnamon"
-		;;
-	flux*)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="fluxbox"
-		;;
-	gnome)
-		FLL_XTYPE="wayland"
-		FLL_XSESSION="gnome"
-		;;
-	gnome-x11)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="gnome"
-		;;
-	hyprland)
-		FLL_XTYPE="wayland"
-		FLL_XSESSION="hyprland"
-		;;
-	icewm)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="IceWM"
-		;;
-	kde|kde-wayland|plasma)
-		FLL_XTYPE="wayland"
-		FLL_XSESSION="plasma"
-		;;
-	kde-x11|plasmax11)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="plasmax11"
-		;;
-	kodi)
-		FLL_XTYPE="wayland"
-		FLL_XSESSION="kodi-gbm"
-		;;
-	kodi-x11)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="kodi"
-		;;
-	labwc)
-		FLL_XTYPE="wayland"
-		FLL_XSESSION="labwc"
-		;;
-	lxde)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="LXDE"
-		;;
-	lxqt-x11)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="lxqt"
-		;;
-	lxqt|lxqt-wayland|lxqt-labwc|lxqt-kwin|lxqt-hyprland|lxqt-sway|lxqt-wayfire)
-		FLL_XTYPE="wayland"
-		FLL_XSESSION="lxqt-wayland"
-		;;
-	mate)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="mate"
-		;;
-	sway)
-		FLL_XTYPE="wayland"
-		FLL_XSESSION="sway"
-		;;
-	xfce)
-		FLL_XTYPE="x11"
-		FLL_XSESSION="xfce"
-		;;
-	xfce-wayland)
-		FLL_XTYPE="wayland"
-		FLL_XSESSION="xfce-wayland"
-		;;
-	*)
-		FLL_XTYPE=""
-		FLL_XSESSION=""
-		;;
-esac
-
-case "${FLL_XSESSION}" in
-	lxqt-wayland)
-		# Support various compositors of lxqt (default: labwc)
-		[ "${FLL_XDESKTOP}" = "lxqt-labwc" ] && [ -x /usr/bin/labwc ] && \
-			sed -i 's#^compositor=.*#compositor=/usr/bin/labwc#' \
-				/etc/xdg/lxqt/session.conf
-		[ "${FLL_XDESKTOP}" = "lxqt-kwin" ] && [ -x /usr/bin/kwin_wayland ] && \
-			sed -i 's#^compositor=.*#compositor=/usr/bin/kwin_wayland#' \
-				/etc/xdg/lxqt/session.conf
-		[ "${FLL_XDESKTOP}" = "lxqt-hyprland" ] && [ -x /usr/bin/Hyprland ] && \
-			sed -i 's#^compositor=.*#compositor=/usr/bin/Hyprland#' \
-				/etc/xdg/lxqt/session.conf
-		[ "${FLL_XDESKTOP}" = "lxqt-sway" ] && [ -x /usr/bin/sway ] && \
-			sed -i 's#^compositor=.*#compositor=/usr/bin/sway#' \
-				/etc/xdg/lxqt/session.conf
-		[ "${FLL_XDESKTOP}" = "lxqt-wayfire" ] && [ -x /usr/bin/wayfire ] && \
-			sed -i 's#^compositor=.*#compositor=/usr/bin/wayfire#' \
-				/etc/xdg/lxqt/session.conf
-		# Solve a chicken and egg problem: preselect wayland compositor
-		# or else startlxqt launches lxqt session preferences dialog on
-		# first login
-		mkdir -p /etc/skel/.config/lxqt
-		cp /etc/xdg/lxqt/session.conf \
-			/etc/skel/.config/lxqt/session.conf
-		# Hack to set initial dark theme
-		mkdir -p /etc/skel/.config/labwc
-		sed -e 's/Vent/Vent-dark/' \
-			/usr/share/lxqt/wayland/labwc/rc.xml \
-			> /etc/skel/.config/labwc/rc.xml
-		# Disable the desktopswitch plugin on wayland
-		sed -i 's/desktopswitch, //' /etc/xdg/lxqt/panel.conf
-		;;
-	labwc)
-		. /etc/default/keyboard
-		if [ "${XKBVARIANT}" ]; then
-			XKB_DEFAULT_LAYOUT="${XKBLAYOUT}(${XKBVARIANT})"
-		else
-			XKB_DEFAULT_LAYOUT="${XKBLAYOUT}"
-		fi
-		cat >> /etc/xdg/labwc/environment <<EOF
-XKB_DEFAULT_LAYOUT="${XKB_DEFAULT_LAYOUT}"
-EOF
-		;;
-	hyprland)
-		# Hyprland doesn't appear to read from /etc/xdg
-		mkdir -p /etc/skel/.config
-		cp -a /usr/share/aptosid-settings-hyprland/hypr /etc/skel/.config/
-		. /etc/default/keyboard
-		sed -i "s#\#kb_model =#kb_layout = ${XKBLAYOUT}#" /etc/skel/.config/hypr/hyprland.conf
-		sed -i "s#\#kb_variant =#kb_variant = ${XKBVARIANT}#" /etc/skel/.config/hypr/hyprland.conf
-		sed -i "s#\#kb_model =#kb_model = ${XKBMODEL}#" /etc/skel/.config/hypr/hyprland.conf
-		sed -i "s#\#kb_options =#kb_options = ${XKBOPTIONS}#" /etc/skel/.config/hypr/hyprland.conf
-		;;
-	sway)
-		mkdir -p /etc/skel/.config/sway
-		cp /usr/share/aptosid-settings-sway/config /etc/skel/.config/sway
-		cp /usr/share/aptosid-settings-sway/colorscheme /etc/skel/.config/sway
-		. /etc/default/keyboard
-		sed -i "s#xkb_layout \"\"#xkb_layout \"${XKBLAYOUT}\"#" /etc/skel/.config/sway/config
-		sed -i "s#xkb_variant \"\"#xkb_variant \"${XKBVARIANT}\"#" /etc/skel/.config/sway/config
-		sed -i "s#xkb_model \"\"#xkb_model \"${XKBMODEL}\"#" /etc/skel/.config/sway/config
-		sed -i "s#xkb_options \"\"#xkb_options \"${XKBOPTIONS}\"#" /etc/skel/.config/sway/config
-esac
-
-SLIM=/usr/bin/slim
-if [ -x "${SLIM}" ]; then
+DM=
+DM=/usr/bin/slim
+if [ -x "${DM}" ]; then
 	echo "Configuring slim..."
 	setup_slim
 fi
 
-GDM3=/usr/sbin/gdm3
-if [ -x "${GDM3}" ]; then
-	echo "Configuring gdm3..."
-	setup_gdm3
-fi
-
-LXDM=/usr/sbin/lxdm
-if [ -x "${LXDM}" ]; then
+DM=/usr/sbin/lxdm
+if [ -x "${DM}" ]; then
 	echo "Configuring lxdm..."
 	setup_lxdm
 fi
 
-LIGHTDM=/usr/sbin/lightdm
-if [ -x "${LIGHTDM}" ]; then
+DM=/usr/sbin/lightdm
+if [ -x "${DM}" ]; then
 	echo "Configuring lightdm..."
 	setup_lightdm
 fi
 
-SDDM=/usr/bin/sddm
-if [ -x "${SDDM}" ]; then
+DM=/usr/sbin/gdm3
+if [ -x "${DM}" ]; then
+	echo "Configuring gdm3..."
+	setup_gdm3
+fi
+
+DM=/usr/bin/sddm
+if [ -x "${DM}" ]; then
 	echo "Configuring sddm..."
 	setup_sddm
 fi
 
-GREETD=/usr/sbin/greetd
-if [ -x "${GREETD}" ]; then
+DM=/usr/sbin/greetd
+if [ -x "${DM}" ]; then
 	echo "Configuring greetd..."
 	setup_greetd
+fi
+
+if [ -n "${DM}" ]; then
+	echo "${DM}" > /etc/X11/default-display-manager
 fi
