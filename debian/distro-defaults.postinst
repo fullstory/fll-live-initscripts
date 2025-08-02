@@ -31,12 +31,6 @@ chrooted() {
 
 case "$1" in
 	configure)
-		if dpkg --compare-versions "$2" lt '4.1.19~'; then
-			for file in gdm3 lxdm slim wdm xdm; do
-				rm -f "/etc/insserv/overrides/${file}"
-			done
-		fi
-
 		if [ ! -f /etc/apt/sources.list ] && chrooted; then
 			echo 'distro-defaults: creating /etc/apt/sources.list ...' 1>&2
 			cat > /etc/apt/sources.list \

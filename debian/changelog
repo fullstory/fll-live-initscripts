@@ -1,6 +1,11 @@
 fll-live-initscripts (6.0.14) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Remove insserv (rip) override logic from debian/distro-
+    defaults.postinst.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 22 Jul 2025 05:22:51 +0200
 
