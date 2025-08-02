@@ -6,7 +6,6 @@ fll-live-initscripts (6.0.14) UNRELEASED; urgency=medium
   [ Kel Modderman ]
   * Remove insserv (rip) override logic from debian/distro-
     defaults.postinst.
-  * Write default dm to /etc/X11/default-display-manager.
   * Ensure all desktop settings are applied for all installed desktop
     environments, and not just the one selected as default or by
     cheatcode.

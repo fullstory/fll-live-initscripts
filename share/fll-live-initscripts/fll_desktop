@@ -344,49 +344,32 @@ for opt in $(cat /proc/cmdline); do
 	esac
 done
 
-DDM=
-DM=/usr/bin/slim
-if [ -x "${DM}" ]; then
-	echo "Configuring slim..."
-	setup_slim
-	DDM="${DM}"
-fi
-
-DM=/usr/sbin/lxdm
-if [ -x "${DM}" ]; then
-	echo "Configuring lxdm..."
-	setup_lxdm
-	DDM="${DM}"
-fi
-
-DM=/usr/sbin/lightdm
-if [ -x "${DM}" ]; then
-	echo "Configuring lightdm..."
-	setup_lightdm
-	DDM="${DM}"
-fi
-
-DM=/usr/sbin/gdm3
-if [ -x "${DM}" ]; then
-	echo "Configuring gdm3..."
-	setup_gdm3
-	DDM="${DM}"
-fi
-
-DM=/usr/bin/sddm
-if [ -x "${DM}" ]; then
-	echo "Configuring sddm..."
-	setup_sddm
-	DDM="${DM}"
-fi
-
-DM=/usr/sbin/greetd
-if [ -x "${DM}" ]; then
+if [ -x /usr/sbin/greetd ]; then
 	echo "Configuring greetd..."
 	setup_greetd
-	DDM="${DM}"
 fi
 
-if [ -n "${DDM}" ]; then
-	echo "${DDM}" > /etc/X11/default-display-manager
+if [ -x /usr/bin/slim ]; then
+	echo "Configuring slim..."
+	setup_slim
+fi
+
+if [ -x /usr/sbin/lxdm ]; then
+	echo "Configuring lxdm..."
+	setup_lxdm
+fi
+
+if [ -x /usr/sbin/lightdm ]; then
+	echo "Configuring lightdm..."
+	setup_lightdm
+fi
+
+if [ -x /usr/sbin/gdm3 ]; then
+	echo "Configuring gdm3..."
+	setup_gdm3
+fi
+
+if [ -x /usr/bin/sddm ]; then
+	echo "Configuring sddm..."
+	setup_sddm
 fi
