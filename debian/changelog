@@ -1,7 +1,4 @@
-fll-live-initscripts (6.0.14) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (6.0.14) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Remove insserv (rip) override logic from debian/distro-
@@ -10,7 +7,7 @@ fll-live-initscripts (6.0.14) UNRELEASED; urgency=medium
     environments, and not just the one selected as default or by
     cheatcode.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 22 Jul 2025 05:22:51 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Aug 2025 04:43:44 +0200
 
 fll-live-initscripts (6.0.13) unstable; urgency=medium
 
