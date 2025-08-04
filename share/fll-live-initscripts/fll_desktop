@@ -234,6 +234,12 @@ setup_desktop() {
 	esac
 
 	case "${FLL_XSESSION}" in
+		lxqt)
+			# set window_manager=openbox
+			mkdir -p /etc/skel/.config/lxqt
+			cp /etc/xdg/lxqt/session.conf \
+				/etc/skel/.config/lxqt/session.conf
+			;;
 		lxqt-wayland)
 			# Support various compositors of lxqt (default: labwc)
 			case "${DESKTOP}" in
