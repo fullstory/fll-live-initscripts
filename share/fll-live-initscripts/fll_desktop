@@ -219,7 +219,7 @@ setup_desktop() {
 			FLL_XTYPE="wayland"
 			FLL_XSESSION="sway"
 			;;
-		xfce)
+		xfce|xfce-x11)
 			FLL_XTYPE="x11"
 			FLL_XSESSION="xfce"
 			;;
