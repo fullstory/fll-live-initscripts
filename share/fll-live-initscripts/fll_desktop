@@ -155,7 +155,7 @@ setup_desktop() {
 			FLL_XTYPE="wayland"
 			FLL_XSESSION="cinnamon-wayland"
 			;;
-		cinnamon)
+		cinnamon|cinnamon-x11)
 			FLL_XTYPE="x11"
 			FLL_XSESSION="cinnamon"
 			;;
