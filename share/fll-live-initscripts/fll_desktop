@@ -203,7 +203,7 @@ setup_desktop() {
 			FLL_XTYPE="x11"
 			FLL_XSESSION="LXDE"
 			;;
-		lxqt-x11)
+		lxqt-x11|lxqt-openbox)
 			FLL_XTYPE="x11"
 			FLL_XSESSION="lxqt"
 			;;

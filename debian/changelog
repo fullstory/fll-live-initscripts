@@ -1,6 +1,10 @@
 fll-live-initscripts (6.0.15) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Add lxqt-openbox as an alias for lxqt-x11.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Aug 2025 04:43:56 +0200
 
