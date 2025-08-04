@@ -6,6 +6,7 @@ fll-live-initscripts (6.0.15) UNRELEASED; urgency=medium
   [ Kel Modderman ]
   * Add lxqt-openbox as an alias for lxqt-x11.
   * Add cinnamon-x11 as an alias for cinnamon.
+  * Add kodi-gbm as an alias for kodi.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Aug 2025 04:43:56 +0200
 

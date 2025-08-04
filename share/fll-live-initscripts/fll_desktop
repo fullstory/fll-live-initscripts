@@ -187,7 +187,7 @@ setup_desktop() {
 			FLL_XTYPE="x11"
 			FLL_XSESSION="plasmax11"
 			;;
-		kodi)
+		kodi|kodi-gbm)
 			FLL_XTYPE="wayland"
 			FLL_XSESSION="kodi-gbm"
 			;;
