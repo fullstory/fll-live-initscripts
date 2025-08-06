@@ -1,7 +1,4 @@
-fll-live-initscripts (6.0.15) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (6.0.15) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Add lxqt-openbox as an alias for lxqt-x11.
@@ -10,7 +7,7 @@ fll-live-initscripts (6.0.15) UNRELEASED; urgency=medium
   * Add xfce-x11 as an alias for xfce.
   * desktop: set window_manager=openbox in lxqt session.conf.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 03 Aug 2025 04:43:56 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 06 Aug 2025 13:08:48 +0200
 
 fll-live-initscripts (6.0.14) unstable; urgency=medium
 
