@@ -19,9 +19,6 @@ case "${HOMECTL_STATE}" in
 				--session-launcher="${FLL_XSESSION}" \
 				--session-type="${FLL_XTYPE}" \
 				--auto-login=yes
-			# hack calamares to allow passthru of existing user+home
-			[ -w /etc/calamares/settings.conf ] && \
-				sed -i 's/- users/#- users/g' /etc/calamares/settings.conf
 		fi
 		;;
 	absent|*)
