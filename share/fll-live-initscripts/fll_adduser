@@ -36,11 +36,13 @@ case "${FLL_XSESSION}" in
             org.gnome.desktop.session idle-delay 0
         ;;
     plasma*)
-        cat >> /etc/xdg/kscreenlockerrc <<EOF
+        if [ ! -e /etc/xdg/kscreenlockerrc ]; then
+            cat >> /etc/xdg/kscreenlockerrc <<EOF
 [Daemon]
 Autolock=false
 LockOnResume=false
 EOF
+        fi
         ;;
     xfce)
         sudo -u "${FLL_LIVE_USER}" dbus-run-session -- xfconf-query \

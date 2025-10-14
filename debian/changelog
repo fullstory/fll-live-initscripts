@@ -5,6 +5,7 @@ fll-live-initscripts (6.0.16) UNRELEASED; urgency=medium
 
   [ Kel Modderman ]
   * fll_homectl: remove untested calamres hack.
+  * fll_home: conditionally write /etc/xdg/kscreenlockerrc.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 06 Aug 2025 13:09:02 +0200
 
