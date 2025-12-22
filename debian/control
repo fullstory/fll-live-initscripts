@@ -34,7 +34,6 @@ Depends: ${misc:Depends},
  systemd-homed | adduser,
  console-setup,
  distro-defaults,
- eject,
  fll-live-utils,
  login,
  keyboard-configuration,
@@ -69,7 +68,7 @@ Depends: ${shlibs:Depends},
  ${misc:Depends},
  udev
 Description: fll live utilities
- A set of tools for use by fll-live-initscripts.
+ A set of tools for use by fll-live-initramfs and fll-live-initscripts.
  .
  This is a FULLSTORY live-only package and should not be installed to an
  ordinary system.

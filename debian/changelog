@@ -1,6 +1,11 @@
 fll-live-initscripts (6.0.17) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * Drop eject from depends and update fll-live-utils description to
+    mention initramfs.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 17 Oct 2025 06:10:17 +0200
 
