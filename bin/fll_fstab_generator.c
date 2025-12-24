@@ -534,7 +534,7 @@ static void process_disk(struct udev_device *device, int disk)
 		if (opts.noswap_flag)
 			goto end_process_disk;
 
-		print_mntent(fs_spec, "none", fs_vfstype, "sw", 0, 0);
+		print_mntent(fs_spec, "none", fs_vfstype, "defaults", 0, 0);
 
 		if (opts.swapon_flag &&
 		    swapon(udev_device_get_devnode(device), 0) == -1) {
