@@ -7,7 +7,7 @@ fll-live-initscripts (20251224.1) UNRELEASED; urgency=medium
   * Have a go at forcing calamres displaymaner.conf configuration to
     align with the desktop cheatcode.
   * Switch to date release version.
-  * fll_fstab_generator: change options for swap from sw to defaults.
+  * Purge fll_fstab_generator, it is no longer relevant.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 23 Dec 2025 03:31:19 +0100
 
