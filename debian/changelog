@@ -1,7 +1,4 @@
-fll-live-initscripts (20251224.1) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (20251224.1) unstable; urgency=medium
 
   [ Kel Modderman ]
   * Have a go at forcing calamres displaymaner.conf configuration to
@@ -9,7 +6,7 @@ fll-live-initscripts (20251224.1) UNRELEASED; urgency=medium
   * Switch to date release version.
   * Purge fll_fstab_generator, it is no longer relevant.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 23 Dec 2025 03:31:19 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 25 Dec 2025 04:58:08 +0100
 
 fll-live-initscripts (6.0.17) unstable; urgency=medium
 
