@@ -242,8 +242,8 @@ setup_desktop() {
 	if [ -r "${DESKTOP_FILE}" ]; then
 		DESKTOP_EXEC=$(awk -F= '/^TryExec/{ print $2 }' "${DESKTOP_FILE}")
 		sed -i -e 's/#defaultDesktopEnvironment:/defaultDesktopEnvironment:/' \
-				-e "s/#    executable: \".*\"/    executable: \"$(basename ${DESKTOP_EXEC})\"/" \
-				-e "s/#    desktopFile: \".*\"/    desktopFile: \"$(basename ${DESKTOP_FILE})\"/" \
+				-e "s/^.*executable: \".*\"$/    executable: \"$(basename ${DESKTOP_EXEC})\"/" \
+				-e "s/^.*desktopFile: \".*\"$/    desktopFile: \"$(basename ${DESKTOP_FILE})\"/" \
 				/etc/calamares/modules/displaymanager.conf
 	fi
 
