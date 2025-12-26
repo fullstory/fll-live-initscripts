@@ -1,4 +1,4 @@
-fll-live-initscripts (20251226.1) UNRELEASED; urgency=medium
+fll-live-initscripts (20251227.1) UNRELEASED; urgency=medium
 
   [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
@@ -18,7 +18,7 @@ fll-live-initscripts (20251226.1) UNRELEASED; urgency=medium
   * Adjust find invocations.
   * Use glob when configuring all installed desktops.
 
- -- Kel Modderman <kelvmod@gmail.com>  Fri, 26 Dec 2025 07:38:09 +1000
+ -- Kel Modderman <kelvmod@gmail.com>  Sat, 27 Dec 2025 00:28:10 +1000
 
 fll-live-initscripts (20251224.1) unstable; urgency=medium
 
