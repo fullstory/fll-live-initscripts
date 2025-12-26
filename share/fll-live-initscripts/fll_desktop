@@ -192,6 +192,7 @@ setup_desktop() {
 			;;
 		*)
 			echo "fll_desktop: unsupported desktop session: ${DESKTOP_FILE}"
+			exit 1
 			;;
 	esac
 
