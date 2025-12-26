@@ -1,7 +1,4 @@
-fll-live-initscripts (20251227.1) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (20251227.1) unstable; urgency=medium
 
   [ Kel Modderman ]
   * fll_desktop: improve regexp that updates
@@ -18,7 +15,7 @@ fll-live-initscripts (20251227.1) UNRELEASED; urgency=medium
   * Adjust find invocations.
   * Use glob when configuring all installed desktops.
 
- -- Kel Modderman <kelvmod@gmail.com>  Sat, 27 Dec 2025 00:28:10 +1000
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 26 Dec 2025 19:58:46 +0100
 
 fll-live-initscripts (20251224.1) unstable; urgency=medium
 
