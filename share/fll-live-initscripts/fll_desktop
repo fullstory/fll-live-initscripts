@@ -162,25 +162,24 @@ setup_desktop() {
 				DESKTOP_FILE=$(find /usr/share/*sessions -type f -name "${1}*.desktop" \
 					| sort | head -n 1)
 			fi
+			# failed to determine the "correct" desktop file from desktop= cheatcode
+			if [ ! -f "${DESKTOP_FILE}" ]; then
+				echo "fll_desktop: desktop session file not found for: ${1}"
+				exit 1
+			fi
+			# update calamares
+			DESKTOP_EXEC=$(awk -F= '/^TryExec/{ print $2 }' "${DESKTOP_FILE}")
+			if [ -z "${DESKTOP_EXEC}" ]; then
+				DESKTOP_EXEC=$(awk -F= '/^Exec/{ print $2 }' "${DESKTOP_FILE}")
+			fi
+			if [ -n "${DESKTOP_EXEC}" ]; then
+				sed -i -e 's/#defaultDesktopEnvironment:/defaultDesktopEnvironment:/' \
+					-e "s/^.*executable: \".*\"$/    executable: \"$(basename ${DESKTOP_EXEC% *})\"/" \
+					-e "s/^.*desktopFile: \".*\"$/    desktopFile: \"$(basename ${DESKTOP_FILE})\"/" \
+					/etc/calamares/modules/displaymanager.conf
+			fi
 			;;
 	esac
-
-	if [ ! -f "${DESKTOP_FILE}" ]; then
-		echo "fll_desktop: desktop session file not found for: ${1}"
-		exit 1
-	fi
-
-	# update calamares
-	DESKTOP_EXEC=$(awk -F= '/^TryExec/{ print $2 }' "${DESKTOP_FILE}")
-	if [ -z "${DESKTOP_EXEC}" ]; then
-		DESKTOP_EXEC=$(awk -F= '/^Exec/{ print $2 }' "${DESKTOP_FILE}")
-	fi
-	if [ -n "${DESKTOP_EXEC}" ]; then
-		sed -i -e 's/#defaultDesktopEnvironment:/defaultDesktopEnvironment:/' \
-			-e "s/^.*executable: \".*\"$/    executable: \"$(basename ${DESKTOP_EXEC% *})\"/" \
-			-e "s/^.*desktopFile: \".*\"$/    desktopFile: \"$(basename ${DESKTOP_FILE})\"/" \
-			/etc/calamares/modules/displaymanager.conf
-	fi
 
 	FLL_XSESSION="$(basename ${DESKTOP_FILE%.desktop})"
 	case "${DESKTOP_FILE}" in

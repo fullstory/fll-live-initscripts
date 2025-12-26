@@ -1,6 +1,11 @@
 fll-live-initscripts (20251227.2) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
+  * fll_desktop: only update calamares for the desktop determined from
+    cheatcode.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 26 Dec 2025 19:59:03 +0100
 
