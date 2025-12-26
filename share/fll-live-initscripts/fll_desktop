@@ -48,7 +48,7 @@ EOF
 			;;
 		sddm)
 			mkdir -p /etc/sddm.conf.d
-			printf "\[Autologin]\nUser=${FLL_LIVE_USER}\nSession=${FLL_XSESSION}\n" \
+			printf "\n[Autologin]\nUser=${FLL_LIVE_USER}\nSession=${FLL_XSESSION}\n" \
 				>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
 			[ -z "${HOMECTL}" ] && printf "Relogin=true\n" \
 				>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
@@ -281,8 +281,8 @@ EOF
 }
 
 # detect and setup all installed desktops
-for desktop_file in $(find /usr/share/*sessions -type f -name "*.desktop"); do
-	setup_desktop "${desktop_file}"
+for desktop_file in /usr/share/*sessions/*.desktop; do
+	[ -f "${desktop_file}" ] && setup_desktop "${desktop_file}"
 done
 
 # setup active desktop

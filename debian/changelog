@@ -16,6 +16,7 @@ fll-live-initscripts (20251226.1) UNRELEASED; urgency=medium
   * fll_desktop: improve logic to determine desktop exec command for
     clamares update.
   * Adjust find invocations.
+  * Use glob when configuring all installed desktops.
 
  -- Kel Modderman <kelvmod@gmail.com>  Fri, 26 Dec 2025 07:38:09 +1000
 
