@@ -314,6 +314,7 @@ EOF
 			sed -i "s#xkb_variant \"\"#xkb_variant \"${XKBVARIANT}\"#" /etc/skel/.config/sway/config
 			sed -i "s#xkb_model \"\"#xkb_model \"${XKBMODEL}\"#" /etc/skel/.config/sway/config
 			sed -i "s#xkb_options \"\"#xkb_options \"${XKBOPTIONS}\"#" /etc/skel/.config/sway/config
+			;;
 	esac
 
 	export DESKTOP_NAME DESKTOP_FILE FLL_XTYPE FLL_XSESSION
