@@ -15,6 +15,7 @@ fll-live-initscripts (20251226.1) UNRELEASED; urgency=medium
   * fll_desktop: add a blank line before sddm autologin config block.
   * fll_desktop: improve logic to determine desktop exec command for
     clamares update.
+  * Adjust find invocations.
 
  -- Kel Modderman <kelvmod@gmail.com>  Fri, 26 Dec 2025 07:38:09 +1000
 
