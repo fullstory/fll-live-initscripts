@@ -144,93 +144,54 @@ EOF
 setup_desktop() {
 	# This function may be called twice for the same desktop if user
 	# supplied a desktop= cheatcode - everything below must be imdepotent
-	DESKTOP_NAME="${1}"
-	DESKTOP_FILE="${2}"
-
-	case "${DESKTOP_NAME}" in
-		budgie|budgie-desktop)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="budgie-desktop"
-			;;
-		cinnamon-wayland)
-			FLL_XTYPE="wayland"
-			FLL_XSESSION="cinnamon-wayland"
-			;;
-		cinnamon|cinnamon-x11)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="cinnamon"
-			;;
-		flux*)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="fluxbox"
-			;;
-		gnome)
-			FLL_XTYPE="wayland"
-			FLL_XSESSION="gnome"
-			;;
-		gnome-x11)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="gnome"
-			;;
-		hyprland)
-			FLL_XTYPE="wayland"
-			FLL_XSESSION="hyprland"
-			;;
-		icewm)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="IceWM"
-			;;
-		kde|kde-wayland|plasma)
-			FLL_XTYPE="wayland"
-			FLL_XSESSION="plasma"
-			;;
-		kde-x11|plasmax11)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="plasmax11"
-			;;
-		kodi|kodi-gbm)
-			FLL_XTYPE="wayland"
-			FLL_XSESSION="kodi-gbm"
-			;;
-		kodi-x11)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="kodi"
-			;;
-		labwc)
-			FLL_XTYPE="wayland"
-			FLL_XSESSION="labwc"
-			;;
-		lxde)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="LXDE"
-			;;
-		lxqt-x11|lxqt-openbox)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="lxqt"
-			;;
-		lxqt|lxqt-wayland|lxqt-labwc|lxqt-kwin|lxqt-hyprland|lxqt-sway|lxqt-wayfire)
-			FLL_XTYPE="wayland"
-			FLL_XSESSION="lxqt-wayland"
-			;;
-		mate)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="mate"
-			;;
-		sway)
-			FLL_XTYPE="wayland"
-			FLL_XSESSION="sway"
-			;;
-		xfce|xfce-x11)
-			FLL_XTYPE="x11"
-			FLL_XSESSION="xfce"
-			;;
-		xfce-wayland)
-			FLL_XTYPE="wayland"
-			FLL_XSESSION="xfce-wayland"
+	case "${1}" in
+		*.desktop)
+			DESKTOP_FILE="${1}"
 			;;
 		*)
-			FLL_XTYPE=""
-			FLL_XSESSION=""
+			if [ "${1#*-*}" = "x11" ]; then
+				DESKTOP_FILE=$(find /usr/share/xsessions/*.desktop -type f -name "${1%-*}*.desktop" \
+					| sort | head -n 1)
+			elif [ "${1#*-*}" = "wayland" ]; then
+				DESKTOP_FILE=$(find /usr/share/wayland-sessions/*.desktop -type f -name "${1%-*}*.desktop" \
+					| sort | head -n 1)
+			else
+				DESKTOP_FILE=$(find /usr/share/*sessions/*.desktop -type f -name "${1}.desktop" \
+					| sort | head -n 1)
+			fi
+			if [ ! -f "${DESKTOP_FILE}" ]; then
+				DESKTOP_FILE=$(find /usr/share/*sessions/*.desktop -type f -name "${1%-*}-*.desktop" \
+					| sort | head -n 1)
+			fi
+			if [ ! -f "${DESKTOP_FILE}" ]; then
+				DESKTOP_FILE=$(find /usr/share/*sessions/*.desktop -type f -name "${1}*.desktop" \
+					| sort | head -n 1)
+			fi
+			;;
+	esac
+
+	if [ ! -f "${DESKTOP_FILE}" ]; then
+		echo "fll_desktop: desktop session file not found for: ${1}"
+		exit 1
+	fi
+
+	# update calamares
+	DESKTOP_EXEC=$(awk -F= '/^TryExec/{ print $2 }' "${DESKTOP_FILE}")
+	sed -i -e 's/#defaultDesktopEnvironment:/defaultDesktopEnvironment:/' \
+			-e "s/^.*executable: \".*\"$/    executable: \"$(basename ${DESKTOP_EXEC})\"/" \
+			-e "s/^.*desktopFile: \".*\"$/    desktopFile: \"$(basename ${DESKTOP_FILE})\"/" \
+			/etc/calamares/modules/displaymanager.conf
+
+	FLL_XSESSION="$(basename ${DESKTOP_FILE%.desktop})"
+	case "${DESKTOP_FILE}" in
+		/usr/share/xsessions/*)
+			FLL_XTYPE="x11"
+			;;
+		/usr/share/wayland-sessions/*)
+			FLL_XTYPE="wayland"
+			;;
+		*)
+			echo "fll_desktop: unsupported desktop session: ${DESKTOP_FILE}"
 			;;
 	esac
 
@@ -243,7 +204,7 @@ setup_desktop() {
 			;;
 		lxqt-wayland)
 			# Support various compositors of lxqt (default: labwc)
-			case "${DESKTOP_NAME}" in
+			case "${1}" in
 				lxqt-labwc)
 					[ -x /usr/bin/labwc ] && \
 					sed -i 's#^compositor=.*#compositor=/usr/bin/labwc#' \
@@ -316,67 +277,19 @@ EOF
 			sed -i "s#xkb_options \"\"#xkb_options \"${XKBOPTIONS}\"#" /etc/skel/.config/sway/config
 			;;
 	esac
-
-	export DESKTOP_NAME DESKTOP_FILE FLL_XTYPE FLL_XSESSION
-}
-
-update_calamares() {
-	if [ ! -f "${DESKTOP_FILE}" ]; then
-		DESKTOP_FILE=$(find /usr/share/*sessions/*.desktop -type f \
-			-name "${DESKTOP_NAME}.desktop" | head -n 1 2>/dev/null)
-	fi
-
-	if [ -r "${DESKTOP_FILE}" ]; then
-		DESKTOP_EXEC=$(awk -F= '/^TryExec/{ print $2 }' "${DESKTOP_FILE}")
-		sed -i -e 's/#defaultDesktopEnvironment:/defaultDesktopEnvironment:/' \
-				-e "s/^.*executable: \".*\"$/    executable: \"$(basename ${DESKTOP_EXEC})\"/" \
-				-e "s/^.*desktopFile: \".*\"$/    desktopFile: \"$(basename ${DESKTOP_FILE})\"/" \
-				/etc/calamares/modules/displaymanager.conf
-	fi
-}
-
-detect_desktop() {
-	FORCE_DESKTOP="${1}"
-	while read -r desktop_name desktop_file; do
-		if [ -n "${FORCE_DESKTOP}" ] || [ "${desktop_name}" = "${FORCE_DESKTOP}" ]; then
-			setup_desktop "${desktop_name}" "${desktop_file}"
-			update_calamares
-			break
-		elif [ -z "${FORCE_DESKTOP}" ] && [ -r "${desktop_file}" ]; then
-			setup_desktop "${desktop_name}" "${desktop_file}"
-		fi
-	done <<'EOF'
-sway              /usr/share/wayland-sessions/sway.desktop
-hyprland          /usr/share/wayland-sessions/hyprland.desktop
-labwc             /usr/share/wayland-sessions/labwc.desktop
-mate              /usr/share/xsessions/mate.desktop
-budgie-desktop    /usr/share/xsessions/budgie-desktop.desktop
-cinnamon-wayland  /usr/share/wayland-sessions/cinnamon-wayland.desktop
-cinnamon          /usr/share/xsessions/cinnamon.desktop
-kodi-x11          /usr/share/xsessions/kodi.desktop
-kodi-gbm          /usr/share/wayland-sessions/kodi-gbm.desktop
-icewm             /usr/share/xsessions/icewm-session.desktop
-fluxbox           /usr/share/xsessions/fluxbox.desktop
-lxde              /usr/share/xsessions/LXDE.desktop
-lxqt              /usr/share/xsessions/lxqt.desktop
-lxqt-wayland      /usr/share/wayland-sessions/lxqt-wayland.desktop
-xfce-wayland      /usr/share/wayland-sessions/xfce-wayland.desktop
-xfce              /usr/share/xsessions/xfce.desktop
-gnome-x11         /usr/share/xsessions/gnome.desktop
-gnome             /usr/share/wayland-sessions/gnome.desktop
-plasmax11         /usr/share/xsessions/plasmax11.desktop
-plasma            /usr/share/wayland-sessions/plasma.desktop
-EOF
 }
 
 # detect and setup all installed desktops
-detect_desktop
+for desktop_file in $(find /usr/share/*sessions/*.desktop \
+	-type f -name "*.desktop"); do
+	setup_desktop "${desktop_file}"
+done
 
 # override default desktop
 for opt in $(cat /proc/cmdline); do
 	case "${opt}" in
 		desktop=*)
-			detect_desktop "${opt#desktop=}"
+			setup_desktop "${opt#desktop=}"
 			;;
 	esac
 done

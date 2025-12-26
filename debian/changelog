@@ -6,16 +6,11 @@ fll-live-initscripts (20251226.1) UNRELEASED; urgency=medium
   [ Kel Modderman ]
   * fll_desktop: improve regexp that updates
     /etc/calamares/modules/displaymanager.conf.
-  * fll_desktop: fix use of ${desktop_file} variable when detecting
-    window managers.
-  * fll_desktop: make window manager detection into re-usable function
-    and allow a session to be forced by name only.
-  * fll_desktop: fine tune detect_desktop function logic so it may be
-    run once to configure all installed desktops, and again to configure
-    the preferred desktop for this boot session.
-  * fll_desktop: only update calamares displaymanager.conf during the
-    forced desktop instance of detect_desktop (in response to cheatcode).
   * fll_desktop: fix typo and conclude case statement.
+  * fll_desktop: no longer hardcode desktop session and type, instead
+    user a heuristic which detects all installed session files and
+    attempts to set them up, and finally parses the desktop= cheatcode
+    and sets it up again thus making it the active choice.
 
  -- Kel Modderman <kelvmod@gmail.com>  Fri, 26 Dec 2025 07:38:09 +1000
 
