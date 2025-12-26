@@ -234,19 +234,6 @@ setup_desktop() {
 			;;
 	esac
 
-	if [ ! -f "${DESKTOP_FILE}" ]; then
-		DESKTOP_FILE=$(find /usr/share/*sessions/*.desktop -type f \
-			-name "${DESKTOP_NAME}.desktop" | head -n 1 2>/dev/null)
-	fi
-
-	if [ -r "${DESKTOP_FILE}" ]; then
-		DESKTOP_EXEC=$(awk -F= '/^TryExec/{ print $2 }' "${DESKTOP_FILE}")
-		sed -i -e 's/#defaultDesktopEnvironment:/defaultDesktopEnvironment:/' \
-				-e "s/^.*executable: \".*\"$/    executable: \"$(basename ${DESKTOP_EXEC})\"/" \
-				-e "s/^.*desktopFile: \".*\"$/    desktopFile: \"$(basename ${DESKTOP_FILE})\"/" \
-				/etc/calamares/modules/displaymanager.conf
-	fi
-
 	case "${FLL_XSESSION}" in
 		lxqt)
 			# set window_manager=openbox
@@ -332,10 +319,29 @@ EOF
 	export DESKTOP_NAME DESKTOP_FILE FLL_XTYPE FLL_XSESSION
 }
 
+update_calamares() {
+	if [ ! -f "${DESKTOP_FILE}" ]; then
+		DESKTOP_FILE=$(find /usr/share/*sessions/*.desktop -type f \
+			-name "${DESKTOP_NAME}.desktop" | head -n 1 2>/dev/null)
+	fi
+
+	if [ -r "${DESKTOP_FILE}" ]; then
+		DESKTOP_EXEC=$(awk -F= '/^TryExec/{ print $2 }' "${DESKTOP_FILE}")
+		sed -i -e 's/#defaultDesktopEnvironment:/defaultDesktopEnvironment:/' \
+				-e "s/^.*executable: \".*\"$/    executable: \"$(basename ${DESKTOP_EXEC})\"/" \
+				-e "s/^.*desktopFile: \".*\"$/    desktopFile: \"$(basename ${DESKTOP_FILE})\"/" \
+				/etc/calamares/modules/displaymanager.conf
+	fi
+}
+
 detect_desktop() {
 	FORCE_DESKTOP="${1}"
 	while read -r desktop_name desktop_file; do
-		if [ -r "${desktop_file}" ] || [ "${desktop_name}" = "${FORCE_DESKTOP}" ]; then
+		if [ -n "${FORCE_DESKTOP}" ] || [ "${desktop_name}" = "${FORCE_DESKTOP}" ]; then
+			setup_desktop "${desktop_name}" "${desktop_file}"
+			update_calamares
+			break
+		elif [ -z "${FORCE_DESKTOP}" ] && [ -r "${desktop_file}" ]; then
 			setup_desktop "${desktop_name}" "${desktop_file}"
 		fi
 	done <<'EOF'
@@ -347,7 +353,7 @@ budgie-desktop    /usr/share/xsessions/budgie-desktop.desktop
 cinnamon-wayland  /usr/share/wayland-sessions/cinnamon-wayland.desktop
 cinnamon          /usr/share/xsessions/cinnamon.desktop
 kodi-x11          /usr/share/xsessions/kodi.desktop
-kodi              /usr/share/wayland-sessions/kodi-gbm.desktop
+kodi-gbm          /usr/share/wayland-sessions/kodi-gbm.desktop
 icewm             /usr/share/xsessions/icewm-session.desktop
 fluxbox           /usr/share/xsessions/fluxbox.desktop
 lxde              /usr/share/xsessions/LXDE.desktop

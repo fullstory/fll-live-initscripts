@@ -10,6 +10,11 @@ fll-live-initscripts (20251226.1) UNRELEASED; urgency=medium
     window managers.
   * fll_desktop: make window manager detection into re-usable function
     and allow a session to be forced by name only.
+  * fll_desktop: fine tune detect_desktop function logic so it may be
+    run once to configure all installed desktops, and again to configure
+    the preferred desktop for this boot session.
+  * fll_desktop: only update calamares displaymanager.conf during the
+    forced desktop instance of detect_desktop (in response to cheatcode).
 
  -- Kel Modderman <kelvmod@gmail.com>  Fri, 26 Dec 2025 07:38:09 +1000
 
