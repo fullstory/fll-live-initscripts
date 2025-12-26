@@ -48,7 +48,7 @@ EOF
 			;;
 		sddm)
 			mkdir -p /etc/sddm.conf.d
-			printf "[Autologin]\nUser=${FLL_LIVE_USER}\nSession=${FLL_XSESSION}\n" \
+			printf "\[Autologin]\nUser=${FLL_LIVE_USER}\nSession=${FLL_XSESSION}\n" \
 				>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
 			[ -z "${HOMECTL}" ] && printf "Relogin=true\n" \
 				>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"

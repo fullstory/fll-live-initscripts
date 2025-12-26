@@ -12,6 +12,7 @@ fll-live-initscripts (20251226.1) UNRELEASED; urgency=medium
     attempts to set them up, and finally parses the desktop= cheatcode
     and sets it up again thus making it the active choice.
   * Refactor displaymanager setup to simplify maintenance.
+  * fll_desktop: add a blank line before sddm autologin config block.
 
  -- Kel Modderman <kelvmod@gmail.com>  Fri, 26 Dec 2025 07:38:09 +1000
 
