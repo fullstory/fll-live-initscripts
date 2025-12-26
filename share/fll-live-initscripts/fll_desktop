@@ -332,11 +332,13 @@ EOF
 	export DESKTOP_NAME DESKTOP_FILE FLL_XTYPE FLL_XSESSION
 }
 
-while read -r desktop_name desktop_file; do
-	if [ -r "$path" ]; then
-		setup_desktop "${desktop_name}" "${desktop_file}"
-	fi
-done <<'EOF'
+detect_desktop() {
+	FORCE_DESKTOP="${1}"
+	while read -r desktop_name desktop_file; do
+		if [ -r "${desktop_file}" ] || [ "${desktop_name}" = "${FORCE_DESKTOP}" ]; then
+			setup_desktop "${desktop_name}" "${desktop_file}"
+		fi
+	done <<'EOF'
 sway              /usr/share/wayland-sessions/sway.desktop
 hyprland          /usr/share/wayland-sessions/hyprland.desktop
 labwc             /usr/share/wayland-sessions/labwc.desktop
@@ -358,6 +360,10 @@ gnome             /usr/share/wayland-sessions/gnome.desktop
 plasmax11         /usr/share/xsessions/plasmax11.desktop
 plasma            /usr/share/wayland-sessions/plasma.desktop
 EOF
+}
+
+# detect and setup all installed desktops
+detect_desktop
 
 # override default desktop
 for opt in $(cat /proc/cmdline); do

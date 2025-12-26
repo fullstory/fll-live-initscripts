@@ -6,6 +6,10 @@ fll-live-initscripts (20251226.1) UNRELEASED; urgency=medium
   [ Kel Modderman ]
   * fll_desktop: improve regexp that updates
     /etc/calamares/modules/displaymanager.conf.
+  * fll_desktop: fix use of ${desktop_file} variable when detecting
+    window managers.
+  * fll_desktop: make window manager detection into re-usable function
+    and allow a session to be forced by name only.
 
  -- Kel Modderman <kelvmod@gmail.com>  Fri, 26 Dec 2025 07:38:09 +1000
 
