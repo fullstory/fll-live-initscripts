@@ -1,108 +1,100 @@
 #!/bin/sh
-###############################################################################
-# 	configure x-display-manager's
-###############################################################################
-setup_gdm3() {
-	# autologin + greeter theme
-	# timed login required for login after x restart
-	sed -i	-e "/^AutomaticLogin\=.*/d" \
-		-e "/^AutomaticLoginEnable\=.*/d" \
-		-e "/^TimedLoginEnable\=.*/d" \
-		-e "/^TimedLogin\=.*/d" \
-		-e "/^TimedLoginDelay\=.*/d" \
-		-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true\n \
-			\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=1/" \
-			/etc/gdm3/daemon.conf
 
-	case "${FLL_XTYPE}" in
-		x11)
-			sed -i "s/#WaylandEnable=false/WaylandEnable=false/" /etc/gdm3/daemon.conf
-			;;
-	esac
+setup_displaymanager() {
+	case "${1}" in
+		gdm3)
+			# autologin + greeter theme
+			# timed login required for login after x restart
+			sed -i	-e "/^AutomaticLogin\=.*/d" \
+				-e "/^AutomaticLoginEnable\=.*/d" \
+				-e "/^TimedLoginEnable\=.*/d" \
+				-e "/^TimedLogin\=.*/d" \
+				-e "/^TimedLoginDelay\=.*/d" \
+				-e "s/^\(\[daemon\]$\)/\1\nAutomaticLogin\=${FLL_LIVE_USER}\nAutomaticLoginEnable\=true\n \
+					\nTimedLoginEnable\=true\nTimedLogin\=${FLL_LIVE_USER}\nTimedLoginDelay\=1/" \
+					/etc/gdm3/daemon.conf
 
-	# preselect the xsession
-	cat > /etc/skel/.dmrc <<EOF
+			if [ "${FLL_XTYPE}" = "x11" ]; then
+				sed -i "s/#WaylandEnable=false/WaylandEnable=false/" /etc/gdm3/daemon.conf
+			fi
+
+			# preselect the xsession
+			cat > /etc/skel/.dmrc <<EOF
 [Desktop]
 Session=${FLL_XSESSION}
 EOF
-}
-
-setup_lightdm() {
-	# set autologin user and set timeout to zero
-	mkdir -p /etc/lightdm/lightdm.conf.d
-	if [ ! -e "/etc/lightdm/lightdm.conf.d/80_${FLL_LIVE_USER}.conf" ]; then
-		cat >"/etc/lightdm/lightdm.conf.d/80_${FLL_LIVE_USER}.conf" <<EOF
+			;;
+		lightdm)
+			# set autologin user and set timeout to zero
+			mkdir -p /etc/lightdm/lightdm.conf.d
+			if [ ! -e "/etc/lightdm/lightdm.conf.d/80_${FLL_LIVE_USER}.conf" ]; then
+				cat >"/etc/lightdm/lightdm.conf.d/80_${FLL_LIVE_USER}.conf" <<EOF
 [SeatDefaults]
 greeter-hide-users=false
 autologin-user=${FLL_LIVE_USER}
 autologin-user-timeout=0
 autologin-session=${FLL_XSESSION}
 EOF
-	fi
-}
-
-setup_lxdm() {
-	# set autologin user
-	if [ -L /etc/lxdm/default.conf ] && [ ! -e "/etc/lxdm/${FLL_LIVE_USER}.conf" ]; then
-		rm -f /etc/lxdm/default.conf
-		sed "s/^# autologin=.*/&\nautologin=${FLL_LIVE_USER}/" \
-			"${1}/etc/lxdm/lxdm.conf" > "/etc/lxdm/${FLL_LIVE_USER}.conf"
-		ln -fs "${FLL_LIVE_USER}.conf" /etc/lxdm/default.conf
-	fi
-}
-
-setup_sddm() {
-	mkdir -p /etc/sddm.conf.d
-	printf "[Autologin]\nUser=${FLL_LIVE_USER}\nSession=${FLL_XSESSION}\n" \
-		>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
-	[ -z "${HOMECTL}" ] && printf "Relogin=true\n" \
-		>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
-
-	case "${FLL_XTYPE}" in
-		x11)
-			sed -i 's/^DisplayServer=.*/DisplayServer=x11/' /etc/sddm.conf.d/*.conf
+			fi
 			;;
-	esac
-}
+		lxdm)
+			# set autologin user
+			if [ -L /etc/lxdm/default.conf ] && [ ! -e "/etc/lxdm/${FLL_LIVE_USER}.conf" ]; then
+				rm -f /etc/lxdm/default.conf
+				sed "s/^# autologin=.*/&\nautologin=${FLL_LIVE_USER}/" \
+					"${1}/etc/lxdm/lxdm.conf" > "/etc/lxdm/${FLL_LIVE_USER}.conf"
+				ln -fs "${FLL_LIVE_USER}.conf" /etc/lxdm/default.conf
+			fi
+			;;
+		sddm)
+			mkdir -p /etc/sddm.conf.d
+			printf "[Autologin]\nUser=${FLL_LIVE_USER}\nSession=${FLL_XSESSION}\n" \
+				>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
+			[ -z "${HOMECTL}" ] && printf "Relogin=true\n" \
+				>>"/etc/sddm.conf.d/${FLL_LIVE_USER}.conf"
 
-setup_slim() {
-	# set autologin for $FLL_LIVE_USER to yes
-	sed -i	-e "s/^default_user.*/\#FLL\#&/" \
-		-e "s/^\#FLL\#\(default_user[ \t]*${FLL_LIVE_USER}$\)/\1/" \
-		-e "s/^auto_login.*/\#FLL\#&/" \
-		-e "s/^\#FLL\#\(auto_login[ \t]*yes$\)/\1/" \
-			/etc/slim.conf
-	grep -q ^default_user /etc/slim.conf || \
-		printf "default_user\t${FLL_LIVE_USER}\n" >> /etc/slim.conf
-	grep -q ^auto_login /etc/slim.conf || \
-		printf "auto_login\tyes\n" >> /etc/slim.conf
-}
+			if [ "${FLL_XTYPE}" = "x11" ]; then
+				sed -i 's/^DisplayServer=.*/DisplayServer=x11/' /etc/sddm.conf.d/*.conf
+			fi
+			;;
+			slim)
+			# set autologin for $FLL_LIVE_USER to yes
+			sed -i	-e "s/^default_user.*/\#FLL\#&/" \
+				-e "s/^\#FLL\#\(default_user[ \t]*${FLL_LIVE_USER}$\)/\1/" \
+				-e "s/^auto_login.*/\#FLL\#&/" \
+				-e "s/^\#FLL\#\(auto_login[ \t]*yes$\)/\1/" \
+					/etc/slim.conf
+			grep -q ^default_user /etc/slim.conf || \
+				printf "default_user\t${FLL_LIVE_USER}\n" >> /etc/slim.conf
+			grep -q ^auto_login /etc/slim.conf || \
+				printf "auto_login\tyes\n" >> /etc/slim.conf
+		;;
+		greetd)
+			if [ "${FLL_XSESSION}" = "hyprland" ]; then
+				EXECUTE_CMD="Hyprland"
+			else
+				EXECUTE_CMD="${FLL_XSESSION}"
+			fi
 
-setup_greetd() {
-	unset GREETER_CMD
-	unset EXECUTE_CMD
-
-	[ "${FLL_XSESSION}" = "hyprland" ] && EXECUTE_CMD="Hyprland" || EXECUTE_CMD="${FLL_XSESSION}"
-
-	if [ -n "${FLL_XSESSION}" ] && [ -x /usr/bin/tuigreet ]; then
-		TUITHEME="border=magenta;text=cyan;prompt=cyan;time=cyan;action=cyan;button=magenta;container=black;input=magenta"
-		GREETER_CMD="/usr/bin/tuigreet --greeting 'Welcome to ${FLL_DISTRO_NAME}'"
-		GREETER_CMD="${GREETER_CMD} --time --user-menu --user-menu-max-uid 60513"
-		GREETER_CMD="${GREETER_CMD} --asterisks --remember --remember-user-session"
-		GREETER_CMD="${GREETER_CMD} --power-shutdown 'systemctl -i poweroff'"
-		GREETER_CMD="${GREETER_CMD} --power-reboot 'systemctl -i reboot'"
-		GREETER_CMD="${GREETER_CMD} --cmd '${EXECUTE_CMD}' --theme '${TUITHEME}'"
-	else
-		case "${FLL_XSESSION}" in
-			sway|hyprland)
-				GREETER_CMD="${EXECUTE_CMD} --config /etc/greetd/${FLL_XSESSION}-config"
-				GREETER="agreety -c ${EXECUTE_CMD}"
-				[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet -c ${EXECUTE_CMD}"
-				[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet -l -c ${EXECUTE_CMD}"
-				if [ -x /usr/bin/nwg-hello ]; then
-					GREETER_CMD= "${EXECUTE_CMD} -c /etc/nwg-hello/${FLL_XSESSION}-config"
-				elif [ "${FLL_XSESSION}" = "sway" ]; then
-					cat > /etc/greetd/sway-config <<EOF
+			if [ -n "${FLL_XSESSION}" ] && [ -x /usr/bin/tuigreet ]; then
+				TUITHEME="border=magenta;text=cyan;prompt=cyan;time=cyan;action=cyan;button=magenta;container=black;input=magenta"
+				GREETER_CMD="/usr/bin/tuigreet --greeting 'Welcome to ${FLL_DISTRO_NAME}'"
+				GREETER_CMD="${GREETER_CMD} --time --user-menu --user-menu-max-uid 60513"
+				GREETER_CMD="${GREETER_CMD} --asterisks --remember --remember-user-session"
+				GREETER_CMD="${GREETER_CMD} --power-shutdown 'systemctl -i poweroff'"
+				GREETER_CMD="${GREETER_CMD} --power-reboot 'systemctl -i reboot'"
+				GREETER_CMD="${GREETER_CMD} --cmd '${EXECUTE_CMD}' --theme '${TUITHEME}'"
+			else
+				case "${FLL_XSESSION}" in
+					sway|hyprland)
+					GREETER_CMD="${EXECUTE_CMD} --config /etc/greetd/${FLL_XSESSION}-config"
+					GREETER="agreety -c ${EXECUTE_CMD}"
+					[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet -c ${EXECUTE_CMD}"
+					[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet -l -c ${EXECUTE_CMD}"
+					if [ -x /usr/bin/nwg-hello ]; then
+						GREETER_CMD= "${EXECUTE_CMD} -c /etc/nwg-hello/${FLL_XSESSION}-config"
+					elif [ "${FLL_XSESSION}" = "sway" ]; then
+						cat > /etc/greetd/sway-config <<EOF
 exec "${GREETER}; swaymsg exit"
 
 bindsym Mod4+shift+e exec swaynag \
@@ -113,32 +105,35 @@ bindsym Mod4+shift+e exec swaynag \
 
 include /etc/sway/sway-config.d/*
 EOF
-				elif [ "${FLL_XSESSION}" = "hyprland" ]; then
-					cat > /etc/greetd/hyprland.conf <<EOF
+					elif [ "${FLL_XSESSION}" = "hyprland" ]; then
+						cat > /etc/greetd/hyprland.conf <<EOF
 exec-once = ${GREETER}; hyprctl dispatch exit
 EOF
-				fi
-				;;
-			labwc)
-				GREETER="agreety"
-				[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet"
-				[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet"
-				GREETER_CMD="labwc --startup ${GREETER}"
-				;;
-		esac
-	fi
+					fi
+					;;
 
-	if [ -n "${GREETER_CMD}" ]; then
-		sed -i "s#^command = ".*"#command = \"${GREETER_CMD}\"#" \
-			/etc/greetd/config.toml
+					labwc)
+					GREETER="agreety"
+					[ -x /usr/sbin/wlgreet ] && GREETER="wlgreet"
+					[ -x /usr/bin/gtkgreet ] && GREETER="gtkgreet"
+					GREETER_CMD="labwc --startup ${GREETER}"
+					;;
+				esac
+			fi
 
-		cat >> /etc/greetd/config.toml <<EOF
+			if [ -n "${GREETER_CMD}" ]; then
+				sed -i "s#^command = ".*"#command = \"${GREETER_CMD}\"#" \
+					/etc/greetd/config.toml
+
+				cat >> /etc/greetd/config.toml <<EOF
 
 [initial_session]
 command = "${EXECUTE_CMD}"
 user = "${FLL_LIVE_USER}"
 EOF
-	fi
+			fi
+			;;
+	esac
 }
 
 setup_desktop() {
@@ -286,7 +281,7 @@ for desktop_file in $(find /usr/share/*sessions/*.desktop \
 	setup_desktop "${desktop_file}"
 done
 
-# override default desktop
+# setup active desktop
 for opt in $(cat /proc/cmdline); do
 	case "${opt}" in
 		desktop=*)
@@ -295,32 +290,10 @@ for opt in $(cat /proc/cmdline); do
 	esac
 done
 
-if [ -x /usr/sbin/greetd ]; then
-	echo "Configuring greetd..."
-	setup_greetd
-fi
-
-if [ -x /usr/bin/slim ]; then
-	echo "Configuring slim..."
-	setup_slim
-fi
-
-if [ -x /usr/sbin/lxdm ]; then
-	echo "Configuring lxdm..."
-	setup_lxdm
-fi
-
-if [ -x /usr/sbin/lightdm ]; then
-	echo "Configuring lightdm..."
-	setup_lightdm
-fi
-
-if [ -x /usr/sbin/gdm3 ]; then
-	echo "Configuring gdm3..."
-	setup_gdm3
-fi
-
-if [ -x /usr/bin/sddm ]; then
-	echo "Configuring sddm..."
-	setup_sddm
-fi
+# configure displaymanager
+for displaymanager in /usr/sbin/greetd /usr/bin/slim /usr/sbin/lxdm \
+	/usr/sbin/lightdm /usr/sbin/gdm3 /usr/bin/sddm; do
+	[ -x "${displaymanager}" ] || continue
+	echo "Configuring ${displaymanager}..."
+	setup_displaymanager "$(basename ${displaymanager})"
+done
