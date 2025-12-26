@@ -13,6 +13,8 @@ fll-live-initscripts (20251226.1) UNRELEASED; urgency=medium
     and sets it up again thus making it the active choice.
   * Refactor displaymanager setup to simplify maintenance.
   * fll_desktop: add a blank line before sddm autologin config block.
+  * fll_desktop: improve logic to determine desktop exec command for
+    clamares update.
 
  -- Kel Modderman <kelvmod@gmail.com>  Fri, 26 Dec 2025 07:38:09 +1000
 
