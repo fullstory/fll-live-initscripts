@@ -369,7 +369,7 @@ detect_desktop
 for opt in $(cat /proc/cmdline); do
 	case "${opt}" in
 		desktop=*)
-			setup_desktop "${opt#desktop=}"
+			detect_desktop "${opt#desktop=}"
 			;;
 	esac
 done
