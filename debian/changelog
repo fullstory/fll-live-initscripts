@@ -1,13 +1,15 @@
-fll-live-initscripts (20251227.2) UNRELEASED; urgency=medium
+fll-live-initscripts (20251229.1) UNRELEASED; urgency=medium
 
   [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+  * fll_desktop: use case insensitive file pattern matching in
+    setup_desktop.
 
   [ Kel Modderman ]
   * fll_desktop: only update calamares for the desktop determined from
     cheatcode.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 26 Dec 2025 19:59:03 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 29 Dec 2025 09:04:28 +1000
 
 fll-live-initscripts (20251227.1) unstable; urgency=medium
 

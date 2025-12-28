@@ -145,21 +145,21 @@ setup_desktop() {
 			;;
 		*)
 			if [ "${1#*-*}" = "x11" ]; then
-				DESKTOP_FILE=$(find /usr/share/xsessions -type f -name "${1%-*}*.desktop" \
+				DESKTOP_FILE=$(find /usr/share/xsessions -type f -iname "${1%-*}*.desktop" \
 					| sort | head -n 1)
 			elif [ "${1#*-*}" = "wayland" ]; then
-				DESKTOP_FILE=$(find /usr/share/wayland-sessions -type f -name "${1%-*}*.desktop" \
+				DESKTOP_FILE=$(find /usr/share/wayland-sessions -type f -iname "${1%-*}*.desktop" \
 					| sort | head -n 1)
 			else
-				DESKTOP_FILE=$(find /usr/share/*sessions -type f -name "${1}.desktop" \
+				DESKTOP_FILE=$(find /usr/share/*sessions -type f -iname "${1}.desktop" \
 					| sort | head -n 1)
 			fi
 			if [ ! -f "${DESKTOP_FILE}" ]; then
-				DESKTOP_FILE=$(find /usr/share/*sessions -type f -name "${1%-*}-*.desktop" \
+				DESKTOP_FILE=$(find /usr/share/*sessions -type f -iname "${1%-*}-*.desktop" \
 					| sort | head -n 1)
 			fi
 			if [ ! -f "${DESKTOP_FILE}" ]; then
-				DESKTOP_FILE=$(find /usr/share/*sessions -type f -name "${1}*.desktop" \
+				DESKTOP_FILE=$(find /usr/share/*sessions -type f -iname "${1}*.desktop" \
 					| sort | head -n 1)
 			fi
 			# failed to determine the "correct" desktop file from desktop= cheatcode
