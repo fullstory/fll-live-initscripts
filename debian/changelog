@@ -1,8 +1,12 @@
-fll-live-initscripts (20251229.2) UNRELEASED; urgency=medium
+fll-live-initscripts (20260102.1) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 29 Dec 2025 00:13:55 +0100
+  [ Kel Modderman ]
+  * fll_adduser: properly disable kscreenlockerrc.
+
+ -- Kel Modderman <kelvmod@gmail.com>  Fri, 02 Jan 2026 20:47:31 +1000
 
 fll-live-initscripts (20251229.1) unstable; urgency=medium
 

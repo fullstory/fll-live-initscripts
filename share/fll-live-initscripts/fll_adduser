@@ -36,8 +36,9 @@ case "${FLL_XSESSION}" in
             org.gnome.desktop.session idle-delay 0
         ;;
     plasma*)
-        if [ ! -e /etc/xdg/kscreenlockerrc ]; then
+        if ! grep -q '^[Daemon]' /etc/xdg/kscreenlockerrc 2>/dev/null; then
             cat >> /etc/xdg/kscreenlockerrc <<EOF
+
 [Daemon]
 Autolock=false
 LockOnResume=false
