@@ -294,9 +294,8 @@ for opt in $(cat /proc/cmdline); do
 done
 
 # configure displaymanager
-for displaymanager in /usr/sbin/greetd /usr/bin/slim /usr/sbin/lxdm \
-	/usr/sbin/lightdm /usr/sbin/gdm3 /usr/bin/sddm; do
-	[ -x "${displaymanager}" ] || continue
+for displaymanager in greetd slim lxdm lightdm gdm3 sddm; do
+	[ -x "$(which ${displaymanager})" ] || continue
 	echo "Configuring ${displaymanager}..."
-	setup_displaymanager "$(basename ${displaymanager})"
+	setup_displaymanager "${displaymanager}"
 done

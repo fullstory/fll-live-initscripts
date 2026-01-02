@@ -5,6 +5,8 @@ fll-live-initscripts (20260102.1) UNRELEASED; urgency=medium
 
   [ Kel Modderman ]
   * fll_adduser: properly disable kscreenlockerrc.
+  * fll_desktop: make the display manager setup a bit more maintainable
+    by using which to inspect PATH rather than hardcoding it.
 
  -- Kel Modderman <kelvmod@gmail.com>  Fri, 02 Jan 2026 20:47:31 +1000
 
