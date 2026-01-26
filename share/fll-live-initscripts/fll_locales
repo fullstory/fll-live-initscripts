@@ -208,8 +208,26 @@ EOF
 	fi
 }
 
+configure_calamares_geoip()
+{
+	if [ -n "${FLL_LANGUAGE}" ]; then
+		return 0
+	fi
+	# configure calamares geoip contry code lookup
+	if ! grep -qw '^geoip:' /etc/calamares/modules/welcome.conf; then
+		cat >>/etc/calamares/modules/welcome.conf <<EOF
+# added by fll_locales: no language was selected at boot time
+geoip:
+    style:    "none"
+    url:      "https://geoip.kde.org/v1/ubiquity"
+    selector: "CountryCode"
+EOF
+	fi
+}
+
 case "${1}" in
 	start)
+		configure_calamares_geoip
 		set_locale
 		set_keytable
 		;;

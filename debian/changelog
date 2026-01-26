@@ -1,8 +1,13 @@
 fll-live-initscripts (20260126.1) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
   * fll_locales: remove noaptlang cheatcode it no longer exists.
   * fll_locales: prefix LANGUAGE variable with FLL_.
+  * If no language has been specified by the owner via grub or
+    cheatcode, configure calamares to select a country code via geoip.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 26 Jan 2026 12:07:47 +1000
 
