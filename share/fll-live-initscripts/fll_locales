@@ -218,7 +218,7 @@ configure_calamares_geoip()
 		cat >>/etc/calamares/modules/welcome.conf <<EOF
 # added by fll_locales: no language was selected at boot time
 geoip:
-    style:    "none"
+    style:    "xml"
     url:      "https://geoip.kde.org/v1/ubiquity"
     selector: "CountryCode"
 EOF
