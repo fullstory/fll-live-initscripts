@@ -210,6 +210,7 @@ configure_calamares_geoip()
 	fi
 	# configure calamares geoip contry code lookup
 	if ! grep -q '^geoip:' /etc/calamares/modules/welcome.conf 2>/dev/null; then
+		mkdir -p /etc/calamares/modules
 		cat >>/etc/calamares/modules/welcome.conf <<EOF
 # added by fll_locales: no language was selected at boot time
 geoip:
@@ -219,6 +220,7 @@ geoip:
 EOF
 	fi
 	if ! grep -q '^guessLayout:' /etc/calamares/modules/keyboard.conf 2>/dev/null; then
+		mkdir -p /etc/calamares/modules
 		cat >>/etc/calamares/modules/keyboard.conf <<EOF
 # added by fll_locales: no language was selected at boot time
 guessLayout: true
