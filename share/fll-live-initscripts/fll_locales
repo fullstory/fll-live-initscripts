@@ -35,6 +35,8 @@ XKBLAYOUT="us"
 XKBVARIANT=""
 XKBOPTIONS=""
 
+FLL_LANGUAGE=""
+
 ###
 # cheatcode handling
 ###
@@ -42,7 +44,7 @@ if [ -f /proc/cmdline ]; then
 	for param in $(cat /proc/cmdline); do
 		case "${param}" in
 			lang=*)
-				LANGUAGE=$(awk 'BEGIN{ print tolower("'"${param#lang=}"'") }')
+				FLL_LANGUAGE=$(awk 'BEGIN{ print tolower("'"${param#lang=}"'") }')
 				;;
 			xkboptions=*)
 				KBOPTIONS="${param#xkboptions=}"
@@ -65,8 +67,8 @@ fi
 # ll -> language code
 # cc -> demographic code
 ###
-LANG_CODE=${LANGUAGE%%[-_]*}
-DEMO_CODE="$(echo ${LANGUAGE##*[-_]} | awk '{print toupper($1)}')"
+LANG_CODE=${FLL_LANGUAGE%%[-_]*}
+DEMO_CODE="$(echo ${FLL_LANGUAGE##*[-_]} | awk '{print toupper($1)}')"
 
 LANG=""
 

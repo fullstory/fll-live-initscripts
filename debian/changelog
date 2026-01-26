@@ -2,8 +2,9 @@ fll-live-initscripts (20260126.1) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
   * fll_locales: remove noaptlang cheatcode it no longer exists.
+  * fll_locales: prefix LANGUAGE variable with FLL_.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 26 Jan 2026 12:05:37 +1000
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 26 Jan 2026 12:07:47 +1000
 
 fll-live-initscripts (20260102.1) unstable; urgency=medium
 
