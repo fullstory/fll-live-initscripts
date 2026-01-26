@@ -1,7 +1,4 @@
-fll-live-initscripts (20260126.1) UNRELEASED; urgency=medium
-
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
+fll-live-initscripts (20260126.1) unstable; urgency=medium
 
   [ Kel Modderman ]
   * fll_locales: remove noaptlang cheatcode it no longer exists.
@@ -11,7 +8,7 @@ fll-live-initscripts (20260126.1) UNRELEASED; urgency=medium
     keyboard layout via geoip.
   * Remove localize argument logic and functionality.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 26 Jan 2026 12:07:47 +1000
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 26 Jan 2026 13:16:18 +0100
 
 fll-live-initscripts (20260102.1) unstable; urgency=medium
 
