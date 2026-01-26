@@ -44,9 +44,6 @@ if [ -f /proc/cmdline ]; then
 			lang=*)
 				LANGUAGE=$(awk 'BEGIN{ print tolower("'"${param#lang=}"'") }')
 				;;
-			noaptlang)
-				NOAPTLANG="yes"
-				;;
 			xkboptions=*)
 				KBOPTIONS="${param#xkboptions=}"
 				;;
