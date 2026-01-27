@@ -174,10 +174,6 @@ set_locale()
 	if grep -q "^LANG=${LANG}" /etc/locale.conf; then
 		return 0
 	fi
-
-	echo "${NAME}: configuring locales for '${LANG}'"
-	echo "locales locales/default_environment_locale select ${LANG}" | \
-		debconf-set-selections
 	update-locale "LANG=${LANG}"
 }
 
