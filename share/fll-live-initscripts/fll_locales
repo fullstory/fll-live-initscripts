@@ -21,6 +21,11 @@ PATH=/usr/sbin:/usr/bin
 NAME="fll-locales"
 
 ###
+# source distro-defaults if executed explcitly (e.g. by calamares)
+###
+[ "${1}" = "localize" ] && . /etc/default/distro
+
+###
 # source LANG functions
 ###
 . /usr/share/fll-live-initscripts/locales
@@ -234,8 +239,14 @@ case "${1}" in
 		set_locale
 		set_keytable
 		;;
+	localize)
+		[ -n "${2}" ] && LANG="${2}"
+		# localize
+		set_locale
+		set_keytable
+		;;
 	*)
-		echo "Usage: ${NAME} start" >&2
+		echo "Usage: ${NAME} {start|localize}" >&2
 		exit 3
 		;;
 esac
