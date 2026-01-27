@@ -12,6 +12,7 @@ fll-live-initscripts (20260126.1) unstable; urgency=medium
   * If no language has been specified by the owner via grub or
     cheatcode, configure calamares to select a country code and guess
     keyboard layout via geoip.
+  * Remove localize argument logic and functionality.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 26 Jan 2026 13:16:18 +0100
 
