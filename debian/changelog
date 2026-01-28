@@ -1,8 +1,10 @@
-fll-live-initscripts (20260126.3) UNRELEASED; urgency=medium
+fll-live-initscripts (20260128.1) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
+  * fll_locales: avoid dpkg/debconf when configuring
+    /etc/default/keyboard, edit conffile and call setupcon directly.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 27 Jan 2026 13:54:56 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 28 Jan 2026 21:26:03 +1000
 
 fll-live-initscripts (20260126.2) unstable; urgency=medium
 

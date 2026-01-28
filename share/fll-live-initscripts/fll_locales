@@ -179,24 +179,17 @@ set_locale()
 
 set_keytable()
 {
-	if ! grep -q "XKBLAYOUT=\"${XKBLAYOUT%%,*}\"" /etc/default/keyboard; then
-		# generate new keyboard-configuration conffile
-		rm -f /etc/default/keyboard
-		DEBCONF=$(mktemp)
-		cat >"${DEBCONF}" <<EOF
-keyboard-configuration keyboard-configuration/layoutcode string ${XKBLAYOUT%%,*}
-keyboard-configuration keyboard-configuration/modelcode string ${XKBMODEL}
-keyboard-configuration keyboard-configuration/variantcode string ${XKBVARIANT}
-keyboard-configuration keyboard-configuration/optionscode string ${XKBOPTIONS}
-EOF
-		debconf-set-selections < "${DEBCONF}"
-		rm -f "${DEBCONF}"
-		dpkg-reconfigure -fnoninteractive keyboard-configuration
-
-		if ! ischroot; then
-			udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
-		fi
+	if grep -q "XKBLAYOUT=\"${XKBLAYOUT%%,*}\"" /etc/default/keyboard; then
+		return 0
 	fi
+	sed -i \
+		-e "s/^XKBMODEL=.*/XKBMODEL=\"${XKBMODEL}\"/" \
+		-e "s/^XKBLAYOUT=.*/XKBLAYOUT=\"${XKBLAYOUT%%,*}\"/" \
+		-e "s/^XKBVARIANT=.*/XKBVARIANT=\"${XKBVARIANT}\"/" \
+		-e "s/^XKBOPTIONS=.*/XKBOPTIONS=\"${XKBOPTIONS}\"/" \
+		/etc/default/keyboard
+	setupcon --force --save
+	udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
 }
 
 configure_calamares_geoip()
