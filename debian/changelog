@@ -1,8 +1,10 @@
-fll-live-initscripts (20260128.2) UNRELEASED; urgency=medium
+fll-live-initscripts (20260129.1) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
+  * fll_locales: drop conflict with shutdown.target, do not call
+    setupcon.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 28 Jan 2026 18:55:13 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 29 Jan 2026 21:22:52 +1000
 
 fll-live-initscripts (20260128.1) unstable; urgency=medium
 

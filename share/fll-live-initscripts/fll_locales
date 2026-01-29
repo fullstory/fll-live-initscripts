@@ -188,8 +188,7 @@ set_keytable()
 		-e "s/^XKBVARIANT=.*/XKBVARIANT=\"${XKBVARIANT}\"/" \
 		-e "s/^XKBOPTIONS=.*/XKBOPTIONS=\"${XKBOPTIONS}\"/" \
 		/etc/default/keyboard
-	setupcon --force --save
-	udevadm trigger --property-match=ID_INPUT_KEYBOARD=1
+	udevadm trigger --subsystem-match=input --action=change
 }
 
 configure_calamares_geoip()

@@ -2,8 +2,7 @@
 ConditionPathExists=/etc/default/distro
 Description=localise live system
 DefaultDependencies=no
-Conflicts=shutdown.target
-Before=shutdown.target console-screen.service keyboard-setup.service
+Before=console-screen.service keyboard-setup.service
 
 [Service]
 Type=oneshot
