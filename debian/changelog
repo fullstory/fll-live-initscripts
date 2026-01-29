@@ -1,8 +1,11 @@
 fll-live-initscripts (20260129.1) UNRELEASED; urgency=medium
 
+  [ Stefan Lippers-Hollmann ]
   * NOT RELEASED YET
+
+  [ Kel Modderman ]
   * fll_locales: drop conflict with shutdown.target, do not call
-    setupcon.
+    setupcon, adjust udevadm triger as per keyboard(5).
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 29 Jan 2026 21:22:52 +1000
 
