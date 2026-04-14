@@ -1,9 +1,5 @@
-fll-live-initscripts (20260414.1) UNRELEASED; urgency=medium
+fll-live-initscripts (20260414.1) unstable; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * fll_adduser: explcitly add live user to sudo group, allowing sudo
     membership to be dropped as a default group in adduser.conf.
 
