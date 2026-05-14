@@ -1,9 +1,5 @@
-fll-live-initscripts (20260514.1) UNRELEASED; urgency=medium
+fll-live-initscripts (20260514.1) unstable; urgency=medium
 
-  [ Stefan Lippers-Hollmann ]
-  * NOT RELEASED YET
-
-  [ Kel Modderman ]
   * postinst: adjust chrooted() logic to allow installation into
     systemd container.
 
