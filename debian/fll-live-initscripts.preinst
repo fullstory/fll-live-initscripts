@@ -4,13 +4,20 @@ set -e
 
 chrooted() {
 	# borrowed from udev's postinst
-	if [ "$(stat -c %d/%i /)" = "$(stat -Lc %d/%i /proc/1/root 2>/dev/null)" ]; then
-		# the device number/inode pair of / is the same as that of
-		# /sbin/init's root, so we're *not* in a chroot and hence
-		# return false.
-		return 1
+	if [ "$(stat -c %d/%i /)" != "$(stat -Lc %d/%i /proc/1/root 2>/dev/null)" ]; then
+		# the device number/inode pair of / is not the same as that of
+		# /sbin/init's root, so we're in a chroot and return true.
+		return 0
 	fi
-	return 0
+
+	# nspawn: PID 1 root matches container root, but systemd sets this
+	if [ -d /run/systemd ]; then
+		if systemd-detect-virt --quiet --container 2>/dev/null; then
+			return 0
+		fi
+	fi
+
+	return 1
 }
 
 case "$1" in
